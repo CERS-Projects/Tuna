@@ -1,0 +1,7 @@
+demo/.gradle
+demo/.gradle-watcher
+demo/build
+**/build
+node_modules
+.gradle
+.git

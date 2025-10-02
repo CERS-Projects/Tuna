@@ -1,0 +1,93 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/react/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./react-test-app:/app
+      - /app/node_modules
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/springboot/Dockerfile
+    command:
+      - bash
+      - -c
+      - |
+        chmod +x /app/gradlew \
+        && /app/gradlew --no-daemon build \
+        && /app/gradlew --no-daemon bootRun
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./demo:/app
+      - ./demo/.gradle:/root/.gradle
+    environment:
+      - SPRING_DEVTOOLS_REMOTE_SECRET=secret
+      - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
+    depends_on:
+      - mysql
+      - mongo
+    restart: "no"
+
+  backend-watcher:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/springboot/Dockerfile
+    working_dir: /app
+    command:
+      [
+        "bash",
+        "-c",
+        "chmod +x /app/gradlew && /app/gradlew --no-daemon classes --continuous",
+      ]
+    volumes:
+      - ./demo:/app
+      - ./demo/.gradle-watcher:/app/.gradle
+    restart: "no"
+    depends_on:
+      - backend
+
+  mysql:
+    image: mysql:8.4.6
+    restart: no
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test
+    volumes:
+      - ./dockerfiles/db-mysql:/docker-entrypoint-initdb.d
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      start_period: 30s
+
+  mongo:
+    image: mongo:8.0
+    restart: no
+    volumes:
+      - ./dockerfiles/db-mongo:/docker-entrypoint-initdb.d
+    ports:
+      - "27017:27017"
+    environment:
+      TZ: "Asia/Tokyo"
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  mongo-express:
+    image: mongo-express
+    restart: no
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: test_user
+      ME_CONFIG_BASICAUTH_PASSWORD: test
