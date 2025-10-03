@@ -1,6 +1,6 @@
-demo/.gradle
-demo/.gradle-watcher
-demo/build
+backend/.gradle
+backend/.gradle-watcher
+backend/build
 **/build
 node_modules
 .gradle

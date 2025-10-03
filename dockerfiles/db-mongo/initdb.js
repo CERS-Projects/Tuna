@@ -1,11 +1,11 @@
 // サンプルスクリプト
 
-db = db.getSiblingDB("db_test_mongo");
+db = db.getSiblingDB("tuna_mongodb");
 
 db.createUser({
-  user: "app_user",
-  pwd: "app_pass",
-  roles: [{ role: "readWrite", db: "db_test_mongo" }],
+  user: "user",
+  pwd: "pass",
+  roles: [{ role: "readWrite", db: "tuna_mongodb" }],
 });
 
 db.todos.insertMany([
