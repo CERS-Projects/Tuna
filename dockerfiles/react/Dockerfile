@@ -5,4 +5,6 @@ WORKDIR /app
 COPY frontend/package*.json ./
 RUN npm install
 
-CMD ["npm", "run", "dev"]
+RUN npm install -g nodemon
+
+CMD ["sh", "-c", "nodemon --watch package.json --exec 'npm install' & npm run dev"]
