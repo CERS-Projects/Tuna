@@ -14,5 +14,9 @@
     "vscode-icons-team.vscode-icons",
     "ms-vscode-remote.remote-wsl",
     "ms-vsliveshare.vsliveshare",
+    "vscjava.vscode-java-pack",
+    "vmware.vscode-boot-dev-pack",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-mysql"
   ]
 }
