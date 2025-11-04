@@ -38,6 +38,10 @@ const createAppRouter = (queryClient: QueryClient) =>
       ],
     },
     {
+      path: paths.help.category.path,
+      lazy: () => import("./routes/helpCategory").then(convert(queryClient)),
+    },
+    {
       path: "*",
       lazy: () => import("./routes/not-found").then(convert(queryClient)),
     },
