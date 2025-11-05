@@ -14,4 +14,10 @@ export const paths = {
       getHref: () => "/app/test",
     },
   },
+  help:{
+    category:{
+      path:"help/category",
+      gethref: () => "/help/category"
+    }
+  }
 } as const;
