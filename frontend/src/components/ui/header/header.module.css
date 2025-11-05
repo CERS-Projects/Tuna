@@ -10,8 +10,13 @@
     font-size: 60px;
 }
 .helpIcon{
+    cursor:pointer;
     all: unset;
     position: fixed;
     right: 30px;
     font-size: 70px;
+}
+
+.helpIcon:focus-visible{
+    outline:auto;
 }

@@ -1,4 +1,4 @@
-import { CategoryBox } from "@/feature/help/components/categoryBox";
+import { CategoryBox } from "@/features/help/components/categoryBox";
 
 const HelpCategory = () => {
   return (
