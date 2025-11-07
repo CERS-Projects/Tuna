@@ -25,13 +25,8 @@
 }
 
 .inputError {
-  height: 2em;
-  width: 400px;
-  font-size: 1em;
-  border-radius: 10px;
+  composes: input;
   outline: solid 3px rgb(220, 50, 50);
-  border: none;
-  transition: all 0.2s ease;
 }
 
 .inputError:focus {
