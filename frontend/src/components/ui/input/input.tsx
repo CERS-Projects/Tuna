@@ -28,11 +28,6 @@ export const Input = ({
           {label}
         </label>
       )}
-      {error && (
-        <span className={styles.errorMessage} role="alert">
-          {error}
-        </span>
-      )}
       <input
         id={inputId}
         ref={ref}
@@ -42,6 +37,15 @@ export const Input = ({
         style={{ width, height }}
         {...props}
       />
+      {error && (
+        <span
+          id={`${inputId}-error`}
+          className={styles.errorMessage}
+          role="alert"
+        >
+          {error}
+        </span>
+      )}
     </div>
   );
 };
