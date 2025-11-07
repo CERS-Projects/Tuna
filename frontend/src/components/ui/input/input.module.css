@@ -1,0 +1,46 @@
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.inputLabel {
+  font-size: 20px;
+}
+
+.input {
+  height: 2em;
+  width: 400px;
+  font-size: 1em;
+  border-radius: 10px;
+  outline: solid 3px rgb(50, 85, 150);
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline-color: rgb(90, 100, 200);
+  outline-width: 3.5px;
+  box-shadow: 0 0 0 3px rgba(60, 100, 180, 0.15);
+}
+
+.inputError {
+  height: 2em;
+  width: 400px;
+  font-size: 1em;
+  border-radius: 10px;
+  outline: solid 3px rgb(220, 50, 50);
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.inputError:focus {
+  outline-color: rgb(255, 70, 70);
+  outline-width: 3.5px;
+  box-shadow: 0 0 0 4px rgba(255, 70, 70, 0.2);
+}
+
+.errorMessage {
+  color: rgb(220, 50, 50);
+  font-size: 0.875em;
+}
