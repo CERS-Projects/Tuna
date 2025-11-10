@@ -15,10 +15,10 @@ type ListProps = {
 
 export const Explanation = ({ explanation }: Props) => {
   return (
-    <div>
+    <>
       <h1 className={styles.explanationTitle}>{explanation.title}</h1>
       <div className={styles.explanationText}>{explanation.text}</div>
-    </div>
+    </>
   );
 };
 
