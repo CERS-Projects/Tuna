@@ -1,14 +1,14 @@
 import { useState } from "react";
 import type { MouseEvent } from "react";
 
-import Style from "./contentsItem.module.css";
+import style from "./contentsItem.module.css";
 
-type contentsItemProps = {
+type ContentsItemProps = {
   question: string;
   answer: string;
 };
 
-export const ContentsItem = (contents: contentsItemProps) => {
+export const ContentsItem = (contents: ContentsItemProps) => {
   const [isCardOpen, setIsCardOpen] = useState(false);
 
   // 💡 カード全体をクリックしたときのハンドラ
@@ -22,20 +22,20 @@ export const ContentsItem = (contents: contentsItemProps) => {
   };
 
   return (
-    <div className={Style.contentsCard} onClick={handleCardToggle}>
-      <div className={Style.questionSummary}>
+    <div className={style.contentsCard} onClick={handleCardToggle}>
+      <div className={style.questionSummary}>
         <span>Q</span>
         <div>{contents.question}</div>
-        <span className={`${Style.toggleIcon} ${isCardOpen ? Style.open : ""}`}>
+        <span className={`${style.toggleIcon} ${isCardOpen ? style.open : ""}`}>
           ▶
         </span>
       </div>
 
       <div
-        className={`${Style.answerContainer} ${isCardOpen ? Style.open : ""}`}
+        className={`${style.answerContainer} ${isCardOpen ? style.open : ""}`}
         onClick={handleAnswerClick}
       >
-        <div className={Style.answerContents}>
+        <div className={style.answerContents}>
           <span>A.</span>
           {contents.answer}
         </div>
