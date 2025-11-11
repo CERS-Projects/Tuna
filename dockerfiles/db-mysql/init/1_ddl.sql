@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS tuna_db.student_tb(
     user_id            INT(10)      NOT NULL PRIMARY KEY,
     grade              INT(1)       NOT NULL,
     enter_date         DATE         NOT NULL,               
-    gradude_date       DATE,
+    graduate_date       DATE,
 
     FOREIGN KEY (user_id)
     REFERENCES tuna_db.user_tb(user_id)
@@ -111,7 +111,7 @@ INSERT INTO tuna_db.teacher_tb (user_id, authority_flag) VALUES
 (4, 0); -- 山田次郎 (管理者権限なし)
 
 -- user_id = 2, 3 を生徒として登録
-INSERT INTO tuna_db.student_tb (user_id, grade, enter_date, gradude_date) VALUES
+INSERT INTO tuna_db.student_tb (user_id, grade, enter_date, graduate_date) VALUES
 (2, 3, '2023-04-01', NULL), -- 田中花子: 3年生
 (3, 1, '2025-04-01', NULL); -- 小林健太: 1年生
 
