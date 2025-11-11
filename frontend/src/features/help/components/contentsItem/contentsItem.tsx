@@ -26,15 +26,20 @@ export const ContentsItem = (contents: contentsItemProps) => {
       <div className={Style.questionSummary}>
         <span>Q</span>
         <div>{contents.question}</div>
-        <span className={Style.toggleIcon}>{isCardOpen ? "▲" : "▼"}</span>
+        <span className={`${Style.toggleIcon} ${isCardOpen ? Style.open : ""}`}>
+          ▶
+        </span>
       </div>
 
-      {isCardOpen && (
-        <div className={Style.answerContent} onClick={handleAnswerClick}>
+      <div
+        className={`${Style.answerContainer} ${isCardOpen ? Style.open : ""}`}
+        onClick={handleAnswerClick}
+      >
+        <div className={Style.answerContents}>
           <span>A.</span>
           {contents.answer}
         </div>
-      )}
+      </div>
     </div>
   );
 };
