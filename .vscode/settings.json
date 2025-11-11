@@ -1,0 +1,12 @@
+{
+  "extensions.ignoreRecommendations": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.autobuild.enabled": true,
+  "java.jdt.ls.java.home": "my/jdk/path" // 自分のJDKのパスを追加する
+}

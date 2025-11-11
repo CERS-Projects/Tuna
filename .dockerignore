@@ -1,0 +1,7 @@
+backend/.gradle
+backend/.gradle-watcher
+backend/build
+**/build
+node_modules
+.gradle
+.git
