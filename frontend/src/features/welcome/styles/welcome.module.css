@@ -30,10 +30,11 @@
 
 /* タイトル枠 */
 .welcomeTitle {
-  font-size: clamp(28px, 3.5vw, 45px);
+  font-size: clamp(28px, 3.5vw, 50px);
   font-weight: bold;
   padding: 0.2em;
   border-left: 5px solid #2589d0;
+  width: 40%;
 }
 /* タイトルの下線 */
 .underLine {
@@ -50,6 +51,7 @@
   display: flex;
   flex-direction: row;
   gap: 20px;
+  width: 60%;
 }
 
 /* 下の三つの概要枠 */

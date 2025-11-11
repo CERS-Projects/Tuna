@@ -26,10 +26,12 @@ const Welcome = () => {
         <div className={styles.welcomeMidashi}>
           <div className={styles.welcomeTitle}>Welcome to Tuna!!</div>
           <div className={styles.welcomeButton}>
-            <Button onClick={() => console.log("aaaaa")}>
+            <Button height="100%" width={"60%"} fontSize={25}>
               学校法人の方はこちら
             </Button>
-            <Button onClick={() => console.log("aaaaa")}>ログイン</Button>
+            <Button height={"100%"} width={"60%"} fontSize={25}>
+              ログイン
+            </Button>
           </div>
         </div>
         <hr className={styles.underLine} />
