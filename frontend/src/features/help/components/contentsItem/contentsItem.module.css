@@ -1,5 +1,4 @@
 .contentsCard {
-  flex-direction: column;
   cursor: pointer;
   padding: 20px;
   margin-bottom: 15px;
@@ -28,7 +27,7 @@
 .answerContainer.open {
   max-height: 500px;
 }
-.answerContent {
+.answerContents {
   font-size: 18px;
   line-height: 1.6;
   padding-left: 10px;
