@@ -24,12 +24,14 @@ export const ContentsItem = (contents: contentsItemProps) => {
   return (
     <div className={Style.contentsCard} onClick={handleCardToggle}>
       <div className={Style.questionSummary}>
+        <span>Q</span>
         <div>{contents.question}</div>
         <span className={Style.toggleIcon}>{isCardOpen ? "▲" : "▼"}</span>
       </div>
 
       {isCardOpen && (
         <div className={Style.answerContent} onClick={handleAnswerClick}>
+          <span>A.</span>
           {contents.answer}
         </div>
       )}
