@@ -73,7 +73,7 @@ services:
     image: mongo:8.0
     restart: no
     volumes:
-      - ./dockerfiles/db-mongo:/docker-entrypoint-initdb.d
+      - ./dockerfiles/db-mongo:/docker-entrypoint-init_db.d
     ports:
       - "27017:27017"
     environment:
