@@ -1,8 +1,9 @@
 .helpCategoryBox {
+    text-decoration: none;
     width: 400px;
     height: 210px;
     
-    border: 2px solid #007bff;
+    border: 2px solid rgb(50,85,150);
     border-radius: 25px;
     background-color: #ffffff;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);

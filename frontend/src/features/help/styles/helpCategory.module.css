@@ -1,0 +1,21 @@
+.wrapper {
+    max-width: 2000px;
+
+    margin-left: 200px;
+    margin-right: 200px;
+
+    min-height:100vh;
+
+    border-left: 2px solid rgb(50,85,150);
+    border-right: 2px solid rgb(50,85,150);
+
+    padding-left: 40px;
+    padding-right: 40px;
+}   
+
+.helpCategoryContainer {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
