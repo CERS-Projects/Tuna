@@ -1,16 +1,21 @@
 /* table作成を行うファイル */
 
+/* 文字コード（接続）をutf8mb4に */
+SET NAMES utf8mb4;
+
 /* データベースがなければ作成する */
-CREATE DATABASE IF NOT EXISTS tuna_db;
+CREATE DATABASE IF NOT EXISTS tuna_db
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_bin;
 
 /* 学校情報 */
 CREATE TABLE IF NOT EXISTS tuna_db.school_info_tb(
     school_id          INT(5)       PRIMARY KEY AUTO_INCREMENT,
     school_name        VARCHAR(256) NOT NULL,
-    school_code        CHAR(13)  NOT NULL UNIQUE,
+    school_code        CHAR(13)     NOT NULL UNIQUE,
     school_address     VARCHAR(161) NOT NULL,              
     school_mailaddress VARCHAR(32)  NOT NULL UNIQUE,
-    approval_status    TINYINT(1)   NOT NULL DEFAULT 0 --0:承認待ち 1:承認済み 2:拒否済み
+    approval_status    TINYINT(1)   NOT NULL DEFAULT 0 -- 0:承認待ち 1:承認済み 2:拒否済み
 
 );
 
@@ -97,7 +102,7 @@ CREATE TABLE IF NOT EXISTS tuna_db.help_contents_tb(
 
 INSERT INTO tuna_db.school_info_tb (school_name, school_code, school_address, school_mailaddress, approval_status) VALUES
 ('マグロ市立第一中学校', 'MAGURO0000001', '東京都港区まぐろ1-1-1', 'maguro1@tuna.ac.jp',0),
-('カツオ私立高等専門学校', 'KATSUO0000002', '大阪府中央区かつお2-2-2', 'katsuo2@tuna.ac.jp',1),
+('カツオ私立高等専門学校', 'KATSUO0000002', '大阪府中央区かつお2-2-2', 'akatsuo2@tuna.ac.jp',1),
 ('カジキ国立大学', 'KAZIKI0000003', '大阪府中央区かつお2-2-2', 'katsuo2@tuna.ac.jp',2);
 
 -- school_id = 1 (マグロ市立第一中学校) のユーザー
