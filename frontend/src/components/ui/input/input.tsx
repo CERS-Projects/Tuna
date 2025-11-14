@@ -5,8 +5,8 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   ref?: React.Ref<HTMLInputElement>;
   label?: string;
   error?: string;
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
 };
 
 export const Input = ({
