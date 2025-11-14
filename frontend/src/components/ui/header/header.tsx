@@ -7,9 +7,14 @@ export const Header = () => {
   return (
     <div className={styles.headerContainer}>
       <header className={styles.header}>Tuna</header>
-      <Link to={paths.help.category.gethref()} className={styles.helpIcon}>
-        <FaQuestionCircle />
-      </Link>
+      <div className={styles.supportContiner}>
+        <Link to={paths.help.category.gethref()} className={styles.helpIcon}>
+          <FaQuestionCircle />
+        </Link>
+        <Link to={paths.welcome.getHref()} className={styles.inqueryButton}>
+          <a>お問い合わせ</a>
+        </Link>
+      </div>
     </div>
   );
 };
