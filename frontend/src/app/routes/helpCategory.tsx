@@ -8,6 +8,7 @@ type HelpItem = {
   description: string;
   iconUrl?: string;
 }
+
 const HelpDataDummy: HelpItem[] = [
   { 
     id: 1,
@@ -41,6 +42,7 @@ export const HelpCategory = () => {
       <Header />
       <div className = {Styles.wrapper}>
         <h1>ヘルプ一覧</h1>
+        
         <div className = {Styles.helpCategoryContainer}>
           {HelpDataDummy.map ((item) => (
             <HelpCategoryCard
