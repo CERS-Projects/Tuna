@@ -1,0 +1,22 @@
+.accountLockContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.textContainer {
+  color: aliceblue;
+  background-color: rgb(147, 147, 211);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+.FaFish {
+  margin-top: 4rem;
+  width: 100px;
+  height: 100px;
+}
+.backLink {
+  all: unset;
+}
