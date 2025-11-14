@@ -1,14 +1,14 @@
 import { useState } from "react";
 import type { MouseEvent } from "react";
 
-import style from "./contentsItem.module.css";
+import style from "./helpContentsItem.module.css";
 
 type ContentsItemProps = {
   question: string;
   answer: string;
 };
 
-export const ContentsItem = (contents: ContentsItemProps) => {
+export const HelpContentsItem = (contents: ContentsItemProps) => {
   const [isCardOpen, setIsCardOpen] = useState(false);
 
   // 💡 カード全体をクリックしたときのハンドラ

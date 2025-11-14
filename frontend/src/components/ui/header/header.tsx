@@ -7,7 +7,7 @@ export const Header = () => {
   return (
     <div className={styles.headerContainer}>
       <header className={styles.header}>Tuna</header>
-      <Link to={paths.help.category.gethref()} className={styles.helpIcon}>
+      <Link to={paths.help.category.getHref()} className={styles.helpIcon}>
         <FaQuestionCircle />
       </Link>
     </div>
