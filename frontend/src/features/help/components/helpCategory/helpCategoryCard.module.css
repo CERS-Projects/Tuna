@@ -1,69 +1,67 @@
-.helpCategoryBox{
-    text-decoration: none;
+.helpCategoryBox {
+  text-decoration: none;
 
-    min-height: 12rem;
-    padding: 1.5rem;
+  min-height: 12rem;
+  padding: 1.5rem;
 
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 
-    border: 2px solid rgb(50, 85, 150);
-    border-radius: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 2px solid rgb(50, 85, 150);
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
 
-    transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .helpCategoryBox:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
 .helpCategoryBox:active {
-    border-color: rgb(50, 85, 150);
-    border-width: 3px;
-    transform: translateY(-1px);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-color: rgb(50, 85, 150);
+  border-width: 3px;
+  transform: translateY(-1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .contentInner {
-    width: 100%;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.helpCategoryBox h3{
-    font-size: 1.2rem;
-    margin-top: 0;
-    margin-bottom: 0.8rem;
-    color: #000000;
-    overflow-wrap: anywhere;
+.helpCategoryBox h3 {
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  color: #000000;
+  overflow-wrap: anywhere;
 }
 
-.helpCategoryBox p{
-    font-size: 0.9rem;
-    padding-right: 6rem;
-    line-height: 1.5;
-    color: #000000;
-    flex-grow: 1;
-    margin-bottom: 0;
-    min-height: 4rem;
-    flex-grow: 1;
+.helpCategoryBox p {
+  font-size: 0.9rem;
+  padding-right: 6rem;
+  line-height: 1.5;
+  color: #000000;
+  flex-grow: 1;
+  margin-bottom: 0;
+  min-height: 4rem;
 }
 
 .helpCategoryBox img,
 .contentInner .icon {
-    position: absolute;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    width: 4rem;
-    height: 4rem;
-    object-fit: contain;
-    opacity: 0.7;
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
+  opacity: 0.7;
 }
