@@ -3,6 +3,10 @@ export const paths = {
     path: "/",
     getHref: () => "/",
   },
+  accountLock: {
+    path: "/account-lock",
+    getHref: () => "/account-lock",
+  },
 
   app: {
     root: {
@@ -14,10 +18,10 @@ export const paths = {
       getHref: () => "/app/test",
     },
   },
-  help:{
-    category:{
-      path:"help/category",
-      gethref: () => "/help/category"
-    }
-  }
+  help: {
+    category: {
+      path: "help/category",
+      gethref: () => "/help/category",
+    },
+  },
 } as const;
