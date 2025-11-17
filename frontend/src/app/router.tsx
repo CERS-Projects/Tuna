@@ -42,6 +42,11 @@ const createAppRouter = (queryClient: QueryClient) =>
       lazy: () => import("./routes/helpCategory").then(convert(queryClient)),
     },
     {
+      path: paths.help.contents.path,
+      lazy: () => import("./routes/helpContents").then(convert(queryClient)),
+    },
+
+    {
       path: "*",
       lazy: () => import("./routes/not-found").then(convert(queryClient)),
     },
