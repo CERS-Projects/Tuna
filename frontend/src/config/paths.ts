@@ -21,9 +21,7 @@ export const paths = {
     },
   },
   inquiry: {
-    request: {
-      path: "/inquiry/request",
-      getHref: () => "/inquiry/request",
-    },
+    path: "/inquiry",
+    getHref: () => "/inquiry",
   },
 } as const;

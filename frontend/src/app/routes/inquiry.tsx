@@ -4,19 +4,25 @@ import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
 import styles from "@/features/inquiry/inquiry.module.css";
 
+type InquiryForm = {
+  mailaddress: string;
+  subject: string;
+  description: string;
+};
+
 const Inquiry = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<InquiryForm>();
   const onSubmit = (data) => console.log(data);
   console.log(errors);
 
   return (
     <>
       <Header />
-      <main>
+      <main className={styles.main}>
         <form
           className={styles.inquiryRequestContainer}
           onSubmit={handleSubmit(onSubmit)}
@@ -26,8 +32,10 @@ const Inquiry = () => {
             type="email"
             label="メールアドレス"
             placeholder="メールアドレス"
-            {...register("メールアドレス", {
-              required: true,
+            width={"100%"}
+            error={errors["mailaddress"]?.message ?? ""}
+            {...register("mailaddress", {
+              required: "メールアドレスは必須です。",
               pattern: /^\S+@\S+$/i,
             })}
           />
@@ -35,13 +43,47 @@ const Inquiry = () => {
             type="text"
             label="件名"
             placeholder="件名"
-            {...register("件名", { required: true, max: 20, min: 1 })}
+            width={"100%"}
+            error={errors["subject"]?.message ?? ""}
+            {...register("subject", {
+              required: "件名は必須です。",
+              maxLength: {
+                value: 20,
+                message: "件名は20文字以内で書いてください。",
+              },
+              minLength: {
+                value: 2,
+                message: "件名は2文字以上で書いてください。",
+              },
+            })}
           />
           <label htmlFor="問い合わせ内容">説明</label>
           <textarea
             id="問い合わせ内容"
-            {...register("説明", { required: true, max: 1000, min: 1 })}
+            placeholder="問い合わせ内容"
+            className={
+              errors.description
+                ? `${styles.textarea} ${styles.textareaError}`
+                : styles.textarea
+            }
+            {...register("description", {
+              required: "問い合わせ内容は必須です。",
+              maxLength: {
+                value: 1000,
+                message: "問い合わせ内容は1000文字以内で書いてください。",
+              },
+              minLength: {
+                value: 2,
+                message: "問い合わせ内容は2文字以上で書いてください。",
+              },
+            })}
           />
+
+          {errors.description?.message && (
+            <span className={styles.textareaErrorLabel}>
+              {errors.description.message}
+            </span>
+          )}
 
           <Button type="submit">送信</Button>
         </form>
