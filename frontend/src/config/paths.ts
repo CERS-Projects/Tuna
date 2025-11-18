@@ -24,4 +24,10 @@ export const paths = {
       getHref: () => "/help/category/contents",
     },
   },
+  auth: {
+    login: {
+      path: "/login",
+      getHref: () => "/login",
+    },
+  },
 } as const;

@@ -1,0 +1,39 @@
+import { Header } from "@/components/ui/header/header.tsx";
+import { Button } from "@/components/ui/button/button.tsx";
+import { Input } from "@/components/ui/input/input.tsx";
+import { Link } from "react-router-dom";
+import styles from "@/features/auth/styles/login.module.css";
+
+export const Login = () => {
+  return (
+    <>
+      <Header />
+      <div className={styles.loginContainer}>
+        <Input
+          width={455}
+          height={45}
+          label="ユーザーID"
+          type="text"
+          placeholder="student1234"
+        />
+        <Input
+          width={455}
+          height={45}
+          label="パスワード"
+          type="text"
+          placeholder="password"
+        />
+
+        <Link to="" className={styles.loginLink}>
+          利用規約
+        </Link>
+        <Link to="" className={styles.loginLink}>
+          パスワードをお忘れですか？
+        </Link>
+        <Button className={styles.loginButton}>ログイン</Button>
+      </div>
+    </>
+  );
+};
+
+export default Login;
