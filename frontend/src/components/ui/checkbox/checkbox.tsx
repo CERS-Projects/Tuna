@@ -23,35 +23,32 @@ export const Checkbox = ({
 
   return (
     <div className={styles.checkbox}>
-      <div>
-        <label htmlFor={inputId} className={styles.checkboxLabel}>
-          <input
-            id={inputId}
-            type="checkbox"
-            ref={ref}
-            aria-invalid={error ? "true" : "false"}
-            aria-describedby={error ? `${inputId}-error` : undefined}
-            {...props}
-          />
-          <span>
-            <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-              {linkText}
-            </a>
-            {labelTextAfterLink}
-          </span>
-        </label>
-      </div>
-      <div>
-        {error && (
-          <span
-            id={`${inputId}-error`}
-            className={styles.errorMessage}
-            role="alert"
-          >
-            {error}
-          </span>
-        )}
-      </div>
+      <label htmlFor={inputId} className={styles.checkboxLabel}>
+        <input
+          id={inputId}
+          type="checkbox"
+          ref={ref}
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby={error ? `${inputId}-error` : undefined}
+          {...props}
+        />
+        <span>
+          <a href={linkUrl} target="_blank" rel="noopener noreferrer">
+            {linkText}
+          </a>
+          {labelTextAfterLink}
+        </span>
+      </label>
+
+      {error && (
+        <span
+          id={`${inputId}-error`}
+          className={styles.errorMessage}
+          role="alert"
+        >
+          {error}
+        </span>
+      )}
     </div>
   );
 };
