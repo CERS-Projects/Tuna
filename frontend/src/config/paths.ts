@@ -24,4 +24,8 @@ export const paths = {
       getHref: () => "/help/category/contents",
     },
   },
+  inquiry: {
+    path: "/inquiry",
+    getHref: () => "/inquiry",
+  },
 } as const;
