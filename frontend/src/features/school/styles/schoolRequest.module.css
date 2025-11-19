@@ -7,8 +7,7 @@
   max-width: 500px;
   min-width: 299px;
   gap: 23px;
-  padding-right: 4px;
-  padding-bottom: 20px;
+  padding: 0 4px 20px;
 }
 .title {
   margin-bottom: -20px;

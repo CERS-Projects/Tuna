@@ -27,7 +27,6 @@ export default function SchoolRequest() {
   const onSubmit = (data: SchoolRequestForm) => {
     console.log("申請しました", data);
   };
-  console.log("error", errors);
 
   return (
     <div>
@@ -87,8 +86,8 @@ export default function SchoolRequest() {
               {...register("学校メールアドレス", {
                 required: "学校メールアドレスは必須です",
                 maxLength: {
-                  value: 32,
-                  message: "学校メールアドレスは32文字以内で入力してください",
+                  value: 254,
+                  message: "学校メールアドレスは254文字以内で入力してください",
                 },
                 pattern: {
                   value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
@@ -152,7 +151,7 @@ export default function SchoolRequest() {
               width="100%"
               label="パスワード"
               type="password"
-              autoComplete="off"
+              autoComplete="new-password"
               placeholder="パスワード"
               error={errors["パスワード"]?.message ?? ""}
               {...register("パスワード", {
