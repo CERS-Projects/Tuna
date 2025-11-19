@@ -1,13 +1,12 @@
 .checkbox {
   display: flex;
   flex-direction: column;
-  }
+}
 .checkboxLabel {
-  color:rgba(0, 0, 0, 0.773);
+  color: rgba(0, 0, 0, 0.773);
   font-size: 0.9rem;
 }
-.errorMessage { 
+.errorMessage {
   color: rgb(220, 50, 50);
   font-size: 0.75rem;
 }
-
