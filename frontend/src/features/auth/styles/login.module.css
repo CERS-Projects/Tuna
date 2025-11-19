@@ -1,0 +1,20 @@
+.loginContainer {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: -80px;
+}
+
+.loginContainer > * {
+  margin-bottom: 20px;
+}
+
+.loginLink {
+  display: block;
+  margin-bottom: 10px;
+  text-align: left;
+  width: 450px;
+  color: rgb(50, 85, 150);
+}

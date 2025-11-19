@@ -1,4 +1,3 @@
-import React from "react";
 import { Header } from "@/components/ui/header/header";
 import { HelpContentsItem } from "@/features/help/components/helpContentsItem/helpContentsItem";
 import style from "@/styles/helpcontents.module.css";

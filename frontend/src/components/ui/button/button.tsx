@@ -6,7 +6,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   ref?: React.Ref<HTMLButtonElement>;
   width?: string;
   height?: string;
-  fontSize?: number;
+  fontSize?: string;
 };
 export const Button = ({
   children,
