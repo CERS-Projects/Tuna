@@ -3,6 +3,12 @@ export const paths = {
     path: "/",
     getHref: () => "/",
   },
+  school: {
+    request: {
+      path: "/school/request",
+      getHref: () => "/school/request",
+    },
+  },
   auth: {
     login: {
       path: "/login",

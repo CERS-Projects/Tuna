@@ -27,6 +27,10 @@ const createAppRouter = (queryClient: QueryClient) =>
       lazy: () => import("./routes/welcome").then(convert(queryClient)),
     },
     {
+      path: paths.school.request.path,
+      lazy: () => import("./routes/schoolRequest").then(convert(queryClient)),
+    },
+    {
       path: paths.auth.login.path,
       lazy: () => import("./routes/login").then(convert(queryClient)),
     },
