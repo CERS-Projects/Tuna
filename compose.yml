@@ -14,7 +14,7 @@ services:
       context: .
       dockerfile: ./dockerfiles/springboot/Dockerfile
     command:
-      - bash
+      - sh
       - -c
       - |
         chmod +x /app/gradlew \
@@ -40,7 +40,7 @@ services:
     working_dir: /app
     command:
       [
-        "bash",
+        "sh",
         "-c",
         "chmod +x /app/gradlew && /app/gradlew --no-daemon classes --continuous",
       ]
@@ -60,7 +60,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: pass
     volumes:
-      - ./dockerfiles/db-mysql:/docker-entrypoint-initdb.d
+      - ./dockerfiles/db-mysql/init:/docker-entrypoint-initdb.d
     ports:
       - "3307:3306"
     healthcheck:

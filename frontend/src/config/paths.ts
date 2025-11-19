@@ -9,7 +9,12 @@ export const paths = {
       getHref: () => "/school/request",
     },
   },
-
+  auth: {
+    login: {
+      path: "/login",
+      getHref: () => "/login",
+    },
+  },
   app: {
     root: {
       path: "/app",
@@ -23,7 +28,15 @@ export const paths = {
   help: {
     category: {
       path: "help/category",
-      gethref: () => "/help/category",
+      getHref: () => "/help/category",
     },
+    contents: {
+      path: "help/category/contents",
+      getHref: () => "/help/category/contents",
+    },
+  },
+  inquiry: {
+    path: "/inquiry",
+    getHref: () => "/inquiry",
   },
 } as const;

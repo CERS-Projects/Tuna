@@ -1,0 +1,86 @@
+.main {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inquiryRequestContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  flex: 1;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+}
+
+.inquiryRequestContainer p {
+  height: 20%;
+  color: #575757;
+}
+
+.inquiryRequestContainer label {
+  font-size: 20px;
+  width: min(500px, 100%);
+  align-self: center;
+  text-align: left;
+}
+
+.textarea {
+  height: 8rem;
+  width: min(500px, 100%);
+  padding: 0.5rem 0.5rem;
+  font-size: 1.2em;
+  border-radius: 10px;
+  outline: solid 3px rgb(50, 85, 150);
+  border: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.textarea:focus {
+  outline-color: rgb(90, 100, 200);
+  outline-width: 3.5px;
+  box-shadow: 0 0 0 3px rgba(60, 100, 180, 0.15);
+}
+
+.textareaError {
+  outline: solid 3px rgb(220, 50, 50);
+}
+
+.textareaError:focus {
+  outline-color: rgb(255, 70, 70);
+  outline-width: 3.5px;
+  box-shadow: 0 0 0 4px rgba(255, 70, 70, 0.2);
+}
+
+.textareaErrorLabel {
+  color: rgb(220, 50, 50);
+  font-size: 0.875rem;
+  width: min(500px, 100%);
+  text-align: left;
+  transform: translateY(-15px);
+}
+
+@media screen and (max-width: 768px) {
+  .inquiryRequestContainer {
+    gap: 1rem;
+  }
+  .inquiryRequestContainer label {
+    font-size: 1rem;
+  }
+
+  .inquiryRequestContainer input {
+    height: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .inquiryRequestContainer textarea {
+    height: 6rem;
+    font-size: 1rem;
+  }
+}
