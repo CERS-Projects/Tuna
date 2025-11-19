@@ -30,7 +30,9 @@ export const Login = () => {
         <Link to="" className={styles.loginLink}>
           パスワードをお忘れですか？
         </Link>
-        <Button className={styles.loginButton}>ログイン</Button>
+        <Button width={"300px"} height={"70px"} fontSize={"1.5em"}>
+          ログイン
+        </Button>
       </div>
     </>
   );
