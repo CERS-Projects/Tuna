@@ -5,7 +5,7 @@ import { Header } from "@/components/ui/header/header";
 import { useForm } from "react-hook-form";
 
 type OnetimePassword = {
-  ワンタイムパスワード: string;
+  onetimepassword: string;
 };
 
 const TwoFactorAuth = () => {
@@ -33,8 +33,8 @@ const TwoFactorAuth = () => {
           <Input
             width="100%"
             placeholder="ワンタイムパスワードを入力"
-            error={errors["ワンタイムパスワード"]?.message ?? ""}
-            {...register("ワンタイムパスワード", {
+            error={errors["onetimepassword"]?.message ?? ""}
+            {...register("onetimepassword", {
               required: "ワンタイムパスワードを入力してください",
             })}
           />
