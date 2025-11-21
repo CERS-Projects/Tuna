@@ -26,10 +26,10 @@ const TwoFactorAuth = () => {
           <h1>ワンタイムパスワード入力</h1>
         </div>
 
-        <p className={styles.text}>
+        <p className={styles.otpInstruction}>
           登録されているメールアドレスにワンタイムパスワードを送信しました。メールに記載されているワンタイムパスワードを入力してください。
         </p>
-        <div className={styles.components}>
+        <div className={styles.otpActions}>
           <Input
             width="100%"
             placeholder="ワンタイムパスワードを入力"
