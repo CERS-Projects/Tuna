@@ -1,0 +1,44 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.title {
+  text-align: center;
+  font-size: 1.3rem;
+  padding-top: 50px;
+}
+.text {
+  width: 400px;
+  font-size: 0.9rem;
+  padding-bottom: 20px;
+}
+.components {
+  max-width: 500px;
+  width: 90%;
+  gap: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media (width <= 500px) {
+  .title {
+    text-align: center;
+    font-size: 0.88rem;
+    padding-top: 40px;
+  }
+  .components {
+    margin: auto;
+    width: 80%;
+    min-width: 299px;
+    gap: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .text {
+    width: 75%;
+    font-size: 0.82rem;
+    padding-bottom: 25px;
+  }
+}
