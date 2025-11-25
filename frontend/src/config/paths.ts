@@ -3,6 +3,7 @@ export const paths = {
     path: "/",
     getHref: () => "/",
   },
+<<<<<<< HEAD
   school: {
     request: {
       path: "/school/request",
@@ -19,6 +20,13 @@ export const paths = {
       getHref: () => "/login/two-factor-auth",
     },
   },
+=======
+  accountLock: {
+    path: "/account-lock",
+    getHref: () => "/account-lock",
+  },
+
+>>>>>>> e2f8efa (feat : アカウント停止画面への遷移追加)
   app: {
     root: {
       path: "/app",
@@ -32,6 +40,7 @@ export const paths = {
   help: {
     category: {
       path: "help/category",
+<<<<<<< HEAD
       getHref: () => "/help/category",
     },
     contents: {
@@ -43,4 +52,9 @@ export const paths = {
     path: "/inquiry",
     getHref: () => "/inquiry",
   },
+=======
+      gethref: () => "/help/category",
+    },
+  },
+>>>>>>> e2f8efa (feat : アカウント停止画面への遷移追加)
 } as const;
