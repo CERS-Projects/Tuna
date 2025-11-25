@@ -62,11 +62,11 @@ public class InquiryController {
     
 
 
-    @GetMapping("/getInquiries")
+    @GetMapping("/findAll")
     public ResponseEntity<List<InquiryEntity>> selectInquiry() {
         try {
             List<InquiryEntity> inquiries = inquiryService.selectInquiry();
-            System.out.println(inquiries);
+            
             return ResponseEntity.status(HttpStatus.OK).body(inquiries);
         } catch (Exception e) {
             // エラーハンドリング（例：ログ出力、適切なレスポンスコードの返却など）
@@ -75,7 +75,7 @@ public class InquiryController {
         }
     }
 
-    @GetMapping("/getInquiryById")
+    @GetMapping("/findById")
     public ResponseEntity<InquiryEntity> getInquiryById(@RequestParam  @NonNull String _id) {
         try {
             InquiryEntity inquiry = inquiryService.findByInquiryId(_id);

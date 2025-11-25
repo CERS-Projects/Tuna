@@ -8,6 +8,7 @@ import com.example.backend.support.model.InquiryEntity;
 
 @Repository
 public interface InquiryRepository extends MongoRepository< InquiryEntity, String> {
+    //日時昇順で全件取得
     List<InquiryEntity> findAllByOrderByDatetimeAsc();
 
 };
