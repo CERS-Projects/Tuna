@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import styles from "@/features/auth/styles/passwordReset.module.css";
 
 type passwordForm = {
-  メールアドレス: string;
-  パスワード: string;
+  mailaddress: string;
+  userid: string;
 };
 
 export const PasswordReset = () => {
@@ -33,9 +33,9 @@ export const PasswordReset = () => {
             label="ユーザーID"
             type="text"
             placeholder="student1234"
-            error={errors["メールアドレス"]?.message ?? ""}
-            {...register("メールアドレス", {
-              required: "メールは必須です。",
+            error={errors["userid"]?.message ?? ""}
+            {...register("userid", {
+              required: "ユーザーIDは必須です",
               maxLength: {
                 value: 32,
                 message: "ユーザー名は32字以内です",
@@ -48,8 +48,8 @@ export const PasswordReset = () => {
             label="メールアドレス"
             type="text"
             placeholder="tuna@tuna.jp"
-            error={errors["メールアドレス"]?.message ?? ""}
-            {...register("メールアドレス", {
+            error={errors["mailaddress"]?.message ?? ""}
+            {...register("mailaddress", {
               required: "メールアドレスは必須です",
               maxLength: {
                 value: 256,

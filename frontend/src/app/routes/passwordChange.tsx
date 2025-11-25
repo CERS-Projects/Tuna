@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import styles from "@/features/auth/styles/passwordChange.module.css";
 
 type changePasswordForm = {
-  新しいパスワード: string;
-  確認用パスワード: string;
+  newpassword: string;
+  repassword: string;
 };
 
 export const PasswordChange = () => {
@@ -22,7 +22,7 @@ export const PasswordChange = () => {
   };
   console.log("error", errors);
 
-  const newPassword = watch("新しいパスワード", "");
+  const newPassword = watch("newpassword", "");
 
   return (
     <>
@@ -36,8 +36,8 @@ export const PasswordChange = () => {
             label="新しいパスワード"
             type="password"
             placeholder="Tuna1234"
-            error={errors["新しいパスワード"]?.message ?? ""}
-            {...register("新しいパスワード", {
+            error={errors["newpassword"]?.message ?? ""}
+            {...register("newpassword", {
               required: "パスワードを入力してください",
               minLength: {
                 value: 8,
@@ -69,7 +69,7 @@ export const PasswordChange = () => {
             label="確認用のためもう一度入力してください"
             type="password"
             placeholder="Tuna1234"
-            {...register("確認用パスワード", {
+            {...register("repassword", {
               required: "パスワードが一致しません",
               validate: (value) => {
                 return value === newPassword || "パスワードが一致しません";
