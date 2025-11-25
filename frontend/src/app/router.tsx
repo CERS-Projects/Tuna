@@ -35,6 +35,14 @@ const createAppRouter = (queryClient: QueryClient) =>
       lazy: () => import("./routes/login").then(convert(queryClient)),
     },
     {
+      path: paths.auth.passReset.path,
+      lazy: () => import("./routes/passwordReset").then(convert(queryClient)),
+    },
+    {
+      path: paths.auth.passChange.path,
+      lazy: () => import("./routes/passwordChange").then(convert(queryClient)),
+    },
+    {
       path: paths.app.root.path,
       element: <AppRoot />,
       ErrorBoundary: AppRootErrorBoundary,
