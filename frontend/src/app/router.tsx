@@ -27,6 +27,23 @@ const createAppRouter = (queryClient: QueryClient) =>
       lazy: () => import("./routes/welcome").then(convert(queryClient)),
     },
     {
+<<<<<<< HEAD
+      path: paths.school.request.path,
+      lazy: () => import("./routes/schoolRequest").then(convert(queryClient)),
+    },
+    {
+      path: paths.auth.login.path,
+      lazy: () => import("./routes/login").then(convert(queryClient)),
+    },
+    {
+      path: paths.auth.twoFactorAuth.path,
+      lazy: () => import("./routes/twoFactorAuth").then(convert(queryClient)),
+=======
+      path: paths.accountLock.path,
+      lazy: () => import("./routes/accountLock").then(convert(queryClient)),
+>>>>>>> e2f8efa (feat : アカウント停止画面への遷移追加)
+    },
+    {
       path: paths.app.root.path,
       element: <AppRoot />,
       ErrorBoundary: AppRootErrorBoundary,
@@ -41,6 +58,15 @@ const createAppRouter = (queryClient: QueryClient) =>
       path: paths.help.category.path,
       lazy: () => import("./routes/helpCategory").then(convert(queryClient)),
     },
+    {
+      path: paths.help.contents.path,
+      lazy: () => import("./routes/helpContents").then(convert(queryClient)),
+    },
+    {
+      path: paths.inquiry.path,
+      lazy: () => import("./routes/inquiry").then(convert(queryClient)),
+    },
+
     {
       path: "*",
       lazy: () => import("./routes/not-found").then(convert(queryClient)),

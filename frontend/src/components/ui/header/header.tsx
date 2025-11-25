@@ -15,6 +15,10 @@ export const Header = () => {
           <p>お問い合わせ</p>
         </Link>
       </div>
+      <header className={styles.header}>Tuna</header>
+      <Link to={paths.help.category.getHref()} className={styles.helpIcon}>
+        <FaQuestionCircle />
+      </Link>
     </div>
   );
 };

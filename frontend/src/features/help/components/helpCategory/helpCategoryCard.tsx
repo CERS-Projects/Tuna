@@ -1,24 +1,30 @@
 import styles from "./helpCategoryCard.module.css"
+import {Link} from 'react-router-dom'
 
 type HelpCategoryBoxProps = {
     title: string;
     description: string;
     iconUrl? : string;
+    to: string;
 }
 
-export const HelpCategoryCard = ({title, description, iconUrl}: HelpCategoryBoxProps) => {
+export const HelpCategoryCard = ({title, description, iconUrl, to}: HelpCategoryBoxProps) => {
     return (
-        <div className={styles.helpCategoryBox}>
-            {/*...タイトル...*/}
-            <h3>{title}</h3>
+        <Link to= {to} className={styles.helpCategoryBox}>
 
-            {/*...説明...*/}
-            <p>{description}</p>
+            <div className={styles.contentInner}>
+                {/*...タイトル...*/}
+                <h3>{title}</h3>
 
-            {/*...アイコン画像...*/}
-            {iconUrl && (
-                <img src={iconUrl} alt={`${title}のアイコン`} className="icon" />
-            )}
-        </div>
+                {/*...説明...*/}
+                <p>{description}</p>
+
+              {/*...アイコン画像...*/}
+                {iconUrl && (
+                    <img src={iconUrl} alt={`${title}のアイコン`} className={styles.icon}/>
+                )}
+            </div>
+            
+        </Link>
     )
 }

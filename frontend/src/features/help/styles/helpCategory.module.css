@@ -1,0 +1,34 @@
+.wrapper {
+    max-width: 1440px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    min-height:100vh;
+
+    padding-left: 5%;
+    padding-right: 5%;
+}   
+
+.helpCategoryContainer {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 1.5rem;
+
+    justify-content: center;
+}
+
+@media (max-width: 1024px) {
+    .helpCategoryContainer {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 4vw;
+    }
+}
+
+@media (max-width: 600px) {
+    .helpCategoryContainer {
+        grid-template-columns: 1fr; 
+    }
+}
