@@ -474,8 +474,7 @@ try {
           },
           inquiry_status: {
             bsonType: "int",
-            minLength: 1,
-            maxLength: 1,
+            enum: [0, 1, 2],
             description: "問い合わせの対応状態を格納する 0:受付待ち",
           },
         },
