@@ -35,6 +35,10 @@ const createAppRouter = (queryClient: QueryClient) =>
       lazy: () => import("./routes/login").then(convert(queryClient)),
     },
     {
+      path: paths.auth.twoFactorAuth.path,
+      lazy: () => import("./routes/twoFactorAuth").then(convert(queryClient)),
+    },
+    {
       path: paths.app.root.path,
       element: <AppRoot />,
       ErrorBoundary: AppRootErrorBoundary,
@@ -57,6 +61,7 @@ const createAppRouter = (queryClient: QueryClient) =>
       path: paths.inquiry.path,
       lazy: () => import("./routes/inquiry").then(convert(queryClient)),
     },
+
     {
       path: "*",
       lazy: () => import("./routes/not-found").then(convert(queryClient)),
