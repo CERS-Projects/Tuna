@@ -8,17 +8,13 @@ export const Header = () => {
       <header className={styles.headerTitle}>Tuna</header>
 
       <div className={styles.supportContiner}>
-        <Link to={paths.help.category.gethref()} className={styles.helpLink}>
+        <Link to={paths.help.category.getHref()} className={styles.helpLink}>
           <p>ヘルプ</p>
         </Link>
-        <Link to={paths.inquery.getHref()} className={styles.inqueryLink}>
+        <Link to={paths.inquiry.getHref()} className={styles.inqueryLink}>
           <p>お問い合わせ</p>
         </Link>
       </div>
-      <header className={styles.header}>Tuna</header>
-      <Link to={paths.help.category.getHref()} className={styles.helpIcon}>
-        <FaQuestionCircle />
-      </Link>
     </div>
   );
 };
