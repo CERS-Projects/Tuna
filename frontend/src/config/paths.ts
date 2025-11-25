@@ -22,6 +22,10 @@ export const paths = {
       path: "/password/change",
       getHref: () => "/password/change",
     },
+    twoFactorAuth: {
+      path: "/login/two-factor-auth",
+      getHref: () => "/login/two-factor-auth",
+    },
   },
   app: {
     root: {
