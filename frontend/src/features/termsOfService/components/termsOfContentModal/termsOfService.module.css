@@ -1,0 +1,86 @@
+.tosContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+  line-height: 1.8;
+  color: #333;
+}
+
+.tosContainer h1 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #333;
+}
+
+.tosContainer h2 {
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-left: 0.8rem;
+  border-left: 5px solid rgb(50, 85, 150);
+  background-color: #f9f9f9;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.tosContainer p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.tosContainer ul,
+.tosContainer ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tosContainer li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.tosContainer ul ul {
+  margin-top: 0.5rem;
+  list-style-type: circle;
+}
+
+.tos-footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.end {
+  display: flex;
+  align-items: flex-end;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.end p {
+  width: 100%;
+  text-align: end;
+}
+
+@media (max-width: 600px) {
+  .tosContainer {
+    padding: 1rem;
+  }
+  .tosContainer h1 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+  }
+  .tosContainer h2 {
+    font-size: 1rem;
+    margin-top: 1.5rem;
+  }
+  .tosContainer p,
+  .tosContainer li {
+    font-size: 0.85rem;
+  }
+}
