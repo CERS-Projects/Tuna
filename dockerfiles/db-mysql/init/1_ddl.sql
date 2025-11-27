@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS tuna_db.user_tb(
     user_id            INT(10)      PRIMARY KEY AUTO_INCREMENT,
     school_id          INT(5)       NOT NULL,
     show_user_id       VARCHAR(20)  NOT NULL UNIQUE,
-    password           CHAR(64)     NOT NULL,
+    password           VARCHAR(255) NOT NULL,
     mailaddress        VARCHAR(254) NOT NULL UNIQUE,
     name               VARCHAR(50)  NOT NULL,
     accounts_stop_flag boolean      NOT NULL DEFAULT 0,
@@ -117,7 +117,6 @@ INSERT INTO tuna_db.user_tb (school_id, show_user_id, password, mailaddress, nam
 INSERT INTO tuna_db.teacher_tb (user_id, authority_flag) VALUES
 (1, 1), -- 佐藤太郎 (管理者権限あり)
 (4, 0); -- 山田次郎 (管理者権限なし)
-
 -- user_id = 2, 3 を生徒として登録
 INSERT INTO tuna_db.student_tb (user_id, grade, enter_date, graduate_date) VALUES
 (2, 3, '2023-04-01', NULL), -- 田中花子: 3年生
