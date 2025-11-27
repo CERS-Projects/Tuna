@@ -1,0 +1,47 @@
+.modal {
+  display: fixed;
+  margin: 0;
+  padding: 0;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  height: 80%;
+  width: 60%;
+  border: 0;
+  border-radius: 20px;
+  background-color: rgb(221, 229, 253);
+}
+
+.modal::backdrop {
+  background-color: #000;
+  opacity: 0.5;
+}
+
+.modalContent {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  padding: 3%;
+  border: 0;
+  border-radius: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.modalContent::-webkit-scrollbar {
+  width: 16px;
+  height: 8px;
+  background-color: transparent;
+}
+
+.modalContent::-webkit-scrollbar-track {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+  background-color: rgb(57, 107, 255);
+  border-radius: 100px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+}
