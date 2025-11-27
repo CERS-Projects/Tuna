@@ -13,12 +13,12 @@
 
 .termsModal {
   cursor: pointer;
-  color: blue;
+  color: rgb(0, 0, 255);
   text-decoration: underline;
 }
 
 .activeTermsModal {
   cursor: pointer;
-  color: blueviolet;
+  color: rgb(138, 43, 226);
   text-decoration: underline;
 }

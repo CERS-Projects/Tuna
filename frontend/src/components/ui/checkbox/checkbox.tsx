@@ -52,6 +52,15 @@ export const Checkbox = ({
                   setIsClicked(true);
                 }
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onLinkClick?.();
+                  if (isClicked === false) {
+                    setIsClicked(true);
+                  }
+                }
+              }}
               role="button"
               tabIndex={0}
             >

@@ -49,12 +49,6 @@
   list-style-type: circle;
 }
 
-.tos-footer {
-  margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
-}
-
 .end {
   display: flex;
   align-items: flex-end;
