@@ -31,6 +31,11 @@ const createAppRouter = (queryClient: QueryClient) =>
       lazy: () => import("./routes/schoolRequest").then(convert(queryClient)),
     },
     {
+      path: paths.school.confirm.path,
+      lazy: () =>
+        import("./routes/confirmSchoolRequest").then(convert(queryClient)),
+    },
+    {
       path: paths.auth.login.path,
       lazy: () => import("./routes/login").then(convert(queryClient)),
     },
@@ -58,8 +63,22 @@ const createAppRouter = (queryClient: QueryClient) =>
       lazy: () => import("./routes/helpContents").then(convert(queryClient)),
     },
     {
-      path: paths.inquiry.path,
+      path: paths.inquiry.inquiry.path,
       lazy: () => import("./routes/inquiry").then(convert(queryClient)),
+    },
+    {
+      path: paths.inquiry.complete.paths,
+      lazy: () => import("./routes/completeInquiry").then(convert(queryClient)),
+    },
+    {
+      path: paths.passwordreset.confirm.path,
+      lazy: () =>
+        import("./routes/emailSentConfirm").then(convert(queryClient)),
+    },
+    {
+      path: paths.newPassword.complete.paths,
+      lazy: () =>
+        import("./routes/completePasswordChange").then(convert(queryClient)),
     },
 
     {

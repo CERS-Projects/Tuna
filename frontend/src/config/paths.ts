@@ -8,6 +8,10 @@ export const paths = {
       path: "/school/request",
       getHref: () => "/school/request",
     },
+    confirm: {
+      path: "/school/request/confirm",
+      getHref: () => "/school/request/confirm",
+    },
   },
   auth: {
     login: {
@@ -40,7 +44,25 @@ export const paths = {
     },
   },
   inquiry: {
-    path: "/inquiry",
-    getHref: () => "/inquiry",
+    inquiry: {
+      path: "/inquiry",
+      getHref: () => "/inquiry",
+    },
+    complete: {
+      paths: "/inquiry/complete",
+      getHref: () => "/inquiry/complete",
+    },
+  },
+  passwordreset: {
+    confirm: {
+      path: "password-reset/confirm",
+      getHref: () => "/password-reset/confirm",
+    },
+  },
+  newPassword: {
+    complete: {
+      paths: "new-password/complete",
+      getHref: () => "/new-password/complete",
+    },
   },
 } as const;
