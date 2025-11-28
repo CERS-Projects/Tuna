@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "@/components/ui/checkbox/checkbox.module.css";
 
 type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
@@ -6,6 +6,7 @@ type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
   error?: string;
   linkText?: string;
   linkUrl?: string;
+  onLinkClick?: () => void;
   labelTextAfterLink?: React.ReactNode;
 };
 
@@ -15,9 +16,11 @@ export const Checkbox = ({
   error,
   linkText,
   linkUrl,
+  onLinkClick,
   labelTextAfterLink,
   ...props
 }: CheckboxProps) => {
+  const [isClicked, setIsClicked] = useState(false);
   const genId = React.useId();
   const inputId = id || `checkbox-${genId}`;
 
@@ -33,9 +36,38 @@ export const Checkbox = ({
           {...props}
         />
         <span>
-          <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-            {linkText}
-          </a>
+          {linkUrl ? (
+            <a href={linkUrl} target="_blank" rel="noopener noreferrer">
+              {linkText}
+            </a>
+          ) : (
+            <span
+              className={
+                isClicked ? styles.activeTermsModal : styles.termsModal
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                onLinkClick?.();
+                if (isClicked === false) {
+                  setIsClicked(true);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onLinkClick?.();
+                  if (isClicked === false) {
+                    setIsClicked(true);
+                  }
+                }
+              }}
+              role="button"
+              tabIndex={0}
+            >
+              {linkText}
+            </span>
+          )}
+
           {labelTextAfterLink}
         </span>
       </label>

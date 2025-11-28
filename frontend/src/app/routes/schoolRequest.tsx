@@ -1,9 +1,12 @@
 import styles from "@/features/school/styles/schoolRequest.module.css";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
 import { Header } from "@/components/ui/header/header";
 import { Checkbox } from "@/components/ui/checkbox/checkbox";
+import { TermsOfService } from "@/features/termsOfService/components/termsOfContentModal/termsOfService";
+import type { ModalHandle } from "@/components/ui/modal/modal";
 
 type SchoolRequestForm = {
   学校の名前: string;
@@ -23,6 +26,14 @@ export default function SchoolRequest() {
     handleSubmit,
     formState: { errors },
   } = useForm<SchoolRequestForm>();
+
+  const termsModalRef = useRef<ModalHandle>(null);
+
+  const handleOpenTermsModal = () => {
+    if (termsModalRef.current) {
+      termsModalRef.current.show();
+    }
+  };
 
   const onSubmit = (data: SchoolRequestForm) => {
     console.log("申請しました", data);
@@ -168,7 +179,7 @@ export default function SchoolRequest() {
           </div>
           <Checkbox
             linkText="利用規約"
-            linkUrl="https://example.com"
+            onLinkClick={handleOpenTermsModal}
             labelTextAfterLink={<>に同意する</>}
             error={errors["利用規約"]?.message}
             {...register("利用規約", {
@@ -178,6 +189,7 @@ export default function SchoolRequest() {
           <Button type="submit">申請</Button>
         </div>
       </form>
+      <TermsOfService ref={termsModalRef} />
     </div>
   );
 }
