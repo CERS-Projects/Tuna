@@ -169,13 +169,13 @@ try {
             minimum: 1,
             description: "MySQLに格納されている一意のユーザIDを格納",
           },
-          bookmark: {
-            bsonType: "array",
-            items: {
-              bsonType: "objectId",
-            },
-            description:
-              "お気に入りの投稿を保存するためのもの 配列の要素には投稿のobjectIdが入る",
+          post_id: {
+            bsonType: "objectId",
+            description: "ブックマークした投稿のオブジェクトIDを格納",
+          },
+          created_at: {
+            bsonType: "date",
+            description: "リレーションが生成された日時",
           },
         },
       },
@@ -211,21 +211,20 @@ try {
     validator: {
       $jsonSchema: {
         bsonType: "object",
-        required: ["user_id"],
+        required: ["user_id", "post_id"],
         properties: {
           user_id: {
             bsonType: "int",
             minimum: 1,
             description: "MySQLで定義されている一意のuser_idを格納",
           },
-          goods: {
-            bsonType: "array",
-            items: {
-              bsonType: "objectId",
-              minimum: 1,
-              description:
-                "指定したユーザがいいねした投稿のオブジェクトIDを格納",
-            },
+          post_id: {
+            bsonType: "objectId",
+            description: "投稿のオブジェクトIDを格納",
+          },
+          created_at: {
+            bsonType: "date",
+            description: "リレーションが生成された日時",
           },
         },
       },
@@ -560,14 +559,18 @@ try {
   db.bookmark_collection.insertMany([
     {
       user_id: 101,
-      bookmark: [
-        new ObjectId("600000000000000000000001"),
-        new ObjectId("600000000000000000000002"),
-      ],
+      post_id: ObjectId("669a84a2c914e6b7f329d201"),
+      created_at: new Date(),
     },
     {
-      user_id: 102,
-      bookmark: [new ObjectId("600000000000000000000003")],
+      user_id: 205,
+      post_id: ObjectId("669a84a2c914e6b7f329d201"),
+      created_at: new Date(),
+    },
+    {
+      user_id: 101,
+      post_id: ObjectId("669a84a2c914e6b7f329d202"),
+      created_at: new Date(),
     },
   ]);
   print("✅ bookmark_collectionに2件挿入しました。");
@@ -587,18 +590,22 @@ try {
   ]);
   print("✅ follow_and_follower_collectionに2件挿入しました。");
 
-  // F. goods_collection
+  //F good_collection
   db.goods_collection.insertMany([
     {
       user_id: 101,
-      goods: [
-        new ObjectId("600000000000000000000005"),
-        new ObjectId("600000000000000000000006"),
-      ],
+      post_id: ObjectId("669a84a2c914e6b7f329d201"),
+      created_at: new Date(),
     },
     {
-      user_id: 102,
-      goods: [new ObjectId("600000000000000000000007")],
+      user_id: 205,
+      post_id: ObjectId("669a84a2c914e6b7f329d201"),
+      created_at: new Date(),
+    },
+    {
+      user_id: 101,
+      post_id: ObjectId("669a84a2c914e6b7f329d202"),
+      created_at: new Date(),
     },
   ]);
   print("✅ goods_collectionに2件挿入しました。");
