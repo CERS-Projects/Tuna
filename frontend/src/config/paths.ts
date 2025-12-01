@@ -14,6 +14,14 @@ export const paths = {
       path: "/login",
       getHref: () => "/login",
     },
+    passReset: {
+      path: "/password/reset",
+      getHref: () => "/password/reset",
+    },
+    passChange: {
+      path: "/password/change",
+      getHref: () => "/password/change",
+    },
     twoFactorAuth: {
       path: "/login/two-factor-auth",
       getHref: () => "/login/two-factor-auth",
