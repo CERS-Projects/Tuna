@@ -1,28 +1,39 @@
 .inputContainer {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0.5rem;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .inputLabel {
-  font-size: 20px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.2;
 }
 
 .input {
-  height: 2rem;
-  width: 400px;
+  min-height: 2.5rem;
+  width: 100%;
   font-size: 1rem;
   border-radius: 10px;
   outline: solid 3px rgb(50, 85, 150);
   border: none;
   transition: all 0.2s ease;
+  padding: 0.5rem 0.75rem;
+  box-sizing: border-box;
+  background-color: #fff;
 }
 
 .input:focus {
   outline-color: rgb(90, 100, 200);
   outline-width: 3.5px;
   box-shadow: 0 0 0 3px rgba(60, 100, 180, 0.15);
+}
+
+.input::placeholder {
+  color: #9ca3af;
 }
 
 .inputError {
@@ -40,5 +51,3 @@
   color: rgb(220, 50, 50);
   font-size: 0.875em;
 }
-
-

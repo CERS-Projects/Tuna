@@ -45,7 +45,7 @@ export const PasswordChange = () => {
               },
               maxLength: {
                 value: 24,
-                message: "パスワードは24文字以下で入寮してください",
+                message: "パスワードは24文字以下で入力してください",
               },
               pattern: {
                 value: /^[a-zA-Z0-9]+$/,
@@ -69,6 +69,7 @@ export const PasswordChange = () => {
             label="確認用のためもう一度入力してください"
             type="password"
             placeholder="Tuna1234"
+            error={errors["repassword"]?.message ?? ""}
             {...register("repassword", {
               required: "パスワードが一致しません",
               validate: (value) => {
