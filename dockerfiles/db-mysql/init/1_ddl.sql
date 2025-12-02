@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS tuna_db.school_info_tb(
     school_name        VARCHAR(256) NOT NULL,
     school_code        CHAR(13)     NOT NULL UNIQUE,
     school_address     VARCHAR(161) NOT NULL,              
-    school_mailaddress VARCHAR(32)  NOT NULL UNIQUE,
+    school_mailaddress VARCHAR(254)  NOT NULL UNIQUE,
     approval_status    TINYINT(1)   NOT NULL DEFAULT 0 -- 0:承認待ち 1:承認済み 2:拒否済み
 
 );
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS tuna_db.user_tb(
     user_id            INT(10)      PRIMARY KEY AUTO_INCREMENT,
     school_id          INT(5)       NOT NULL,
     show_user_id       VARCHAR(20)  NOT NULL UNIQUE,
-    password           VARCHAR(255) NOT NULL,
+    password           CHAR(60)     NOT NULL,
     mailaddress        VARCHAR(254) NOT NULL UNIQUE,
     name               VARCHAR(50)  NOT NULL,
     accounts_stop_flag boolean      NOT NULL DEFAULT 0,
@@ -107,11 +107,11 @@ INSERT INTO tuna_db.school_info_tb (school_name, school_code, school_address, sc
 
 -- school_id = 1 (マグロ市立第一中学校) のユーザー
 INSERT INTO tuna_db.user_tb (school_id, show_user_id, password, mailaddress, name, accounts_stop_flag) VALUES
-(1, 't001_teacher_a', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', 'teacher.a@maguro1.jp', '佐藤 太郎 (教)', 0), -- 教師
-(1, 's001_student_x', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 'student.x@maguro1.jp', '田中 花子 (生)', 0), -- 生徒
-(1, 's001_student_y', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d15420e', 'student.y@maguro1.jp', '小林 健太 (生)', 0), -- 生徒
+(1, 't001_teacher_a', '$2a$08$K7559zjnWnbpFmsw.Z1LHeJZ1PBdbvOwu0fzf1uHI3qoBVDceM9pu', 'teacher.a@maguro1.jp', '佐藤 太郎 (教)', 0), -- 教師
+(1, 's001_student_x', '$2a$08$HrFsARLjNxBMk.JNiKh/9O9gilc.gsEy.MaU/VvqzRk/kF4CfOMS.', 'student.x@maguro1.jp', '田中 花子 (生)', 0), -- 生徒
+(1, 's001_student_y', '$2a$10$UIHJ7FvDtz3wWV6.pdaCCOEMPDFEAPVND5gWNzXmV.VXavbs29g3m', 'student.y@maguro1.jp', '小林 健太 (生)', 0), -- 生徒
 -- school_id = 2 (カツオ私立高等専門学校) のユーザー
-(2, 't002_teacher_b', 'b678c18253cc04b77f95015ff363990848035626b9f2c8d287116744040f9c2d', 'teacher.b@katsuo2.jp', '山田 次郎 (教)', 0); -- 教師
+(2, 't002_teacher_b', '$2a$10$GJOmEGnrVUH44ZbY2JygtOy3NpX0OKEGAJuhdrRLN.aDhFxZayR5S', 'teacher.b@katsuo2.jp', '山田 次郎 (教)', 0); -- 教師
 
 -- user_id = 1, 4 を教師として登録
 INSERT INTO tuna_db.teacher_tb (user_id, authority_flag) VALUES
