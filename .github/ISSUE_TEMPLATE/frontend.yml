@@ -1,5 +1,5 @@
-name: 💡 機能追加: backend
-description: バックエンド側の機能追加用テンプレートです
+name: 💡 機能追加:frontend
+description: フロントエンド側の機能追加用テンプレートです
 body:
   - type: textarea
     id: summary
@@ -8,8 +8,8 @@ body:
       description: 対応する機能追加の概要を記載してください。なぜ追加するのか目的がある場合はざっと記載してください。(設計書どおりの実装の場合は目的は書かなくてOK)
       placeholder: |
         例:
-        - 新しいAPIエンドポイントを追加する
-        - ○○バッチ処理を追加する
+        - ○○画面に△△ボタンを追加する
+        - ××ページのUIを調整する
     validations:
       required: true
 
@@ -17,11 +17,12 @@ body:
     id: detail
     attributes:
       label: 詳細
-      description: API仕様や処理内容など、分かっている範囲で記載してください。
+      description: 仕様や画面の挙動、エンドポイント(API URL)など、分かっている範囲で記載してください。
       placeholder: |
         例:
-        - エンドポイント、リクエスト/レスポンス
-        - ビジネスロジックの概要
+        - 画面構成、ボタン配置、入力項目
+        - クリック時の挙動、バリデーション条件
+        - エンドポイント                 など
     validations:
       required: false
 
@@ -32,8 +33,8 @@ body:
       description: 必要な作業を箇条書きで記載してください。（分かる範囲でOK）
       placeholder: |
         例:
-        - [ ] エンティティ/テーブル定義
-        - [ ] 実装
-        - [ ] テスト追加
+        - [ ] コンポーネント作成
+        - [ ] デザイン反映
+        - [ ] 動作確認
     validations:
       required: false
