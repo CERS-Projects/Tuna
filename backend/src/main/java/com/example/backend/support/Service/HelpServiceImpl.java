@@ -31,10 +31,10 @@ public class HelpServiceImpl implements HelpService {
     public List<HelpContentEntity> findHelpByCategoryId(Integer id) {
 
         if (id == null) {
-            throw new IllegalArgumentException("検索文字列が無効です");
+            throw new IllegalArgumentException("カテゴリIDがnullです");
         }
 
-        if (helpContentRepository.existsById(id) == false) {
+        if (helpCategoryRepository.existsByCategoryId(id) == false) {
             throw new EmptyResultDataAccessException("見つかりません", 0);
         }
         return helpContentRepository.findByCategoryId(id);
@@ -59,13 +59,13 @@ public class HelpServiceImpl implements HelpService {
     public void createHelpContents(HelpContentEntity data) {
 
         if (data.getCategoryId() == null)
-            throw new IllegalArgumentException("保存データがnullです");
+            throw new IllegalArgumentException("カテゴリIDがnullです");
 
         if (data.getQuestion() == null)
-            throw new IllegalArgumentException("保存データがnullです");
+            throw new IllegalArgumentException("質問がnullです");
 
         if (data.getAnswer() == null)
-            throw new IllegalArgumentException("保存データがnullです");
+            throw new IllegalArgumentException("回答がnullです");
 
         try {
             helpContentRepository.save(data);
@@ -109,7 +109,6 @@ public class HelpServiceImpl implements HelpService {
             throw new EmptyResultDataAccessException("削除項目が存在しません", 0);
         }
 
-        helpContentRepository.deleteById(contentId);
 
     }
 
