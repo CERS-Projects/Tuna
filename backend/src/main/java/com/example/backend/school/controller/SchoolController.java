@@ -1,12 +1,14 @@
 package com.example.backend.school.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.school.dto.CreateSchoolIntegrationDto;
-import com.example.backend.school.model.CreateTeacherUserEntity;
+import com.example.backend.school.dto.SchoolIntegrationCreate;
+import com.example.backend.school.model.UserEntity;
 import com.example.backend.school.service.AdminUserService;
 import com.example.backend.school.service.CreateUserService;
 import com.example.backend.school.service.SchoolService;
@@ -19,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/school")
 @RequiredArgsConstructor
+@Transactional
 public class SchoolController {
 
     /* 依存性の注入 */
@@ -27,9 +30,9 @@ public class SchoolController {
     private final CreateUserService createUserService;
     
     @PostMapping("/create")
-    public void createSchool(@RequestBody @Valid CreateSchoolIntegrationDto requestDto){
+    public ResponseEntity<Void> createSchool(@RequestBody @Valid SchoolIntegrationCreate requestDto){
         final Integer schoolId;
-        final CreateTeacherUserEntity newTeacherAccount;
+        final UserEntity newTeacherAccount;
 
         /* 学校情報の登録を行う */
         schoolId = schoolService.createSchool(requestDto.getSchoolDto());
@@ -39,6 +42,9 @@ public class SchoolController {
 
         /* 管理者権限を教師アカウントに付与する */
         adminUserService.createAdmin(newTeacherAccount, requestDto.getCreateTeacherDto().getAuthorityFlag());
+
+        /* HTTPステータスコード 200 で返す。その際レスポンスボディは空 */
+        return ResponseEntity.ok().build();
     }
 
 } 

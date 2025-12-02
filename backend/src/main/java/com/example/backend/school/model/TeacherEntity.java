@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "teacher_tb")
-public class CreateAdminUserEntity {
+public class TeacherEntity {
 
     /* user_tbのuser_idを参照するかつ、このテーブルで主キーとして扱う書き方 */
     @Id
@@ -28,10 +28,10 @@ public class CreateAdminUserEntity {
     @JoinColumn(name = "user_id", 
                 referencedColumnName = "userId",
                 nullable = false)
-    private CreateTeacherUserEntity teacherAccount;
+    private UserEntity teacherAccount;
 
     @Column(name = "authority_flag",
             nullable = false,
             columnDefinition = "TINYINT(1)")
-    Integer authorityFlag;
+    private Integer authorityFlag;
 }

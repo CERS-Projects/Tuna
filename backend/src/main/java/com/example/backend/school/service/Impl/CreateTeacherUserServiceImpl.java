@@ -4,11 +4,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.backend.school.dto.CreateTeacherDto;
-import com.example.backend.school.model.CreateAdminUserEntity;
-import com.example.backend.school.model.CreateTeacherUserEntity;
-import com.example.backend.school.repository.CreateAdminUserRepository;
-import com.example.backend.school.repository.CreateTeacherUserRepository;
+import com.example.backend.school.dto.TeacherCreateRequest;
+import com.example.backend.school.model.TeacherEntity;
+import com.example.backend.school.model.UserEntity;
+import com.example.backend.school.repository.TeacherRepository;
+import com.example.backend.school.repository.UserRepository;
 import com.example.backend.school.service.AdminUserService;
 import com.example.backend.school.service.CreateUserService;
 
@@ -22,10 +22,10 @@ import lombok.RequiredArgsConstructor;
 public class CreateTeacherUserServiceImpl implements CreateUserService, AdminUserService{
 
     /* CreateTeacherRepositoryの依存の注入 */
-    private final CreateTeacherUserRepository teacherRepository;
+    private final UserRepository teacherRepository;
 
     /* CreateAdminRepositoryの依存の注入 */
-    private final CreateAdminUserRepository adminRepository;
+    private final TeacherRepository adminRepository;
 
     /* BCryptのエンコーダーの依存の注入 */
     private final PasswordEncoder passwordEncoder;
@@ -35,9 +35,9 @@ public class CreateTeacherUserServiceImpl implements CreateUserService, AdminUse
      */
     @Override
     @Transactional
-    public CreateTeacherUserEntity createTeacher(CreateTeacherDto dto, Integer schoolId){
+    public UserEntity createTeacher(TeacherCreateRequest dto, Integer schoolId){
 
-        CreateTeacherUserEntity newTeacherAccount = new CreateTeacherUserEntity();
+        UserEntity newTeacherAccount = new UserEntity();
 
         /* パスワードをハッシュ化 */
         String digest = passwordEncoder.encode(dto.getPassword());
@@ -50,7 +50,7 @@ public class CreateTeacherUserServiceImpl implements CreateUserService, AdminUse
         newTeacherAccount.setMailAddress(dto.getMailAddress());
 
         /* セットした値をDBに追加 */
-        CreateTeacherUserEntity savedTeacherEntity = teacherRepository.save(newTeacherAccount);
+        UserEntity savedTeacherEntity = teacherRepository.save(newTeacherAccount);
         return savedTeacherEntity;
     }
 
@@ -59,16 +59,16 @@ public class CreateTeacherUserServiceImpl implements CreateUserService, AdminUse
      */
     @Override
     @Transactional
-    public void createAdmin(CreateTeacherUserEntity newTeacher, Integer authorityFlag){
+    public void createAdmin(UserEntity newTeacher, Integer authorityFlag){
         
-        CreateAdminUserEntity newAdmin = new CreateAdminUserEntity();
+        TeacherEntity newAdmin = new TeacherEntity();
 
         /* エンティティに値をセット */
         newAdmin.setTeacherAccount(newTeacher);
         newAdmin.setAuthorityFlag(authorityFlag);
 
         /* セットした値をDBに追加 */
-        CreateAdminUserEntity savedAdminUser = adminRepository.save(newAdmin);
+        adminRepository.save(newAdmin);
     }
 
 

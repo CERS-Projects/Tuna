@@ -11,12 +11,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class CreateSchoolIntegrationDto {
+public class SchoolIntegrationCreate {
     @NotNull
     @Valid 
-    private final CreateSchoolDto schoolDto;
+    private final SchoolCreateRequest schoolDto;
     
     @NotNull
     @Valid 
-    private final CreateTeacherDto createTeacherDto;
+    private final TeacherCreateRequest createTeacherDto;
 }

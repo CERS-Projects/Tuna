@@ -2,7 +2,6 @@ package com.example.backend.school.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -10,10 +9,9 @@ import jakarta.validation.constraints.Size;
  * 学校情報を登録するためのDto
  */
 
-@Value
 @Setter
 @Getter
-public class CreateSchoolDto {
+public class SchoolCreateRequest {
     @NotBlank(message = "学校名の入力は必須です")
     @Size(min = 1,max = 256, message = "学校名は256文字以下で入力してください")
     private String schoolName;

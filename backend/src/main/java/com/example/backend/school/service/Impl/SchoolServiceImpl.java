@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.example.backend.school.service.SchoolService;
-import com.example.backend.school.dto.CreateSchoolDto;
+import com.example.backend.school.dto.SchoolCreateRequest;
 import com.example.backend.school.model.ApprovalStatus;
 import com.example.backend.school.model.SchoolEntity;
 import com.example.backend.school.repository.SchoolRepository;
@@ -23,7 +23,7 @@ public class SchoolServiceImpl implements SchoolService{
     /* 学校用のデータを追加する機能 */
     @Override
     @Transactional
-    public Integer createSchool(CreateSchoolDto dto){
+    public Integer createSchool(SchoolCreateRequest dto){
         SchoolEntity newSchool = new SchoolEntity();
         
         /* dtoの内容をモデルにセットする */
