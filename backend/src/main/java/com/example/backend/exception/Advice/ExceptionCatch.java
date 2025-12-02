@@ -40,7 +40,6 @@ public class ExceptionCatch {
     @ExceptionHandler({ NoResourceFoundException.class, EmptyResultDataAccessException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponseEntity notFound(Exception e) {
-        System.out.println(e.getMessage());
         ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.NOT_FOUND.value(), e.getMessage());
         log.error(response.getErrorMessage());
         return response;
@@ -59,7 +58,7 @@ public class ExceptionCatch {
     @ExceptionHandler({ InternalServerError.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseEntity serverError(Exception e) {
-        ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.INSUFFICIENT_STORAGE.value(), e.getMessage());
+        ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         log.error(response.getErrorMessage());
         return response;
     }
