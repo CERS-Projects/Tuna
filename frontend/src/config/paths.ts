@@ -18,6 +18,26 @@ export const paths = {
       path: "/login",
       getHref: () => "/login",
     },
+    passReset: {
+      passReset: {
+        path: "/password/reset",
+        getHref: () => "/password/reset",
+      },
+      confirm: {
+        path: "/password/reset/confirm",
+        getHref: () => "/password/reset/confirm",
+      },
+    },
+    passChange: {
+      passChange: {
+        path: "/password/change",
+        getHref: () => "/password/change",
+      },
+      confirm: {
+        path: "/password/change/confirm",
+        getHref: () => "/password/change/confirm",
+      },
+    },
     twoFactorAuth: {
       path: "/login/two-factor-auth",
       getHref: () => "/login/two-factor-auth",
@@ -51,18 +71,6 @@ export const paths = {
     complete: {
       paths: "/inquiry/complete",
       getHref: () => "/inquiry/complete",
-    },
-  },
-  passwordreset: {
-    confirm: {
-      path: "password-reset/confirm",
-      getHref: () => "/password-reset/confirm",
-    },
-  },
-  newPassword: {
-    complete: {
-      paths: "new-password/complete",
-      getHref: () => "/new-password/complete",
     },
   },
 } as const;

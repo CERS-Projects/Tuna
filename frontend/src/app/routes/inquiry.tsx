@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
-import styles from "@/features/inquiry/inquiry.module.css";
+import styles from "@/features/inquiry/styles/inquiry.module.css";
 
 type InquiryForm = {
   mailaddress: string;

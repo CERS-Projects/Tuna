@@ -71,12 +71,12 @@ const createAppRouter = (queryClient: QueryClient) =>
       lazy: () => import("./routes/completeInquiry").then(convert(queryClient)),
     },
     {
-      path: paths.passwordreset.confirm.path,
+      path: paths.auth.passReset.confirm.path,
       lazy: () =>
         import("./routes/emailSentConfirm").then(convert(queryClient)),
     },
     {
-      path: paths.newPassword.complete.paths,
+      path: paths.auth.passChange.confirm.path,
       lazy: () =>
         import("./routes/completePasswordChange").then(convert(queryClient)),
     },

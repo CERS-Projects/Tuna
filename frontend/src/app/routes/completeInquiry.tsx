@@ -1,4 +1,4 @@
-import styles from "@/features/auth/styles/completeInquiry.module.css";
+import styles from "@/features/inquiry/styles/completeInquiry.module.css";
 import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
 

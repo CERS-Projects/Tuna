@@ -1,4 +1,4 @@
-import styles from "@/features/auth/styles/confirmSchoolRequest.module.css";
+import styles from "@/features/school/styles/confirmSchoolRequest.module.css";
 import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
 
