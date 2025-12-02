@@ -1,0 +1,40 @@
+name: 💡 機能追加: frontend
+description: フロントエンド側の機能追加用テンプレートです
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 概要
+      description: 対応する機能追加の概要を記載してください。なぜ追加するのか目的がある場合はざっと記載してください。(設計書どおりの実装の場合は目的は書かなくてOK)
+      placeholder: |
+        例:
+        - ○○画面に△△ボタンを追加する
+        - ××ページのUIを調整する
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: 詳細
+      description: 仕様や画面の挙動、エンドポイント(API URL)など、分かっている範囲で記載してください。
+      placeholder: |
+        例:
+        - 画面構成、ボタン配置、入力項目
+        - クリック時の挙動、バリデーション条件
+        - エンドポイント                 など
+    validations:
+      required: false
+
+  - type: textarea
+    id: task
+    attributes:
+      label: タスク
+      description: 必要な作業を箇条書きで記載してください。（分かる範囲でOK）
+      placeholder: |
+        例:
+        - [ ] コンポーネント作成
+        - [ ] デザイン反映
+        - [ ] 動作確認
+    validations:
+      required: false
