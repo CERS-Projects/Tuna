@@ -1,4 +1,4 @@
-package com.example.backend.support.Service;
+package com.example.backend.support.service;
 
 import java.util.List;
 
@@ -8,10 +8,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.backend.support.Model.HelpContentEntity;
-import com.example.backend.support.Model.HelpCategoryEntity;
-import com.example.backend.support.Repositry.HelpContentRepository;
-import com.example.backend.support.Repositry.HelpCategoryRepository;
+import com.example.backend.support.model.HelpContentEntity;
+import com.example.backend.support.model.HelpCategoryEntity;
+import com.example.backend.support.repository.HelpContentRepository;
+import com.example.backend.support.repository.HelpCategoryRepository;
 
 @Service
 @Transactional

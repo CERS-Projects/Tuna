@@ -1,11 +1,11 @@
-package com.example.backend.support.Repositry;
+package com.example.backend.support.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.backend.support.Model.HelpContentEntity;
+import com.example.backend.support.model.HelpContentEntity;
 
 @Repository
 public interface HelpContentRepository extends JpaRepository<HelpContentEntity, Integer> {

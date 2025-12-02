@@ -1,8 +1,8 @@
-package com.example.backend.support.Service;
+package com.example.backend.support.service;
 
 import java.util.List;
-import com.example.backend.support.Model.HelpContentEntity;
-import com.example.backend.support.Model.HelpCategoryEntity;
+import com.example.backend.support.model.HelpContentEntity;
+import com.example.backend.support.model.HelpCategoryEntity;
 
 public interface HelpService {
 

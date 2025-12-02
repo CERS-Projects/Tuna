@@ -4,6 +4,6 @@ import com.example.backend.school.model.TeacherEntity;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CreateAdminUserRepository extends JpaRepository<TeacherEntity, Integer>{
+public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>{
     
 }

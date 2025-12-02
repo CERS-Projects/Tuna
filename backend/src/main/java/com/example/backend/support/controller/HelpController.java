@@ -1,13 +1,13 @@
-package com.example.backend.support.Controller;
+package com.example.backend.support.controller;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.support.Model.HelpContentEntity;
-import com.example.backend.support.Model.HelpCategoryEntity;
-import com.example.backend.support.Service.HelpService;
+import com.example.backend.support.model.HelpContentEntity;
+import com.example.backend.support.model.HelpCategoryEntity;
+import com.example.backend.support.service.HelpService;
 
 import lombok.RequiredArgsConstructor;
 
