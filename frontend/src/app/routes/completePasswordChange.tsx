@@ -1,4 +1,4 @@
-import styles from "@/features/auth/styles/completePasswordChange.module.css";
+import styles from "@/styles/confirm.module.css";
 import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
 
@@ -6,7 +6,7 @@ const CompletePasswordChange = () => {
   return (
     <div className={styles.container}>
       <Header />
-      <h1 className={styles.compChange}>変更が完了しました</h1>
+      <h1 className={styles.complete}>変更が完了しました</h1>
       <p className={styles.guide}>
         変更後のパスワードが使用できない場合は、再設定またはお問い合わせください。
       </p>

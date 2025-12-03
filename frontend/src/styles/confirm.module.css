@@ -5,7 +5,7 @@
   min-width: 330px;
   margin-bottom: 30px;
 }
-.compInquiry {
+.complete {
   border-radius: 8px;
   margin-top: 50px;
   margin-bottom: -5px;
@@ -18,9 +18,9 @@
   padding: 2.5% 2%;
 }
 .guide {
-  text-align: left;
-  max-width: 380px;
-  font-size: 0.73rem;
+  width: 50%;
+  text-align: center;
+  font-size: 1.2rem;
 }
 .buttonContainer {
   display: flex;
@@ -29,7 +29,7 @@
   gap: 15px;
 }
 @media (width <= 500px) {
-  .compInquiry {
+  .complete {
     border-radius: 6px;
     margin-top: 40px;
     margin-bottom: -10px;
@@ -38,12 +38,12 @@
     width: 70%;
     padding: 5% 3%;
   }
-  .guide {
-    width: 70%;
-    font-size: 0.75rem;
-  }
   .br {
     display: none;
+  }
+  .guide {
+    width: 70%;
+    font-size: 0.9rem;
   }
   .buttonContainer {
     margin-top: -5px;

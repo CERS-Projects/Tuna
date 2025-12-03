@@ -1,4 +1,4 @@
-import styles from "@/features/inquiry/styles/completeInquiry.module.css";
+import styles from "@/styles/confirm.module.css";
 import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
 
@@ -6,7 +6,7 @@ const CompleteInquiry = () => {
   return (
     <div className={styles.container}>
       <Header />
-      <h1 className={styles.compInquiry}>送信が完了しました</h1>
+      <h1 className={styles.complete}>送信が完了しました</h1>
       <p className={styles.guide}>
         お問い合わせありがとうございます。
         <br className={styles.br} />

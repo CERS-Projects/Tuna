@@ -1,4 +1,4 @@
-import styles from "@/features/school/styles/confirmSchoolRequest.module.css";
+import styles from "@/styles/confirm.module.css";
 import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
 
@@ -6,7 +6,7 @@ const ConfirmSchoolRequest = () => {
   return (
     <div className={styles.container}>
       <Header />
-      <h1 className={styles.compRequest}>申請が完了しました</h1>
+      <h1 className={styles.complete}>申請が完了しました</h1>
       <p className={styles.guide}>
         学校アカウントの作成完了まで数日かかる場合がございます。
         <br className={styles.br} />
