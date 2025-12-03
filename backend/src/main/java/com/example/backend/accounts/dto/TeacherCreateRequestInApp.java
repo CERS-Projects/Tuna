@@ -1,4 +1,4 @@
-package com.example.backend.school.dto;
+package com.example.backend.accounts.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -9,14 +9,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-/*
- * 教師アカウント登録のためのDto
- */
-
-@Setter
 @Getter
-public class TeacherCreateRequest {
-    @NotBlank(message = "表示用ユーザIDの入力は必須です")
+@Setter
+public class TeacherCreateRequestInApp {
+   @NotBlank(message = "表示用ユーザIDの入力は必須です")
     @Size(min = 1, max = 20, message = "1文字以上、20文字以下で入力してください")
     private String showUserId;
 
@@ -33,7 +29,7 @@ public class TeacherCreateRequest {
     private String password;
 
     @NotNull
-    @Min(value = 0)//管理者権限OFF
-    @Max(value = 1)//管理者権限ON
-    private Integer authorityFlag; 
+    @Min(value = 1)
+    @Max(value = 99999)
+    private Integer schoolId;
 }

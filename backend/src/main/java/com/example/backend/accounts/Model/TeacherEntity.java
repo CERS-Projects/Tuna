@@ -1,4 +1,4 @@
-package com.example.backend.school.model;
+package com.example.backend.accounts.Model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +28,7 @@ public class TeacherEntity {
     @JoinColumn(name = "user_id", 
                 referencedColumnName = "userId",
                 nullable = false)
-    private UserEntity teacherAccount;
+    private UserEntity teacherAccountId;
 
     @Column(name = "authority_flag",
             nullable = false,

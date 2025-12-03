@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.accounts.Model.UserEntity;
+import com.example.backend.accounts.Service.AdminUserService;
+import com.example.backend.accounts.Service.CreateUserService;
+
 import com.example.backend.school.dto.SchoolIntegrationCreate;
-import com.example.backend.school.model.UserEntity;
-import com.example.backend.school.service.AdminUserService;
-import com.example.backend.school.service.CreateUserService;
 import com.example.backend.school.service.SchoolService;
 
 import jakarta.validation.Valid;
