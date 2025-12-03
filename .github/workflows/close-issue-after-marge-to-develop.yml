@@ -3,8 +3,7 @@ on:
   pull_request:
     types:
       - closed
-    branches:
-      - develop
+    branches: ["*"]
 jobs:
   issue_close:
     name: auto close linked issue
