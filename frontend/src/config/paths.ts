@@ -43,6 +43,11 @@ export const paths = {
       getHref: () => "/login/two-factor-auth",
     },
   },
+  accountLock: {
+    path: "/account-lock",
+    getHref: () => "/account-lock",
+  },
+
   app: {
     root: {
       path: "/app",

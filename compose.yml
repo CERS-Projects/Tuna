@@ -19,6 +19,7 @@ services:
       - |
         chmod +x /app/gradlew \
         && /app/gradlew --no-daemon build \
+        && /app/gradlew test --stacktrace \
         && /app/gradlew --no-daemon bootRun
     ports:
       - "8080:8080"

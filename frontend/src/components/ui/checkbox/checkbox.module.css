@@ -10,3 +10,15 @@
   color: rgb(220, 50, 50);
   font-size: 0.75rem;
 }
+
+.termsModal {
+  cursor: pointer;
+  color: rgb(0, 0, 255);
+  text-decoration: underline;
+}
+
+.activeTermsModal {
+  cursor: pointer;
+  color: rgb(138, 43, 226);
+  text-decoration: underline;
+}

@@ -7,6 +7,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   error?: string;
   width?: string | number;
   height?: string | number;
+  containerStyle?: React.CSSProperties;
 };
 
 export const Input = ({
@@ -15,6 +16,7 @@ export const Input = ({
   id,
   width,
   height,
+  containerStyle,
   ref,
   ...props
 }: InputProps) => {
@@ -22,7 +24,7 @@ export const Input = ({
   const inputId = id || `input-${genId}`;
 
   return (
-    <div className={styles.inputContainer}>
+    <div className={styles.inputContainer} style={{ width, ...containerStyle }}>
       {label && (
         <label htmlFor={inputId} className={styles.inputLabel}>
           {label}
@@ -34,7 +36,7 @@ export const Input = ({
         className={error ? styles.inputError : styles.input}
         aria-invalid={error ? "true" : "false"}
         aria-describedby={error ? `${inputId}-error` : undefined}
-        style={{ width, height }}
+        style={{ height }}
         {...props}
       />
       {error && (
