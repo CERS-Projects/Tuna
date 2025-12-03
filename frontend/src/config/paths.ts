@@ -8,6 +8,10 @@ export const paths = {
       path: "/school/request",
       getHref: () => "/school/request",
     },
+    confirm: {
+      path: "/school/request/confirm",
+      getHref: () => "/school/request/confirm",
+    },
   },
   auth: {
     login: {
@@ -15,12 +19,24 @@ export const paths = {
       getHref: () => "/login",
     },
     passReset: {
-      path: "/password/reset",
-      getHref: () => "/password/reset",
+      passReset: {
+        path: "/password/reset",
+        getHref: () => "/password/reset",
+      },
+      confirm: {
+        path: "/password/reset/confirm",
+        getHref: () => "/password/reset/confirm",
+      },
     },
     passChange: {
-      path: "/password/change",
-      getHref: () => "/password/change",
+      passChange: {
+        path: "/password/change",
+        getHref: () => "/password/change",
+      },
+      confirm: {
+        path: "/password/change/confirm",
+        getHref: () => "/password/change/confirm",
+      },
     },
     twoFactorAuth: {
       path: "/login/two-factor-auth",
@@ -53,7 +69,13 @@ export const paths = {
     },
   },
   inquiry: {
-    path: "/inquiry",
-    getHref: () => "/inquiry",
+    inquiry: {
+      path: "/inquiry",
+      getHref: () => "/inquiry",
+    },
+    complete: {
+      paths: "/inquiry/complete",
+      getHref: () => "/inquiry/complete",
+    },
   },
 } as const;
