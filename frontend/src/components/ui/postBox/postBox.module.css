@@ -1,0 +1,148 @@
+.postBoxLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.904);
+  border: 1px solid rgb(50, 85, 150);
+  margin-top: -1px;
+}
+
+.postConteiner {
+  width: 100%;
+  max-width: 550px;
+  margin: 20px auto;
+  padding: 15px;
+}
+
+.postHeader {
+  display: flex;
+  align-items: left;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #1a1a1a;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.postHeader:hover {
+  color: #007bff;
+}
+
+.postBody {
+  padding: 2px 0;
+  margin-bottom: 10px;
+  text-align: left;
+  color: #1a1a1a;
+  line-height: 1.6;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.userIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.postImgBox {
+  width: auto;
+  height: auto;
+  margin: 5px;
+  display: grid;
+  gap: 3px;
+}
+
+.postImg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10%;
+}
+
+.postFooter {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-top: 10px;
+  flex-wrap: wrap;
+}
+
+.postFooter button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 1.5em;
+  display: flex;
+  align-items: center;
+  color: rgb(50, 85, 150);
+}
+
+.postFooter button:hover {
+  color: #007bff;
+}
+
+.goodCount,
+.commentCount {
+  font-size: 0.9em;
+  color: #333;
+  margin-right: 15px;
+}
+
+.modalImg {
+  height: 100%;
+  width: 100%;
+  max-width: 80vh;
+  max-height: 80vh;
+}
+
+.postImgBox[data-count="1"] {
+  display: block;
+  height: auto;
+}
+
+.postImgBox[data-count="1"] .postImg {
+  height: auto;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 600px;
+  object-fit: contain;
+  margin: 0 auto;
+  display: block;
+  border-radius: 5%;
+}
+
+.postImgBox:not([data-count="1"]) .postImg {
+  height: 100%;
+  object-fit: cover;
+}
+
+.postImgBox[data-count="2"] {
+  grid-template-columns: 1fr 1fr;
+}
+
+.postImgBox[data-count="3"] {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.postImgBox[data-count="3"] .postImg:nth-child(1) {
+  grid-row: span 2;
+}
+
+.postImgBox[data-count="4"] {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+@media (max-width: 600px) {
+  .postConteiner {
+    max-width: 90;
+    margin: 10px auto;
+  }
+}
