@@ -1,5 +1,6 @@
 name: 🐛 バグ修正
 description: バグを報告 and 修正する
+labels: ["bug"]
 body:
   - type: markdown
     attributes:

@@ -1,5 +1,6 @@
 name: 💡 機能追加:frontend
 description: フロントエンド側の機能追加用テンプレートです
+labels: ["frontend"]
 body:
   - type: textarea
     id: summary

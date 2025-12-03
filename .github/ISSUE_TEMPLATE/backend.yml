@@ -1,5 +1,6 @@
 name: 💡 機能追加:backend
 description: バックエンド側の機能追加用テンプレートです
+labels: ["backend"]
 body:
   - type: textarea
     id: summary
