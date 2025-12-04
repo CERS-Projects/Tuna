@@ -25,13 +25,13 @@ export const HelpCategory = () => {
   return (
     <>
       <Header />
-      <div className={styles.wrapper}>
+      <main className={styles.main}>
         <h1>ヘルプ一覧</h1>
 
         <div className={styles.helpCategoryContainer}>
-          {helpCategory.map((item) => (
+          {helpCategory.map((item, index) => (
             <HelpCategoryCard
-              key={item.id}
+              key={item.id ?? index}
               title={item.categoryName}
               description={item.description}
               iconUrl={item.iconUrl}
@@ -39,7 +39,7 @@ export const HelpCategory = () => {
             />
           ))}
         </div>
-      </div>
+      </main>
     </>
   );
 };
