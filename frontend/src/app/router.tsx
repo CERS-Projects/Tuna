@@ -1,6 +1,6 @@
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, type RouteObject } from "react-router"; // type追加
 import { RouterProvider } from "react-router/dom";
 
 import { paths } from "@/config/paths";
@@ -20,89 +20,70 @@ const convert = (queryClient: QueryClient) => (m: any) => {
   };
 };
 
-const createAppRouter = (queryClient: QueryClient) =>
-  createBrowserRouter([
-    {
-      path: paths.welcome.path,
-      lazy: () => import("./routes/welcome").then(convert(queryClient)),
-    },
-    {
-      path: paths.school.request.path,
-      lazy: () => import("./routes/schoolRequest").then(convert(queryClient)),
-    },
-    {
-      path: paths.school.confirm.path,
-      lazy: () =>
-        import("./routes/confirmSchoolRequest").then(convert(queryClient)),
-    },
-    {
-      path: paths.auth.login.path,
-      lazy: () => import("./routes/login").then(convert(queryClient)),
-    },
-    {
-      path: paths.auth.passReset.path,
-      lazy: () => import("./routes/passwordReset").then(convert(queryClient)),
-    },
-    {
-      path: paths.auth.passChange.path,
-      lazy: () => import("./routes/passwordChange").then(convert(queryClient)),
-    },
-    {
-      path: paths.auth.twoFactorAuth.path,
-      lazy: () => import("./routes/twoFactorAuth").then(convert(queryClient)),
-    },
-    {
-      path: paths.accountLock.path,
-      lazy: () => import("./routes/accountLock").then(convert(queryClient)),
-    },
+const createAppRouter = (queryClient: QueryClient) => {
+  const route = (path: string, importer: () => Promise<any>): RouteObject => ({
+    path,
+    lazy: () => importer().then(convert(queryClient)),
+  });
+
+  return createBrowserRouter([
+    // ログイン不要ルート
+    route(paths.welcome.path, () => import("./routes/welcome")),
+    route(paths.help.category.path, () => import("./routes/helpCategory")),
+    route(paths.help.contents.path, () => import("./routes/helpContents")),
+    route(paths.inquiry.inquiry.path, () => import("./routes/inquiry")),
+    route(
+      paths.inquiry.complete.path,
+      () => import("./routes/completeInquiry")
+    ),
+    route(paths.school.request.path, () => import("./routes/schoolRequest")),
+    route(
+      paths.school.confirm.path,
+      () => import("./routes/confirmSchoolRequest")
+    ),
+
+    // 認証関連ルート
+    route(paths.auth.login.path, () => import("./routes/auth/login")),
+    route(
+      paths.auth.passReset.passReset.path,
+      () => import("./routes/auth/passwordReset")
+    ),
+    route(
+      paths.auth.passChange.passChange.path,
+      () => import("./routes/auth/passwordChange")
+    ),
+    route(
+      paths.auth.twoFactorAuth.path,
+      () => import("./routes/auth/twoFactorAuth")
+    ),
+    route(
+      paths.auth.passReset.confirm.path,
+      () => import("./routes/auth/emailSentConfirm")
+    ),
+    route(
+      paths.auth.passChange.confirm.path,
+      () => import("./routes/auth/completePasswordChange")
+    ),
+    route(
+      paths.auth.accountLock.path,
+      () => import("./routes/auth/accountLock")
+    ),
+
+    // アプリ内ルート (ログイン必要)
     {
       path: paths.app.root.path,
       element: <AppRoot />,
       ErrorBoundary: AppRootErrorBoundary,
-      children: [
-        {
-          path: paths.app.test.path,
-          lazy: () => import("./routes/app/test").then(convert(queryClient)),
-        },
-      ],
-    },
-    {
-      path: paths.help.category.path,
-      lazy: () => import("./routes/helpCategory").then(convert(queryClient)),
-    },
-    {
-      path: paths.help.contents.path,
-      lazy: () => import("./routes/helpContents").then(convert(queryClient)),
-    },
-    {
-      path: paths.inquiry.inquiry.path,
-      lazy: () => import("./routes/inquiry").then(convert(queryClient)),
-    },
-    {
-      path: paths.inquiry.complete.paths,
-      lazy: () => import("./routes/completeInquiry").then(convert(queryClient)),
-    },
-    {
-      path: paths.auth.passReset.confirm.path,
-      lazy: () =>
-        import("./routes/emailSentConfirm").then(convert(queryClient)),
-    },
-    {
-      path: paths.auth.passChange.confirm.path,
-      lazy: () =>
-        import("./routes/completePasswordChange").then(convert(queryClient)),
+      children: [route(paths.app.test.path, () => import("./routes/app/test"))],
     },
 
-    {
-      path: "*",
-      lazy: () => import("./routes/not-found").then(convert(queryClient)),
-    },
+    // 404
+    route("*", () => import("./routes/not-found")),
   ]);
+};
 
 export const AppRouter = () => {
   const queryClient = useQueryClient();
-
   const router = useMemo(() => createAppRouter(queryClient), [queryClient]);
-
   return <RouterProvider router={router} />;
 };

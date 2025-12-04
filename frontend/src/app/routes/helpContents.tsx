@@ -1,6 +1,6 @@
 import { Header } from "@/components/ui/header/header";
 import { HelpContentsItem } from "@/features/help/components/helpContentsItem/helpContentsItem";
-import style from "@/styles/helpcontents.module.css";
+import style from "@/features/help/styles/helpContents.module.css";
 import { GiControlTower } from "react-icons/gi";
 type helpCategoryData = {
   categoryId: number;
@@ -28,7 +28,7 @@ const helpContents = () => {
   return (
     <div>
       <Header />
-      <div className={style.helpContetntscontainer}>
+      <div className={style.helpContentsContainer}>
         <div className={style.titleContainer}>
           <h1 className={style.categoryTitle}>{categoryDummyData.title}</h1>
           <GiControlTower className={style.categoryIcon} />

@@ -12,7 +12,7 @@
   color: aliceblue;
   font-size: 4rem;
 }
-.supportContiner {
+.supportContainer {
   all: unset;
   display: block;
   color: aliceblue;
@@ -25,7 +25,7 @@
   text-decoration: underline;
   cursor: pointer;
 }
-.inqueryLink {
+.inquiryLink {
   all: unset;
   text-decoration: underline;
   cursor: pointer;
@@ -47,12 +47,12 @@
     position: relative;
     left: 20px;
   }
-  .supportContiner {
+  .supportContainer {
     font-size: 1rem;
   }
 }
 @media (max-width: 370px) {
-  .supportContiner {
+  .supportContainer {
     display: none;
   }
 }
