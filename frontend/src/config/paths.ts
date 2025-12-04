@@ -6,12 +6,12 @@ export const paths = {
   },
   help: {
     category: {
-      path: "/help/category",
-      getHref: () => "/help/category",
+      path: "/help",
+      getHref: () => "/help",
     },
     contents: {
-      path: "/help/category/contents",
-      getHref: () => "/help/category/contents",
+      path: "/help/:id",
+      getHref: () => "/help/${id}",
     },
   },
   inquiry: {

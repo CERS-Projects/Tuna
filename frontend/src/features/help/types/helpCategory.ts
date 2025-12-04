@@ -1,5 +1,5 @@
 export type HelpCategoryType = {
-  id: number;
+  categoryId: number | null;
   categoryName: string;
   description?: string;
   iconUrl?: string;

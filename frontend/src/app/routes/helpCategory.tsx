@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { HelpCategoryCard } from "@/features/help/components/helpCategory/helpCategoryCard";
-import styles from "@/features/help/styles/helpCategory.module.css";
 import { Header } from "@/components/ui/header/header";
-import type { HelpCategoryType } from "@/features/help/types/helpCategory";
+import { HelpCategoryCard } from "@/features/help/components/helpCategory/helpCategoryCard";
 import { getHelpCategory } from "@/features/help/api/getHelpCategory";
+import type { HelpCategoryType } from "@/features/help/types/helpCategory";
+import styles from "@/features/help/styles/helpCategory.module.css";
 
 export const HelpCategory = () => {
   const [helpCategory, setHelpCategory] = useState<HelpCategoryType[]>([]);
@@ -31,11 +31,11 @@ export const HelpCategory = () => {
         <div className={styles.helpCategoryContainer}>
           {helpCategory.map((item, index) => (
             <HelpCategoryCard
-              key={item.id ?? index}
+              key={item.categoryId ?? index}
               title={item.categoryName}
               description={item.description}
               iconUrl={item.iconUrl}
-              to={``}
+              to={`/help/${item.categoryId}`}
             />
           ))}
         </div>
