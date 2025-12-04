@@ -1,7 +1,7 @@
 import { Header } from "@/components/ui/header/header.tsx";
 import { Button } from "@/components/ui/button/button.tsx";
 import { Input } from "@/components/ui/input/input.tsx";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import styles from "@/features/auth/styles/login.module.css";
 
 export const Login = () => {
