@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.accounts.Model.UserEntity;
-import com.example.backend.accounts.Service.AdminUserService;
-import com.example.backend.accounts.Service.CreateUserService;
-
+import com.example.backend.accounts.model.UserEntity;
+import com.example.backend.accounts.service.AdminUserService;
+import com.example.backend.accounts.service.CreateUserService;
 import com.example.backend.school.dto.SchoolIntegrationCreate;
 import com.example.backend.school.service.SchoolService;
 
@@ -42,7 +41,7 @@ public class SchoolController {
         newTeacherAccount = createUserService.createTeacher(requestDto.getCreateTeacherDto(), schoolId);
 
         /* 管理者権限を教師アカウントに付与する */
-        adminUserService.createAdmin(newTeacherAccount, requestDto.getCreateTeacherDto().getAuthorityFlag());
+        adminUserService.setTeacherAuthorityFlag(newTeacherAccount, requestDto.getCreateTeacherDto().getAuthorityFlag());
 
         /* HTTPステータスコード 200 で返す。その際レスポンスボディは空 */
         return ResponseEntity.ok().build();
