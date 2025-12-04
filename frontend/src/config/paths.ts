@@ -6,11 +6,11 @@ export const paths = {
   },
   help: {
     category: {
-      path: "help/category",
+      path: "/help/category",
       getHref: () => "/help/category",
     },
     contents: {
-      path: "help/category/contents",
+      path: "/help/category/contents",
       getHref: () => "/help/category/contents",
     },
   },
