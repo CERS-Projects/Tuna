@@ -1,7 +1,28 @@
 export const paths = {
+  // ログイン不要ルート
   welcome: {
     path: "/",
     getHref: () => "/",
+  },
+  help: {
+    category: {
+      path: "help/category",
+      getHref: () => "/help/category",
+    },
+    contents: {
+      path: "help/category/contents",
+      getHref: () => "/help/category/contents",
+    },
+  },
+  inquiry: {
+    inquiry: {
+      path: "/inquiry",
+      getHref: () => "/inquiry",
+    },
+    complete: {
+      path: "/inquiry/complete",
+      getHref: () => "/inquiry/complete",
+    },
   },
   school: {
     request: {
@@ -13,6 +34,8 @@ export const paths = {
       getHref: () => "/school/request/confirm",
     },
   },
+
+  // 認証関連ルート
   auth: {
     login: {
       path: "/login",
@@ -42,12 +65,13 @@ export const paths = {
       path: "/login/two-factor-auth",
       getHref: () => "/login/two-factor-auth",
     },
-  },
-  accountLock: {
-    path: "/account-lock",
-    getHref: () => "/account-lock",
+    accountLock: {
+      path: "/account-lock",
+      getHref: () => "/account-lock",
+    },
   },
 
+  // アプリ内ルート (ログイン必要)
   app: {
     root: {
       path: "/app",
@@ -56,26 +80,6 @@ export const paths = {
     test: {
       path: "/app/test",
       getHref: () => "/app/test",
-    },
-  },
-  help: {
-    category: {
-      path: "help/category",
-      getHref: () => "/help/category",
-    },
-    contents: {
-      path: "help/category/contents",
-      getHref: () => "/help/category/contents",
-    },
-  },
-  inquiry: {
-    inquiry: {
-      path: "/inquiry",
-      getHref: () => "/inquiry",
-    },
-    complete: {
-      paths: "/inquiry/complete",
-      getHref: () => "/inquiry/complete",
     },
   },
 } as const;
