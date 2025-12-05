@@ -5,7 +5,7 @@ import {
   BsChat,
   BsExclamationCircle,
 } from "react-icons/bs";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router";
 import type React from "react";
 import { useState, useRef } from "react";
 import styles from "./postBox.module.css";
@@ -26,7 +26,7 @@ type PostDataProps = {
   postImgs?: string[];
 };
 
-const PostBox = ({
+export const PostBox = ({
   postId,
   userId,
   userName,
@@ -133,5 +133,3 @@ const PostBox = ({
     </>
   );
 };
-
-export default PostBox;

@@ -110,7 +110,6 @@
   height: auto;
   width: auto;
   max-width: 100%;
-  height: auto;
   max-height: 600px;
   object-fit: contain;
   margin: 0 auto;
@@ -142,7 +141,7 @@
 
 @media (max-width: 600px) {
   .postContainer {
-    max-width: 90;
+    max-width: 90%;
     margin: 10px auto;
   }
 }
