@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 /* 学校登録に係る処理 */
 @RestController
-@RequestMapping("/api/school")
+@RequestMapping("/school")
 @RequiredArgsConstructor
 @Transactional
 public class SchoolController {

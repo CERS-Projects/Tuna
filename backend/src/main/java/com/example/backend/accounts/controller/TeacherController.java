@@ -14,7 +14,7 @@ import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.service.AdminUserService;
 import com.example.backend.accounts.service.CreateUserService;
 
-@RequestMapping("/api/accounts")
+@RequestMapping("/accounts")
 @RestController
 @RequiredArgsConstructor
 public class TeacherController {
