@@ -18,5 +18,5 @@ public class SchoolIntegrationCreate {
     
     @NotNull
     @Valid 
-    private final TeacherCreateRequest createTeacherDto;
+    private final TeacherCreateRequestOutSideApp createTeacherDto;
 }

@@ -1,4 +1,4 @@
-package com.example.backend.school.model;
+package com.example.backend.accounts.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
