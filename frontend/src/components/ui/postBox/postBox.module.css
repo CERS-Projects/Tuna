@@ -8,7 +8,7 @@
   margin-top: -1px;
 }
 
-.postConteiner {
+.postContainer {
   width: 100%;
   max-width: 550px;
   margin: 20px auto;
@@ -141,7 +141,7 @@
 }
 
 @media (max-width: 600px) {
-  .postConteiner {
+  .postContainer {
     max-width: 90;
     margin: 10px auto;
   }

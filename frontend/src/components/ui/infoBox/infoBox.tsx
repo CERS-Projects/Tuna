@@ -1,7 +1,7 @@
 import type React from "react";
 import styles from "./infoBox.module.css";
 
-type InfoProps = React.DialogHTMLAttributes<HTMLDialogElement> & {
+type InfoProps = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
 };
 
