@@ -41,7 +41,7 @@ public class SchoolController {
         newTeacherAccount = createUserService.createTeacher(requestDto.getCreateTeacherDto(), schoolId);
 
         /* 管理者権限を教師アカウントに付与する */
-        adminUserService.setTeacherAuthorityFlag(newTeacherAccount, requestDto.getCreateTeacherDto().getAuthorityFlag());
+        adminUserService.authorityGrant(newTeacherAccount);
 
         /* HTTPステータスコード 200 で返す。その際レスポンスボディは空 */
         return ResponseEntity.ok().build();

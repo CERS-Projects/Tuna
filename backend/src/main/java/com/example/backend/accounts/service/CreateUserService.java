@@ -1,7 +1,7 @@
-package com.example.backend.accounts.Service;
+package com.example.backend.accounts.service;
 
-import com.example.backend.accounts.Model.UserEntity;
 import com.example.backend.accounts.dto.TeacherCreateRequestInApp;
+import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
 
 /*
@@ -11,5 +11,5 @@ import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
 public interface CreateUserService {
     UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId);
     UserEntity createTeacher(TeacherCreateRequestInApp dto);
-    //CreateStudentUserEntity createStudent(CreateStudentDto dto, Integet schoolId);
+    //CreateStudentUserEntity createStudent(CreateStudentDto dto, Integer schoolId);
 }
