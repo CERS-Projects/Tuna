@@ -16,24 +16,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Date;
 
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/inquiry")
+@RequestMapping("api/inquiries")
 public class InquiryController {
 
     private final InquiryService inquiryService;
 
-    @PostMapping("/insert")
+    @PostMapping
     //問い合わせの登録(Responceで返す値がないためvoidで定義)
     public ResponseEntity<Void> insertInquiry(@RequestBody  InquiryInsertRequest inquiryRequest) {
 
@@ -62,7 +65,7 @@ public class InquiryController {
     
 
 
-    @GetMapping("/findAll")
+    @GetMapping
     public ResponseEntity<List<InquiryEntity>> selectInquiry() {
         try {
             List<InquiryEntity> inquiries = inquiryService.selectInquiry();
@@ -75,8 +78,8 @@ public class InquiryController {
         }
     }
 
-    @GetMapping("/findById")
-    public ResponseEntity<InquiryEntity> getInquiryById(@RequestParam  @NonNull String _id) {
+    @GetMapping("/{_id}")
+    public ResponseEntity<InquiryEntity> getInquiryById(@PathVariable("_id") @NonNull String _id) {
         try {
             InquiryEntity inquiry = inquiryService.findByInquiryId(_id);
             if (inquiry != null) {
@@ -92,8 +95,8 @@ public class InquiryController {
     }
     
 
-    @PutMapping("/updateStatus")
-    public ResponseEntity<Void> postMethodName(@RequestBody InquiryUpdateRequest inquiry) {
+    @PatchMapping("/{_id}")
+    public ResponseEntity<Void> postMethodName(@PathVariable("_id") @NonNull String _id, @RequestBody InquiryUpdateRequest inquiry) {
         try {
             String id = inquiry.get_id();
             Integer status = inquiry.getInquiry_status();
@@ -107,10 +110,10 @@ public class InquiryController {
     }
     
 
-    @PostMapping("/delete")
-    public ResponseEntity<Void> deleteInquiry(@RequestBody  InquiryDeleteRequest _id) {
+    @DeleteMapping("/{_id}")
+    public ResponseEntity<Void> deleteInquiry(@PathVariable("_id") @NonNull String _id) {
         try {
-            inquiryService.deleteInquiry( _id.get_id() );
+            inquiryService.deleteInquiry( _id );
             System.out.println("Deleted inquiry with id: " + _id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
