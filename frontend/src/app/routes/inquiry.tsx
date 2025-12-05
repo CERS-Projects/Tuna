@@ -3,6 +3,9 @@ import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
 import styles from "@/features/inquiry/styles/inquiry.module.css";
+import { sendInquiry } from "@/features/inquiry/api/sendInquiry";
+import type { InquiryData } from "@/features/inquiry/api/sendInquiry";
+import { useNavigate } from "react-router";
 
 type InquiryForm = {
   mailaddress: string;
@@ -15,8 +18,35 @@ const Inquiry = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<InquiryForm>();
-  const onSubmit = (data) => console.log(data);
+
+  const onSubmit = async (data: InquiryForm) => {
+    const inquiryData: InquiryData = {
+      mailaddress: data.mailaddress,
+      subject: data.subject,
+      content: data.description,
+      inquiry_status: 0,
+    };
+
+    try {
+      const success = await sendInquiry(inquiryData);
+      if (success) {
+        console.log("フォームの送信に成功しました。完了画面へ遷移します。");
+        reset();
+        navigate("/inquiry/complete", {
+          state: { inquirySuccess: true },
+        });
+      } else {
+        console.log("フォームの送信に失敗しました。");
+      }
+    } catch {
+      console.log("予期せぬエラーが発生しました。接続を確認してください。");
+    }
+  };
+
+  const navigate = useNavigate();
+
   console.log(errors);
 
   return (
