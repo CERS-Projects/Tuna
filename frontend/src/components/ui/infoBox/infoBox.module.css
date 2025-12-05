@@ -1,0 +1,10 @@
+.infoBox {
+  border-radius: 10px;
+  width: 90%;
+  height: 90%;
+  border: 5px solid rgb(50, 85, 150);
+  background-color: rgba(255, 255, 255, 0.904);
+  padding: 3%;
+  box-sizing: border-box;
+  overflow: auto;
+}

@@ -10,6 +10,7 @@ type ModalProps = React.DialogHTMLAttributes<HTMLDialogElement> & {
   ref?: React.Ref<ModalHandle>;
   width?: string | number;
   height?: string | number;
+  containerStyle?: React.CSSProperties;
   children: React.ReactNode;
 };
 
@@ -18,6 +19,7 @@ export const Modal = ({
   width,
   height,
   children,
+  containerStyle,
   ...props
 }: ModalProps) => {
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -42,7 +44,7 @@ export const Modal = ({
   return (
     <dialog
       className={styles.modal}
-      style={{ width, height }}
+      style={{ width, height, ...containerStyle }}
       ref={modalRef}
       onClick={closeModal}
       {...props}
