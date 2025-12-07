@@ -2,7 +2,7 @@ import { type HelpContentsType } from "../types/helpContents";
 
 export const getHelpContents = async (categoryId: number) => {
   const response = await fetch(
-    `http://localhost:8080/api/support/help/category/${categoryId}`,
+    `${import.meta.env.VITE_API_BASE_URL}/support/help/category/${categoryId}`,
     { method: "GET" }
   );
 
