@@ -6,7 +6,6 @@ import { HelpContentsItem } from "@/features/help/components/helpContentsItem/he
 import { getHelpContents } from "@/features/help/api/getHelpContents";
 import { getHelpCategory } from "@/features/help/api/getHelpCategory";
 import { type HelpContentsType } from "@/features/help/types/helpContents";
-import { type HelpCategoryType } from "@/features/help/types/helpCategory";
 import style from "@/features/help/styles/helpContents.module.css";
 
 const HelpContents = () => {
@@ -17,39 +16,29 @@ const HelpContents = () => {
   const navigate = useNavigate();
 
   const [contents, setContents] = useState<HelpContentsType[]>([]);
-  const [category, setCategory] = useState<HelpCategoryType>({
-    categoryId: categoryId ?? null,
-    categoryName: state?.title ?? "",
-  });
+  const [categoryName, setCategoryName] = useState<string>(state?.title ?? "");
 
   useEffect(() => {
     const fetchHelpContents = async () => {
       try {
-        if (!params.id || isNaN(Number(params.id))) {
+        if (!categoryId || isNaN(Number(categoryId))) {
           navigate("/not-found", { replace: true });
           return;
         }
 
-        if (category.categoryId === null) {
-          throw new Error("categoryId is required");
-        }
-
-        if (category.categoryName === "") {
-          const categorys = await getHelpCategory();
-          const targetCategory = categorys.find(
-            (c) => c.categoryId === category.categoryId
+        if (!categoryName) {
+          const categories = await getHelpCategory();
+          const targetCategory = categories.find(
+            (c) => c.categoryId === categoryId
           );
           if (targetCategory) {
-            setCategory((prev) => ({
-              ...prev,
-              categoryName: targetCategory.categoryName,
-            }));
+            setCategoryName(targetCategory.categoryName);
           } else {
             throw new Error("categoryName is None");
           }
         }
 
-        const response = await getHelpContents(category.categoryId);
+        const response = await getHelpContents(categoryId);
         setContents(response);
         console.log(response);
       } catch (error) {
@@ -58,14 +47,15 @@ const HelpContents = () => {
     };
 
     fetchHelpContents();
-  }, [category, params.id, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryId, navigate]);
 
   return (
     <div>
       <Header />
       <div className={style.helpContentsContainer}>
         <div className={style.titleContainer}>
-          <h1 className={style.categoryTitle}>{category.categoryName}</h1>
+          <h1 className={style.categoryTitle}>{categoryName}</h1>
           <GiControlTower className={style.categoryIcon} />
         </div>
 
