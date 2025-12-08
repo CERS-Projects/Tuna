@@ -1,8 +1,7 @@
 import styles from "@/styles/confirm.module.css";
 import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
-import { useNavigate } from "react-router";
-import { useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useEffect } from "react";
 
 const CompleteInquiry = () => {

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
 import styles from "@/features/inquiry/styles/inquiry.module.css";
 import { sendInquiry } from "@/features/inquiry/api/sendInquiry";
-import type { InquiryData } from "@/features/inquiry/api/sendInquiry";
+import { type InquirySendData } from "@/features/inquiry/type/inquiry";
 import { useNavigate } from "react-router";
 
 type InquiryForm = {
@@ -22,7 +22,7 @@ const Inquiry = () => {
   } = useForm<InquiryForm>();
 
   const onSubmit = async (data: InquiryForm) => {
-    const inquiryData: InquiryData = {
+    const inquiryData: InquirySendData = {
       mailaddress: data.mailaddress,
       subject: data.subject,
       content: data.description,

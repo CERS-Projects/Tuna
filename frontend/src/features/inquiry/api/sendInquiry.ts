@@ -1,20 +1,17 @@
-export type InquiryData = {
-  mailaddress: string;
-  subject: string;
-  content: string;
-  inquiry_status: number;
-};
+import { type InquirySendData } from "@/features/inquiry/type/inquiry";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const sendInquiry = async (newTask: InquiryData): Promise<boolean> => {
+export const sendInquiry = async (
+  inquiryData: InquirySendData
+): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE_URL}/inquiry/insert`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newTask),
+      body: JSON.stringify(inquiryData),
     });
 
     if (response.ok) {
