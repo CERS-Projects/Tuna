@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.service.AdminUserService;
-import com.example.backend.accounts.service.CreateUserService;
+import com.example.backend.accounts.service.TeacherService;
 import com.example.backend.school.dto.SchoolIntegrationCreate;
 import com.example.backend.school.service.SchoolService;
 
@@ -27,7 +27,7 @@ public class SchoolController {
     /* 依存性の注入 */
     private final SchoolService schoolService;
     private final AdminUserService adminUserService;
-    private final CreateUserService createUserService;
+    private final TeacherService createUserService;
     
     @PostMapping("/create")
     public ResponseEntity<Void> createSchool(@RequestBody @Valid SchoolIntegrationCreate requestDto){

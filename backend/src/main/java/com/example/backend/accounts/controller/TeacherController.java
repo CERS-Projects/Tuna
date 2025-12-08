@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import com.example.backend.accounts.dto.TeacherCreateRequestInApp;
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.service.AdminUserService;
-import com.example.backend.accounts.service.CreateUserService;
+import com.example.backend.accounts.service.TeacherService;
 
 @RequestMapping("/accounts")
 @RestController
@@ -20,7 +20,7 @@ import com.example.backend.accounts.service.CreateUserService;
 public class TeacherController {
 
     /* CreateUserServiceの依存注入 */
-    private final CreateUserService createUserService;
+    private final TeacherService createUserService;
     /* AdminUserServiceの依存注入 */
     private final AdminUserService adminUserService;
 

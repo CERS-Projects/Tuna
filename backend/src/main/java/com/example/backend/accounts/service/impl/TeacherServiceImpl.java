@@ -11,7 +11,7 @@ import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.TeacherRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.AdminUserService;
-import com.example.backend.accounts.service.CreateUserService;
+import com.example.backend.accounts.service.TeacherService;
 import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
 
 
@@ -20,7 +20,7 @@ import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
  */
 @Service
 @RequiredArgsConstructor
-public class CreateTeacherUserServiceImpl implements CreateUserService, AdminUserService{
+public class TeacherServiceImpl implements TeacherService, AdminUserService{
 
     /* UserRepositoryの依存の注入 */
     private final UserRepository userRepository;
