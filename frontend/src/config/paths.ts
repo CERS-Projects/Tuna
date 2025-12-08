@@ -11,7 +11,7 @@ export const paths = {
     },
     contents: {
       path: "/help/:id",
-      getHref: () => "/help/${id}",
+      getHref: (id: number | string) => `/help/${id}`,
     },
   },
   inquiry: {
