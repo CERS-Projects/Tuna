@@ -1,45 +1,70 @@
+import { useLocation, useParams, useNavigate } from "react-router";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/ui/header/header";
-import { HelpContentsItem } from "@/features/help/components/helpContentsItem/helpContentsItem";
-import style from "@/features/help/styles/helpContents.module.css";
 import { GiControlTower } from "react-icons/gi";
-type helpCategoryData = {
-  categoryId: number;
-  title: string;
-};
+import { HelpContentsItem } from "@/features/help/components/helpContentsItem/helpContentsItem";
+import { getHelpContents } from "@/features/help/api/getHelpContents";
+import { getHelpCategory } from "@/features/help/api/getHelpCategory";
+import { type HelpContentsType } from "@/features/help/types/helpContents";
+import style from "@/features/help/styles/helpContents.module.css";
 
-const helpContents = () => {
-  const categoryDummyData: helpCategoryData = {
-    categoryId: 1,
-    title: "テストタイトル",
-  };
-  const contentsDummyData = [
-    {
-      contentsId: 1,
-      question: "How to create an account?",
-      answer: "To create an account, click on the Sign Up button...",
-    },
-    {
-      contentsId: 2,
-      question: "How to reset my password?",
-      answer: "To reset your password, go to the login page and click on...",
-    },
-  ];
+const HelpContents = () => {
+  const params = useParams<{ id: string }>();
+  const location = useLocation();
+  const state = location.state as { title?: string };
+  const categoryId = params.id ? Number(params.id) : undefined;
+  const navigate = useNavigate();
+
+  const [contents, setContents] = useState<HelpContentsType[]>([]);
+  const [categoryName, setCategoryName] = useState<string>(state?.title ?? "");
+
+  useEffect(() => {
+    const fetchHelpContents = async () => {
+      try {
+        if (!categoryId || isNaN(Number(categoryId))) {
+          navigate("/not-found", { replace: true });
+          return;
+        }
+
+        if (!categoryName) {
+          const categories = await getHelpCategory();
+          const targetCategory = categories.find(
+            (c) => c.categoryId === categoryId
+          );
+          if (targetCategory) {
+            setCategoryName(targetCategory.categoryName);
+          } else {
+            throw new Error("categoryName is None");
+          }
+        }
+
+        const response = await getHelpContents(categoryId);
+        setContents(response);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchHelpContents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryId, navigate]);
 
   return (
     <div>
       <Header />
       <div className={style.helpContentsContainer}>
         <div className={style.titleContainer}>
-          <h1 className={style.categoryTitle}>{categoryDummyData.title}</h1>
+          <h1 className={style.categoryTitle}>{categoryName}</h1>
           <GiControlTower className={style.categoryIcon} />
         </div>
 
         <div className={style.contentsList}>
-          {contentsDummyData.map((content) => (
+          {contents.map((item, index) => (
             <HelpContentsItem
-              key={content.contentsId}
-              question={content.question}
-              answer={content.answer}
+              key={item.contentsId ?? index}
+              question={item.question}
+              answer={item.answer}
             />
           ))}
         </div>
@@ -47,4 +72,4 @@ const helpContents = () => {
     </div>
   );
 };
-export default helpContents;
+export default HelpContents;
