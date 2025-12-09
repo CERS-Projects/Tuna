@@ -2,6 +2,7 @@ import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
 import { ExplanationList } from "@/features/welcome/components/explanation/explanation";
 import styles from "@/features/welcome/styles/welcome.module.css";
+import { useNavigate } from "react-router";
 
 const values = [
   {
@@ -19,6 +20,8 @@ const values = [
 ];
 
 const Welcome = () => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.container}>
       <Header />
@@ -26,10 +29,20 @@ const Welcome = () => {
         <div className={styles.welcomeMidashi}>
           <div className={styles.welcomeTitle}>Welcome to Tuna!!</div>
           <div className={styles.welcomeButton}>
-            <Button height="100%" width={"60%"} fontSize={25}>
+            <Button
+              height="100%"
+              width={"50%"}
+              fontSize={"1.5rem"}
+              onClick={() => navigate("/school/request")}
+            >
               学校法人の方はこちら
             </Button>
-            <Button height={"100%"} width={"60%"} fontSize={25}>
+            <Button
+              height={"100%"}
+              width={"50%"}
+              fontSize={"1.5rem"}
+              onClick={() => navigate("/login")}
+            >
               ログイン
             </Button>
           </div>
