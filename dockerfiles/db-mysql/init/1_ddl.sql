@@ -68,8 +68,8 @@ CREATE TABLE IF NOT EXISTS tuna_db.teacher_tb(
 CREATE TABLE IF NOT EXISTS tuna_db.student_tb(
     user_id            INT(10)      NOT NULL PRIMARY KEY,
     grade              INT(1)       NOT NULL,
-    enter_date         DATE         NOT NULL,               
-    graduate_date       DATE,
+    admission_date     DATE         NOT NULL,               
+    graduate_date      DATE,
 
     FOREIGN KEY (user_id)
     REFERENCES tuna_db.user_tb(user_id)
