@@ -24,3 +24,9 @@
   color: red;
   font-size: 0.69rem;
 }
+
+.requestError {
+  text-align: center;
+  color: red;
+  font-size: 1.4rem;
+}

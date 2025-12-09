@@ -12,7 +12,12 @@ export const api = async <T>({ url, options }: ApiRequestType): Promise<T> => {
       throw Error(e);
     })
     .then(handleErrors)
-    .then((res) => res?.json());
+    .then(async (res) => {
+      if (!res) return null;
+
+      const text = await res.text();
+      return text ? JSON.parse(text) : null;
+    });
 
   return response;
 };
