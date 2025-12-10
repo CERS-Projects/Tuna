@@ -10,7 +10,7 @@ import { TermsOfService } from "@/features/termsOfService/components/termsOfCont
 import type { ModalHandle } from "@/components/ui/modal/modal";
 import type { SchoolRequestType } from "@/features/school/types/schoolRequest";
 import { useSchoolRequest } from "@/features/school/hooks/useSchoolRequest";
-import { ApiRequestError } from "@/types/apiRequestError";
+import { ConfirmModal } from "@/features/school/components/confirmModal/confirmModal";
 import { paths } from "@/config/paths";
 
 type SchoolRequestForm = SchoolRequestType & {
@@ -26,6 +26,7 @@ export default function SchoolRequest() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm<SchoolRequestForm>({
     defaultValues: savedData || {
@@ -34,13 +35,27 @@ export default function SchoolRequest() {
     },
   });
 
-  const { mutate, isPending, error } = useSchoolRequest();
+  const { mutate, isPending, error, reset } = useSchoolRequest();
 
   const termsModalRef = useRef<ModalHandle>(null);
+  const confirmModalRef = useRef<ModalHandle>(null);
 
   const handleOpenTermsModal = () => {
     if (termsModalRef.current) {
       termsModalRef.current.show();
+    }
+  };
+
+  const handleOpenConfirmModal = () => {
+    if (confirmModalRef.current) {
+      confirmModalRef.current.show();
+    }
+  };
+
+  const handleCloseConfirmModal = () => {
+    if (confirmModalRef.current) {
+      confirmModalRef.current.close();
+      reset();
     }
   };
 
@@ -63,7 +78,7 @@ export default function SchoolRequest() {
   return (
     <div>
       <Header />
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(handleOpenConfirmModal)}>
         <div className={styles.form}>
           <h1 className={styles.title}>学校情報</h1>
           <div className={styles.info}>
@@ -211,23 +226,20 @@ export default function SchoolRequest() {
               required: "利用規約に同意してください",
             })}
           />
-          {error && (
-            <span className={styles.requestError}>
-              {error instanceof ApiRequestError &&
-              error.body?.statusCode === 409
-                ? "既に登録されている学校です。"
-                : error instanceof ApiRequestError &&
-                  error.body?.statusCode === 400
-                ? "入力内容に誤りがあります。"
-                : "申請に失敗しました。もう一度お試しください。"}
-            </span>
-          )}
           <Button type="submit" disabled={isPending}>
             {isPending ? "送信中..." : "申請"}
           </Button>
         </div>
       </form>
       <TermsOfService ref={termsModalRef} />
+      <ConfirmModal
+        ref={confirmModalRef}
+        request={getValues()}
+        isPending={isPending}
+        error={error}
+        handleSubmit={() => onSubmit(getValues())}
+        handleClose={handleCloseConfirmModal}
+      />
     </div>
   );
 }
