@@ -9,7 +9,7 @@ export const api = async <T>({ url, options }: ApiRequestType): Promise<T> => {
 
   const response: T = await fetch(api_url, options)
     .catch((e) => {
-      throw Error(e);
+      throw Error(e.message);
     })
     .then(handleErrors)
     .then(async (res) => {

@@ -1,14 +1,13 @@
 import { type HelpContentsType } from "../types/helpContents";
+import { api } from "@/lib/api-client";
 
 export const getHelpContents = async (
   categoryId: number
 ): Promise<HelpContentsType[]> => {
-  const response = await fetch(
-    `${import.meta.env.VITE_API_BASE_URL}/support/help/category/${categoryId}`,
-    { method: "GET" }
-  );
-
-  const result: HelpContentsType[] = await response.json();
+  const result = await api<HelpContentsType[]>({
+    url: `/support/help/category/${categoryId}`,
+    options: { method: "GET" },
+  });
 
   return result;
 };
