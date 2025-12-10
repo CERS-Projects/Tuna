@@ -5,7 +5,6 @@ import com.mongodb.lang.NonNull;
 
 import lombok.RequiredArgsConstructor;
 import com.example.backend.support.dto.InquiryInsertRequest;
-import com.example.backend.support.dto.InquiryUpdateRequest;
 import com.example.backend.support.model.InquiryEntity;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,10 +91,9 @@ public class InquiryController {
     
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateInquiryStatus(@PathVariable("id") @NonNull String _id, @RequestBody InquiryUpdateRequest inquiry) {
+    public ResponseEntity<Void> updateInquiryStatus(@PathVariable("id") @NonNull String id, @RequestBody Integer status) {
         try {
-            String id = inquiry.get_id();
-            Integer status = inquiry.getInquiry_status();
+            
             inquiryService.updateStatus( id, status );
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
