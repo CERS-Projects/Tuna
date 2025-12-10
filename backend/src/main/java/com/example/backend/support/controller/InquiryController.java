@@ -26,7 +26,7 @@ import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("inquiries")
+@RequestMapping("/support/inquiries")
 public class InquiryController {
 
     private final InquiryService inquiryService;
