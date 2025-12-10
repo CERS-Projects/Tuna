@@ -92,7 +92,7 @@ public class InquiryController {
     
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> postMethodName(@PathVariable("id") @NonNull String _id, @RequestBody InquiryUpdateRequest inquiry) {
+    public ResponseEntity<Void> updateInquiryStatus(@PathVariable("id") @NonNull String _id, @RequestBody InquiryUpdateRequest inquiry) {
         try {
             String id = inquiry.get_id();
             Integer status = inquiry.getInquiry_status();
