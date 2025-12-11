@@ -118,7 +118,7 @@ INSERT INTO tuna_db.teacher_tb (user_id, authority_flag) VALUES
 (1, 1), -- 佐藤太郎 (管理者権限あり)
 (4, 0); -- 山田次郎 (管理者権限なし)
 -- user_id = 2, 3 を生徒として登録
-INSERT INTO tuna_db.student_tb (user_id, grade, enter_date, graduate_date) VALUES
+INSERT INTO tuna_db.student_tb (user_id, grade, admission_date, graduate_date) VALUES
 (2, 3, '2023-04-01', NULL), -- 田中花子: 3年生
 (3, 1, '2025-04-01', NULL); -- 小林健太: 1年生
 
