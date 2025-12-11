@@ -73,6 +73,7 @@ export const paths = {
 
   // アプリ内ルート (ログイン必要)
   app: {
+    // 共通ルート
     root: {
       path: "/app",
       getHref: () => "/app",
@@ -84,6 +85,18 @@ export const paths = {
     test: {
       path: "/app/test",
       getHref: () => "/app/test",
+    },
+
+    // 教師ルート
+    management: {
+      root: {
+        path: "/manager",
+        getHref: () => "/manager",
+      },
+      top: {
+        path: "/manager/teacher/top",
+        getHref: () => "/manager/teacher/top",
+      },
     },
   },
 } as const;
