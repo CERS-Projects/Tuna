@@ -1,0 +1,42 @@
+.timelineFilter {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.timelineFilter hr {
+  background-color: rgb(50, 85, 150);
+  height: 1px;
+  width: 100%;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.timelineFilter h2 {
+  font-size: 50px;
+  margin-top: -10px;
+  margin-bottom: -10px;
+  word-break: break-all;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.filterCard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  flex: 1;
+  height: auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 5px;
+  align-items: center;
+}
+
+.filterCard:has(> :nth-child(3)) {
+  grid-template-columns: repeat(2, 1fr);
+  overflow: auto;
+}

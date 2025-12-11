@@ -74,7 +74,10 @@ const createAppRouter = (queryClient: QueryClient) => {
       path: paths.app.root.path,
       element: <AppRoot />,
       ErrorBoundary: AppRootErrorBoundary,
-      children: [route(paths.app.test.path, () => import("./routes/app/test"))],
+      children: [
+        route(paths.app.test.path, () => import("./routes/app/test")),
+        route(paths.app.timeline.path, () => import("./routes/app/timeline")),
+      ],
     },
 
     // 404

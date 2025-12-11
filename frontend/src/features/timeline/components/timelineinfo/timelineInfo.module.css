@@ -1,0 +1,30 @@
+.timelineInfo {
+  border: 3px solid rgb(50, 85, 150);
+  border-radius: 20px;
+  text-align: center;
+  width: 90%;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin-top: 5px;
+  word-break: break-all;
+}
+
+.timelineInfo h3 {
+  font-size: 1.2rem;
+  border-bottom: 1px solid rgb(50, 85, 150);
+  padding: 0.2rem;
+}
+
+.timelineInfo p {
+  background-color: rgb(140, 180, 250);
+}
+
+.timelineInfo:hover {
+  transform: translateY(-3px);
+}
+
+.timelineInfo:active {
+  border-width: 3px;
+  transform: translateY(-1px);
+}
