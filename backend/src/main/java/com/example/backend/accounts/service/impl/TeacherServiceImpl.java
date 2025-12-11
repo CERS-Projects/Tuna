@@ -1,6 +1,5 @@
 package com.example.backend.accounts.service.impl;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,7 @@ import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.AdminUserService;
 import com.example.backend.accounts.service.TeacherService;
 import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
+import com.example.backend.accounts.helper.AccountsHelper;
 
 
 /*
@@ -28,8 +28,8 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     /* TeacherRepositoryの依存の注入 */
     private final TeacherRepository teacherRepository;
 
-    /* BCryptを使用できるようにする */
-    private final PasswordEncoder passwordEncoder;
+    /* ヘルパークラスの 依存の注入 */
+    private final AccountsHelper accountsHelper;
 
 
     /*
@@ -41,12 +41,12 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
 
         UserEntity newTeacherAccount = new UserEntity();
 
-        newTeacherAccount = toUserEntity(schoolId, 
-                                            dto.getShowUserId(),
-                                            dto.getName(),
-                                            dto.getMailAddress(),
-                                            dto.getPassword()
-                                            );
+        newTeacherAccount = accountsHelper.toUserEntity(schoolId, 
+                                                        dto.getShowUserId(),
+                                                        dto.getName(),
+                                                        dto.getMailAddress(),
+                                                        dto.getPassword()
+                                                       );
 
         /* セットした値をDBに追加 */
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
@@ -62,12 +62,12 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
         
         UserEntity newTeacherAccount = new UserEntity();
 
-        newTeacherAccount = toUserEntity(dto.getSchoolId(), 
-                                            dto.getShowUserId(),
-                                            dto.getName(),
-                                            dto.getMailAddress(),
-                                            dto.getPassword()
-                                            );
+        newTeacherAccount = accountsHelper.toUserEntity(dto.getSchoolId(), 
+                                                        dto.getShowUserId(),
+                                                        dto.getName(),
+                                                        dto.getMailAddress(),
+                                                        dto.getPassword()
+                                                       );
         /* セットした値をDBに追加 */
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
         return savedTeacherEntity;
@@ -104,25 +104,6 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
 
         /* セットした値をDBに追加 */
         teacherRepository.save(newadmin);
-    }
-
-    /*
-     * DtoとEntityの変換部分の共通部分の処理(Helper method)
-     */
-
-    /* UserEntityに変換 */
-    private UserEntity toUserEntity(Integer schoolId, String showUserId, String name, String mailAddress, String password){
-       
-        UserEntity newTeacherAccount = new UserEntity();
-        String digest = passwordEncoder.encode(password);
-
-        newTeacherAccount.setSchoolId(schoolId);
-        newTeacherAccount.setShowUserId(showUserId);
-        newTeacherAccount.setName(name);
-        newTeacherAccount.setPassword(digest);
-        newTeacherAccount.setMailAddress(mailAddress);
-
-        return newTeacherAccount;
     }
 
     /* TeacherEntityに変換 */
