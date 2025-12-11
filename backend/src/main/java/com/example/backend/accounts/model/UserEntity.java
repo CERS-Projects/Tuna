@@ -54,4 +54,9 @@ public class UserEntity {
             length = 50
             )
     private String name;
+
+    @Column(name = "accounts_stop_flag",
+            columnDefinition = "BOOLEAN DEFAULT FALSE",
+            nullable = false)
+    private Boolean accountsStopFlag = false;
 }
