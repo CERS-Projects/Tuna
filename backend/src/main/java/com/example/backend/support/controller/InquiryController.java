@@ -31,7 +31,7 @@ public class InquiryController {
 
     private final InquiryService inquiryService;
 
-    @PostMapping("/insert")
+    @PostMapping
     //問い合わせの登録(Responceで返す値がないためvoidで定義)
     public ResponseEntity<Void> insertInquiry(@RequestBody  InquiryInsertRequest inquiryRequest) {
 
@@ -60,7 +60,7 @@ public class InquiryController {
     
 
 
-    @GetMapping("/findAll")
+    @GetMapping
     public ResponseEntity<List<InquiryEntity>> selectInquiry() {
         try {
             List<InquiryEntity> inquiries = inquiryService.selectInquiry();
