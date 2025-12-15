@@ -13,6 +13,8 @@ services:
     build:
       context: .
       dockerfile: ./dockerfiles/springboot/Dockerfile
+    env_file:
+      - .env
     command:
       - sh
       - -c
@@ -26,13 +28,22 @@ services:
     volumes:
       - ./backend:/app
       - ./backend/.gradle:/root/.gradle
+      - ./backend/build:/app/build
     environment:
       - SPRING_DEVTOOLS_REMOTE_SECRET=secret
       - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
+
+        # Spring Profile
+      - SPRING_PROFILES_ACTIVE=prod
     depends_on:
-      - mysql
-      - mongo
+      mysql:
+        condition: service_healthy
+      mongo:
+        condition: service_started
     restart: "no"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
 
   backend-watcher:
     build:
@@ -82,13 +93,13 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
 
-  mongo-express:
-    image: mongo-express
-    restart: no
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/
-      ME_CONFIG_BASICAUTH_ENABLED: true
-      ME_CONFIG_BASICAUTH_USERNAME: user
-      ME_CONFIG_BASICAUTH_PASSWORD: pass
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: no
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/
+  #     ME_CONFIG_BASICAUTH_ENABLED: true
+  #     ME_CONFIG_BASICAUTH_USERNAME: user
+  #     ME_CONFIG_BASICAUTH_PASSWORD: pass
