@@ -23,6 +23,7 @@ configurations {
 repositories {
 	mavenCentral()
 }
+
 sourceSets{
 	main {
 		java{
@@ -30,6 +31,7 @@ sourceSets{
 		}
 	}
 }
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -47,6 +49,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 
+	implementation platform('software.amazon.awssdk:bom:2.25.40') 
+    implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:sts'
 }
 
 tasks.named('test') {
