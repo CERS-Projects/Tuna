@@ -1,17 +1,15 @@
 import { Outlet } from "react-router";
-import { Header } from "@/components/ui/header/header";
+import { ManagementLayout } from "@/components/layouts/managementLayout/managementLayout";
 
 export const ErrorBoundary = () => {
   return <div>Something went wrong!</div>;
 };
 
-// Outletを後にレイアウトで囲む
 const ManagementRoot = () => {
   return (
-    <>
-      <Header />
+    <ManagementLayout>
       <Outlet />
-    </>
+    </ManagementLayout>
   );
 };
 

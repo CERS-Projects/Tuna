@@ -4,20 +4,17 @@ import { paths } from "@/config/paths";
 
 export const Header = () => {
   return (
-    <div className={styles.headerContainer}>
-      <header className={styles.headerTitle}>Tuna</header>
+    <header className={styles.headerContainer}>
+      <h1 className={styles.headerTitle}>Tuna</h1>
 
       <div className={styles.supportContainer}>
-        <Link to={paths.help.category.getHref()} className={styles.helpLink}>
+        <Link to={paths.help.category.getHref()} className={styles.link}>
           <p>ヘルプ</p>
         </Link>
-        <Link
-          to={paths.inquiry.inquiry.getHref()}
-          className={styles.inquiryLink}
-        >
+        <Link to={paths.inquiry.inquiry.getHref()} className={styles.link}>
           <p>お問い合わせ</p>
         </Link>
       </div>
-    </div>
+    </header>
   );
 };

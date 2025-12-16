@@ -50,43 +50,57 @@ const MENU_ITEMS = [
 export const MenuDrawer = ({ isOpen, onClose }: Props) => {
   const role = "ADMIN";
 
+  const handleLinkClick = () => {
+    if (window.innerWidth <= 768) {
+      onClose();
+    }
+  };
+
   if (isOpen) {
     return (
-      <aside className={styles.drawer}>
-        <nav className={styles.navList}>
-          {MENU_ITEMS.map((item) => (
-            <NavLink
-              to={item.path}
-              className={({ isActive }) =>
-                !isActive
-                  ? styles.navCard
-                  : `${styles.navCard} ${styles.active}`
-              }
-            >
-              <span className={styles.navIcon}>{item.icon}</span>
-              <div className={styles.navDescription}>
-                <h3>{item.name}</h3>
-              </div>
-            </NavLink>
-          ))}
+      <>
+        <aside className={styles.drawer}>
+          <span className={styles.closeDrawer} onClick={onClose}>
+            X
+          </span>
+          <nav className={styles.navList}>
+            {MENU_ITEMS.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={handleLinkClick}
+                className={({ isActive }) =>
+                  !isActive
+                    ? styles.navCard
+                    : `${styles.navCard} ${styles.active}`
+                }
+              >
+                <span className={styles.navIcon}>{item.icon}</span>
+                <div className={styles.navDescription}>
+                  <h3>{item.name}</h3>
+                </div>
+              </NavLink>
+            ))}
 
-          {role === "ADMIN" && (
-            <NavLink
-              to={paths.app.management.schoolInfo.path}
-              className={({ isActive }) =>
-                !isActive
-                  ? styles.navCard
-                  : `${styles.navCard} ${styles.active}`
-              }
-            >
-              <FaSchool className={styles.navIcon} />
-              <div className={styles.navDescription}>
-                <h3>学校情報管理</h3>
-              </div>
-            </NavLink>
-          )}
-        </nav>
-      </aside>
+            {role === "ADMIN" && (
+              <NavLink
+                to={paths.app.management.schoolInfo.path}
+                className={({ isActive }) =>
+                  !isActive
+                    ? styles.navCard
+                    : `${styles.navCard} ${styles.active}`
+                }
+              >
+                <FaSchool className={styles.navIcon} />
+                <div className={styles.navDescription}>
+                  <h3>学校情報管理</h3>
+                </div>
+              </NavLink>
+            )}
+          </nav>
+        </aside>
+        <div className={styles.backdrop} onClick={onClose}></div>
+      </>
     );
   } else {
     return null;

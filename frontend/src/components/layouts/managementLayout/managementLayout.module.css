@@ -1,0 +1,42 @@
+.layoutContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  width: 100%;
+}
+
+.menuContainer {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.menuWrapper {
+  width: 70px;
+  height: 100%;
+}
+
+.openDrawer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  background-color: rgb(230, 240, 255);
+  border: 1px solid #7e7e7e;
+}
+
+.content {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
