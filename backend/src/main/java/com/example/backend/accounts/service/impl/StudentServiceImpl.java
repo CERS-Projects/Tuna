@@ -42,7 +42,7 @@ public class StudentServiceImpl implements StudentService{
     /* 生徒アカウントをレコードとして関連つけている */
     private record StudentAccountPair(UserEntity newUserAccount, StudentEntity newStudentAccount){}
 
-    /* コンストラクタ */
+    /* CSVファイル扱えるようにするための初期設定 */
     public StudentServiceImpl(UserRepository userRepository, StudentRepository studentRepository,
                               AccountsHelper accountsHelper){
         /* 依存の注入 */
@@ -50,20 +50,30 @@ public class StudentServiceImpl implements StudentService{
         this.studentRepository = studentRepository;
         this.accountsHelper = accountsHelper;
 
+        /* CSVマッパーを使用できるようにするための処理 */
         CsvMapper csvMapper = new CsvMapper();
+        /* 引数をcsvMapperで使用できるようにするための設定 */
         csvMapper.registerModule(new JavaTimeModule());
 
+        /*
+         * CSVファイル読み取りのルール設定
+         * schemaFor():CSVファイルからPOJOにマッピングするためのファイルを指定
+         * withHeader():CSVファイルの1行目をヘッダーとして扱う
+         * withColumnReordering(true):ヘッダーの順番が入れ替わっていても対応できるようにする
+         */
         CsvSchema csvSchema = csvMapper.schemaFor(ReadCSVFileStudentCreateRequest.class)
                                        .withHeader()
                                        .withColumnReordering(true);
-        
+
+        /*
+         * デシリアライズしたデータを読み取り専用にする処理
+         */
         this.csvObjectReader = csvMapper.readerFor(ReadCSVFileStudentCreateRequest.class)
                                         .with(csvSchema);
     }
 
     /* ユーザデータの基本情報を登録（生徒） */
     @Override
-    @Transactional
     public UserEntity createStudent(StudentCreateRequest dto){
 
         UserEntity newStudentAccount = new UserEntity();
@@ -81,7 +91,6 @@ public class StudentServiceImpl implements StudentService{
 
     /* 登録した基本情報のユーザIDを元に、生徒情報を付加する */
     @Override
-    @Transactional
     public void setStudentEnrollmentInformation(StudentCreateRequest dto, UserEntity savedStudentAccount){
         StudentEntity studentInformation = new StudentEntity();
 
@@ -101,12 +110,23 @@ public class StudentServiceImpl implements StudentService{
         studentRepository.save(studentInformation);
     }
 
-    @Transactional
+    /*
+     * CSVファイルから一括で生徒アカウントを登録する機能
+     * InputStream inputStream = csvFile.getInputStream(): アップロードされたCSVファイルの内容を読み取るためのストリーム
+     *                                                   　(ストリームとは入力->整形->出力までの一連の流れを指す)
+     * this.readCsv(inputStream): CSVファイルの内容をReadCSVFileStudentCreateRequestオブジェクトのリストに変換
+     * records.stream(): recordsとして取得したリストをストリームとして処理を始める
+     * .map(eachElement->this.toStudentEntityByFile(eachElement, schoolId)): 各レコードをStudentAccountPairオブジェクトに変換
+     * .collect(Collectors.toList()): toStudentEntityByFileで変換した結果をList<?>に集約
+     * StudentAccountPair::newUserAccount: StudentAccountPairオブジェクトから新しいUserEntityオブジェクトを取得
+     * StudentAccountPair::newStudentAccount: StudentAccountPairオブジェクトから新しいStudentEntityオブジェクトを取得
+     */
+    @Override
     public void createStudentByFile(MultipartFile csvFile, final Integer schoolId) throws IOException{
         try (InputStream inputStream = csvFile.getInputStream()){
             List<ReadCSVFileStudentCreateRequest> records = this.readCsv(inputStream);
             List<StudentAccountPair> fromCsvData = records.stream()
-                                                   .map(dto->this.toStudentEntityByFile(dto, schoolId))
+                                                   .map(recordEachElement->this.toStudentEntityByFile(recordEachElement, schoolId))
                                                    .collect(Collectors.toList());
 
             List<UserEntity> toUserData = fromCsvData.stream()
@@ -139,11 +159,12 @@ public class StudentServiceImpl implements StudentService{
         return studentEnrollmentInformation;
     }
 
-
+    /* CSVファイルの要素をPOJOに変換 */
     private List<ReadCSVFileStudentCreateRequest> readCsv(InputStream inputStream) throws IOException{
         return csvObjectReader.<ReadCSVFileStudentCreateRequest>readValues(inputStream).readAll();
     }
 
+    /* エンティティに挿入する処理 */
     private StudentAccountPair toStudentEntityByFile(ReadCSVFileStudentCreateRequest records, final Integer schoolId){
 
         UserEntity newUserAccount = new UserEntity();
