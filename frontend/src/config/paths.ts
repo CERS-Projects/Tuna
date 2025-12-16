@@ -77,6 +77,10 @@ export const paths = {
       path: "/app",
       getHref: () => "/app",
     },
+    timeline: {
+      path: "/app/timeline",
+      getHref: () => "/app/timeline",
+    },
     test: {
       path: "/app/test",
       getHref: () => "/app/test",

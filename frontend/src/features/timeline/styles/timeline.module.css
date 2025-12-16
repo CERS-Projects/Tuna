@@ -1,0 +1,67 @@
+.timelineLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.timelineContainer {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 6% 1fr 40%;
+}
+
+.timelineAreaLeft {
+  border-right: 1px solid rgb(50, 85, 150);
+}
+
+.timelineAreaCenter {
+  overflow-y: auto;
+}
+
+.timelineAreaRight {
+  border-left: 1px solid rgb(50, 85, 150);
+  overflow: auto;
+}
+
+.modalButton {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .timelineContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  .timelineAreaCenter {
+    flex: 1;
+    order: 1;
+    width: 100%;
+  }
+  .timelineAreaLeft {
+    order: 2;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .timelineAreaRight {
+    display: none;
+  }
+  .modalButton {
+    position: fixed;
+    display: block;
+    font-size: 3rem;
+    z-index: 1;
+    background: none;
+    border: none;
+    right: 3%;
+    color: rgb(50, 85, 150);
+  }
+  .modalButton:hover {
+    color: #007bff;
+  }
+}
