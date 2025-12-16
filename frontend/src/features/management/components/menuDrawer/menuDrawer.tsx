@@ -6,73 +6,89 @@ import {
   MdWarning,
 } from "react-icons/md";
 import { FaComments, FaBell, FaSchool } from "react-icons/fa6";
-import { Link } from "react-router";
+import { NavLink } from "react-router";
+import { paths } from "@/config/paths";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+const MENU_ITEMS = [
+  {
+    path: paths.app.management.group.path,
+    name: "グループ管理",
+    icon: <MdGroups />,
+  },
+  {
+    path: paths.app.management.post.path,
+    name: "投稿管理",
+    icon: <FaComments />,
+  },
+  {
+    path: paths.app.management.classroom.path,
+    name: "授業ルーム管理",
+    icon: <MdMeetingRoom />,
+  },
+  {
+    path: paths.app.management.notification.path,
+    name: "お知らせ管理",
+    icon: <FaBell />,
+  },
+  {
+    path: paths.app.management.account.path,
+    name: "アカウント管理",
+    icon: <MdManageAccounts />,
+  },
+  {
+    path: paths.app.management.report.path,
+    name: "通報管理",
+    icon: <MdWarning />,
+  },
+];
+
 export const MenuDrawer = ({ isOpen, onClose }: Props) => {
-  const dummyRole = "ADMIN";
+  const role = "ADMIN";
 
   if (isOpen) {
     return (
       <aside className={styles.drawer}>
         <nav className={styles.navList}>
-          <Link to="" className={styles.navCard}>
-            <MdGroups className={styles.navIcon} />
-            <div className={styles.navDescription}>
-              <h3>グループ管理</h3>
-              <p>グループの作成・編集 / メンバーの管理を行う</p>
-            </div>
-          </Link>
-          <Link to="" className={styles.navCard}>
-            <FaComments className={styles.navIcon} />
-            <div className={styles.navDescription}>
-              <h3>投稿管理</h3>
-              <p>投稿の管理を行う</p>
-            </div>
-          </Link>
-          <Link to="" className={styles.navCard}>
-            <MdMeetingRoom className={styles.navIcon} />
-            <div className={styles.navDescription}>
-              <h3>授業ルーム管理</h3>
-              <p>授業ルームの管理を行う</p>
-            </div>
-          </Link>
-          <Link to="" className={styles.navCard}>
-            <FaBell className={styles.navIcon} />
-            <div className={styles.navDescription}>
-              <h3>お知らせ管理</h3>
-              <p>お知らせの管理を行う</p>
-            </div>
-          </Link>
-          <Link to="" className={styles.navCard}>
-            <MdManageAccounts className={styles.navIcon} />
-            <div className={styles.navDescription}>
-              <h3>アカウント管理</h3>
-              <p>アカウントの管理を行う</p>
-            </div>
-          </Link>
-          <Link to="" className={styles.navCard}>
-            <MdWarning className={styles.navIcon} />
-            <div className={styles.navDescription}>
-              <h3>通報管理</h3>
-              <p>通報の管理を行う</p>
-            </div>
-          </Link>
-          {dummyRole === "ADMIN" && (
-            <Link to="" className={styles.navCard}>
+          {MENU_ITEMS.map((item) => (
+            <NavLink
+              to={item.path}
+              className={({ isActive }) =>
+                !isActive
+                  ? styles.navCard
+                  : `${styles.navCard} ${styles.active}`
+              }
+            >
+              <span className={styles.navIcon}>{item.icon}</span>
+              <div className={styles.navDescription}>
+                <h3>{item.name}</h3>
+              </div>
+            </NavLink>
+          ))}
+
+          {role === "ADMIN" && (
+            <NavLink
+              to={paths.app.management.schoolInfo.path}
+              className={({ isActive }) =>
+                !isActive
+                  ? styles.navCard
+                  : `${styles.navCard} ${styles.active}`
+              }
+            >
               <FaSchool className={styles.navIcon} />
               <div className={styles.navDescription}>
                 <h3>学校情報管理</h3>
-                <p>学校情報の管理を行う</p>
               </div>
-            </Link>
+            </NavLink>
           )}
         </nav>
       </aside>
     );
+  } else {
+    return null;
   }
 };

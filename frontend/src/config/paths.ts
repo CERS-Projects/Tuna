@@ -93,9 +93,33 @@ export const paths = {
         path: "/manager",
         getHref: () => "/manager",
       },
-      top: {
-        path: "/manager/teacher/top",
-        getHref: () => "/manager/teacher/top",
+      group: {
+        path: "/manager/teacher/group",
+        getHref: () => "/manager/teacher/group",
+      },
+      post: {
+        path: "/manager/teacher/post",
+        getHref: () => "/manager/teacher/post",
+      },
+      classroom: {
+        path: "/manager/teacher/room",
+        getHref: () => "/manager/teacher/room",
+      },
+      notification: {
+        path: "/manager/teacher/notification",
+        getHref: () => "/manager/teacher/notification",
+      },
+      account: {
+        path: "/manager/teacher/account",
+        getHref: () => "/manager/teacher/account",
+      },
+      report: {
+        path: "/manager/teacher/report",
+        getHref: () => "/manager/teacher/report",
+      },
+      schoolInfo: {
+        path: "/manager/teacher/school-info",
+        getHref: () => "/manager/teacher/school-info",
       },
     },
   },

@@ -92,8 +92,8 @@ const createAppRouter = (queryClient: QueryClient) => {
       ErrorBoundary: ManagementErrorBoundary,
       children: [
         route(
-          paths.app.management.top.path,
-          () => import("./routes/app/management/managementTop")
+          paths.app.management.group.path,
+          () => import("./routes/app/management/groupManagement")
         ),
       ],
     },
