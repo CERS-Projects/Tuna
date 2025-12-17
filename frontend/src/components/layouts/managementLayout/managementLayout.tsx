@@ -43,15 +43,18 @@ export const ManagementLayout = ({ children }: Props) => {
             </div>
             <button
               onClick={() => setIsOpen(true)}
-              className={styles.openDrawer}
-              style={isOpen ? { display: "none" } : { display: "flex" }}
+              className={
+                isOpen
+                  ? `${styles.openDrawer} ${styles.closeDrawer}`
+                  : styles.openDrawer
+              }
             >
               <FaChevronRight />
             </button>
             <MenuDrawer isOpen={isOpen} onClose={() => setIsOpen(false)} />
           </aside>
 
-          <main className={styles.content}>{children}</main>
+          <main className={styles.main}>{children}</main>
         </div>
       ) : (
         // 960px以下のレイアウト
