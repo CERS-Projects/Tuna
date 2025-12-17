@@ -15,6 +15,13 @@ export const Header = () => {
       <IoArrowBackCircleOutline
         className={styles.pageBack}
         onClick={handlePageBack}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            handlePageBack();
+          }
+        }}
       />
 
       <h1 className={styles.headerTitle}>Tuna</h1>
