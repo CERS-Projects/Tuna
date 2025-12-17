@@ -26,11 +26,8 @@ public class TeacherController {
 
     @PostMapping("/teacher")
     public ResponseEntity<Void> createTeacher(@RequestBody @Valid TeacherCreateRequestInApp requestDto){
-
-        UserEntity newTeacherAccount = new UserEntity();
-
         /* 教師アカウントの作成 */
-        newTeacherAccount = createUserService.createTeacher(requestDto);
+       UserEntity newTeacherAccount = createUserService.createTeacher(requestDto);
         
         /* 権限の設定(権限無し) */
         adminUserService.authorityNotGrant(newTeacherAccount);

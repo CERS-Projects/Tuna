@@ -59,10 +59,8 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Override
     @Transactional
     public UserEntity createTeacher(TeacherCreateRequestInApp dto){
-        
-        UserEntity newTeacherAccount = new UserEntity();
 
-        newTeacherAccount = accountsHelper.toUserEntity(dto.getSchoolId(), 
+        UserEntity newTeacherAccount = accountsHelper.toUserEntity(dto.getSchoolId(), 
                                                         dto.getShowUserId(),
                                                         dto.getName(),
                                                         dto.getMailAddress(),
@@ -81,10 +79,9 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Transactional
     public void authorityGrant(UserEntity newTeacher){
         
-        TeacherEntity newAdmin = new TeacherEntity();
         final Integer AUTHORITY_FLAG = 1;
 
-        newAdmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
+        TeacherEntity newAdmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
 
         /* セットした値をDBに追加 */
         teacherRepository.save(newAdmin);
@@ -96,14 +93,12 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Override
     @Transactional
     public void authorityNotGrant(UserEntity newTeacher){
-        
-        TeacherEntity newadmin = new TeacherEntity();
         final Integer AUTHORITY_FLAG = 0;
 
-        newadmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
+        TeacherEntity newAdmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
 
         /* セットした値をDBに追加 */
-        teacherRepository.save(newadmin);
+        teacherRepository.save(newAdmin);
     }
 
     /* TeacherEntityに変換 */
