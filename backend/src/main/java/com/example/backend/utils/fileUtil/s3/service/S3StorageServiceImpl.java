@@ -1,4 +1,4 @@
-package com.example.backend.utils.fileUtil.s3;
+package com.example.backend.utils.fileUtil.s3.service;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -16,9 +16,10 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import lombok.extern.slf4j.Slf4j;
 
+
 @Service
 @Slf4j
-public class S3StorageService {
+public class S3StorageServiceImpl  implements S3StorageService {
 
     private final S3Client s3Client;
     private final S3Presigner s3Presigner;
@@ -32,14 +33,15 @@ public class S3StorageService {
     /*署名の有効期限 */
     private final int EXPIRATION_MINUTES = 160;
 
-    public S3StorageService(S3Client s3Client, S3Presigner s3Presigner) {
+    public S3StorageServiceImpl(S3Client s3Client, S3Presigner s3Presigner) {
         this.s3Client = s3Client;
         this.s3Presigner = s3Presigner;
     }
 
     /**
-     * S3 にファイルをアップロードして、保存したキーを返す。
+     * S3 にファイルをアップロードして、保存したキーを返すメソッド
      */
+    @Override
     public String uploadFile(MultipartFile file, String directory) throws IOException {
         String originalFilename = file.getOriginalFilename();
         String safeFileName = originalFilename != null ? originalFilename : "file";
@@ -78,6 +80,7 @@ public class S3StorageService {
     }
 
     //署名付きURLを生成するメソッド
+    @Override
     public String generatePresignedUrl(String key) {
         S3Presigner presigner = this.s3Presigner;
 
@@ -88,19 +91,20 @@ public class S3StorageService {
                 .build();
 
         //署名付きURLを作成するリクエストを作成
-         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
                 .signatureDuration(java.time.Duration.ofMinutes(EXPIRATION_MINUTES))
                 .getObjectRequest(getObjectRequest)
                 .build();
 
         //リクエストをもとに署名付きURLを生成
-         PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
+        PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
         return presignedRequest.url().toString();
     }
 
 
 
     //ファイルの存在を確認するメソッド
+    @Override
     public boolean doesObjectExist(String key) {
         try {
             s3Client.headObject(builder -> builder.bucket(bucketName).key(key));
@@ -111,6 +115,7 @@ public class S3StorageService {
     }
 
     //ファイルを削除するメソッド
+    @Override
     public void deleteFile(String key) {
         s3Client.deleteObject(builder -> builder.bucket(bucketName).key(key));
     }
