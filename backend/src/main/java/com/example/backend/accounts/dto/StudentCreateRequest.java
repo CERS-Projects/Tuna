@@ -14,19 +14,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class StudentCreateRequest {
-    @NotBlank(message = "表示用のユーザIDの入力は必須です")
+    @NotBlank
     @Size(min = 1, max = 20)
     private String showUserId;
 
-    @NotBlank(message = "パスワードの入力は必須です")
+    @NotBlank
     private String password;
 
-    @NotBlank(message = "メールアドレスの入力は必須です")
+    @NotBlank
     @Email
     @Size(min = 1, max = 254)
     private String mailAddress;
 
-    @NotBlank(message = "名前の入力は必須です")
+    @NotBlank
     @Size(min = 1, max = 50)
     private String name;
 
@@ -35,12 +35,12 @@ public class StudentCreateRequest {
      * 　最高学年が3年の場合 : @Max(3)
      * 　最高学年が6年の場合 : @Max(6) 
      */
-    @NotNull(message = "学年の入力は必須です")
+    @NotNull
     @Min(1)
     @Max(3)
     private Integer grade;
     
-    @NotNull(message = "入学年度の入力は必須です")
+    @NotNull
     private LocalDate admissionDate;
 
     /* 

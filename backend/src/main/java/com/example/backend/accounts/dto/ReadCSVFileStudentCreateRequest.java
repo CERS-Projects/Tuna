@@ -36,7 +36,7 @@ public record ReadCSVFileStudentCreateRequest (
     @Max(3)
     Integer grade,
     
-    @NotNull(message = "入学年度の入力は必須です")
+    @NotNull
     LocalDate admissionDate,
 
     /* 
