@@ -19,15 +19,15 @@ import com.example.backend.accounts.service.TeacherService;
 @RequiredArgsConstructor
 public class TeacherController {
 
-    /* CreateUserServiceの依存注入 */
-    private final TeacherService createUserService;
+    /* TeacherServiceの依存注入 */
+    private final TeacherService teacherService;
     /* AdminUserServiceの依存注入 */
     private final AdminUserService adminUserService;
 
     @PostMapping("/teacher")
     public ResponseEntity<Void> createTeacher(@RequestBody @Valid TeacherCreateRequestInApp requestDto){
         /* 教師アカウントの作成 */
-       UserEntity newTeacherAccount = createUserService.createTeacher(requestDto);
+       UserEntity newTeacherAccount = teacherService.createTeacher(requestDto);
         
         /* 権限の設定(権限無し) */
         adminUserService.authorityNotGrant(newTeacherAccount);

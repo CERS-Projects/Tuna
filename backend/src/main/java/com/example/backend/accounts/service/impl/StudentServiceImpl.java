@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.accounts.dto.ReadCSVFileStudentCreateRequest;
@@ -76,14 +74,12 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public UserEntity createStudent(StudentCreateRequest dto){
 
-        UserEntity newStudentAccount = new UserEntity();
-
-        newStudentAccount = accountsHelper.toUserEntity(dto.getSchoolId(),
-                                                        dto.getShowUserId(),
-                                                        dto.getName(),
-                                                        dto.getMailAddress(),
-                                                        dto.getPassword()
-                                                        );
+        UserEntity newStudentAccount = accountsHelper.toUserEntity(dto.getSchoolId(),
+                                                                   dto.getShowUserId(),
+                                                                   dto.getName(),
+                                                                   dto.getMailAddress(),
+                                                                   dto.getPassword()
+                                                                   );
                                                         
         UserEntity savedUserEntity = userRepository.save(newStudentAccount);
         return savedUserEntity;
@@ -92,21 +88,12 @@ public class StudentServiceImpl implements StudentService{
     /* 登録した基本情報のユーザIDを元に、生徒情報を付加する */
     @Override
     public void setStudentEnrollmentInformation(StudentCreateRequest dto, UserEntity savedStudentAccount){
-        StudentEntity studentInformation = new StudentEntity();
 
-        /* 
-         * Optional:Nullを持つ可能性とNullを持たない可能性のあるもの
-         * Nullを保持する可能性がある変数を明示的に定義とdtoから値を取得し代入を行う処理、
-         * その後、optionalGraduateDateがnullの場合はorElseの引数を代入し、
-         * そうでない場合はOptionalGraduateDateに入っている値が代入される
-         */
-        LocalDate graduateDate = Optional.ofNullable(dto.getGraduateDate()).orElse(null);
-
-            studentInformation = toStudentEntity(savedStudentAccount,
-                                                 dto.getGrade(),
-                                                 dto.getAdmissionDate(),
-                                                 graduateDate
-                                                );
+        StudentEntity studentInformation = toStudentEntity(savedStudentAccount,
+                                                           dto.getGrade(),
+                                                           dto.getAdmissionDate(),
+                                                           dto.getGraduateDate()
+                                                          );
         studentRepository.save(studentInformation);
     }
 
@@ -120,6 +107,7 @@ public class StudentServiceImpl implements StudentService{
      * .collect(Collectors.toList()): toStudentEntityByFileで変換した結果をList<?>に集約
      * StudentAccountPair::newUserAccount: StudentAccountPairオブジェクトから新しいUserEntityオブジェクトを取得
      * StudentAccountPair::newStudentAccount: StudentAccountPairオブジェクトから新しいStudentEntityオブジェクトを取得
+     * try-with-resources構文: InputStreamを自動的に閉じるための構文
      */
     @Override
     public void createStudentByFile(MultipartFile csvFile, final Integer schoolId) throws IOException{
@@ -167,21 +155,18 @@ public class StudentServiceImpl implements StudentService{
     /* エンティティに挿入する処理 */
     private StudentAccountPair toStudentEntityByFile(ReadCSVFileStudentCreateRequest records, final Integer schoolId){
 
-        UserEntity newUserAccount = new UserEntity();
-        StudentEntity newStudentAccount = new StudentEntity();
-
-        newUserAccount = accountsHelper.toUserEntity(schoolId,
-                                                     records.showUserId(),
-                                                     records.name(),
-                                                     records.password(),
-                                                     records.mailAddress()
-                                                     );
+        UserEntity newUserAccount = accountsHelper.toUserEntity(schoolId,
+                                                                records.showUserId(),
+                                                                records.password(),
+                                                                records.mailAddress(),
+                                                                records.name()
+                                                                );
         
-        newStudentAccount = toStudentEntity(newUserAccount, 
-                                            records.grade(), 
-                                            records.admissionDate(), 
-                                            records.graduateDate()
-                                            );
+        StudentEntity newStudentAccount = toStudentEntity(newUserAccount, 
+                                                          records.grade(), 
+                                                          records.admissionDate(), 
+                                                          records.graduateDate()
+                                                         );
 
         return new StudentAccountPair(newUserAccount, newStudentAccount);
     }

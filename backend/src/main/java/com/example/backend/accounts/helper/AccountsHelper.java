@@ -17,16 +17,16 @@ public class AccountsHelper {
     private final PasswordEncoder passwordEncoder;
 
     /* UserEntityに変換 */
-    public UserEntity toUserEntity(Integer schoolId, String showUserId, String name, String mailAddress, String password){
+    public UserEntity toUserEntity(Integer schoolId, String showUserId, String password, String mailAddress, String name){
         
         UserEntity newUserAccount = new UserEntity();
         String digest = passwordEncoder.encode(password);
 
         newUserAccount.setSchoolId(schoolId);
         newUserAccount.setShowUserId(showUserId);
-        newUserAccount.setName(name);
         newUserAccount.setPassword(digest);
         newUserAccount.setMailAddress(mailAddress);
+        newUserAccount.setName(name);
 
         return newUserAccount;
     }
