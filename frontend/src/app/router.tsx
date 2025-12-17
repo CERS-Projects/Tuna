@@ -10,6 +10,11 @@ import {
   ErrorBoundary as AppRootErrorBoundary,
 } from "./routes/app/root";
 
+import {
+  default as ManagementRoot,
+  ErrorBoundary as ManagementErrorBoundary,
+} from "./routes/app/management/root";
+
 const convert = (queryClient: QueryClient) => (m: any) => {
   const { clientLoader, clientAction, default: Component, ...rest } = m;
   return {
@@ -77,6 +82,19 @@ const createAppRouter = (queryClient: QueryClient) => {
       children: [
         route(paths.app.test.path, () => import("./routes/app/test")),
         route(paths.app.timeline.path, () => import("./routes/app/timeline")),
+      ],
+    },
+
+    // アプリ内教師ルート (ログイン必要)
+    {
+      path: paths.app.management.root.path,
+      element: <ManagementRoot />,
+      ErrorBoundary: ManagementErrorBoundary,
+      children: [
+        route(
+          paths.app.management.group.path,
+          () => import("./routes/app/management/groupManagement")
+        ),
       ],
     },
 

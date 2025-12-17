@@ -1,0 +1,68 @@
+.layoutContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+}
+
+.menuContainer {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.menuWrapper {
+  width: 60px;
+  height: 100%;
+}
+
+.openDrawer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  background-color: rgb(230, 240, 255);
+  border: 1px solid #7e7e7e;
+}
+
+.closeDrawer {
+  display: none;
+}
+
+.main {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 960px以下のレイアウト */
+@media (max-width: 960px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .contentContainer {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .menuWrapper {
+    width: 100%;
+    height: 60px;
+    flex-shrink: 0;
+  }
+}
