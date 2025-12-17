@@ -1,10 +1,22 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import styles from "./header.module.css";
 import { paths } from "@/config/paths";
+import { IoArrowBackCircleOutline } from "react-icons/io5";
 
 export const Header = () => {
+  const navigate = useNavigate();
+
+  const handlePageBack = () => {
+    navigate(-1);
+  };
+
   return (
     <header className={styles.headerContainer}>
+      <IoArrowBackCircleOutline
+        className={styles.pageBack}
+        onClick={handlePageBack}
+      />
+
       <h1 className={styles.headerTitle}>Tuna</h1>
 
       <div className={styles.supportContainer}>
