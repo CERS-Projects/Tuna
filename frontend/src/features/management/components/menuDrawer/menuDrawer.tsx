@@ -8,6 +8,7 @@ import {
 import { FaComments, FaBell, FaSchool } from "react-icons/fa6";
 import { NavLink } from "react-router";
 import { paths } from "@/config/paths";
+import { useEffect } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -56,13 +57,28 @@ export const MenuDrawer = ({ isOpen, onClose }: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isOpen, onClose]);
+
   if (isOpen) {
     return (
       <>
         <aside className={styles.drawer}>
-          <span className={styles.closeDrawer} onClick={onClose}>
+          <button
+            type="button"
+            className={styles.closeDrawer}
+            onClick={onClose}
+          >
             X
-          </span>
+          </button>
           <nav className={styles.navList}>
             {MENU_ITEMS.map((item) => (
               <NavLink
