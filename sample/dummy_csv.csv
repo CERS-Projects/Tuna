@@ -1,0 +1,4 @@
+showUserId,password,mailAddress,name,grade,admissionDate,graduateDate
+student01,pass1234,alice@example.com,山田太郎,1,2024-04-01,
+student02,securepwd,bob@school.net,佐藤花子,3,2023-04-01,2026-03-31
+student03,testpass,charlie@web.co.jp,田中一郎,2,2024-04-01,
