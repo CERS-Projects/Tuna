@@ -1,0 +1,55 @@
+.searchFilterContainer {
+  font-size: 1.2rem;
+}
+
+.checkIcon {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 20px;
+  height: 20px;
+  border: 2px solid #888;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  margin-right: 8px;
+  vertical-align: middle;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.checkIcon:hover {
+  border-color: rgb(50, 85, 150);
+}
+
+.checkIcon:checked {
+  background-color: rgb(50, 85, 150);
+  border-color: rgb(50, 85, 150);
+}
+
+.checkIcon:checked::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkIcon:indeterminate {
+  background-color: rgb(50, 85, 150);
+  border-color: rgb(50, 85, 150);
+}
+
+.checkIcon:indeterminate::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 10px;
+  height: 2px;
+  background-color: white;
+}

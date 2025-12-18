@@ -77,6 +77,10 @@ const createAppRouter = (queryClient: QueryClient) => {
       children: [
         route(paths.app.test.path, () => import("./routes/app/test")),
         route(paths.app.timeline.path, () => import("./routes/app/timeline")),
+        route(
+          paths.app.searchPost.path,
+          () => import("./routes/app/searchPost")
+        ),
       ],
     },
 
