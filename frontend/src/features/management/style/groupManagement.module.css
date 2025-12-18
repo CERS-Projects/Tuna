@@ -1,72 +1,160 @@
-.main {
-  display: flex;
-  width: 100%;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  padding: 1% 0;
-  box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.container {
+.mainContainer {
   display: flex;
-  width: 90%;
-  flex: 1;
   flex-direction: column;
-  align-items: center;
+  height: 100%;
+  flex: 1;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.mainContainer hr {
+  width: 100%;
+  height: 0;
+  border: 0;
+  border-top: 1px solid #b7b7b7;
+  background: transparent;
+}
+
+.sectionName {
+  font-weight: 600;
+}
+
+.menuContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
   gap: 1rem;
 }
 
-.title {
-  width: fit-content;
-  align-self: flex-start;
-  text-align: left;
-  border-bottom: 3px solid #2589d0;
-  text-decoration-thickness: 3px;
-  text-decoration-style: solid;
+.breadcrumbsContainer {
+  height: auto;
+  width: 75%;
+  min-width: 0;
 }
 
-.navList {
+.breadcrumbs {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 90%;
-  gap: 0.75rem;
+  gap: 8px;
+  overflow-x: auto;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #64748b;
+  list-style: none;
 }
 
-.navCard {
+.breadcrumbs li {
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.breadcrumbs span {
+  font-size: 1.2rem;
+}
+
+.actions {
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 100%;
-  border: 3px solid #2589d0;
-  border-radius: 10px;
-  min-height: 4.5rem;
-  padding: 0.5rem;
-  box-sizing: border-box;
-  text-decoration: none;
-  color: inherit;
+  justify-content: flex-end;
+  width: 25%;
+  gap: 1rem;
 }
 
-.navIcon {
+.actions button {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  width: 10%;
-  color: #2589d0;
-  font-size: 3rem;
+  gap: 5px;
+  height: 2.5rem;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 1px solid #d7d7d7;
+  background-color: #fff;
+  font-weight: 500;
+  font-size: 0.85rem;
 }
 
-.navDescription {
+.groupInfoContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.groupTree {
   display: flex;
   flex-direction: column;
-  width: 80%;
-  padding-left: 1.5rem;
+  width: 25%;
+  height: 100%;
+  border: 2px solid #c7c7c7;
+  border-radius: 10px;
+  padding: 5px;
   box-sizing: border-box;
-  word-break: break-word;
+  overflow: auto;
 }
 
-.navDescription h3,
-p {
-  margin: 0;
+.groupInfo {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  height: 100%;
+  gap: 1.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.currentGroup {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 7rem;
+  border: 2px solid #c7c7c7;
+  border-radius: 10px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.subGroupsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+}
+
+.subGroups {
+  width: 100%;
+  overflow-y: auto;
+}
+
+@media (max-width: 960px) {
+  .menuContainer {
+    flex-direction: column;
+  }
+
+  .breadcrumbsContainer {
+    width: 100%;
+  }
+
+  .breadcrumbs {
+    font-size: 1.4rem;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions button {
+    height: 2rem;
+  }
 }

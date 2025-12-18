@@ -1,0 +1,29 @@
+.tree {
+  display: block;
+}
+
+.branch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.branch:hover {
+  background: #f1f5f9;
+}
+
+.branch svg {
+  flex: 0 0 auto;
+}
+
+.tree > .tree {
+  margin-left: 1rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid #e2e8f0;
+}
