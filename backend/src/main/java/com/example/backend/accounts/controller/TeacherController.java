@@ -12,25 +12,22 @@ import lombok.RequiredArgsConstructor;
 import com.example.backend.accounts.dto.TeacherCreateRequestInApp;
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.service.AdminUserService;
-import com.example.backend.accounts.service.CreateUserService;
+import com.example.backend.accounts.service.TeacherService;
 
 @RequestMapping("/accounts")
 @RestController
 @RequiredArgsConstructor
 public class TeacherController {
 
-    /* CreateUserServiceの依存注入 */
-    private final CreateUserService createUserService;
+    /* TeacherServiceの依存注入 */
+    private final TeacherService teacherService;
     /* AdminUserServiceの依存注入 */
     private final AdminUserService adminUserService;
 
     @PostMapping("/teacher")
     public ResponseEntity<Void> createTeacher(@RequestBody @Valid TeacherCreateRequestInApp requestDto){
-
-        UserEntity newTeacherAccount = new UserEntity();
-
         /* 教師アカウントの作成 */
-        newTeacherAccount = createUserService.createTeacher(requestDto);
+       UserEntity newTeacherAccount = teacherService.createTeacher(requestDto);
         
         /* 権限の設定(権限無し) */
         adminUserService.authorityNotGrant(newTeacherAccount);
