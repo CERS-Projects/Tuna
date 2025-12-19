@@ -1,49 +1,51 @@
 package com.example.backend.utils.fileUtil.helper;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web. multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.example.backend.utils.fileUtil.s3.service.S3StorageServiceImpl;
+import com.example.backend.utils.fileUtil.s3.service.S3StorageService;
 import com.example.backend.utils.fileUtil.validation.DocumentFileValidation;
-import com.example.backend.utils.fileUtil. validation.ImageFileValidation;
+import com.example.backend.utils.fileUtil.validation.ImageFileValidation;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern. slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class FileControlHelper {
 
-    private final S3StorageServiceImpl s3StorageService;
+    private final S3StorageService s3StorageService;
     private final ImageFileValidation imageValidator;
     private final DocumentFileValidation documentValidator;
 
     //ファイルをアップロードする
-    public String uploadFile(MultipartFile file, String directory) {
-        // 入力チェック
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("アップロードファイルが指定されていません");
-        }
+    public List<String> uploadFile(String directory, MultipartFile... files) {
 
+        // 保存先ディレクトリのチェック
         if (directory == null || directory.isBlank()) {
             throw new IllegalArgumentException("保存先ディレクトリが指定されていません");
         }
-        // ファイルの種類に応じたバリデーション
-        validateFile(file, directory);
-        // S3にアップロード
+        List<String> keyList = new ArrayList<>();
+
         try {
-            String key = s3StorageService. uploadFile(file, directory);
-            log.info("ファイルアップロード成功: key={}", key);
-            return key;
-        } catch (IOException e) {
+            for(MultipartFile file : files){
+                // ファイルの種類に応じたバリデーション
+                validateFile(file, directory);
+                // S3にアップロード
+                keyList.add(s3StorageService.uploadFile(file, directory));
+                log.info("ファイルアップロード成功: key={}", keyList.get(keyList.size() - 1));
+            
+            }
+            return keyList;
+        } catch (Exception e) {
             log.error("ファイルアップロードに失敗しました", e);
-            throw new RuntimeException("ファイルアップロードに失敗しました", e);
+            throw new RuntimeException("ファイルアップロードに失敗しました");
         }
     }
 
@@ -57,24 +59,43 @@ public class FileControlHelper {
                 }
             }
             case "images" -> {
-                if (!imageValidator.isValidImageFile(file)) {
+                if (!imageValidator.isImageFile(file)) {
                     throw new IllegalArgumentException("無効な画像ファイルです");
                 }
             }
             default -> {
                 // その他のディレクトリはバリデーションなし
                 log.warn("未知のディレクトリ: {}（バリデーションをスキップ）", directory);
+                throw new IllegalArgumentException("未知のディレクトリです: " + directory);
+                
             }
         }
     }
 
     //署名付きURLを取得する（有効期限指定）
     public String getFileUrl(String key) {
-        if (key == null || key. isBlank() ) {
+        if (key == null || key.isBlank() ) {
             return null;
         }
 
-        return s3StorageService.generatePresignedUrl(key);
+        // ファイルの存在確認
+        try {
+            if (!s3StorageService.doesObjectExist(key)) {
+                log.warn("指定されたファイルが存在しません: key={}", key);
+                return null;
+            }
+        } catch (Exception e) {
+            log.error("ファイル存在確認中にエラーが発生しました: key={}", key, e);
+            return null;
+            }
+
+        // 署名付きURLを生成
+        try{
+            return s3StorageService.generatePresignedUrl(key);
+        } catch (Exception e) {
+            log.error("署名付きURLの生成に失敗しました: key={}", key, e);
+            return null;
+        }
     }
 
 
@@ -97,16 +118,32 @@ public class FileControlHelper {
     }
 
     //ファイルを削除する
-    public void deleteFile(String key) {
-        if (key == null || key.isBlank()) {
-            throw new IllegalArgumentException("削除するファイルのキーが指定されていません");
-        }
-        if (!s3StorageService.doesObjectExist(key)) {
-            log.warn("削除対象のファイルが存在しません: key={}", key);
-            throw new RuntimeException("削除対象のファイルが存在しません");
-        }
+    public void deleteFile(String... filekeys) {
 
-        s3StorageService.deleteFile(key);
-        log.info("ファイル削除成功: key={}", key);
+            if(filekeys == null || filekeys.length == 0) {
+                throw new IllegalArgumentException("削除するファイルのキーが指定されていません");
+
+            }
+            if(filekeys.length > 5){
+                throw new IllegalArgumentException("一度に削除できるファイルの数を超えています");
+            }
+
+        try {
+            for(String key : filekeys) {
+                if (key == null || key.isBlank()) {
+                    throw new IllegalArgumentException("削除するファイルのキーが指定されていません");
+                }
+                if (!s3StorageService.doesObjectExist(key)) {
+                    log.warn("削除対象のファイルが存在しません: key={}", key);
+                    throw new RuntimeException("削除対象のファイルが存在しません");
+                }
+
+                s3StorageService.deleteFile(key);
+                log.info("ファイル削除成功: key={}", key);
+            }
+        } catch (Exception e) {
+            log.error("ファイル削除に失敗しました:" + e);
+            throw new RuntimeException("ファイル削除に失敗しました");
+        }
     }
-}
+}  
