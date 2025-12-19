@@ -28,19 +28,15 @@ services:
     volumes:
       - ./backend:/app
       - ./backend/.gradle:/root/.gradle
-      - ./backend/build:/app/build
       - ./backend/logs:/app/logs
     environment:
       - SPRING_DEVTOOLS_REMOTE_SECRET=secret
       - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
-
-        # Spring Profile
-      - SPRING_PROFILES_ACTIVE=prod
     depends_on:
       mysql:
         condition: service_healthy
       mongo:
-        condition: service_started
+        condition: service_healthy
     restart: "no"
     dns:
       - 8.8.8.8
@@ -93,6 +89,11 @@ services:
       TZ: "Asia/Tokyo"
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      timeout: 20s
+      retries: 10
+      start_period: 30s
 
   # mongo-express:
   #   image: mongo-express
