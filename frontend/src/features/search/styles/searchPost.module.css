@@ -21,6 +21,7 @@
 
 .searchPostAreaLeft {
   border-right: 1px solid rgb(50, 85, 150);
+  z-index: 70;
 }
 
 .searchPostAreaCenter {
@@ -32,6 +33,7 @@
   overflow: auto;
   min-height: 100%;
   font-size: 1.7rem;
+  z-index: 70;
 }
 
 .modalButton {
@@ -65,7 +67,7 @@
     position: fixed;
     display: block;
     font-size: 3rem;
-    z-index: 1;
+    z-index: 100;
     background: none;
     border: none;
     right: 3%;

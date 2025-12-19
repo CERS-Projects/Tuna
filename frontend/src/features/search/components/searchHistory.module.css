@@ -1,18 +1,32 @@
 .searchContainer {
   width: 100%;
-  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 auto;
   margin-top: 10px;
+}
+
+.searchHeader {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 10px;
 }
 
 .searchHistoryList {
   display: flex;
   flex-direction: column;
-  width: 90%;
-  margin-top: 30px;
+  width: 70%;
   gap: 10px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 2px solid rgb(50, 85, 150);
 }
 
 .searchHistoryItem {
@@ -25,14 +39,14 @@
 }
 
 .searchHistoryIcon {
-  font-size: 2.5rem;
+  font-size: 2.3rem;
   color: rgb(50, 85, 150);
   margin-right: 10px;
   min-width: 24px;
 }
 
 .searchHistoryText {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 }
 
 .searchHistoryItem:hover .searchHistoryText,
@@ -45,10 +59,10 @@
     font-size: 2rem;
   }
   .searchHistoryItem {
-    padding-left: 2%;
+    padding-left: 5%;
     padding-bottom: 1%;
   }
   .searchHistoryText {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 }
