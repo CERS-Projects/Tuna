@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,7 +51,6 @@ public class S3StorageServiceImpl  implements S3StorageService {
 
         String encodedKey = encodeS3Key(key);
 
-        System.out.println("S3 Keてすとおおおおおおおおおおおおおおおおおおおおお: ");
         log.info("S3 putting file.  bucket=[{}], key={}, region={}", bucketName, encodedKey, region);
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -58,7 +58,14 @@ public class S3StorageServiceImpl  implements S3StorageService {
                 .contentType(file.getContentType())
                 .contentLength(file.getSize())
                 .build();
-        s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+        try (InputStream inputStream = file.getInputStream()) {
+        s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, file.getSize()));
+        log.info("S3 file put successfully. bucket=[{}], key={}, region={}", bucketName, encodedKey, region);
+
+        } catch (Exception e) {
+            log.error("S3ファイルアップロードエラー: bucket=[{}], key={}, region={}", bucketName, encodedKey, region, e);
+            throw e;
+        }
         
         return "https://" + bucketName + ".s3.amazonaws.com/" + encodedKey;
     }
@@ -97,8 +104,16 @@ public class S3StorageServiceImpl  implements S3StorageService {
                 .build();
 
         //リクエストをもとに署名付きURLを生成
+        try {
         PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
+        presigner.close();
         return presignedRequest.url().toString();
+
+        } catch (Exception e) {
+            log.error("署名付きURL生成エラー: bucket=[{}], key={}", bucketName, key, e);
+            throw e;
+        }
+        
     }
 
 
@@ -117,7 +132,12 @@ public class S3StorageServiceImpl  implements S3StorageService {
     //ファイルを削除するメソッド
     @Override
     public void deleteFile(String key) {
+        try {
         s3Client.deleteObject(builder -> builder.bucket(bucketName).key(key));
+        } catch (Exception e) {
+            log.error("S3ファイル削除エラー: bucket=[{}], key={}", bucketName, key, e);
+            throw e;
+        }
     }
 
 }
