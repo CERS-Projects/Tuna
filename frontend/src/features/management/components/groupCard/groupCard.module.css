@@ -10,12 +10,13 @@
   border: 2px solid #c7c7c7;
   border-radius: 10px;
   background-color: #fff;
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
   cursor: pointer;
 }
 
 .groupCard:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f1f5f9;
 }
 
 .groupCard hr {
