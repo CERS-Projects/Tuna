@@ -1,105 +1,15 @@
-import { useState, useEffect } from "react";
-import { type Breadcrumb } from "@/features/management/types/breadcrumb";
+import { Fragment } from "react";
+import { useGroups } from "@/features/management/hooks/useGroups";
+import { useGroupNavigation } from "@/features/management/hooks/useGroupNavigation";
+import { countDescendantsGroups } from "@/features/management/utils/countDescendantsGroups";
 import { Tree } from "@/features/management/components/tree/tree";
 import { GroupCard } from "@/features/management/components/groupCard/groupCard";
 import { FaPen, FaPlus } from "react-icons/fa";
 import styles from "@/features/management/style/groupManagement.module.css";
-import { type TreeType } from "@/features/management/types/group";
-import { useQuery } from "@tanstack/react-query";
-
-const dummyTree: TreeType[] = [
-  {
-    id: "A",
-    name: "Category A",
-    member: 21,
-    branch: [
-      {
-        id: "A1",
-        name: "Subcategory A1",
-        member: 22,
-        branch: [
-          { id: "A1-1", name: "Item A1-1" },
-          { id: "A1-2", name: "Item A1-2" },
-          {
-            id: "A1-3",
-            name: "Item A1-3",
-            branch: [
-              {
-                id: "A1",
-                name: "Subcategory A1",
-                branch: [
-                  { id: "A1-1", name: "Item A1-1" },
-                  { id: "A1-2", name: "Item A1-2" },
-                  { id: "A1-3", name: "Item A1-3" },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "A2",
-        name: "Subcategory A2",
-        member: 22,
-        branch: [
-          { id: "A2-1", name: "Item A2-1" },
-          { id: "A2-2", name: "Item A2-2" },
-          { id: "A2-3", name: "Item A2-3" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "B",
-    name: "Category B",
-    branch: [
-      {
-        id: "B1",
-        name: "Subcategory B1",
-        branch: [
-          { id: "B1-1", name: "Item B1-1" },
-          { id: "B1-2", name: "Item B1-2" },
-        ],
-      },
-    ],
-  },
-  {
-    id: "C",
-    name: "Category C",
-    branch: [
-      { id: "C1", name: "Item C1" },
-      { id: "C2", name: "Item C2" },
-    ],
-  },
-];
 
 const GroupManagement = () => {
-  const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
-  const [currentGroup, setCurrentGroup] = useState<TreeType>();
-
-  const {
-    data: groups = dummyTree,
-    isFetching,
-    isError,
-  } = useQuery<TreeType[]>({
-    queryKey: ["groups"],
-    // TODO: API ができたらここを本実装に差し替え
-    queryFn: async () => {
-      const res = await fetch("/api/groups");
-      if (!res.ok) throw new Error("Failed to fetch groups");
-      return (await res.json()) as TreeType[];
-    },
-    // テスト用デフォルトデータ
-    initialData: dummyTree,
-  });
-
-  useEffect(() => {
-    if (breadcrumbs.length > 0) return;
-    if (!groups || groups.length === 0) return;
-
-    setBreadcrumbs([{ crumb: groups[0].name }]);
-    setCurrentGroup(groups[0]);
-  }, [groups, breadcrumbs.length]);
+  const { groups, isFetching, isError } = useGroups();
+  const { breadcrumbs, currentGroup, selectGroup } = useGroupNavigation(groups);
 
   return (
     <div className={styles.mainContainer}>
@@ -109,10 +19,10 @@ const GroupManagement = () => {
         <nav className={styles.breadcrumbsContainer}>
           <ul className={styles.breadcrumbs}>
             {breadcrumbs.map((item, index) => (
-              <>
-                <li key={`${item.crumb}-${index}`}>{item.crumb}</li>
-                {index !== breadcrumbs.length - 1 && <span>/</span>}
-              </>
+              <Fragment key={`${item.id}`}>
+                <li onClick={() => selectGroup(item.id)}>{item.crumb}</li>
+                {index !== breadcrumbs.length - 1 && "/"}
+              </Fragment>
             ))}
           </ul>
         </nav>
@@ -132,7 +42,7 @@ const GroupManagement = () => {
 
       <div className={styles.groupInfoContainer}>
         <aside className={styles.groupTree}>
-          <Tree items={groups} level={0} />
+          <Tree items={groups} level={0} handleBranchClick={selectGroup} />
         </aside>
         <div className={styles.groupInfo}>
           <div className={styles.currentGroup}>
@@ -141,37 +51,24 @@ const GroupManagement = () => {
             <hr />
 
             <ul className={styles.groupDetail}>
-              <li>{`${currentGroup?.member} members`}</li>
-              <li>{`${22} sub-groups`}</li>
+              <li>{`${currentGroup?.member ?? 0} members`}</li>
+              <li>{`${countDescendantsGroups(
+                currentGroup?.branch
+              )} sub-groups`}</li>
             </ul>
           </div>
           <div className={styles.subGroupsContainer}>
             <h3>サブグループ</h3>
             <div className={styles.subGroups}>
-              <GroupCard
-                name="soukagakkai"
-                member={22}
-                subGroups={222}
-                handleSelectGroup={() => 1}
-              />
-              <GroupCard
-                name="toitukyoukai"
-                member={22}
-                subGroups={22222222222222}
-                handleSelectGroup={() => 1}
-              />
-              <GroupCard
-                name="yatumonji"
-                member={22}
-                subGroups={22222222222222}
-                handleSelectGroup={() => 1}
-              />
-              <GroupCard
-                name="kouhukunokagaku"
-                member={22}
-                subGroups={22222222222222}
-                handleSelectGroup={() => 1}
-              />
+              {currentGroup?.branch?.map((item) => (
+                <GroupCard
+                  key={item.id}
+                  name={item.name}
+                  member={item.member}
+                  subGroups={countDescendantsGroups(item.branch)}
+                  handleSelectGroup={() => selectGroup(item.id)}
+                />
+              ))}
             </div>
           </div>
         </div>

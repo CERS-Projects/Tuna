@@ -1,5 +1,5 @@
 export type TreeType = {
-  id: string;
+  id: number;
   name: string;
   member?: number;
   branch?: TreeType[];

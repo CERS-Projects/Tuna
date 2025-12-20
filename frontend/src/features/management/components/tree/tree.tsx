@@ -6,9 +6,10 @@ import styles from "./tree.module.css";
 type Props = {
   items: TreeType[];
   level: number;
+  handleBranchClick: (id: number) => void;
 };
 
-export const Tree = ({ items, level }: Props) => {
+export const Tree = ({ items, level, handleBranchClick }: Props) => {
   const [openItems, setOpenItems] = useState<{
     [key: TreeType["id"]]: boolean;
   }>({});
@@ -37,10 +38,19 @@ export const Tree = ({ items, level }: Props) => {
             ) : (
               ""
             )}
-            {item.name}
+            <button
+              onKeyDown={() => handleBranchClick(item.id)}
+              onClick={() => handleBranchClick(item.id)}
+            >
+              {item.name}
+            </button>
           </div>
           {item.branch && openItems[item.id] && (
-            <Tree items={item.branch} level={level + 1} />
+            <Tree
+              items={item.branch}
+              level={level + 1}
+              handleBranchClick={handleBranchClick}
+            />
           )}
         </div>
       ))}

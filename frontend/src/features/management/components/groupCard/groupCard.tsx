@@ -2,8 +2,8 @@ import styles from "./groupCard.module.css";
 
 type Props = {
   name: string;
-  member: number;
-  subGroups: number;
+  member: number | undefined;
+  subGroups: number | undefined;
   handleSelectGroup: () => void;
 };
 
@@ -20,8 +20,8 @@ export const GroupCard = ({
       <hr />
 
       <ul className={styles.groupDetail}>
-        <li>{`${member} members`}</li>
-        <li>{`${subGroups} sub-groups`}</li>
+        <li>{`${member ?? 0} members`}</li>
+        <li>{`${subGroups ?? 0} sub-groups`}</li>
       </ul>
     </button>
   );
