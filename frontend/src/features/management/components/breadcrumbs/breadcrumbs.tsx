@@ -13,7 +13,18 @@ export const Breadcrumbs = ({ breadcrumbs, handleSelect }: Props) => {
       <ul className={styles.breadcrumbs}>
         {breadcrumbs.map((item, index) => (
           <Fragment key={`${item.id}`}>
-            <li onClick={() => handleSelect(item.id)}>{item.crumb}</li>
+            <li
+              role="button"
+              tabIndex={0}
+              onClick={() => handleSelect(item.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  handleSelect(item.id);
+                }
+              }}
+            >
+              {item.crumb}
+            </li>
             {index !== breadcrumbs.length - 1 && "/"}
           </Fragment>
         ))}
