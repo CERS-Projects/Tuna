@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { findBreadcrumbPath } from "../utils/findBreadcrumbPath";
 import { type TreeType } from "../types/group";
 import { type Breadcrumb } from "../types/breadcrumb";
@@ -19,49 +19,50 @@ const findGroupById = (
 };
 
 export const useGroupNavigation = (groups: TreeType[]) => {
-  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
-  const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[]>([]);
-  const [currentGroup, setCurrentGroup] = useState<TreeType>();
+  const [requestedGroupId, setRequestedGroupId] = useState<number | null>(null);
 
-  const selectGroup = (id: number): void => {
-    setSelectedGroupId(id);
-  };
+  const selectGroup = useCallback((id: number): void => {
+    setRequestedGroupId(id);
+  }, []);
 
-  useEffect(() => {
+  const { breadcrumbs, currentGroup, selectedGroupId } = useMemo(() => {
     if (!groups || groups.length === 0) {
-      setBreadcrumbs([]);
-      setCurrentGroup(undefined);
-      setSelectedGroupId(null);
-      return;
+      return {
+        breadcrumbs: [] as Breadcrumb[],
+        currentGroup: undefined as TreeType | undefined,
+        selectedGroupId: null as number | null,
+      };
     }
 
     const fallbackId = groups[0].id;
-    const targetId = selectedGroupId ?? fallbackId;
+    const targetId = requestedGroupId ?? fallbackId;
 
     const path =
       findBreadcrumbPath(groups, targetId) ??
-      findBreadcrumbPath(groups, fallbackId);
+      findBreadcrumbPath(groups, fallbackId) ??
+      [];
 
-    if (!path || path.length === 0) {
-      setBreadcrumbs([]);
-      setCurrentGroup(undefined);
-      setSelectedGroupId(null);
-      return;
+    if (path.length === 0) {
+      return {
+        breadcrumbs: [],
+        currentGroup: undefined,
+        selectedGroupId: null,
+      };
     }
-
-    setBreadcrumbs(path);
 
     const resolvedId = path[path.length - 1].id;
-    setCurrentGroup(findGroupById(groups, resolvedId));
 
-    if (selectedGroupId !== resolvedId) {
-      setSelectedGroupId(resolvedId);
-    }
-  }, [groups, selectedGroupId]);
+    return {
+      breadcrumbs: path,
+      currentGroup: findGroupById(groups, resolvedId),
+      selectedGroupId: resolvedId,
+    };
+  }, [groups, requestedGroupId]);
 
   return {
     breadcrumbs,
     currentGroup,
+    selectedGroupId,
     selectGroup,
   };
 };
