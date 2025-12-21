@@ -66,7 +66,11 @@ export const Tree = ({ items, level, currentId, handleBranchClick }: Props) => {
               ""
             )}
             <button
-              onKeyDown={() => handleBranchClick(item.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  handleBranchClick(item.id);
+                }
+              }}
               onClick={() => handleBranchClick(item.id)}
             >
               {item.name}
