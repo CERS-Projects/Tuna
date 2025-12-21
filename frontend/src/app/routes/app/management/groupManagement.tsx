@@ -1,8 +1,8 @@
-import { Fragment } from "react";
 import { useGroups } from "@/features/management/hooks/useGroups";
 import { useGroupNavigation } from "@/features/management/hooks/useGroupNavigation";
 import { countDescendantsGroups } from "@/features/management/utils/countDescendantsGroups";
 import { Tree } from "@/features/management/components/tree/tree";
+import { Breadcrumbs } from "@/features/management/components/breadcrumbs/breadcrumbs";
 import { GroupCard } from "@/features/management/components/groupCard/groupCard";
 import { FaPen, FaPlus } from "react-icons/fa";
 import styles from "@/features/management/style/groupManagement.module.css";
@@ -16,16 +16,7 @@ const GroupManagement = () => {
       <h2 className={styles.sectionName}>グループ一覧</h2>
 
       <header className={styles.menuContainer}>
-        <nav className={styles.breadcrumbsContainer}>
-          <ul className={styles.breadcrumbs}>
-            {breadcrumbs.map((item, index) => (
-              <Fragment key={`${item.id}`}>
-                <li onClick={() => selectGroup(item.id)}>{item.crumb}</li>
-                {index !== breadcrumbs.length - 1 && "/"}
-              </Fragment>
-            ))}
-          </ul>
-        </nav>
+        <Breadcrumbs breadcrumbs={breadcrumbs} handleSelect={selectGroup} />
         <div className={styles.actions}>
           <button>
             <FaPen />
@@ -42,7 +33,12 @@ const GroupManagement = () => {
 
       <div className={styles.groupInfoContainer}>
         <aside className={styles.groupTree}>
-          <Tree items={groups} level={0} handleBranchClick={selectGroup} />
+          <Tree
+            items={groups}
+            level={0}
+            currentId={currentGroup?.id}
+            handleBranchClick={selectGroup}
+          />
         </aside>
         <div className={styles.groupInfo}>
           <div className={styles.currentGroup}>
