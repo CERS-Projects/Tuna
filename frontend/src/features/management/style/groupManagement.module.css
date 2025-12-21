@@ -81,6 +81,17 @@
   background-color: #fff;
   font-weight: 500;
   font-size: 0.85rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease-out;
+  cursor: pointer;
+}
+
+.actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.actions button:active {
+  border: 1.5px solid #d7d7d7;
 }
 
 .groupInfoContainer {
