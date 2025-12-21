@@ -22,11 +22,15 @@
 }
 
 .branch:hover {
-  background: #f1f5f9;
+  background-color: #f1f5f9;
 }
 
 .branch svg {
   flex: 0 0 auto;
+}
+
+.branch_active {
+  background-color: #e6f1fb;
 }
 
 .tree > .tree {
