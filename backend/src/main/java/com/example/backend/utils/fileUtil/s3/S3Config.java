@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software. amazon.awssdk.regions.Region;
-import software.amazon. awssdk.services.s3.S3Client;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,18 +26,18 @@ public class S3Config {
     @Bean
     public S3Client s3Client() {
         log.info("=== S3 Client Config ===");
-        log.info("Region: [{}]", region);
-        log.info("Access Key ID: [{}]", accessKeyId. substring(0, Math.min(5, accessKeyId.length())) + "...");
+        log.info("Region: [{}]", region.trim());
+        log.info("Access Key ID: [{}]", accessKeyId.trim().substring(0, Math.min(5, accessKeyId.trim().length())) + "...");
         log.info("========================");
 
         AwsBasicCredentials credentials = AwsBasicCredentials.create(
-            accessKeyId. trim(),
+            accessKeyId.trim(),
             secretAccessKey.trim()
         );
 
         return S3Client.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                .region(Region.of(region. trim()))
+                .region(Region.of(region.trim()))
                 .build();
     }
     
