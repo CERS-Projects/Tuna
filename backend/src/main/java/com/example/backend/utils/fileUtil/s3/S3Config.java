@@ -30,10 +30,7 @@ public class S3Config {
         log.info("Access Key ID: [{}]", accessKeyId.trim().substring(0, Math.min(5, accessKeyId.trim().length())) + "...");
         log.info("========================");
 
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(
-            accessKeyId.trim(),
-            secretAccessKey.trim()
-        );
+        AwsBasicCredentials credentials = awsCredentials();
 
         return S3Client.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
@@ -43,14 +40,20 @@ public class S3Config {
     
     @Bean
     public S3Presigner s3Presigner() {
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(
-            accessKeyId.trim(),
-            secretAccessKey.trim()
-        );
+        
+        AwsBasicCredentials credentials = awsCredentials();
 
         return S3Presigner.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .region(Region.of(region.trim()))
                 .build();
+    }
+
+    // 認証情報を生成するメソッド
+    private AwsBasicCredentials awsCredentials() {
+        return AwsBasicCredentials.create(
+            accessKeyId.trim(),
+            secretAccessKey.trim()
+        );
     }
 }
