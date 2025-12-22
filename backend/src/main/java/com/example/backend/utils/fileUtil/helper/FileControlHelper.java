@@ -45,6 +45,14 @@ public class FileControlHelper {
             return keyList;
         } catch (Exception e) {
             log.error("ファイルアップロードに失敗しました", e);
+            for (String key : keyList) {
+                try {
+                    s3StorageService.deleteFile(key);
+                    log.info("アップロード失敗に伴うファイル削除成功: key={}", key);
+                } catch (Exception ex) {
+                    log.error("アップロード失敗に伴うファイル削除に失敗しました手動で削除してください: key={}", key, ex);
+                }
+            }
             throw new RuntimeException("ファイルアップロードに失敗しました");
         }
     }
@@ -64,7 +72,7 @@ public class FileControlHelper {
                 }
             }
             default -> {
-                // その他のディレクトリはバリデーションなし
+                // その他のディレクトリは例外として扱う
                 log.warn("未知のディレクトリ: {}（バリデーションをスキップ）", directory);
                 throw new IllegalArgumentException("未知のディレクトリです: " + directory);
                 
