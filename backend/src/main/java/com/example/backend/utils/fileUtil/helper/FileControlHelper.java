@@ -40,7 +40,7 @@ public class FileControlHelper {
                 // S3にアップロード
                 keyList.add(s3StorageService.uploadFile(file, directory));
                 log.info("ファイルアップロード成功: key={}", keyList.get(keyList.size() - 1));
-            
+
             }
             return keyList;
         } catch (Exception e) {
@@ -50,7 +50,7 @@ public class FileControlHelper {
                     s3StorageService.deleteFile(key);
                     log.info("アップロード失敗に伴うファイル削除成功: key={}", key);
                 } catch (Exception ex) {
-                    log.error("アップロード失敗に伴うファイル削除に失敗しました手動で削除してください: key={}", key, ex);
+                    log.error("アップロード失敗に伴うファイル削除に失敗しました。手動で削除してください: key={}", key, ex);
                 }
             }
             throw new RuntimeException("ファイルアップロードに失敗しました");
@@ -62,7 +62,7 @@ public class FileControlHelper {
     private void validateFile(MultipartFile file, String directory) {
         switch (directory) {
             case "documents" -> {
-                if (! documentValidator.isValidDocumentFile(file)) {
+                if (!documentValidator.isValidDocumentFile(file)) {
                     throw new IllegalArgumentException("無効なドキュメントファイルです");
                 }
             }
