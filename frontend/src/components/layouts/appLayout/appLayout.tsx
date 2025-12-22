@@ -11,10 +11,10 @@ export const AppLayout = ({ children }: Props) => {
     <div className={styles.appLayoutContainer}>
       <Header />
       <div className={styles.appLayoutArea}>
-        <div className={styles.appLayoutAreaLeft}>
+        <div className={styles.appLayoutLeft}>
           <Menu />
         </div>
-        <div className={styles.appLayoutAreaRight}>{children}</div>
+        <div className={styles.appLayoutRight}>{children}</div>
       </div>
     </div>
   );

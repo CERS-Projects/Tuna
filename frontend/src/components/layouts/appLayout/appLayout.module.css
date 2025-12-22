@@ -12,12 +12,12 @@
   grid-template-columns: 6% 1fr;
 }
 
-.appLayoutAreaLeft {
+.appLayoutLeft {
   border-right: 1px solid rgb(50, 85, 150);
 }
 
-.appLayoutAreaRight {
-  overflow-y: hidden;
+.appLayoutRight {
+  overflow-y: auto;
 }
 
 @media (max-width: 960px) {
@@ -25,15 +25,15 @@
     display: flex;
     flex-direction: column;
   }
-  .appLayoutAreaRight {
+  .appLayoutRight {
     flex: 1;
     order: 1;
     width: 100%;
   }
-  .appLayoutAreaLeft {
+  .appLayoutLeft {
     order: 2;
     width: 100%;
-    height: 60px;
+    min-height: 60px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
