@@ -23,7 +23,7 @@ public class ImageFileValidation {
 
 
     // 許可するMIMEタイプのリスト（ここに追加・削除するだけでOK）
-    final List<String> allowedMimeTypes = Arrays.asList(
+    private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList(
         "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp"
     );
     /**
@@ -45,7 +45,7 @@ public class ImageFileValidation {
             String detectedMimeType = tika.detect(stream);
 
             // 許可リストに含まれているかチェック
-            return allowedMimeTypes.contains(detectedMimeType);
+            return ALLOWED_MIME_TYPES.contains(detectedMimeType);
 
         } catch (IOException e) {
             log.error("Error detecting MIME type for file: {}", file.getOriginalFilename(), e);
