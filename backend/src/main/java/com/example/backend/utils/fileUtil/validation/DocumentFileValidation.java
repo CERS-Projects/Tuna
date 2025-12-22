@@ -14,9 +14,13 @@ import java.util.List;
 @Slf4j
 public class DocumentFileValidation {
 
-    private final Tika tika = new Tika();
+    private final Tika tika;
 
-    // ドキュメントは画像より大きくなる傾向があるため、例えば20MBに設定
+    public DocumentFileValidation(Tika tika) {
+        this.tika = tika;
+    }
+
+    // 20MBに設定
     private static final long MAX_FILE_SIZE = 20 * 1024 * 1024; 
     private static final int MIN_FILE_SIZE = 10; // 空ファイル対策
 
@@ -26,21 +30,20 @@ public class DocumentFileValidation {
         // PDF
         "application/pdf",
         
-        // Word
-        "application/msword", // .doc
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-        
-        // Excel
-        "application/vnd.ms-excel", // .xls
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
-        
-        // PowerPoint
-        "application/vnd.ms-powerpoint", // .ppt
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation", // .pptx
-
-        // CSV (TikaはCSVをtext/plainと判定することもあるため両方許可するのが一般的)
+        // CSV (TikaはCSVをtext/plainと判定することもあるため注意)
         "text/csv",
-        "text/plain" 
+
+        //msoffice系の許可
+        "application/x-tika-msoffice",
+        "application/x-tika-ooxml",
+        "application/vnd.ms-office",
+        "application/vnd.openxmlformats-officedocument",
+        "application/vnd.ms-word",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
     );
 
     /**
@@ -48,29 +51,34 @@ public class DocumentFileValidation {
      */
     public boolean isValidDocumentFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
+            log.error("ファイルが空です");
             return false;
         }
 
         // サイズチェック
-        if (file.getSize() > MAX_FILE_SIZE) return false;
-        if (file.getSize() < MIN_FILE_SIZE) return false;
+        if (file.getSize() > MAX_FILE_SIZE){
+            log.error("ファイルサイズが大きすぎます: {} bytes", file.getSize());
+            return false;
+        }
+        if (file.getSize() < MIN_FILE_SIZE){
+            log.error("ファイルサイズが小さすぎます: {} bytes", file.getSize());
+            return false;
+        }
 
         try (InputStream stream = file.getInputStream()) {
             // Tikaで中身からMIMEタイプを検出
             String detectedMimeType = tika.detect(stream);
-            log.debug("Detected MIME type: {}", detectedMimeType);
-            
+            System.out.println("検出されたMIMEタイプ: " + detectedMimeType);
 
-            // CSVの特例判定: text/plain の場合は拡張子も念のため確認する
-            if ("text/plain".equals(detectedMimeType)) {
-                String filename = file.getOriginalFilename();
-                return filename != null && filename.toLowerCase().endsWith(".csv");
+            boolean result = ALLOWED_MIME_TYPES.contains(detectedMimeType);
+            if( result == false){
+                log.error("許可されていないMIMEタイプです: {}", detectedMimeType);
             }
 
-            return ALLOWED_MIME_TYPES.contains(detectedMimeType);
+            return result;
 
         } catch (IOException e) {
-            log.error("File validation failed", e);
+            log.error("ファイルの検証中にエラーが発生しました", e);
             return false;
         }
     }

@@ -10,13 +10,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @Slf4j
 public class ImageFileValidation {
 
-    private final Tika tika = new Tika();
+    private final Tika tika;
+
+    public ImageFileValidation(Tika tika) {
+        this.tika = tika;
+    }
 
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
     private static final int MIN_FILE_SIZE = 10; //10バイト
