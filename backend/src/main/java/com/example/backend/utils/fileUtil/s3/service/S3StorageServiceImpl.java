@@ -3,6 +3,9 @@ package com.example.backend.utils.fileUtil.s3.service;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+
+import javax.management.RuntimeErrorException;
 
 import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +50,7 @@ public class S3StorageServiceImpl  implements S3StorageService {
         String originalFilename = file.getOriginalFilename();
         String safeFileName = originalFilename != null ? originalFilename : "file";
 
-        String key = directory + "/" + System.currentTimeMillis() + "_" + safeFileName;
+        String key = directory + "/" + UUID.randomUUID() + "_" + safeFileName;
 
         String encodedKey = encodeS3Key(key);
 
@@ -61,13 +64,14 @@ public class S3StorageServiceImpl  implements S3StorageService {
         try (InputStream inputStream = file.getInputStream()) {
         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, file.getSize()));
         log.info("S3 file put successfully. bucket=[{}], key={}, region={}", bucketName, encodedKey, region);
+        log.info("エンコードしたキーの確認: " + encodedKey);
 
         } catch (Exception e) {
             log.error("S3ファイルアップロードエラー: bucket=[{}], key={}, region={}", bucketName, encodedKey, region, e);
-            throw e;
+            throw new RuntimeException("ファイルアップロードに失敗しました" + e.getMessage());
         }
-        
-        return "https://" + bucketName + ".s3.amazonaws.com/" + encodedKey;
+
+        return encodedKey;
     }
 
     //ファイル名をエンコードするメソッド
