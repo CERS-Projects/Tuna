@@ -68,10 +68,9 @@ public class DocumentFileValidation {
         try (InputStream stream = file.getInputStream()) {
             // Tikaで中身からMIMEタイプを検出
             String detectedMimeType = tika.detect(stream);
-            System.out.println("検出されたMIMEタイプ: " + detectedMimeType);
 
             boolean result = ALLOWED_MIME_TYPES.contains(detectedMimeType);
-            if( result == false){
+            if( !result ){
                 log.error("許可されていないMIMEタイプです: {}", detectedMimeType);
             }
 

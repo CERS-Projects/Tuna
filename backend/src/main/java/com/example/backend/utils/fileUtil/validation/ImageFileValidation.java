@@ -34,12 +34,19 @@ public class ImageFileValidation {
      */
     public boolean isImageFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
+            log.error("ファイルが空です");
             return false;
         }
 
         //サイズチェック
-        if( file.getSize() > MAX_FILE_SIZE )  return false;
-        if ( file.getSize() < MIN_FILE_SIZE )  return false;
+        if( file.getSize() > MAX_FILE_SIZE ) {
+            log.error("ファイルサイズが大きすぎます: {} bytes", file.getSize());
+            return false;
+        }
+        if ( file.getSize() < MIN_FILE_SIZE ){
+            log.error("ファイルサイズが小さすぎます: {} bytes", file.getSize());
+            return false;
+        }
 
         // ファイルの中身を読み取ってMIMEタイプを検出
         try (InputStream stream = file.getInputStream()) {
@@ -48,10 +55,15 @@ public class ImageFileValidation {
             String detectedMimeType = tika.detect(stream);
 
             // 許可リストに含まれているかチェック
-            return ALLOWED_MIME_TYPES.contains(detectedMimeType);
+            Boolean result = ALLOWED_MIME_TYPES.contains(detectedMimeType);
+            if ( !result ) {
+                log.error("許可されていないMIMEタイプです: {}", detectedMimeType);
+            }
+            return result;
+            
 
         } catch (IOException e) {
-            log.error("Error detecting MIME type for file: {}", file.getOriginalFilename(), e);
+            log.error("ファイル確認中にエラーが発生しました: {}", file.getOriginalFilename(), e);
             return false;
         }
     }
