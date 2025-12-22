@@ -14,7 +14,6 @@ import com.example.backend.utils.fileUtil.validation.ImageFileValidation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -23,6 +22,8 @@ public class FileControlHelper {
     private final S3StorageService s3StorageService;
     private final ImageFileValidation imageValidator;
     private final DocumentFileValidation documentValidator;
+
+    private final int MAX_DELETE_FILES = 5;
 
     //ファイルをアップロードする
     public List<String> uploadFile(String directory, MultipartFile... files) {
@@ -45,14 +46,16 @@ public class FileControlHelper {
             return keyList;
         } catch (Exception e) {
             log.error("ファイルアップロードに失敗しました", e);
-            for (String key : keyList) {
-                try {
+            try {
+                for (String key : keyList) {
                     s3StorageService.deleteFile(key);
-                    log.info("アップロード失敗に伴うファイル削除成功: key={}", key);
-                } catch (Exception ex) {
-                    log.error("アップロード失敗に伴うファイル削除に失敗しました。手動で削除してください: key={}", key, ex);
                 }
+                log.info("アップロード失敗後のファイル削除成功");
+            } catch (Exception ex) {
+                log.error("アップロード失敗後のファイル削除に失敗しました", ex);
+                throw new RuntimeException("アップロード失敗後のファイル削除に失敗しました。手動での削除を実行してください。");
             }
+            log.error("ファイルアップロードに失敗しました:",e);
             throw new RuntimeException("ファイルアップロードに失敗しました");
         }
     }
@@ -132,12 +135,13 @@ public class FileControlHelper {
                 throw new IllegalArgumentException("削除するファイルのキーが指定されていません");
 
             }
-            if(filekeys.length > 5){
+            if(filekeys.length > MAX_DELETE_FILES) {
                 throw new IllegalArgumentException("一度に削除できるファイルの数を超えています");
             }
 
         try {
             for(String key : filekeys) {
+                
                 if (key == null || key.isBlank()) {
                     throw new IllegalArgumentException("削除するファイルのキーが指定されていません");
                 }
@@ -145,7 +149,7 @@ public class FileControlHelper {
                     log.warn("削除対象のファイルが存在しません: key={}", key);
                     throw new RuntimeException("削除対象のファイルが存在しません");
                 }
-
+                
                 s3StorageService.deleteFile(key);
                 log.info("ファイル削除成功: key={}", key);
             }
