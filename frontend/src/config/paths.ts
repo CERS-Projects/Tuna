@@ -83,7 +83,7 @@ export const paths = {
     },
     searchPost: {
       path: "/app/search",
-      getHref: () => "app/search",
+      getHref: () => "/app/search",
     },
     test: {
       path: "/app/test",

@@ -18,7 +18,7 @@ type TreeNode = {
 };
 
 //ツリー構造への変換
-const BuildTree = (items: NodeItem[]): TreeNode[] => {
+const buildTree = (items: NodeItem[]): TreeNode[] => {
   const idMapping: { [key: string]: TreeNode } = {};
   const roots: TreeNode[] = [];
 
@@ -55,14 +55,13 @@ const BuildTree = (items: NodeItem[]): TreeNode[] => {
 };
 
 //指定したノード以下の全IDを取得する再帰
-const GetAllTreeId = (node: TreeNode): string[] => {
+const getAllTreeId = (node: TreeNode): string[] => {
   let ids = [node.id];
   node.children.forEach((child) => {
-    ids = ids.concat(GetAllTreeId(child));
+    ids = ids.concat(getAllTreeId(child));
   });
   return ids;
 };
-
 //チェックボックスの行
 type CheckBoxProps = {
   node: TreeNode;
@@ -90,7 +89,7 @@ const CheckBoxRow = ({
 
   //子の状態
   const childrenIds = useMemo(
-    () => GetAllTreeId(node).filter((id) => id !== node.id),
+    () => getAllTreeId(node).filter((id) => id !== node.id),
     [node]
   );
 
@@ -178,7 +177,7 @@ export const SearchFilter = ({ flatData }: TreeCheckBoxProps) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   //フラットなデータをツリーに変換（メモ化）
-  const treeData = useMemo(() => BuildTree(flatData), [flatData]);
+  const treeData = useMemo(() => buildTree(flatData), [flatData]);
 
   const handleExpandToggle = (id: string) => {
     setExpandedIds((prev) => {
@@ -193,7 +192,7 @@ export const SearchFilter = ({ flatData }: TreeCheckBoxProps) => {
   };
 
   const handleToggle = (node: TreeNode, isChecked: boolean) => {
-    const childrenIds = GetAllTreeId(node);
+    const childrenIds = getAllTreeId(node);
 
     setSelectedIds((prev) => {
       const next = new Set(prev);

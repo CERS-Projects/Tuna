@@ -117,7 +117,7 @@ export const SearchHistory = () => {
           <ul className={styles.searchHistoryList}>
             {history.map((item, index) => (
               <li
-                key={`${item}-${index}`}
+                key={index}
                 onClick={() => handleHistoryClick(item)}
                 className={styles.searchHistoryItem}
               >
