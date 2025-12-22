@@ -106,7 +106,6 @@ public class S3StorageServiceImpl  implements S3StorageService {
         //リクエストをもとに署名付きURLを生成
         try {
         PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
-        presigner.close();
         return presignedRequest.url().toString();
 
         } catch (Exception e) {
