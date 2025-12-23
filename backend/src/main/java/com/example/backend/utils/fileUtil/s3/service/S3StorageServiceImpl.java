@@ -82,7 +82,7 @@ public String uploadFile(MultipartFile file, String directory) throws IOExceptio
         log.info("S3 upload success. key={}", key);
     } catch (Exception e) {
         log.error("S3 upload failed. key={}", key, e);
-        throw new RuntimeException("ファイルアップロードに失敗しました: " + e.getMessage());
+        throw new RuntimeException("ファイルアップロードに失敗しました: " , e);
     }
 
     //オブジェクトキーを返す
@@ -94,7 +94,7 @@ public String uploadFile(MultipartFile file, String directory) throws IOExceptio
     @Override
     public String generatePresignedUrl(String key) {
 
-        String originalFilename = new String();
+        String originalFilename = null;
         try{
             //オブジェクトのメタデータを取得
             HeadObjectResponse head = s3Client.headObject(builder -> builder.bucket(bucketName).key(key));
@@ -133,7 +133,7 @@ public String uploadFile(MultipartFile file, String directory) throws IOExceptio
 
         } catch (Exception e) {
             log.error("署名付きURL生成エラー: bucket=[{}], key={}", bucketName, key, e);
-            throw new RuntimeException("署名付きURLの生成に失敗しました: " + e.getMessage());
+            throw new RuntimeException("署名付きURLの生成に失敗しました: " , e);
         }
         
     }
