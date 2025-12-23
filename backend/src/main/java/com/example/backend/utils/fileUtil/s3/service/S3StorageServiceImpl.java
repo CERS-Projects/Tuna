@@ -159,7 +159,7 @@ public String uploadFile(MultipartFile file, String directory) throws IOExceptio
         s3Client.deleteObject(builder -> builder.bucket(bucketName).key(key));
         } catch (Exception e) {
             log.error("S3ファイル削除エラー: bucket=[{}], key={}", bucketName, key, e);
-            throw e;
+            throw new RuntimeException("S3ファイルの削除に失敗しました: " + e.getMessage());
         }
     }
 
