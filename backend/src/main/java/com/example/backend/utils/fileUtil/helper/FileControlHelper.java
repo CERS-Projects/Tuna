@@ -23,6 +23,7 @@ public class FileControlHelper {
     private final ImageFileValidation imageValidator;
     private final DocumentFileValidation documentValidator;
 
+    // 一度に削除できるファイルの最大数
     private final int MAX_DELETE_FILES = 5;
 
     //ファイルをアップロードする
@@ -55,7 +56,6 @@ public class FileControlHelper {
                 log.error("アップロード失敗後のファイル削除に失敗しました", ex);
                 throw new RuntimeException("アップロード失敗後のファイル削除に失敗しました。手動での削除を実行してください。");
             }
-            log.error("ファイルアップロードに失敗しました:",e);
             throw new RuntimeException("ファイルアップロードに失敗しました");
         }
     }
@@ -154,7 +154,7 @@ public class FileControlHelper {
                 log.info("ファイル削除成功: key={}", key);
             }
         } catch (Exception e) {
-            log.error("ファイル削除に失敗しました:" + e);
+            log.error("ファイル削除に失敗しました:", e);
             throw new RuntimeException("ファイル削除に失敗しました");
         }
     }
