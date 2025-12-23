@@ -55,7 +55,7 @@ public class ImageFileValidation {
             String detectedMimeType = tika.detect(stream);
 
             // 許可リストに含まれているかチェック
-            Boolean result = ALLOWED_MIME_TYPES.contains(detectedMimeType);
+            boolean result = ALLOWED_MIME_TYPES.contains(detectedMimeType);
             if ( !result ) {
                 log.error("許可されていないMIMEタイプです: {}", detectedMimeType);
             }
