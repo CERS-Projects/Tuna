@@ -12,11 +12,11 @@
   grid-template-columns: 1fr 40%;
 }
 
-.timelineAreaLeft {
+.timelineContainerLeft {
   overflow-y: auto;
 }
 
-.timelineAreaRight {
+.timelineContainerRight {
   border-left: 1px solid rgb(50, 85, 150);
   overflow: auto;
   min-width: 0;
@@ -32,14 +32,14 @@
     flex-direction: column;
     height: 100%;
   }
-  .timelineAreaLeft {
+  .timelineContainerLeft {
     order: 2;
     width: 100%;
     display: flex;
     flex-direction: column;
     flex: 1;
   }
-  .timelineAreaRight {
+  .timelineContainerRight {
     display: none;
   }
   .modalButton {
