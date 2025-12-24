@@ -3,9 +3,6 @@
 }
 
 .checkIcon {
-  appearance: none;
-  -webkit-appearance: none;
-
   width: 20px;
   height: 20px;
   border: 2px solid #888;
@@ -52,4 +49,21 @@
   width: 10px;
   height: 2px;
   background-color: white;
+}
+
+.clickContainer {
+  display: inline-block;
+  align-items: center;
+  justify-content: center;
+
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  padding: 5px;
+}
+
+.is-hidden {
+  visibility: hidden;
 }

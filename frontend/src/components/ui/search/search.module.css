@@ -12,7 +12,8 @@
   position: absolute;
   top: 50%;
   left: 15px;
-  pointer-events: none;
+  background: none;
+  border: none;
   font-size: 1.5rem;
   color: rgb(50, 85, 150);
   transform: translateY(-50%);
@@ -44,25 +45,5 @@
     width: 60%;
     margin-top: 2%;
     margin-bottom: 5px;
-  }
-  .searchIcon {
-    position: absolute;
-    top: 50%;
-    left: 15px;
-    pointer-events: none;
-    font-size: 1.2rem;
-    color: rgb(50, 85, 150);
-    transform: translateY(-50%);
-  }
-  .searchInput {
-    padding: 10px 10px 10px 50px;
-    overflow: hidden;
-    border: 3px solid rgb(50, 85, 150);
-    width: 100%;
-    height: auto;
-    border-radius: 20px;
-    font-size: 1.2rem;
-    transition: transform 0.3s;
-    box-sizing: border-box;
   }
 }

@@ -4,13 +4,7 @@ import { TiRefresh } from "react-icons/ti";
 import { PostBox } from "@/components/ui/postBox/postBox";
 import styles from "./searchHistory.module.css";
 
-const dummyHistory = [
-  "むとうはるき かっこいい",
-  "むとうはるき かわいい",
-  "むとうはるき いけめん",
-  "むとうはるき あたまいい",
-  "むとうはるき 何者？",
-];
+const dummyHistory = ["e", "d", "c", "b", "a"];
 
 type PostDataItem = {
   postId: number;

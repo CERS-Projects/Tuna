@@ -120,18 +120,7 @@ const CheckBoxRow = ({
     >
       <span
         onClick={() => onExpand(node.id)}
-        style={{
-          display: "inline-block",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "20px",
-          width: "20px",
-          cursor: "pointer",
-          textAlign: "center",
-          userSelect: "none",
-          padding: "5px",
-          visibility: hasChildren ? "visible" : "hidden",
-        }}
+        className={`styles.clickContainer ${!hasChildren ? "is-hidden" : ""}`}
       >
         {isExpanded ? <GoChevronDown /> : <GoChevronRight />}
       </span>

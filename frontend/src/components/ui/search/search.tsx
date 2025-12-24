@@ -35,7 +35,14 @@ export const SearchBar = ({
         placeholder="検索"
         className={styles.searchInput}
       />
-      <FaSearch onClick={onSearch} className={styles.searchIcon} />
+      <button
+        type="button"
+        onClick={onSearch}
+        className={styles.searchIcon}
+        aria-label="検索"
+      >
+        <FaSearch />
+      </button>
     </div>
   );
 };
