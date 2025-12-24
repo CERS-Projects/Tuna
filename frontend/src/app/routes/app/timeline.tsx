@@ -82,7 +82,7 @@ const Timeline = () => {
   return (
     <div className={styles.timelineLayout}>
       <div className={styles.timelineContainer}>
-        <div className={styles.timelineContainerAreaLeft}>
+        <div className={styles.timelineContainerLeft}>
           <button onClick={modalButtonClick} className={styles.modalButton}>
             <RiCompass3Line />
           </button>
@@ -103,7 +103,7 @@ const Timeline = () => {
             />
           ))}
         </div>
-        <div className={styles.timelineContainerAreaRight}>
+        <div className={styles.timelineContainerRight}>
           <InfoBox>
             <TimelineFilter />
           </InfoBox>
