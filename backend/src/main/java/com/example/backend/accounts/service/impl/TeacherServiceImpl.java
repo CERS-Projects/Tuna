@@ -12,6 +12,8 @@ import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.AdminUserService;
 import com.example.backend.accounts.service.TeacherService;
 import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
+import com.example.backend.school.model.SchoolEntity;
+import com.example.backend.school.repository.SchoolRepository;
 import com.example.backend.accounts.helper.AccountsHelper;
 
 
@@ -31,6 +33,8 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     /* ヘルパークラスの 依存の注入 */
     private final AccountsHelper accountsHelper;
 
+    private final SchoolRepository schoolRepository;
+
 
     /*
      *　学校登録に付随する、アカウント登録に係る基本情報をMySQLに登録する機能
@@ -39,14 +43,14 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Transactional
     public UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId){
 
-        UserEntity newTeacherAccount = new UserEntity();
-
-        newTeacherAccount = accountsHelper.toUserEntity(schoolId, 
-                                                        dto.getShowUserId(),
-                                                        dto.getName(),
-                                                        dto.getMailAddress(),
-                                                        dto.getPassword()
-                                                       );
+        SchoolEntity schoolEntity = schoolRepository.findById(schoolId)
+            .orElseThrow(() -> new RuntimeException("学校が見つかりません"));
+        UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity, 
+                                                                   dto.getShowUserId(),
+                                                                   dto.getName(),
+                                                                   dto.getMailAddress(),
+                                                                   dto.getPassword()
+                                                                   );
 
         /* セットした値をDBに追加 */
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
@@ -60,12 +64,13 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Transactional
     public UserEntity createTeacher(TeacherCreateRequestInApp dto){
 
-        UserEntity newTeacherAccount = accountsHelper.toUserEntity(dto.getSchoolId(), 
-                                                        dto.getShowUserId(),
-                                                        dto.getName(),
-                                                        dto.getMailAddress(),
-                                                        dto.getPassword()
-                                                       );
+        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
+        UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity, 
+                                                                   dto.getShowUserId(),
+                                                                   dto.getName(),
+                                                                   dto.getMailAddress(),
+                                                                   dto.getPassword()
+                                                                 );
         /* セットした値をDBに追加 */
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
         return savedTeacherEntity;

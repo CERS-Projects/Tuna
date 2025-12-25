@@ -1,10 +1,14 @@
 package com.example.backend.accounts.model;
 
+import com.example.backend.school.model.SchoolEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,11 +27,11 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
-    @Column(name = "school_id",
-            nullable = false,
-            columnDefinition = "INT(5)"
-            )
-    private Integer schoolId;
+    @ManyToOne
+    @JoinColumn(name = "school_id",
+                referencedColumnName = "school_id",
+                nullable = false)
+    private SchoolEntity school;
 
     @Column(name = "show_user_id",
             nullable = false,

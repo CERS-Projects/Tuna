@@ -9,6 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import com.example.backend.accounts.dto.ReadCSVFileStudentCreateRequest;
 import com.example.backend.accounts.dto.StudentCreateRequest;
 import com.example.backend.accounts.helper.AccountsHelper;
@@ -17,10 +22,8 @@ import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.StudentRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.StudentService;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.example.backend.group.dto.GetUserResponse;
+import com.example.backend.school.model.SchoolEntity;
 
 @Service
 public class StudentServiceImpl implements StudentService{
@@ -48,6 +51,7 @@ public class StudentServiceImpl implements StudentService{
         this.studentRepository = studentRepository;
         this.accountsHelper = accountsHelper;
 
+
         /* CSVマッパーを使用できるようにするための処理 */
         CsvMapper csvMapper = new CsvMapper();
         /* 引数をcsvMapperで使用できるようにするための設定 */
@@ -74,7 +78,8 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public UserEntity createStudent(StudentCreateRequest dto){
 
-        UserEntity newStudentAccount = accountsHelper.toUserEntity(dto.getSchoolId(),
+        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
+        UserEntity newStudentAccount = accountsHelper.toUserEntity(schoolEntity,    
                                                                    dto.getShowUserId(),
                                                                    dto.getName(),
                                                                    dto.getMailAddress(),
@@ -131,12 +136,40 @@ public class StudentServiceImpl implements StudentService{
     }
 
     /*
+     *フロントに返す用の値を取得、加工するメソッド
+     * 以下の値を取得し、Dtoにセットする
+     * showUserId:表示用ユーザID
+     * name:ユーザ名
+     * grade:学年
+     * isJoin:グループに所属しているかどうか
+     */
+    @Override
+    public List<GetUserResponse> findAllGroup(){
+        List<GetUserResponse> response = studentRepository.findAllStudentUsers();
+        return response.stream()
+                       .map(user -> 
+                               new GetUserResponse(
+                               user.getShowUserId(),
+                               user.getUserName(),
+                               user.getGrade(),
+                               isJoined(user)
+                       ))
+                       .collect(Collectors.toList());
+    }
+
+    /* グループに所属しているかチェックする */
+    private Boolean isJoined(GetUserResponse user){
+        // ロジックを実装して、ユーザーがグループに参加しているかどうかを判定
+        return false; // 仮の戻り値
+    }
+
+    /*
      * UserEntity->StudentEntityに変換するヘルプメソッド 
      */
     private StudentEntity toStudentEntity(UserEntity studentAccount, Integer grade, LocalDate admissionDate, LocalDate graduateDate){
         StudentEntity studentEnrollmentInformation = new StudentEntity();
 
-        studentEnrollmentInformation.setStudentAccount(studentAccount);
+        studentEnrollmentInformation.setUser(studentAccount);
         studentEnrollmentInformation.setGrade(grade);
         studentEnrollmentInformation.setAdmissionDate(admissionDate);
 
@@ -155,7 +188,8 @@ public class StudentServiceImpl implements StudentService{
     /* エンティティに挿入する処理 */
     private StudentAccountPair toStudentEntityByFile(ReadCSVFileStudentCreateRequest records, final Integer schoolId){
 
-        UserEntity newUserAccount = accountsHelper.toUserEntity(schoolId,
+        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(schoolId);
+        UserEntity newUserAccount = accountsHelper.toUserEntity(schoolEntity,
                                                                 records.showUserId(),
                                                                 records.password(),
                                                                 records.mailAddress(),
@@ -170,6 +204,4 @@ public class StudentServiceImpl implements StudentService{
 
         return new StudentAccountPair(newUserAccount, newStudentAccount);
     }
-
-
 }
