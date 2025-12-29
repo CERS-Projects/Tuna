@@ -1,0 +1,27 @@
+.breadcrumbsContainer {
+  height: auto;
+  width: 75%;
+  min-width: 0;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #64748b;
+  list-style: none;
+}
+
+.breadcrumbs li {
+  text-decoration: underline;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.breadcrumbs li:hover {
+  opacity: 0.6;
+}

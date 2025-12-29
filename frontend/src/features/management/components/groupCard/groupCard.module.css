@@ -1,0 +1,51 @@
+.groupCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 7.5rem;
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  gap: 10px;
+  border: 2px solid #c7c7c7;
+  border-radius: 10px;
+  background-color: #fff;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.groupCard:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f1f5f9;
+}
+
+.groupCard hr {
+  width: 100%;
+  height: 0;
+  border: 0;
+  border-top: 1px solid #b7b7b7;
+  background: transparent;
+}
+
+.groupName {
+  font-weight: 600;
+  font-size: 1.2rem;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+.groupDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  width: 100%;
+  font-size: 0.9rem;
+  color: #64748b;
+  gap: 0.3rem;
+  padding: 0;
+  margin: 0;
+}

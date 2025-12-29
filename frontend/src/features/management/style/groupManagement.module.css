@@ -1,72 +1,213 @@
-.main {
-  display: flex;
-  width: 100%;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  padding: 1% 0;
-  box-sizing: border-box;
+:where(.mainContainer) * {
+  margin: 0;
+  padding: 0;
 }
 
-.container {
+.mainContainer {
   display: flex;
-  width: 90%;
-  flex: 1;
   flex-direction: column;
-  align-items: center;
+  height: 100%;
+  flex: 1;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.mainContainer hr {
+  width: 100%;
+  height: 0;
+  border: 0;
+  border-top: 1px solid #b7b7b7;
+  background: transparent;
+}
+
+.sectionName {
+  font-weight: 600;
+}
+
+.menuContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
   gap: 1rem;
 }
 
-.title {
-  width: fit-content;
-  align-self: flex-start;
-  text-align: left;
-  border-bottom: 3px solid #2589d0;
-  text-decoration-thickness: 3px;
-  text-decoration-style: solid;
+.breadcrumbsContainer {
+  height: auto;
+  width: 75%;
+  min-width: 0;
 }
 
-.navList {
+.breadcrumbs {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 90%;
-  gap: 0.75rem;
+  gap: 8px;
+  overflow-x: auto;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #64748b;
+  list-style: none;
 }
 
-.navCard {
+.breadcrumbs li {
+  text-decoration: underline;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.breadcrumbs li:hover {
+  opacity: 0.6;
+}
+
+.actions {
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 100%;
-  border: 3px solid #2589d0;
-  border-radius: 10px;
-  min-height: 4.5rem;
-  padding: 0.5rem;
-  box-sizing: border-box;
-  text-decoration: none;
-  color: inherit;
+  justify-content: flex-end;
+  width: 25%;
+  gap: 1rem;
 }
 
-.navIcon {
+.actions button {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  width: 10%;
-  color: #2589d0;
-  font-size: 3rem;
+  gap: 5px;
+  height: 2.5rem;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 1px solid #d7d7d7;
+  background-color: #fff;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease-out;
+  cursor: pointer;
 }
 
-.navDescription {
+.actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.actions button:active {
+  border: 1.5px solid #d7d7d7;
+}
+
+.groupInfoContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.groupTree {
   display: flex;
   flex-direction: column;
-  width: 80%;
-  padding-left: 1.5rem;
+  width: 25%;
+  height: 100%;
+  border: 2px solid #c7c7c7;
+  border-radius: 10px;
+  padding: 5px;
   box-sizing: border-box;
-  word-break: break-word;
+  overflow: auto;
+  background-color: #fff;
 }
 
-.navDescription h3,
-p {
+.groupInfo {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  height: 100%;
+  gap: 1.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.currentGroup {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 7.5rem;
+  width: 100%;
+  padding: 0.5rem 0.8rem;
+  box-sizing: border-box;
+  gap: 10px;
+  border: 2px solid #c7c7c7;
+  border-radius: 10px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.currentGroup hr {
+  width: 100%;
+  height: 0;
+  border: 0;
+  border-top: 1px solid #b7b7b7;
+  background: transparent;
+}
+
+.groupName {
+  font-weight: 600;
+  font-size: 1.2rem;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+.groupDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  width: 100%;
+  font-size: 0.9rem;
+  color: #64748b;
+  gap: 0.3rem;
+  padding: 0;
   margin: 0;
+}
+
+.subGroupsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+}
+
+.subGroups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1rem;
+  width: 100%;
+  overflow-y: auto;
+  align-content: start;
+}
+
+@media (max-width: 960px) {
+  .menuContainer {
+    flex-direction: column;
+  }
+
+  .breadcrumbsContainer {
+    width: 100%;
+  }
+
+  .breadcrumbs {
+    font-size: 1.4rem;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions button {
+    height: 2rem;
+  }
 }
