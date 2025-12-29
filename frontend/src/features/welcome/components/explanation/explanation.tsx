@@ -23,8 +23,8 @@ export const Explanation = ({ explanation }: Props) => {
 };
 
 export const ExplanationList = ({ explanationList }: ListProps) => {
-  const listItems = explanationList.map((el) => (
-    <Explanation explanation={el} />
+  const listItems = explanationList.map((el, index) => (
+    <Explanation key={index} explanation={el} />
   ));
   return <div className={styles.explanationContainer}>{listItems}</div>;
 };

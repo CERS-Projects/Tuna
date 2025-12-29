@@ -44,7 +44,11 @@ export const Modal = ({
   return (
     <dialog
       className={styles.modal}
-      style={{ width, height, ...containerStyle }}
+      style={{
+        width,
+        height,
+        ...containerStyle,
+      }}
       ref={modalRef}
       onClick={closeModal}
       {...props}

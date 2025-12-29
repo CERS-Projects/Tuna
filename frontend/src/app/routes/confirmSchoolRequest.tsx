@@ -1,8 +1,27 @@
 import styles from "@/styles/confirm.module.css";
 import { Header } from "@/components/ui/header/header";
 import { Button } from "@/components/ui/button/button";
+import { useLocation, useNavigate } from "react-router";
+import { useEffect } from "react";
 
 const ConfirmSchoolRequest = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const formData = location.state?.formData;
+
+  useEffect(() => {
+    if (!location.state?.success) {
+      if (window.history.length > 1)
+        navigate("/school/request", { replace: true });
+      else navigate("/", { replace: true });
+    }
+  }, [location, navigate]);
+
+  if (!location.state?.success) {
+    return null;
+  }
+
   return (
     <div className={styles.container}>
       <Header />
@@ -15,7 +34,13 @@ const ConfirmSchoolRequest = () => {
         二週間以上連絡がない場合は、お手数ですがお問い合わせください。
       </p>
       <div className={styles.buttonContainer}>
-        <Button width="200px" fontSize="1rem">
+        <Button
+          width="200px"
+          fontSize="1rem"
+          onClick={() =>
+            navigate("/school/request", { state: { formData: formData } })
+          }
+        >
           元の画面に戻る
         </Button>
       </div>

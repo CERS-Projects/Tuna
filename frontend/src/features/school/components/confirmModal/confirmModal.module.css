@@ -1,0 +1,91 @@
+.confirmContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 1%;
+  box-sizing: border-box;
+}
+
+.confirmData {
+  flex: 1;
+  min-height: 0;
+  width: 90%;
+  overflow-y: auto;
+  border-collapse: collapse;
+}
+
+.confirmData th {
+  width: 50%;
+  text-align: right;
+  padding-right: 1.5rem;
+  word-break: keep-all;
+}
+
+.confirmData td {
+  width: 50%;
+  font-size: 1rem;
+  text-align: left;
+  word-break: break-all;
+}
+
+.confirmData td,
+th {
+  border: none;
+  border-top: 1px solid #aeaeae;
+}
+
+.confirmData td:first-child,
+th:first-child {
+  border-left: none;
+}
+
+.confirmData tr:first-child td,
+tr:first-child th {
+  border-top: none;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60%;
+  gap: 2rem;
+}
+
+.requestError {
+  text-align: center;
+  color: red;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .confirmContainer h3 {
+    font-size: 1rem;
+  }
+  .confirmData th {
+    text-align: center;
+    font-size: 0.8rem;
+  }
+  .confirmData td {
+    font-size: 0.8rem;
+  }
+
+  .requestError {
+    font-size: 1rem;
+  }
+}
