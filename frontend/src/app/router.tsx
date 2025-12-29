@@ -91,10 +91,23 @@ const createAppRouter = (queryClient: QueryClient) => {
       element: <ManagementRoot />,
       ErrorBoundary: ManagementErrorBoundary,
       children: [
-        route(
-          paths.app.management.group.path,
-          () => import("./routes/app/management/groupManagement")
-        ),
+        {
+          path: paths.app.management.group.root.path,
+          lazy: () =>
+            import("../features/management/layouts/groupShell/groupShell").then(
+              convert(queryClient)
+            ),
+          children: [
+            route(
+              paths.app.management.group.root.path,
+              () => import("./routes/app/management/groupList")
+            ),
+            route(
+              paths.app.management.group.new.path,
+              () => import("./routes/app/management/groupNew")
+            ),
+          ],
+        },
       ],
     },
 

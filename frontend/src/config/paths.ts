@@ -94,8 +94,18 @@ export const paths = {
         getHref: () => "/manager",
       },
       group: {
-        path: "/manager/teacher/group",
-        getHref: () => "/manager/teacher/group",
+        root: {
+          path: "/manager/teacher/group",
+          getHref: () => "/manager/teacher/group",
+        },
+        new: {
+          path: "/manager/teacher/group/new",
+          getHref: () => "manager/teacher/group/new",
+        },
+        edit: {
+          path: "/manager/teacher/group/edit",
+          getHref: () => "manager/teacher/group/edit",
+        },
       },
       post: {
         path: "/manager/teacher/post",
