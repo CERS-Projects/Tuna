@@ -1,29 +1,33 @@
-import { useState, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { findBreadcrumbPath } from "../utils/findBreadcrumbPath";
+import { findGroupById } from "../utils/findGroupById";
 import { type TreeType } from "../types/group";
 import { type Breadcrumb } from "../types/breadcrumb";
-
-const findGroupById = (
-  groups: TreeType[],
-  targetId: number
-): TreeType | undefined => {
-  for (const group of groups) {
-    if (group.id === targetId) return group;
-    const targetGroup: TreeType | undefined = group.branch
-      ? findGroupById(group.branch, targetId)
-      : undefined;
-    if (targetGroup) return targetGroup;
-  }
-
-  return undefined;
-};
+import { useSearchParams } from "react-router";
 
 export const useGroupNavigation = (groups: TreeType[]) => {
-  const [requestedGroupId, setRequestedGroupId] = useState<number | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const selectGroup = useCallback((id: number): void => {
-    setRequestedGroupId(id);
-  }, []);
+  const requestedGroupId = useMemo(() => {
+    const raw = searchParams.get("groupId");
+    if (!raw) return null;
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
+  }, [searchParams]);
+
+  const selectGroup = useCallback(
+    (id: number): void => {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.set("groupId", String(id));
+          return next;
+        },
+        { replace: true }
+      );
+    },
+    [setSearchParams]
+  );
 
   const { breadcrumbs, currentGroup, selectedGroupId } = useMemo(() => {
     if (!groups || groups.length === 0) {
