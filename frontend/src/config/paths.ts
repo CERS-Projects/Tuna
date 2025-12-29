@@ -100,11 +100,11 @@ export const paths = {
         },
         new: {
           path: "/manager/teacher/group/new",
-          getHref: () => "manager/teacher/group/new",
+          getHref: () => "/manager/teacher/group/new",
         },
         edit: {
           path: "/manager/teacher/group/edit",
-          getHref: () => "manager/teacher/group/edit",
+          getHref: () => "/manager/teacher/group/edit",
         },
       },
       post: {
