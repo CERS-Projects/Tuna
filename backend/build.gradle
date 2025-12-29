@@ -23,6 +23,7 @@ configurations {
 repositories {
 	mavenCentral()
 }
+
 sourceSets{
 	main {
 		java{
@@ -30,6 +31,7 @@ sourceSets{
 		}
 	}
 }
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -46,7 +48,14 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
 
+	implementation platform('software.amazon.awssdk:bom:2.25.40') 
+    implementation 'software.amazon.awssdk:s3'
+    implementation 'software.amazon.awssdk:sts'
+
+	//ファイルタイプ検出用ライブラリ
+	implementation 'org.apache.tika:tika-core:2.9.1'
 }
 
 tasks.named('test') {

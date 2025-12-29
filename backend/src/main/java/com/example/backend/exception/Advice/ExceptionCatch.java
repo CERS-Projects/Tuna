@@ -1,5 +1,7 @@
 package com.example.backend.exception.Advice;
 
+import java.io.IOException;
+
 import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -55,12 +57,11 @@ public class ExceptionCatch {
     }
 
     // 500
-    @ExceptionHandler({ InternalServerError.class })
+    @ExceptionHandler({ InternalServerError.class, IOException.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseEntity serverError(Exception e) {
         ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         log.error(response.getErrorMessage());
         return response;
     }
-
 }

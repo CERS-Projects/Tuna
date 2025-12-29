@@ -73,13 +73,64 @@ export const paths = {
 
   // アプリ内ルート (ログイン必要)
   app: {
+    // 共通ルート
     root: {
       path: "/app",
       getHref: () => "/app",
     },
+    timeline: {
+      path: "/app/timeline",
+      getHref: () => "/app/timeline",
+    },
     test: {
       path: "/app/test",
       getHref: () => "/app/test",
+    },
+
+    // 教師ルート
+    management: {
+      root: {
+        path: "/manager",
+        getHref: () => "/manager",
+      },
+      group: {
+        root: {
+          path: "/manager/teacher/group",
+          getHref: () => "/manager/teacher/group",
+        },
+        new: {
+          path: "/manager/teacher/group/new",
+          getHref: () => "/manager/teacher/group/new",
+        },
+        edit: {
+          path: "/manager/teacher/group/edit",
+          getHref: () => "/manager/teacher/group/edit",
+        },
+      },
+      post: {
+        path: "/manager/teacher/post",
+        getHref: () => "/manager/teacher/post",
+      },
+      classroom: {
+        path: "/manager/teacher/room",
+        getHref: () => "/manager/teacher/room",
+      },
+      notification: {
+        path: "/manager/teacher/notification",
+        getHref: () => "/manager/teacher/notification",
+      },
+      account: {
+        path: "/manager/teacher/account",
+        getHref: () => "/manager/teacher/account",
+      },
+      report: {
+        path: "/manager/teacher/report",
+        getHref: () => "/manager/teacher/report",
+      },
+      schoolInfo: {
+        path: "/manager/teacher/school-info",
+        getHref: () => "/manager/teacher/school-info",
+      },
     },
   },
 } as const;

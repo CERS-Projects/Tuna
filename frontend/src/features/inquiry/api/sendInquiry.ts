@@ -6,7 +6,7 @@ export const sendInquiry = async (
   inquiryData: InquirySendData
 ): Promise<boolean> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/inquiry/insert`, {
+    const response = await fetch(`${API_BASE_URL}/support/inquiries/insert`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
