@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import Select, { type MultiValue, type StylesConfig } from "react-select";
+import Select, {
+  type MultiValue,
+  type StylesConfig,
+  type ActionMeta,
+} from "react-select";
 import { type GroupsOutletContext } from "@/features/management/layouts/groupShell/groupShell";
 import {
   type CreateGroupsRequestType,
@@ -90,16 +94,6 @@ const GroupNew = () => {
   const parentOptions = useMemo(() => flattenGroups(groups), [groups]);
 
   useEffect(() => {
-    if (!data) return;
-
-    data.forEach((member, index) => {
-      const shouldBeChecked = selectedGrade.includes(member.grade);
-
-      setValue(`members.${index}.isJoined`, shouldBeChecked);
-    });
-  }, [selectedGrade, data, setValue]);
-
-  useEffect(() => {
     setActions({
       left: {
         label: "キャンセル",
@@ -136,6 +130,10 @@ const GroupNew = () => {
       id="newGroupForm"
       className={styles.form}
       onSubmit={handleSubmit(onSubmit)}
+      onKeyDownCapture={(e) => {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+      }}
     >
       <div className={styles.groupBasicInfo}>
         <div className={styles.groupInfoInput}>
@@ -161,6 +159,10 @@ const GroupNew = () => {
             type="text"
             id="newGroupName"
             placeholder="新しいグループ名を入力"
+            onKeyDown={(e) => {
+              if (e.key !== "Enter") return;
+              e.preventDefault();
+            }}
             {...register("newGroupName", {
               required: "グループ名は必須です。",
             })}
@@ -203,10 +205,45 @@ const GroupNew = () => {
               isClearable
               isMulti
               onChange={(
-                selectedOption: MultiValue<{ value: number; label: string }>
+                newValue: MultiValue<GradeOption>,
+                actionMeta: ActionMeta<GradeOption>
               ) => {
-                const newGrades = selectedOption.map((option) => option.value);
+                const newGrades = newValue.map((option) => option.value);
                 setSelectedGrade(newGrades);
+
+                if (!data) return;
+
+                if (
+                  actionMeta.action === "select-option" &&
+                  actionMeta.option
+                ) {
+                  const targetGrade = actionMeta.option.value;
+                  data.forEach((member, index) => {
+                    if (member.grade === targetGrade) {
+                      setValue(`members.${index}.isJoined`, true);
+                    }
+                  });
+                }
+
+                if (
+                  actionMeta.action === "remove-value" &&
+                  actionMeta.removedValue
+                ) {
+                  const targetGrade = actionMeta.removedValue.value;
+                  data.forEach((member, index) => {
+                    if (member.grade === targetGrade) {
+                      setValue(`members.${index}.isJoined`, false);
+                    }
+                  });
+                }
+
+                if (actionMeta.action === "clear") {
+                  data.forEach((member, index) => {
+                    if (selectedGrade.includes(member.grade)) {
+                      setValue(`members.${index}.isJoined`, false);
+                    }
+                  });
+                }
               }}
               styles={selectStyle}
             />
