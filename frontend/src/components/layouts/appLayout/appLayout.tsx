@@ -1,5 +1,5 @@
 import { Header } from "@/components/ui/header/header";
-import { Menu } from "@/features/timeline/components/menu/menu";
+import { Menu } from "@/components/ui/menu/menu";
 import styles from "./appLayout.module.css";
 
 type Props = {
