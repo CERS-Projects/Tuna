@@ -197,10 +197,10 @@ const GroupNew = () => {
           </div>
 
           <div className={styles.groupInfoInput}>
-            <label htmlFor="selectMemebers">メンバー選択</label>
+            <label htmlFor="selectMembers">メンバー選択</label>
             <Select
               options={gradeOptions}
-              id="selectMemebers"
+              id="selectMembers"
               placeholder="学年を選択..."
               isClearable
               isMulti
