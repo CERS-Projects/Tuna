@@ -286,8 +286,6 @@ const GroupNew = () => {
                           type="checkbox"
                           {...register(`members.${index}.isJoined`)}
                         />
-                      </td>
-                      <td style={{ display: "none" }}>
                         <input
                           type="hidden"
                           value={member.userId}
