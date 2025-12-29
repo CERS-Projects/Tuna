@@ -103,7 +103,7 @@ const Timeline = () => {
             />
           ))}
         </div>
-        <div className={styles.timelineInfoBox}>
+        <div className={styles.timelineSub}>
           <InfoBox>
             <TimelineFilter />
           </InfoBox>

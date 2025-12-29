@@ -16,7 +16,7 @@
   overflow-y: auto;
 }
 
-.timelineInfoBox {
+.timelineSub {
   border-left: 1px solid rgb(50, 85, 150);
   overflow: auto;
   min-width: 0;
@@ -38,7 +38,7 @@
     flex-direction: column;
     flex: 1;
   }
-  .timelineInfoBox {
+  .timelineSub {
     display: none;
   }
   .modalButton {
