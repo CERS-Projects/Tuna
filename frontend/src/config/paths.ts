@@ -82,6 +82,10 @@ export const paths = {
       path: "/app/timeline",
       getHref: () => "/app/timeline",
     },
+    searchPost: {
+      path: "/app/search",
+      getHref: () => "/app/search",
+    },
     test: {
       path: "/app/test",
       getHref: () => "/app/test",

@@ -1,29 +1,39 @@
-.timelineLayout {
+.searchPostLayout {
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
 }
 
-.timelineContainer {
+.searchBarContainer {
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchPostContainer {
   flex: 1;
   min-height: 0;
   display: grid;
   grid-template-columns: 6% 1fr 40%;
 }
 
-.timelineAreaLeft {
+.searchPostAreaLeft {
   border-right: 1px solid rgb(50, 85, 150);
+  z-index: 70;
 }
 
-.timelineAreaCenter {
+.searchPostAreaCenter {
   overflow-y: auto;
 }
 
-.timelineAreaRight {
+.searchPostAreaRight {
   border-left: 1px solid rgb(50, 85, 150);
   overflow: auto;
   min-height: 100%;
+  font-size: 1.7rem;
+  z-index: 70;
 }
 
 .modalButton {
@@ -31,16 +41,17 @@
 }
 
 @media (max-width: 960px) {
-  .timelineContainer {
+  .searchPostContainer {
     display: flex;
     flex-direction: column;
   }
-  .timelineAreaCenter {
+  .searchPostAreaCenter {
     flex: 1;
     order: 1;
     width: 100%;
+    height: auto;
   }
-  .timelineAreaLeft {
+  .searchPostAreaLeft {
     order: 2;
     width: 100%;
     height: 60px;
@@ -49,7 +60,7 @@
     justify-content: space-around;
     align-items: center;
   }
-  .timelineAreaRight {
+  .searchPostAreaRight {
     display: none;
   }
   .modalButton {
@@ -64,5 +75,8 @@
   }
   .modalButton:hover {
     color: #007bff;
+  }
+  .searchBarContainer {
+    min-height: 120px;
   }
 }
