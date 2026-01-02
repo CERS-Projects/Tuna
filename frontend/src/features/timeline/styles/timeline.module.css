@@ -19,7 +19,7 @@
 .timelineSub {
   border-left: 1px solid rgb(50, 85, 150);
   overflow: auto;
-  min-width: 0;
+  min-height: 100%;
 }
 
 .modalButton {
