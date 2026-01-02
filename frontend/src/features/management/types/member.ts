@@ -3,4 +3,5 @@ export type Member = {
   showUserId: string;
   name: string;
   grade: number;
+  isJoined?: boolean;
 };

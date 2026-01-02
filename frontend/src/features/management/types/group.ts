@@ -5,15 +5,15 @@ export type TreeType = {
   branch?: TreeType[];
 };
 
-export type CreateGroupsType = {
+export type GroupFormType = {
   parentGroupId: number;
-  newGroupName: string;
+  groupName: string;
   members: { userId: number; isJoined: boolean }[];
 };
 
-export type CreateGroupsRequestType = {
+export type GroupRequestType = {
   parentGroupId: number;
-  newGroupName: string;
+  groupName: string;
   members: number[];
 };
 

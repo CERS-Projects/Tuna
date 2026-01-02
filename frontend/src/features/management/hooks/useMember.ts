@@ -7,6 +7,7 @@ export const DUMMY_MEMBERS: Member[] = [
     showUserId: "2025_ST0001",
     name: "水戸 太郎",
     grade: 2,
+    isJoined: false,
   },
   {
     userId: 102,
@@ -64,13 +65,24 @@ export const DUMMY_MEMBERS: Member[] = [
   },
 ];
 
-export const useMembers = (groupId: number | null | undefined) => {
+export const useMembers = (
+  schoolId: number,
+  groupId?: number | null | undefined
+) => {
   return useQuery<Member[]>({
-    queryKey: ["groupMembers", groupId],
-    enabled: typeof groupId === "number" && Number.isFinite(groupId),
+    queryKey: ["groupMembers", schoolId, groupId],
+    enabled: !!schoolId,
     queryFn: async () => {
-      // API仕様に合わせて調整（例: /api/groups/:id/members）
-      const res = await fetch(`/api/groups/${groupId}/members`);
+      // グループ作成時(グループID無し)
+      if (!groupId) {
+        const res = await fetch(`/api/schools/${schoolId}/students`);
+        return (await res.json()) as Member[];
+      }
+
+      // グループ編集時
+      const res = await fetch(
+        `/api/schools/${schoolId}/groups/${groupId}/members`
+      );
       if (!res.ok) throw new Error("Failed to fetch group members");
       return (await res.json()) as Member[];
     },

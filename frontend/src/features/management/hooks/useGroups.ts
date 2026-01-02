@@ -67,16 +67,16 @@ const dummyTree: TreeType[] = [
   },
 ];
 
-export const useGroups = () => {
+export const useGroups = (schoolId: number) => {
   const {
     data: groups = dummyTree,
     isFetching,
     isError,
   } = useQuery<TreeType[]>({
-    queryKey: ["groups"],
+    queryKey: ["groups", schoolId],
     // API ができたらここを本実装に差し替え
     queryFn: async () => {
-      const res = await fetch("/api/groups");
+      const res = await fetch(`/api/schools/${schoolId}/groups`);
       if (!res.ok) throw new Error("Failed to fetch groups");
       return (await res.json()) as TreeType[];
     },
