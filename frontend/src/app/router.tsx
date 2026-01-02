@@ -110,6 +110,10 @@ const createAppRouter = (queryClient: QueryClient) => {
               paths.app.management.group.new.path,
               () => import("./routes/app/management/groupNew")
             ),
+            route(
+              paths.app.management.group.edit.path,
+              () => import("./routes/app/management/groupEdit")
+            ),
           ],
         },
       ],
