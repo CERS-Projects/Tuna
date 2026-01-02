@@ -10,21 +10,29 @@ import {
 import { useOutletContext, useNavigate, useLocation } from "react-router";
 import { useMembers } from "@/features/management/hooks/useMember";
 import { flattenGroups } from "@/features/management/utils/flattenGroups";
+import { findParentGroup } from "@/features/management/utils/findParentGroup";
 import styles from "@/features/management/style/groupNew.module.css";
 import { selectStyle } from "@/features/management/style/multiSelectStyle";
 
-const GroupNew = () => {
-  const { groups, selectedGroupId, setActions } =
+const GroupEdit = () => {
+  const { groups, selectedGroupId, setActions, currentGroup } =
     useOutletContext<GroupsOutletContext>();
+
+  const parentGroup = useMemo(() => {
+    if (!currentGroup) return null;
+    return findParentGroup(groups, currentGroup.id);
+  }, [groups, currentGroup]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
   } = useForm<GroupFormType>({
     defaultValues: {
-      parentGroupId: selectedGroupId || 0,
+      parentGroupId: parentGroup?.id ?? 0,
+      groupName: currentGroup?.name ?? "",
     },
   });
 
@@ -35,7 +43,7 @@ const GroupNew = () => {
   const [selectedGrade, setSelectedGrade] = useState<number[]>([]);
 
   // ダミーでschoolIdを1に設定
-  const { data } = useMembers(1);
+  const { data } = useMembers(1, selectedGroupId);
 
   const gradeOptions: GradeOption[] = useMemo(() => {
     if (!data) return [];
@@ -48,15 +56,38 @@ const GroupNew = () => {
     }));
   }, [data]);
 
+  const currentGradeOptions = useMemo(() => {
+    return gradeOptions.filter((option) =>
+      selectedGrade.includes(option.value)
+    );
+  }, [gradeOptions, selectedGrade]);
+
   const parentOptions = useMemo(() => flattenGroups(groups), [groups]);
 
   useEffect(() => {
-    setValue("parentGroupId", selectedGroupId ?? 0);
-  }, [selectedGroupId, setValue]);
+    if (data && currentGroup) {
+      reset({
+        parentGroupId: parentGroup?.id ?? 0,
+
+        groupName: currentGroup.name ?? "",
+
+        members: data.map((member) => ({
+          ...member,
+          isJoined: member.isJoined ?? false,
+        })),
+      });
+    }
+
+    setSelectedGrade([]);
+  }, [data, currentGroup, parentGroup, reset]);
 
   useEffect(() => {
     setActions({
       left: {
+        label: "削除",
+        onClick: () => console.log("選択されたグループ削除"),
+      },
+      middle: {
         label: "キャンセル",
         onClick: () =>
           navigate(
@@ -65,7 +96,7 @@ const GroupNew = () => {
           ),
       },
       right: {
-        label: "作成",
+        label: "更新",
       },
     });
 
@@ -88,7 +119,7 @@ const GroupNew = () => {
 
   return (
     <form
-      id="newGroupForm"
+      id="editGroupForm"
       className={styles.form}
       onSubmit={handleSubmit(onSubmit)}
       onKeyDownCapture={(e) => {
@@ -132,7 +163,7 @@ const GroupNew = () => {
               グループ名は必須です。入力してください。
             </p>
           ) : (
-            <p>作成するグループ名を入力してください。</p>
+            <p>変更する場合はグループ名を入力してください。</p>
           )}
         </div>
       </div>
@@ -156,6 +187,7 @@ const GroupNew = () => {
           <div className={styles.groupInfoInput}>
             <label htmlFor="selectMembers">メンバー選択</label>
             <Select
+              value={currentGradeOptions}
               options={gradeOptions}
               id="selectMembers"
               placeholder="学年を選択..."
@@ -263,4 +295,4 @@ const GroupNew = () => {
   );
 };
 
-export default GroupNew;
+export default GroupEdit;

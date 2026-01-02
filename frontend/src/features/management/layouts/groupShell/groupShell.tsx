@@ -28,7 +28,7 @@ export type GroupsOutletContext = ReturnType<typeof useGroups> & {
 };
 
 const GroupShell = () => {
-  const { groups, isFetching, isError } = useGroups();
+  const { groups, isFetching, isError } = useGroups(1);
   const { breadcrumbs, currentGroup, selectedGroupId, selectGroup } =
     useGroupNavigation(groups);
 
@@ -131,8 +131,14 @@ const GroupShell = () => {
 
           {effectiveActions?.right && (
             <button
-              type={mode === "new" ? "submit" : "button"}
-              form={mode === "new" ? "newGroupForm" : undefined}
+              type={mode === "new" || mode === "edit" ? "submit" : "button"}
+              form={
+                mode === "new"
+                  ? "newGroupForm"
+                  : mode === "edit"
+                  ? "editGroupForm"
+                  : undefined
+              }
               onClick={effectiveActions.right.onClick}
               disabled={effectiveActions.right.disabled}
             >
