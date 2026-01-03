@@ -8,49 +8,66 @@ import {
   type GroupFormType,
 } from "@/features/management/types/group";
 import { flattenGroups } from "@/features/management/utils/flattenGroups";
+import { findParentGroup } from "@/features/management/utils/findParentGroup";
 import { GroupForm } from "@/features/management/components/groupForm/groupForm";
+import styles from "@/features/management/style/groupForm.module.css";
 
-const GroupNew = () => {
+const GroupEdit = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { groups, selectedGroupId, setActions } =
+  const { groups, selectedGroupId, setActions, currentGroup } =
     useOutletContext<GroupsOutletContext>();
+
+  const parentGroup = useMemo(() => {
+    if (!currentGroup) return null;
+    return findParentGroup(groups, currentGroup.id);
+  }, [groups, currentGroup]);
 
   const methods = useForm<GroupFormType>({
     defaultValues: {
-      parentGroupId: selectedGroupId || 0,
+      parentGroupId: parentGroup?.id ?? 0,
+      groupName: currentGroup?.name ?? "",
       members: [],
     },
   });
 
-  const { setValue } = methods;
+  const { reset } = methods;
 
-  const parentOptions = useMemo(() => flattenGroups(groups, null), [groups]);
+  const parentOptions = useMemo(
+    () => flattenGroups(groups, selectedGroupId),
+    [groups, selectedGroupId]
+  );
 
   const [selectedGrade, setSelectedGrade] = useState<number[]>([]);
 
   // ダミーでschoolIdを1に設定
-  const { data: members } = useMembers(1);
+  const { data: members } = useMembers(1, selectedGroupId);
 
   useEffect(() => {
-    setValue("parentGroupId", selectedGroupId ?? 0);
-  }, [selectedGroupId, setValue]);
+    if (members && currentGroup) {
+      reset({
+        parentGroupId: parentGroup?.id ?? 0,
 
-  useEffect(() => {
-    if (!members) return;
-    setValue(
-      "members",
-      members.map((m) => ({
-        ...m,
-        isJoined: false,
-      }))
-    );
-  }, [members, setValue]);
+        groupName: currentGroup.name ?? "",
+
+        members: members.map((member) => ({
+          ...member,
+          isJoined: member.isJoined ?? false,
+        })),
+      });
+    }
+
+    setSelectedGrade([]);
+  }, [members, currentGroup, parentGroup, reset]);
 
   useEffect(() => {
     setActions({
       left: {
+        label: "削除",
+        onClick: () => console.log("選択されたグループ削除"),
+      },
+      middle: {
         label: "キャンセル",
         onClick: () =>
           navigate(
@@ -59,7 +76,7 @@ const GroupNew = () => {
           ),
       },
       right: {
-        label: "作成",
+        label: "更新",
       },
     });
 
@@ -82,6 +99,25 @@ const GroupNew = () => {
     console.log(request);
   };
 
+  if (!currentGroup) {
+    return (
+      <div className={styles.form}>
+        <p>指定されたグループが存在しないため、編集できません。</p>
+        <button
+          type="button"
+          onClick={() =>
+            navigate(
+              { pathname: "..", search: location.search },
+              { relative: "path" }
+            )
+          }
+        >
+          一覧へ戻る
+        </button>
+      </div>
+    );
+  }
+
   return (
     <FormProvider {...methods}>
       <GroupForm
@@ -95,4 +131,4 @@ const GroupNew = () => {
   );
 };
 
-export default GroupNew;
+export default GroupEdit;

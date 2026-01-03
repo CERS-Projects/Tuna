@@ -17,7 +17,7 @@ type Props = {
 
 const MENU_ITEMS = [
   {
-    path: paths.app.management.group.path,
+    path: paths.app.management.group.root.path,
     name: "グループ管理",
     icon: <MdGroups />,
   },
@@ -82,7 +82,7 @@ export const MenuDrawer = ({ isOpen, onClose }: Props) => {
           <nav className={styles.navList}>
             {MENU_ITEMS.map((item) => (
               <NavLink
-                key={item.path}
+                key={item.name}
                 to={item.path}
                 onClick={handleLinkClick}
                 className={({ isActive }) =>
