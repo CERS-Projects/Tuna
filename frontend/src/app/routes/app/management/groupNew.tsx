@@ -11,7 +11,7 @@ import {
 import { useOutletContext, useNavigate, useLocation } from "react-router";
 import { useMembers } from "@/features/management/hooks/useMember";
 import { flattenGroups } from "@/features/management/utils/flattenGroups";
-import styles from "@/features/management/style/groupNew.module.css";
+import styles from "@/features/management/style/groupForm.module.css";
 import { selectStyle } from "@/features/management/style/multiSelectStyle";
 
 const GroupNew = () => {
