@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form";
 import { type GroupFormType, type TreeType } from "../../types/group";
-import styles from "./groupForm.module.css";
+import styles from "../../style/groupForm.module.css";
 
 type Props = {
   parentOptions: TreeType[];
@@ -52,9 +52,7 @@ export const GroupBasicInfo = ({ parentOptions }: Props) => {
         />
 
         {errors["groupName"]?.message ? (
-          <p className={styles.isError}>
-            グループ名は必須です。入力してください。
-          </p>
+          <p className={styles.isError}>{errors["groupName"].message}</p>
         ) : (
           <p>グループ名を入力してください。</p>
         )}

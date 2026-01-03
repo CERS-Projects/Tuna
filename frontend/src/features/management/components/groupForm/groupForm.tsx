@@ -3,7 +3,7 @@ import { MemberManagementSection } from "./memberManagementSection";
 import { GroupBasicInfo } from "./groupBasicInfo";
 import { type GroupFormType, type TreeType } from "../../types/group";
 import type { Member } from "../../types/member";
-import styles from "./groupForm.module.css";
+import styles from "../../style/groupForm.module.css";
 
 type Props = {
   selectedGrade: number[];

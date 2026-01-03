@@ -5,7 +5,7 @@ import { type GroupFormType, type GradeOption } from "../../types/group";
 import type { Member } from "../../types/member";
 import { MemberTable } from "../memberTable/memberTable";
 import { selectStyle } from "../../style/multiSelectStyle";
-import styles from "./groupForm.module.css";
+import styles from "../../style/groupForm.module.css";
 
 type Props = {
   selectedGrade: number[];
