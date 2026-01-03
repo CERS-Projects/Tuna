@@ -64,7 +64,10 @@ const GroupEdit = () => {
     );
   }, [gradeOptions, selectedGrade]);
 
-  const parentOptions = useMemo(() => flattenGroups(groups), [groups]);
+  const parentOptions = useMemo(
+    () => flattenGroups(groups, selectedGroupId),
+    [groups, selectedGroupId]
+  );
 
   useEffect(() => {
     if (data && currentGroup) {

@@ -50,7 +50,10 @@ const GroupNew = () => {
     }));
   }, [data]);
 
-  const parentOptions = useMemo(() => flattenGroups(groups), [groups]);
+  const parentOptions = useMemo(
+    () => flattenGroups(groups, selectedGroupId),
+    [groups, selectedGroupId]
+  );
 
   useEffect(() => {
     setValue("parentGroupId", selectedGroupId ?? 0);
