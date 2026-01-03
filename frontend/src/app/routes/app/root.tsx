@@ -1,4 +1,5 @@
 import { Outlet } from "react-router";
+import { AppLayout } from "@/components/layouts/appLayout/appLayout";
 
 export const ErrorBoundary = () => {
   return <div>Something went wrong!</div>;
@@ -6,7 +7,11 @@ export const ErrorBoundary = () => {
 
 // Outletを後にレイアウトで囲む
 const AppRoot = () => {
-  return <Outlet />;
+  return (
+    <AppLayout>
+      <Outlet />
+    </AppLayout>
+  );
 };
 
 export default AppRoot;

@@ -1,0 +1,42 @@
+.appLayoutContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.appLayoutArea {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 6% 1fr;
+}
+
+.appLayoutLeft {
+  border-right: 1px solid rgb(50, 85, 150);
+}
+
+.appLayoutRight {
+  overflow: hidden;
+}
+
+@media (max-width: 960px) {
+  .appLayoutArea {
+    display: flex;
+    flex-direction: column;
+  }
+  .appLayoutRight {
+    flex: 1;
+    order: 1;
+    width: 100%;
+  }
+  .appLayoutLeft {
+    order: 2;
+    width: 100%;
+    min-height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+}

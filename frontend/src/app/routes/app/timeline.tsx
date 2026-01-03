@@ -1,7 +1,5 @@
-import { Header } from "@/components/ui/header/header";
 import { InfoBox } from "@/components/ui/infoBox/infoBox";
 import { TimelineFilter } from "@/features/timeline/components/timelineFilter/timelineFilter";
-import { Menu } from "@/features/timeline/components/menu/menu";
 import { PostBox } from "@/components/ui/postBox/postBox";
 import { RiCompass3Line } from "react-icons/ri";
 import styles from "@/features/timeline/styles/timeline.module.css";
@@ -83,12 +81,8 @@ const Timeline = () => {
   };
   return (
     <div className={styles.timelineLayout}>
-      <Header />
       <div className={styles.timelineContainer}>
-        <div className={styles.timelineAreaLeft}>
-          <Menu />
-        </div>
-        <div className={styles.timelineAreaCenter}>
+        <div className={styles.timelineMain}>
           <button onClick={modalButtonClick} className={styles.modalButton}>
             <RiCompass3Line />
           </button>
@@ -109,7 +103,7 @@ const Timeline = () => {
             />
           ))}
         </div>
-        <div className={styles.timelineAreaRight}>
+        <div className={styles.timelineSub}>
           <InfoBox>
             <TimelineFilter />
           </InfoBox>
