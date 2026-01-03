@@ -34,6 +34,7 @@ const GroupEdit = () => {
     defaultValues: {
       parentGroupId: parentGroup?.id ?? 0,
       groupName: currentGroup?.name ?? "",
+      members: [],
     },
   });
 
@@ -105,7 +106,9 @@ const GroupEdit = () => {
   }, [setActions, navigate, location.search]);
 
   const onSubmit = async (data: GroupFormType) => {
-    const joinedMembersId = data.members
+    const members = Array.isArray(data.members) ? data.members : [];
+
+    const joinedMembersId = members
       .filter((member) => member.isJoined)
       .map((member) => member.userId);
 

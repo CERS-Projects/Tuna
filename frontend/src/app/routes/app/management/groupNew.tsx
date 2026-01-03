@@ -26,6 +26,7 @@ const GroupNew = () => {
   } = useForm<GroupFormType>({
     defaultValues: {
       parentGroupId: selectedGroupId || 0,
+      members: [],
     },
   });
 
@@ -74,7 +75,9 @@ const GroupNew = () => {
   }, [setActions, navigate, location.search]);
 
   const onSubmit = async (data: GroupFormType) => {
-    const joinedMembersId = data.members
+    const members = Array.isArray(data.members) ? data.members : [];
+
+    const joinedMembersId = members
       .filter((member) => member.isJoined)
       .map((member) => member.userId);
 
