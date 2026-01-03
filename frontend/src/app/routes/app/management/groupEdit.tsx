@@ -92,7 +92,7 @@ const GroupEdit = () => {
 
     const request: GroupRequestType = {
       parentGroupId: formData.parentGroupId,
-      groupName: formData.groupName,
+      groupName: formData.groupName.trim(),
       members: joinedMembersId,
     };
 
