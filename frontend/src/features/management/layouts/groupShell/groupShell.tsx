@@ -132,13 +132,7 @@ const GroupShell = () => {
           {effectiveActions?.right && (
             <button
               type={mode === "new" || mode === "edit" ? "submit" : "button"}
-              form={
-                mode === "new"
-                  ? "newGroupForm"
-                  : mode === "edit"
-                  ? "editGroupForm"
-                  : undefined
-              }
+              form={mode === "new" || mode === "edit" ? "groupForm" : undefined}
               onClick={effectiveActions.right.onClick}
               disabled={effectiveActions.right.disabled}
             >

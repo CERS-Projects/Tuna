@@ -1,15 +1,16 @@
-import { type UseFormRegister } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { type GroupFormType } from "../../types/group";
 import { type Member } from "../../types/member";
 import styles from "./memberTable.module.css";
 
 type Props = {
-  data: Member[] | null;
+  members: Member[] | null;
   searchQuery: string;
-  register: UseFormRegister<GroupFormType>;
 };
 
-export const MemberTable = ({ data, searchQuery, register }: Props) => {
+export const MemberTable = ({ members, searchQuery }: Props) => {
+  const { register } = useFormContext<GroupFormType>();
+
   return (
     <div className={styles.memberTableContainer}>
       <table className={styles.memberTable}>
@@ -22,8 +23,8 @@ export const MemberTable = ({ data, searchQuery, register }: Props) => {
           </tr>
         </thead>
         <tbody>
-          {data ? (
-            data.map((member, index) => {
+          {members ? (
+            members.map((member, index) => {
               if (searchQuery) {
                 const lowerQuery = searchQuery.toLowerCase();
                 const lowerName = member.name.toLowerCase();
