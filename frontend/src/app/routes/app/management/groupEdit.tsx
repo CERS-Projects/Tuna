@@ -10,6 +10,7 @@ import {
 import { flattenGroups } from "@/features/management/utils/flattenGroups";
 import { findParentGroup } from "@/features/management/utils/findParentGroup";
 import { GroupForm } from "@/features/management/components/groupForm/groupForm";
+import styles from "@/features/management/style/groupForm.module.css";
 
 const GroupEdit = () => {
   const navigate = useNavigate();
@@ -97,6 +98,25 @@ const GroupEdit = () => {
 
     console.log(request);
   };
+
+  if (!currentGroup) {
+    return (
+      <div className={styles.form}>
+        <p>指定されたグループが存在しないため、編集できません。</p>
+        <button
+          type="button"
+          onClick={() =>
+            navigate(
+              { pathname: "..", search: location.search },
+              { relative: "path" }
+            )
+          }
+        >
+          一覧へ戻る
+        </button>
+      </div>
+    );
+  }
 
   return (
     <FormProvider {...methods}>
