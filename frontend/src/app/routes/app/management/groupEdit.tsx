@@ -35,7 +35,7 @@ const GroupEdit = () => {
   const { reset } = methods;
 
   const parentOptions = useMemo(
-    () => flattenGroups(groups, selectedGroupId),
+    () => flattenGroups(groups, selectedGroupId, { excludeDescendants: true }),
     [groups, selectedGroupId]
   );
 
