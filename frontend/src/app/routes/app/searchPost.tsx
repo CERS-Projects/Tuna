@@ -1,10 +1,8 @@
-import { Header } from "@/components/ui/header/header";
 import { InfoBox } from "@/components/ui/infoBox/infoBox";
 import {
   SearchFilter,
   type NodeItem,
 } from "@/features/search/components/searchFilter";
-import { Menu } from "@/features/timeline/components/menu/menu";
 import styles from "@/features/search/styles/searchPost.module.css";
 import { useRef } from "react";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
@@ -33,12 +31,8 @@ const SearchPost = () => {
   };
   return (
     <div className={styles.searchPostLayout}>
-      <Header />
       <div className={styles.searchPostContainer}>
-        <div className={styles.searchPostAreaLeft}>
-          <Menu />
-        </div>
-        <div className={styles.searchPostAreaCenter}>
+        <div className={styles.searchPostMain}>
           <button onClick={modalButtonClick} className={styles.modalButton}>
             <RiCompass3Line />
           </button>
@@ -46,7 +40,7 @@ const SearchPost = () => {
             <SearchHistory />
           </div>
         </div>
-        <div className={styles.searchPostAreaRight}>
+        <div className={styles.searchPostSub}>
           <InfoBox>
             <SearchFilter flatData={exampleFlatData} />
           </InfoBox>
