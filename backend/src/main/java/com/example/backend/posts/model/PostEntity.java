@@ -1,0 +1,58 @@
+package com.example.backend.posts.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import java.util.Date;
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(collection = "post_collection")
+public class PostEntity {
+    
+    @Id
+    private String id;
+    
+    @Field("user_id")
+    @NotNull
+    private Integer userId;
+    
+    @Field("post_date")
+    @NotNull
+    private Date postDate;
+    
+    @Field("school_code")
+    @NotNull
+    private String schoolCode;
+    
+    @Field("sentence")
+    @NotNull
+    private String sentence;
+    
+    @Field("image_objectKey")
+    private List<String> imageObjectKey;
+    
+    @Field("like_Count")
+    @NotNull
+    private Integer likeCount;
+    
+    @Field("share_range")
+    @NotNull
+    private List<Integer> shareRange;
+    
+    @Field("post_flag")
+    @NotNull
+    private Boolean postFlag;
+
+    @Field("response_to")
+    private String responseTo;
+}
