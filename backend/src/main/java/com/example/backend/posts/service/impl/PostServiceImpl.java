@@ -1,7 +1,7 @@
 package com.example.backend.posts.service.impl;
 
-import com.example.backend.posts.dto.GetTimelineResponseDto;
 import com.example.backend.posts.dto.GetTimelineRequestDto;
+import com.example.backend.posts.dto.GetProfilePostsRequestDto;
 import com.example.backend.posts.dto.PostInsertRequestDto;
 import com.example.backend.posts.dto.PostDetailDto;
 import com.example.backend.posts.model.PostEntity;
@@ -74,16 +74,39 @@ public class PostServiceImpl implements PostService {
 
     //タイムライン投稿取得
     public List<PostDetailDto> getTimelinePosts(GetTimelineRequestDto requestDto) {
-        List<PostDetailDto> postDetails = postRepository.findPostsWithDetails(requestDto.getUserId(), requestDto.getShareRange(), requestDto.getMuteWord());
+        List<PostDetailDto> postDetails;
+        try{
+            postDetails = postRepository.findPostsWithDetails(requestDto.getUserId(), requestDto.getShareRange(), requestDto.getMuteWords());
+            log.info("画像" + postDetails.get(0).getImageUrl());
+        }catch(Exception e){
+            log.error("タイムライン投稿の取得に失敗しました。", e);
+            throw new RuntimeException("タイムライン投稿の取得に失敗しました。", e);
+        }
         for(PostDetailDto postDetail : postDetails){
             postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
             postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
         }
 
         return postDetails;
-
-        
         }
+
+    //ユーザー投稿取得
+    public List<PostDetailDto> getUserPosts(GetProfilePostsRequestDto requestDto) {
+        List<PostDetailDto> postDetails;
+        try{
+            log.info("取得を開始しました 相手targetUserId: " + requestDto.getTargetUserId() + " 取得 currentUserId: " + requestDto.getCurrentUserId() );
+            postDetails = postRepository.findUserPostsWithDetails(requestDto.getCurrentUserId(), requestDto.getTargetUserId(), requestDto.getGroupIds());
+        }catch(Exception e){
+            log.error("ユーザー投稿の取得に失敗しました。", e);
+            throw new RuntimeException("ユーザー投稿の取得に失敗しました。", e);
+        }
+        for(PostDetailDto postDetail : postDetails){
+            postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
+            postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+        }
+
+        return postDetails;
+    }
 
     // 投稿削除
     public void deletePost(String postId, Integer userId) {
