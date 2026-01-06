@@ -124,8 +124,31 @@ export const paths = {
         getHref: () => "/manager/notification",
       },
       account: {
-        path: "/manager/account",
-        getHref: () => "/manager/account",
+        root: {
+          path: "/manager/account",
+          getHref: () => "/manager/account",
+        },
+        list: {
+          path: "/manager/account/list",
+          getHref: () => "/manager/account/list",
+        },
+        edit: {
+          path: "/manager/account/edit/:userId",
+          getHref: (userId: number | string) =>
+            `/manager/account/edit/${userId}`,
+        },
+        new: {
+          path: "/manager/account/new",
+          getHref: () => "/manager/account/new",
+        },
+        register: {
+          path: "/manager/account/register",
+          getHref: () => "/manager/account/register",
+        },
+        import: {
+          path: "/manager/account/import",
+          getHref: () => "/manager/account/import",
+        },
       },
       report: {
         path: "/manager/report",
