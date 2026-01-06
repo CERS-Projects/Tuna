@@ -14,7 +14,7 @@ try {
           "user_id",
           "post_date",
           "sentence",
-          "good",
+          "like_Count",
           "share_range",
           "post_flag",
         ],
@@ -35,11 +35,11 @@ try {
             maxLength: 255,
             description: "投稿の本文",
           },
-          image: {
-            bsonType: "string",
+          image_objectKey: {
+            bsonType: "array",
             description: "投稿に添付する画像がある場合記録",
           },
-          good: {
+          like_Count: {
             bsonType: "int",
             minimum: 0,
             description: "投稿についているいいねの総数",
@@ -53,7 +53,7 @@ try {
             },
           },
           response_to: {
-            bsonType: "objectId",
+            bsonType: ["objectId", "null"],
             description: "返信先のBSONのオブジェクトID",
           },
           post_flag: {
@@ -137,7 +137,7 @@ try {
             bsonType: "array",
             items: {
               bsonType: "object",
-              required: ["query", "search_date"],
+              required: ["query", "searched_at"],
               properties: {
                 query: {
                   bsonType: "string",
@@ -145,7 +145,7 @@ try {
                   maxLength: 100,
                   description: "検索クエリを格納",
                 },
-                search_date: {
+                searched_at: {
                   bsonType: "date",
                   description: "検索日を格納 書式はyyyy-mm-dd-hh-mm-ss-ms",
                 },
@@ -162,7 +162,7 @@ try {
     validator: {
       $jsonSchema: {
         bsonType: "object",
-        required: ["user_id"],
+        required: ["user_id", "post_id", "bookmarked_at"],
         properties: {
           user_id: {
             bsonType: "int",
@@ -173,7 +173,7 @@ try {
             bsonType: "objectId",
             description: "ブックマークした投稿のオブジェクトIDを格納",
           },
-          created_at: {
+          bookmarked_at: {
             bsonType: "date",
             description: "リレーションが生成された日時",
           },
@@ -207,11 +207,11 @@ try {
     },
   });
 
-  db.createCollection("goods_collection", {
+  db.createCollection("like_collection", {
     validator: {
       $jsonSchema: {
         bsonType: "object",
-        required: ["user_id", "post_id"],
+        required: ["user_id", "post_id", "liked_at"],
         properties: {
           user_id: {
             bsonType: "int",
@@ -222,7 +222,7 @@ try {
             bsonType: "objectId",
             description: "投稿のオブジェクトIDを格納",
           },
-          created_at: {
+          liked_at: {
             bsonType: "date",
             description: "リレーションが生成された日時",
           },
@@ -293,7 +293,7 @@ try {
                   bsonType: "array",
                   items: {
                     bsonType: "object",
-                    required: ["name", "path", "upload_date"],
+                    required: ["name", "document_objectKey", "upload_date"],
                     properties: {
                       name: {
                         bsonType: "string",
@@ -301,7 +301,7 @@ try {
                         maxLength: 50,
                         description: "過去に行った授業資料の題名を格納する",
                       },
-                      path: {
+                      document_objectKey: {
                         bsonType: "string",
                         description: "授業資料が格納されるPathを格納",
                       },
@@ -491,30 +491,69 @@ try {
   // A. post_collection
   db.post_collection.insertMany([
     {
+      _id: ObjectId("669a84a2c914e6b7f329d201"), // 固定のObjectIdを指定
       user_id: 101,
       post_date: new Date(),
       sentence: "最初のテスト投稿です。",
-      image: "path/to/img1.jpg",
-      good: 5,
-      share_range: [1, 2],
+      image_objectKey: ["images/418teapot.jpg", "images/レモンの画像.jpg"],
+      like_Count: 5,
+      share_range: [0, 1, 2],
+      response_to: null,
+      post_flag: false,
+    },
+    {
+      _id: ObjectId("669a84a2c914e6b7f329d202"), // 固定のObjectIdを指定
+      user_id: 101,
+      post_date: new Date(Date.now() - 7200000), // 2時間前
+      sentence: "返信テスト投稿です。",
+      like_Count: 3,
+      share_range: [1],
+      post_flag: false,
+    },
+    {
+      user_id: 102,
+      post_date: new Date(Date.now() - 1800000), // 30分前
+      sentence: "こんにちは！これはテスト投稿です。",
+      like_Count: 7,
+      share_range: [0, 1, 3],
+      response_to: null,
       post_flag: false,
     },
     {
       user_id: 102,
       post_date: new Date(Date.now() - 3600000), // 1時間前
       sentence: "2番目の投稿。画像はありません。",
-      good: 10,
-      share_range: [2],
-      response_to: new ObjectId("600000000000000000000001"), // 例として適当な ObjectId
+      like_Count: 10,
+      share_range: [0, 2],
+      response_to: ObjectId("669a84a2c914e6b7f329d201"),
+      post_flag: false,
+    },
+    {
+      user_id: 103,
+      post_date: new Date(Date.now() - 5400000), // 1.5時間前
+      sentence: "テスト投稿3番目です！",
+      like_Count: 2,
+      share_range: [1, 3],
+      response_to: null,
+      post_flag: false,
+    },
+    {
+      user_id: 104,
+      post_date: new Date(Date.now() - 900000), // 15分前
+      sentence: "最後のテスト投稿です。",
+      like_Count: 0,
+      share_range: [0],
+      response_to: null,
       post_flag: false,
     },
   ]);
-  print("✅ post_collectionに2件挿入しました。");
+  print("✅ post_collectionに6件挿入しました。");
 
   // B. profile_collection
   db.profile_collection.insertMany([
     {
       user_id: 101,
+      icon: "images/05a4f81b-2c32-4843-bf9c-3a8ec3bfe10f.png",
       nickname: "タロウ",
       show_user_id: "taro_user",
       introduction: "テストユーザー1号です。",
@@ -524,32 +563,50 @@ try {
     },
     {
       user_id: 102,
-      nickname: "ジロウ",
-      icon: "path/to/icon2.png",
-      show_user_id: "jiro_test",
+      nickname: "ハナコ",
+      icon: "images/bd4f60b5-6cff-4694-a034-d892ad35bf41.png",
+      show_user_id: "hanako_test",
       introduction: "テストユーザー2号。よろしくお願いします！",
       follow: 10,
       follower: 5,
     },
+    {
+      user_id: 103,
+      nickname: "ジロウ",
+      icon: "images/05a4f81b-2c32-4843-bf9c-3a8ec3bfe10f.png",
+      show_user_id: "jiro_example",
+      introduction: "テストユーザー3号です。勉強頑張ります!",
+      follow: 2,
+      follower: 3,
+    },
+    {
+      user_id: 104,
+      nickname: "サブロウ",
+      icon: "images/60306e33-fb23-4874-bd37-26b528802495.png",
+      show_user_id: "saburo_sample",
+      introduction: "テストユーザー4号。よろしく!",
+      follow: 0,
+      follower: 1,
+    },
   ]);
-  print("✅ profile_collectionに2件挿入しました。");
+  print("✅ profile_collectionに4件挿入しました。");
 
   // C. search_history_collection
   db.search_history_collection.insertMany([
     {
       user_id: 101,
       search_history: [
-        { query: "数学 勉強法", search_date: new Date() },
+        { query: "数学 勉強法", searched_at: new Date() },
         {
           query: "英語 スピーキング",
-          search_date: new Date(Date.now() - 600000),
+          searched_at: new Date(Date.now() - 600000),
         },
       ],
     },
     {
       user_id: 103,
       search_history: [
-        { query: "テスト対策", search_date: new Date(Date.now() - 1200000) },
+        { query: "テスト対策", searched_at: new Date(Date.now() - 1200000) },
       ],
     },
   ]);
@@ -560,17 +617,12 @@ try {
     {
       user_id: 101,
       post_id: ObjectId("669a84a2c914e6b7f329d201"),
-      created_at: new Date(),
+      bookmarked_at: new Date(),
     },
     {
       user_id: 205,
       post_id: ObjectId("669a84a2c914e6b7f329d201"),
-      created_at: new Date(),
-    },
-    {
-      user_id: 101,
-      post_id: ObjectId("669a84a2c914e6b7f329d202"),
-      created_at: new Date(),
+      bookmarked_at: new Date(),
     },
   ]);
   print("✅ bookmark_collectionに2件挿入しました。");
@@ -590,25 +642,30 @@ try {
   ]);
   print("✅ follow_and_follower_collectionに2件挿入しました。");
 
-  //F good_collection
-  db.goods_collection.insertMany([
+  //F like_collection
+  db.like_collection.insertMany([
+    {
+      user_id: 102,
+      post_id: ObjectId("669a84a2c914e6b7f329d201"),
+      liked_at: new Date(),
+    },
     {
       user_id: 101,
       post_id: ObjectId("669a84a2c914e6b7f329d201"),
-      created_at: new Date(),
+      liked_at: new Date(),
     },
     {
       user_id: 205,
       post_id: ObjectId("669a84a2c914e6b7f329d201"),
-      created_at: new Date(),
+      liked_at: new Date(),
     },
     {
       user_id: 101,
       post_id: ObjectId("669a84a2c914e6b7f329d202"),
-      created_at: new Date(),
+      liked_at: new Date(),
     },
   ]);
-  print("✅ goods_collectionに2件挿入しました。");
+  print("✅ like_collectionに3件挿入しました。");
 
   // G. classroom_collection
   db.classroom_collection.insertMany([
@@ -625,7 +682,7 @@ try {
           documents: [
             {
               name: "三角関数資料",
-              path: "path/fig/doc1.pdf",
+              document_objectKey: "path/fig/doc1.pdf",
               upload_date: new Date(),
             },
           ],
