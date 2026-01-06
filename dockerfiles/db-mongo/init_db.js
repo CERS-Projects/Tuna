@@ -14,7 +14,7 @@ try {
 					"user_id",
 					"post_date",
 					"sentence",
-					"like_count",
+					"like_Count",
 					"share_range",
 					"post_flag",
 				],
@@ -31,7 +31,7 @@ try {
 					},
 					sentence: {
 						bsonType: "string",
-						minLength: 1,
+						minLength: 3,
 						maxLength: 255,
 						description: "投稿の本文",
 					},
@@ -39,15 +39,10 @@ try {
 						bsonType: "array",
 						description: "投稿に添付する画像がある場合記録",
 					},
-					like_count: {
+					like_Count: {
 						bsonType: "int",
 						minimum: 0,
 						description: "投稿についているいいねの総数",
-					},
-					response_count: {
-						bsonType: "int",
-						minimum: 0,
-						description: "投稿に対する返信の総数",
 					},
 					share_range: {
 						bsonType: "array",
@@ -63,7 +58,8 @@ try {
 					},
 					post_flag: {
 						bsonType: "bool",
-						description: "投稿の有効状態の管理 true=有効, false=論理削除済",
+						description:
+							"論理削除されているかの状態管理 false=未論理削除, true=論理削除済",
 					},
 				},
 			},
@@ -146,7 +142,7 @@ try {
 								query: {
 									bsonType: "string",
 									minLength: 1,
-									maxLength: 20,
+									maxLength: 100,
 									description: "検索クエリを格納",
 								},
 								searched_at: {
@@ -240,6 +236,7 @@ try {
 			$jsonSchema: {
 				bsonType: "object",
 				required: [
+					"room_id",
 					"school_id",
 					"teacher_id",
 					"room_name",
@@ -247,6 +244,11 @@ try {
 					"categorys",
 				],
 				properties: {
+					room_id: {
+						bsonType: "int",
+						minimum: 1,
+						description: "一意の授業ルームのIDを格納",
+					},
 					school_id: {
 						bsonType: "int",
 						minimum: 1,
