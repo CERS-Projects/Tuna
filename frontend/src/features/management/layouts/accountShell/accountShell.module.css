@@ -1,0 +1,68 @@
+:where(.mainContainer) * {
+  margin: 0;
+  padding: 0;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.sectionName {
+  font-weight: 600;
+}
+
+.outletContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 0;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tab {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid #d7d7d7;
+  min-height: 2rem;
+  padding: 0.5rem 1rem;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: inherit;
+}
+
+.tab:hover {
+  background-color: #d7d7d7;
+}
+
+.tabActive {
+  background-color: #fff;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-radius: 0 10px 10px 10px;
+  border: 1px solid #d7d7d7;
+  background-color: #fff;
+}
