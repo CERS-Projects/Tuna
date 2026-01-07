@@ -1,3 +1,5 @@
+import { get } from "react-hook-form";
+
 export const paths = {
   // ログイン不要ルート
   welcome: {
@@ -85,6 +87,14 @@ export const paths = {
     searchPost: {
       path: "/app/search",
       getHref: () => "/app/search",
+    },
+    searchClassroom: {
+      path: "/app/searchClassroom",
+      getHref: () => "/app/searchClassroom",
+      contents: {
+        path: "/searchClassroom/:id",
+        getHref: (id: number | string) => `/searchClassroom/${id}`,
+      },
     },
     test: {
       path: "/app/test",
