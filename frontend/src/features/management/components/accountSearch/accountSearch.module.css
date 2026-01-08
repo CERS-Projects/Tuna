@@ -1,0 +1,76 @@
+.accountSearch {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  gap: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  background-color: #f1f5f9;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.searchContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.searchContainer button {
+  align-self: flex-end;
+  width: 5rem;
+  height: 2rem;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(50, 85, 150);
+  color: #fff;
+}
+
+.searchContainer button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.searchContainer button:active {
+  border-color: rgb(50, 85, 150);
+  border-width: 3px;
+  transform: translateY(-1px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 30%;
+}
+
+.input label {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.input input,
+select {
+  width: 100%;
+  box-sizing: border-box;
+  height: 38px;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 14px;
+  line-height: 1;
+}
