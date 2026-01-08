@@ -1,0 +1,119 @@
+.accountTableContainer {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.accountTable {
+  min-width: 52rem;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  table-layout: fixed;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.accountTable th,
+.accountTable td {
+  white-space: nowrap;
+}
+
+.accountTable thead th:nth-child(1),
+.accountTable tbody td:nth-child(1) {
+  width: 18rem;
+}
+
+.accountTable thead th:nth-child(3),
+.accountTable thead th:nth-child(4),
+.accountTable thead th:nth-child(5),
+.accountTable tbody td:nth-child(3),
+.accountTable tbody td:nth-child(4),
+.accountTable tbody td:nth-child(5) {
+  width: 6.5rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.accountTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgb(50, 85, 150);
+  color: #fff;
+  text-align: left;
+  padding: 0.55rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgb(56, 94, 164);
+}
+
+.accountTable tbody td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 0.9rem;
+}
+
+.accountTable tbody tr:hover td {
+  background: #f8fafc;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.admin {
+  background-color: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.teacher {
+  background-color: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+}
+
+.student {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.isAvailable,
+.isStoped {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.isAvailable {
+  background-color: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.isStoped {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
