@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router";
 import { type AccountType } from "../../types/account";
+import { paths } from "@/config/paths";
 import styles from "./accountTable.module.css";
 
 type Props = {
@@ -6,6 +8,15 @@ type Props = {
 };
 
 export const AccountTable = ({ accounts }: Props) => {
+  const navigate = useNavigate();
+
+  const handleUserNavigate = (userId: number, showUserId: string) => {
+    navigate(paths.app.management.account.edit.getHref(showUserId), {
+      relative: "route",
+      state: { userId: userId },
+    });
+  };
+
   return (
     <div className={styles.accountTableContainer}>
       <table className={styles.accountTable}>
@@ -22,7 +33,12 @@ export const AccountTable = ({ accounts }: Props) => {
           {accounts ? (
             accounts.map((account) => {
               return (
-                <tr key={account.userId}>
+                <tr
+                  key={account.userId}
+                  onClick={() =>
+                    handleUserNavigate(account.userId, account.showUserId)
+                  }
+                >
                   <td>{account.showUserId}</td>
                   <td>{account.name}</td>
                   <td>
