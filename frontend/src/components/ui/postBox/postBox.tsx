@@ -24,6 +24,8 @@ type PostDataProps = {
   postTo: string;
   userTo: string;
   postImgs?: string[];
+  responseTo?: string;
+  isLink?: boolean;
 };
 
 export const PostBox = ({
@@ -39,6 +41,8 @@ export const PostBox = ({
   postTo,
   userTo,
   postImgs,
+  responseTo,
+  isLink = true,
 }: PostDataProps) => {
   const nameData = `${userName}@${userId}`;
   const navigate = useNavigate();
@@ -74,50 +78,114 @@ export const PostBox = ({
 
   return (
     <>
-      <Link
-        to={postTo}
-        className={`${styles.postBoxLink} ${styles.postContainer}`}
-      >
-        <div
-          className={styles.postHeader}
-          onClick={(e) => handleNavigateClick(e, userTo)}
+      {isLink ? (
+        <Link
+          to={`${postId}`}
+          state={{
+            item: {
+              postId,
+              userId,
+              userName,
+              iconUrl,
+              mainPost,
+              goodCount,
+              commentCount,
+              goodCheck,
+              bookmarkCheck,
+              postTo,
+              userTo,
+              postImgs,
+              responseTo,
+            },
+          }}
+          relative="path"
+          className={`${styles.postBoxLink} ${styles.postContainer}`}
         >
-          {iconUrl && <img src={iconUrl} className={styles.userIcon} alt="" />}
-          <span className={styles.userName}>{nameData}</span>
-        </div>
+          <div
+            className={styles.postHeader}
+            onClick={(e) => handleNavigateClick(e, userTo)}
+          >
+            {iconUrl && (
+              <img src={iconUrl} className={styles.userIcon} alt="" />
+            )}
+            <span className={styles.userName}>{nameData}</span>
+          </div>
 
-        <p className={styles.postBody}>{mainPost}</p>
-        <div className={styles.postImgBox} data-count={postImgs?.length}>
-          {postImgs &&
-            postImgs.map((imgurl, index) => (
-              <img
-                className={styles.postImg}
-                key={index}
-                src={imgurl}
-                onClick={(e) => handleImgClick(e, imgurl)}
-                alt=""
-              />
-            ))}
-        </div>
+          <p className={styles.postBody}>{mainPost}</p>
+          <div className={styles.postImgBox} data-count={postImgs?.length}>
+            {postImgs &&
+              postImgs.map((imgurl, index) => (
+                <img
+                  className={styles.postImg}
+                  key={index}
+                  src={imgurl}
+                  onClick={(e) => handleImgClick(e, imgurl)}
+                  alt=""
+                />
+              ))}
+          </div>
 
-        <div className={styles.postFooter}>
-          <button onClick={goodClick}>
-            {goodOn ? <FaThumbsUp /> : <FaRegThumbsUp />}
-          </button>
-          <span className={styles.goodCount}>{goodCount}</span>
-          <button onClick={(e) => handleNavigateClick(e, "/login")}>
-            <BsChat />
-          </button>
-          <span className={styles.commentCount}>{commentCount}</span>
-          <button onClick={bookmarkClick}>
-            {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
-          </button>
-          <button onClick={(e) => handleNavigateClick(e, "")}>
-            <BsExclamationCircle />
-          </button>
-        </div>
-      </Link>
+          <div className={styles.postFooter}>
+            <button onClick={goodClick}>
+              {goodOn ? <FaThumbsUp /> : <FaRegThumbsUp />}
+            </button>
+            <span className={styles.goodCount}>{goodCount}</span>
+            <button onClick={(e) => handleNavigateClick(e, "/login")}>
+              <BsChat />
+            </button>
+            <span className={styles.commentCount}>{commentCount}</span>
+            <button onClick={bookmarkClick}>
+              {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
+            </button>
+            <button onClick={(e) => handleNavigateClick(e, "")}>
+              <BsExclamationCircle />
+            </button>
+          </div>
+        </Link>
+      ) : (
+        <div className={`${styles.postBoxLink} ${styles.postContainer}`}>
+          <div
+            className={styles.postHeader}
+            onClick={(e) => handleNavigateClick(e, userTo)}
+          >
+            {iconUrl && (
+              <img src={iconUrl} className={styles.userIcon} alt="" />
+            )}
+            <span className={styles.userName}>{nameData}</span>
+          </div>
 
+          <p className={styles.postBody}>{mainPost}</p>
+          <div className={styles.postImgBox} data-count={postImgs?.length}>
+            {postImgs &&
+              postImgs.map((imgurl, index) => (
+                <img
+                  className={styles.postImg}
+                  key={index}
+                  src={imgurl}
+                  onClick={(e) => handleImgClick(e, imgurl)}
+                  alt=""
+                />
+              ))}
+          </div>
+
+          <div className={styles.postFooter}>
+            <button onClick={goodClick}>
+              {goodOn ? <FaThumbsUp /> : <FaRegThumbsUp />}
+            </button>
+            <span className={styles.goodCount}>{goodCount}</span>
+            <button onClick={(e) => handleNavigateClick(e, "/login")}>
+              <BsChat />
+            </button>
+            <span className={styles.commentCount}>{commentCount}</span>
+            <button onClick={bookmarkClick}>
+              {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
+            </button>
+            <button onClick={(e) => handleNavigateClick(e, "")}>
+              <BsExclamationCircle />
+            </button>
+          </div>
+        </div>
+      )}
       <Modal
         ref={modalRef}
         height={"fit-content"}
