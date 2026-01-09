@@ -1,13 +1,15 @@
 import { IoSearch } from "react-icons/io5";
 import { useFormContext } from "react-hook-form";
 import { type AccountSearchType } from "../../types/account";
+import { type Role } from "@/types/user";
 import styles from "./accountSearch.module.css";
 
 type Props = {
   onSubmit: (formData: AccountSearchType) => Promise<void>;
+  role: Role;
 };
 
-export const AccountSearch = ({ onSubmit }: Props) => {
+export const AccountSearch = ({ onSubmit, role }: Props) => {
   const { handleSubmit, register } = useFormContext<AccountSearchType>();
 
   return (
@@ -37,7 +39,7 @@ export const AccountSearch = ({ onSubmit }: Props) => {
             <option value={-1}>（選択無し）</option>
             <option value={0}>生徒</option>
             <option value={1}>教師</option>
-            <option value={2}>学校管理者</option>
+            {role === "ADMINTEACHER" && <option value={2}>学校管理者</option>}
           </select>
         </div>
 

@@ -4,7 +4,10 @@ import { AccountSearch } from "@/features/management/components/accountSearch/ac
 import { AccountTable } from "@/features/management/components/accountTable/accountTable";
 import { FormProvider, useForm } from "react-hook-form";
 import { type AccountSearchType } from "@/features/management/types/account";
+import { type Role } from "@/types/user";
 import styles from "@/features/management/style/accountList.module.css";
+
+const ROLE: Role = "ADMINTEACHER";
 
 const AccountList = () => {
   const methods = useForm<AccountSearchType>({
@@ -38,7 +41,7 @@ const AccountList = () => {
   return (
     <FormProvider {...methods}>
       <div className={styles.contents}>
-        <AccountSearch onSubmit={onSubmit} />
+        <AccountSearch onSubmit={onSubmit} role={ROLE} />
         <AccountTable accounts={accounts} />
       </div>
     </FormProvider>
