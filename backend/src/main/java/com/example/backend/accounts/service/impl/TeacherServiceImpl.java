@@ -22,13 +22,12 @@ import com.example.backend.school.model.SchoolEntity;
 import com.example.backend.school.repository.SchoolRepository;
 import com.example.backend.accounts.helper.AccountsHelper;
 
-
 /*
  * 教師アカウント作成をするためのサービス
  */
 @Service
 @RequiredArgsConstructor
-public class TeacherServiceImpl implements TeacherService, AdminUserService{
+public class TeacherServiceImpl implements TeacherService, AdminUserService {
 
     /* UserRepositoryの依存の注入 */
     private final UserRepository userRepository;
@@ -64,15 +63,15 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     /* 学校登録に付随する、アカウント登録に係る基本情報をMySQLに登録する機能 */
     @Override
     @Transactional
-    public UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId){
+    public UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId) {
 
         SchoolEntity schoolEntity = schoolRepository.findById(schoolId)
             .orElseThrow(() -> new SchoolNotFoundException("学校が見つかりません"));
         UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity, 
                                                                    dto.getShowUserId(),
-                                                                   dto.getName(),
+                                                                   dto.getPassword(),
                                                                    dto.getMailAddress(),
-                                                                   dto.getPassword()
+                                                                   dto.getName()
                                                                    );
 
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
@@ -82,14 +81,14 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     /* ウェブアプリ内からの教師アカウント作成機能を提供する */
     @Override
     @Transactional
-    public UserEntity createTeacher(TeacherCreateRequestInApp dto){
+    public UserEntity createTeacher(TeacherCreateRequestInApp dto) {
 
         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
         UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity, 
                                                                    dto.getShowUserId(),
-                                                                   dto.getName(),
+                                                                   dto.getPassword(),
                                                                    dto.getMailAddress(),
-                                                                   dto.getPassword()
+                                                                   dto.getName()
                                                                  );
         /* セットした値をDBに追加 */
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
