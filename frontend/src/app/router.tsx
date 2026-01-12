@@ -135,6 +135,14 @@ const createAppRouter = (queryClient: QueryClient) => {
               paths.app.management.account.new.path,
               () => import("./routes/app/management/account/accountNew")
             ),
+            route(
+              paths.app.management.account.register.path,
+              () => import("./routes/app/management/account/accountRegister")
+            ),
+            route(
+              paths.app.management.account.import.path,
+              () => import("./routes/app/management/account/accountImport")
+            ),
           ],
         },
       ],
