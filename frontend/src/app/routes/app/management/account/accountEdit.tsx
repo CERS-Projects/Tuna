@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAccount } from "@/features/management/hooks/useAccount";
-import { FaChevronLeft } from "react-icons/fa";
+import { BackPage } from "@/features/management/components/backPage/backPage";
 import {
   StudentAccountEditForm,
   TeacherAccountEditForm,
@@ -49,10 +49,10 @@ const AccountEdit = () => {
 
   return (
     <div className={styles.contents}>
-      <button className={styles.backList} onClick={() => navigate(-1)}>
-        <FaChevronLeft />
-        アカウント一覧に戻る
-      </button>
+      <BackPage
+        to={paths.app.management.account.list.path}
+        label={"アカウント一覧に戻る"}
+      />
 
       <h3 className={styles.sectionName}>アカウント編集</h3>
       <hr />
