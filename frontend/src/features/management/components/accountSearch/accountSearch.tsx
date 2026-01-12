@@ -36,10 +36,10 @@ export const AccountSearch = ({ onSubmit, role }: Props) => {
         <div className={styles.input}>
           <label htmlFor="authority">権限</label>
           <select id="authority" {...register("authority")}>
-            <option value={-1}>（選択無し）</option>
-            <option value={0}>生徒</option>
-            <option value={1}>教師</option>
-            {role === "ADMINTEACHER" && <option value={2}>学校管理者</option>}
+            <option value={-2}>（選択無し）</option>
+            <option value={-1}>生徒</option>
+            <option value={0}>教師</option>
+            {role === "ADMINTEACHER" && <option value={1}>学校管理者</option>}
           </select>
         </div>
 

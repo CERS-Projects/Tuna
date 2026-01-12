@@ -42,11 +42,11 @@ export const AccountTable = ({ accounts }: Props) => {
                   <td>{account.showUserId}</td>
                   <td>{account.name}</td>
                   <td>
-                    {account.authority === 0 ? (
+                    {account.authority === -1 ? (
                       <span className={`${styles.badge} ${styles.student}`}>
                         {"生徒"}
                       </span>
-                    ) : account.authority === 1 ? (
+                    ) : account.authority === 0 ? (
                       <span className={`${styles.badge} ${styles.teacher}`}>
                         {"教師"}
                       </span>
