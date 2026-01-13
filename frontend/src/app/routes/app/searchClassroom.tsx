@@ -7,23 +7,10 @@ import { useRef } from "react";
 import { NoticeInfo } from "@/features/searchClassroom/components/noticeInfo";
 import { SearchBar } from "@/components/ui/search/search";
 import { useState } from "react";
-
-type Classroom = {
-  roomId: number;
-  teacherName: string;
-  roomName: string;
-  description: string;
-  latest_update: string;
-};
-
-type NoticeInfoItem = {
-  noticeId: number;
-  groupId: number;
-  noticeTitle: string;
-  noticeContent: string;
-  noticeDate: string;
-  teacherName: string;
-};
+import type {
+  Classroom,
+  NoticeInfoItem,
+} from "@/features/searchClassroom/types/SelectClassroom";
 
 const dummyClass: Classroom[] = [
   {
@@ -32,7 +19,7 @@ const dummyClass: Classroom[] = [
     roomName: "1-A 算数教室",
     description:
       "基礎からじっくり学ぶ算数のクラスです。現在は分数と小数を中心に学習しています。",
-    latest_update: "2026-01-05 10:30:00",
+    latestUpdate: "2026-01-05 10:30:00",
   },
   {
     roomId: 102,
@@ -40,7 +27,7 @@ const dummyClass: Classroom[] = [
     roomName: "2-B 英語ルーム",
     description:
       "ネイティブ講師を招いた英会話中心の授業。楽しく話すことを目標にしています。",
-    latest_update: "2026-01-06 09:15:22",
+    latestUpdate: "2026-01-06 09:15:22",
   },
   {
     roomId: 205,
@@ -48,7 +35,7 @@ const dummyClass: Classroom[] = [
     roomName: "Science Lab 1",
     description:
       "化学反応の実験をメインに行う理科室です。安全メガネの着用を忘れずに。",
-    latest_update: "2025-12-25 16:45:10",
+    latestUpdate: "2025-12-25 16:45:10",
   },
   {
     roomId: 303,
@@ -56,7 +43,7 @@ const dummyClass: Classroom[] = [
     roomName: "3-C 国語演習",
     description:
       "現代文の読解力を深めます。今週は芥川龍之介の短編を読んでいます。",
-    latest_update: "2026-01-04 14:00:00",
+    latestUpdate: "2026-01-04 14:00:00",
   },
   {
     roomId: 401,
@@ -64,7 +51,7 @@ const dummyClass: Classroom[] = [
     roomName: "プログラミング基礎",
     description:
       "TypeScriptとReactを使ったWebアプリ制作の基礎を学ぶ短期集中コースです。",
-    latest_update: "2026-01-02 11:20:45",
+    latestUpdate: "2026-01-02 11:20:45",
   },
   {
     roomId: 502,
@@ -72,7 +59,7 @@ const dummyClass: Classroom[] = [
     roomName: "アート・デザイン",
     description:
       "色彩感覚を磨くデッサンの時間です。今週は静物画に取り組んでいます。",
-    latest_update: "2026-01-06 08:05:12",
+    latestUpdate: "2026-01-06 08:05:12",
   },
 ];
 
@@ -172,14 +159,7 @@ const SearchClassroom = () => {
           <div className={styles.mainBottom}>
             {searchClassroom.length > 0 ? (
               searchClassroom.map((classroom) => (
-                <SelectClassroom
-                  key={classroom.roomId}
-                  roomId={classroom.roomId}
-                  teacherName={classroom.teacherName}
-                  roomName={classroom.roomName}
-                  description={classroom.description}
-                  latest_update={classroom.latest_update}
-                />
+                <SelectClassroom key={classroom.roomId} {...classroom} />
               ))
             ) : (
               <p>該当する教室が見つかりませんでした。</p>

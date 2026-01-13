@@ -93,7 +93,7 @@ export const paths = {
       getHref: () => "/app/searchClassroom",
       contents: {
         path: "/searchClassroom/:id",
-        getHref: (id: number | string) => `/searchClassroom/${id}`,
+        getHref: (id: number | string) => `/app/searchClassroom/${id}`,
       },
     },
     test: {
