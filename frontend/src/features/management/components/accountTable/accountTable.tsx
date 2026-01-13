@@ -30,14 +30,20 @@ export const AccountTable = ({ accounts }: Props) => {
           </tr>
         </thead>
         <tbody>
-          {accounts ? (
+          {accounts.length > 0 ? (
             accounts.map((account) => {
               return (
                 <tr
                   key={account.userId}
+                  tabIndex={0}
                   onClick={() =>
                     handleUserNavigate(account.userId, account.showUserId)
                   }
+                  onKeyDown={(e) => {
+                    if (e.key !== "Enter") return;
+                    e.preventDefault();
+                    handleUserNavigate(account.userId, account.showUserId);
+                  }}
                 >
                   <td>{account.showUserId}</td>
                   <td>{account.name}</td>
@@ -68,7 +74,9 @@ export const AccountTable = ({ accounts }: Props) => {
               );
             })
           ) : (
-            <></>
+            <tr>
+              <td colSpan={5}>該当データがありませんでした</td>
+            </tr>
           )}
         </tbody>
       </table>
