@@ -69,6 +69,10 @@ export const StudentAccountEditForm = ({
             {...register("grade", {
               required: "学年は必須です",
               valueAsNumber: true,
+              min: {
+                value: 1,
+                message: "1以上の数値を入力してください",
+              },
             })}
           />
           {errors.grade?.message && (
@@ -83,7 +87,14 @@ export const StudentAccountEditForm = ({
           id="email"
           type="email"
           placeholder="メールアドレスを入力..."
-          {...register("email", { required: "メールアドレスは必須です" })}
+          {...register("email", {
+            required: "メールアドレスは必須です",
+            pattern: {
+              value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
+              message:
+                "有効なメールアドレスを入力してください（例: school@example.com）",
+            },
+          })}
         />
         {errors.email?.message && (
           <p className={styles.isError}>{errors.email.message}</p>
@@ -170,7 +181,14 @@ export const TeacherAccountEditForm = ({
           id="email"
           type="email"
           placeholder="メールアドレスを入力..."
-          {...register("email", { required: "メールアドレスは必須です" })}
+          {...register("email", {
+            required: "メールアドレスは必須です",
+            pattern: {
+              value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
+              message:
+                "有効なメールアドレスを入力してください（例: school@example.com）",
+            },
+          })}
         />
         {errors.email?.message && (
           <p className={styles.isError}>{errors.email.message}</p>
