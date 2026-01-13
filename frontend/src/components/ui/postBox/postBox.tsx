@@ -10,40 +10,24 @@ import type React from "react";
 import { useState, useRef } from "react";
 import styles from "./postBox.module.css";
 import { Modal, type ModalHandle } from "../modal/modal";
+import type { PostData } from "@/features/post/types/post";
 
-type PostDataProps = {
-  postId: number;
-  userId: string;
-  userName: string;
-  iconUrl?: string;
-  mainPost: string;
-  goodCount: number;
-  commentCount: number;
-  goodCheck: boolean;
-  bookmarkCheck: boolean;
-  postTo: string;
-  userTo: string;
-  postImgs?: string[];
-  responseTo?: string;
-  isLink?: boolean;
-};
+export const PostBox = (props: PostData) => {
+  const {
+    postId,
+    userId,
+    userName,
+    iconUrl,
+    mainPost,
+    goodCount,
+    commentCount,
+    goodCheck,
+    bookmarkCheck,
+    userTo,
+    postImgs,
+    isLink = true,
+  } = props;
 
-export const PostBox = ({
-  postId,
-  userId,
-  userName,
-  iconUrl,
-  mainPost,
-  goodCount,
-  commentCount,
-  goodCheck,
-  bookmarkCheck,
-  postTo,
-  userTo,
-  postImgs,
-  responseTo,
-  isLink = true,
-}: PostDataProps) => {
   const nameData = `${userName}@${userId}`;
   const navigate = useNavigate();
 
@@ -65,138 +49,82 @@ export const PostBox = ({
     e.preventDefault();
     setBookmarkOn((prev) => !prev);
   };
-
   const handleImgClick = (e: React.MouseEvent, imgurl: string) => {
     e.preventDefault();
     e.stopPropagation();
     setSelectedImg(imgurl);
-
-    if (modalRef.current) {
-      modalRef.current.show();
-    }
+    if (modalRef.current) modalRef.current.show();
   };
+
+  const renderContent = () => (
+    <>
+      <div
+        className={styles.postHeader}
+        onClick={(e) => handleNavigateClick(e, userTo)}
+      >
+        {iconUrl && <img src={iconUrl} className={styles.userIcon} alt="" />}
+        <span className={styles.userName}>{nameData}</span>
+      </div>
+
+      <p className={styles.postBody}>{mainPost}</p>
+
+      <div className={styles.postImgBox} data-count={postImgs?.length}>
+        {postImgs?.map((imgurl, index) => (
+          <img
+            className={styles.postImg}
+            key={index}
+            src={imgurl || "default-image.jpg"}
+            onClick={(e) => handleImgClick(e, imgurl)}
+            alt=""
+          />
+        ))}
+      </div>
+
+      <div className={styles.postFooter}>
+        <button onClick={goodClick}>
+          {goodOn ? <FaThumbsUp /> : <FaRegThumbsUp />}
+        </button>
+        <span className={styles.goodCount}>{goodCount}</span>
+        <button onClick={(e) => handleNavigateClick(e, "/login")}>
+          <BsChat />
+        </button>
+        <span className={styles.commentCount}>{commentCount}</span>
+        <button onClick={bookmarkClick}>
+          {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
+        </button>
+        <button onClick={(e) => handleNavigateClick(e, "")}>
+          <BsExclamationCircle />
+        </button>
+      </div>
+    </>
+  );
+
+  const containerClass = `${styles.postBoxLink} ${styles.postContainer}`;
 
   return (
     <>
       {isLink ? (
         <Link
           to={`${postId}`}
-          state={{
-            item: {
-              postId,
-              userId,
-              userName,
-              iconUrl,
-              mainPost,
-              goodCount,
-              commentCount,
-              goodCheck,
-              bookmarkCheck,
-              postTo,
-              userTo,
-              postImgs,
-              responseTo,
-            },
-          }}
+          state={{ item: props }}
           relative="path"
-          className={`${styles.postBoxLink} ${styles.postContainer}`}
+          className={containerClass}
         >
-          <div
-            className={styles.postHeader}
-            onClick={(e) => handleNavigateClick(e, userTo)}
-          >
-            {iconUrl && (
-              <img src={iconUrl} className={styles.userIcon} alt="" />
-            )}
-            <span className={styles.userName}>{nameData}</span>
-          </div>
-
-          <p className={styles.postBody}>{mainPost}</p>
-          <div className={styles.postImgBox} data-count={postImgs?.length}>
-            {postImgs &&
-              postImgs.map((imgurl, index) => (
-                <img
-                  className={styles.postImg}
-                  key={index}
-                  src={imgurl}
-                  onClick={(e) => handleImgClick(e, imgurl)}
-                  alt=""
-                />
-              ))}
-          </div>
-
-          <div className={styles.postFooter}>
-            <button onClick={goodClick}>
-              {goodOn ? <FaThumbsUp /> : <FaRegThumbsUp />}
-            </button>
-            <span className={styles.goodCount}>{goodCount}</span>
-            <button onClick={(e) => handleNavigateClick(e, "/login")}>
-              <BsChat />
-            </button>
-            <span className={styles.commentCount}>{commentCount}</span>
-            <button onClick={bookmarkClick}>
-              {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
-            </button>
-            <button onClick={(e) => handleNavigateClick(e, "")}>
-              <BsExclamationCircle />
-            </button>
-          </div>
+          {renderContent()}
         </Link>
       ) : (
-        <div className={`${styles.postBoxLink} ${styles.postContainer}`}>
-          <div
-            className={styles.postHeader}
-            onClick={(e) => handleNavigateClick(e, userTo)}
-          >
-            {iconUrl && (
-              <img src={iconUrl} className={styles.userIcon} alt="" />
-            )}
-            <span className={styles.userName}>{nameData}</span>
-          </div>
-
-          <p className={styles.postBody}>{mainPost}</p>
-          <div className={styles.postImgBox} data-count={postImgs?.length}>
-            {postImgs &&
-              postImgs.map((imgurl, index) => (
-                <img
-                  className={styles.postImg}
-                  key={index}
-                  src={imgurl}
-                  onClick={(e) => handleImgClick(e, imgurl)}
-                  alt=""
-                />
-              ))}
-          </div>
-
-          <div className={styles.postFooter}>
-            <button onClick={goodClick}>
-              {goodOn ? <FaThumbsUp /> : <FaRegThumbsUp />}
-            </button>
-            <span className={styles.goodCount}>{goodCount}</span>
-            <button onClick={(e) => handleNavigateClick(e, "/login")}>
-              <BsChat />
-            </button>
-            <span className={styles.commentCount}>{commentCount}</span>
-            <button onClick={bookmarkClick}>
-              {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
-            </button>
-            <button onClick={(e) => handleNavigateClick(e, "")}>
-              <BsExclamationCircle />
-            </button>
-          </div>
-        </div>
+        <div className={containerClass}>{renderContent()}</div>
       )}
+
       <Modal
         ref={modalRef}
-        height={"fit-content"}
-        width={"fit-content"}
+        height="fit-content"
+        width="fit-content"
         containerStyle={{ maxHeight: "500px", maxWidth: "500px" }}
       >
-        <img
-          className={styles.modalImg}
-          src={selectedImg}
-          alt="Enlarged post image"
-        />
+        {selectedImg && (
+          <img className={styles.modalImg} src={selectedImg} alt="Enlarged" />
+        )}
       </Modal>
     </>
   );
