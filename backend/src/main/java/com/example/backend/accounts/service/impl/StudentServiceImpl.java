@@ -22,6 +22,7 @@ import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.StudentRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.StudentService;
+import com.example.backend.group.dto.GetUserBySchoolId;
 import com.example.backend.group.dto.GetUserResponse;
 import com.example.backend.school.model.SchoolEntity;
 
@@ -144,8 +145,8 @@ public class StudentServiceImpl implements StudentService{
      * isJoin:グループに所属しているかどうか
      */
     @Override
-    public List<GetUserResponse> findAllGroup(){
-        List<GetUserResponse> response = studentRepository.findAllStudentUsers();
+    public List<GetUserResponse> findAllGroup(GetUserBySchoolId dto){
+        List<GetUserResponse> response = studentRepository.findAllStudentUsers(dto.getSchoolId());
         return response.stream()
                        .map(user -> 
                                new GetUserResponse(

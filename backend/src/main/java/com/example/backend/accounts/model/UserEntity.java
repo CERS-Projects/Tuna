@@ -17,7 +17,6 @@ import lombok.Setter;
  * アカウント登録の基本情報を扱うエンティティ 
  * 生徒アカウント、教師アカウント共用で使う予定
  */
-
 @Getter
 @Setter
 @Entity
@@ -29,7 +28,6 @@ public class UserEntity {
 
     @ManyToOne
     @JoinColumn(name = "school_id",
-                referencedColumnName = "school_id",
                 nullable = false)
     private SchoolEntity school;
 

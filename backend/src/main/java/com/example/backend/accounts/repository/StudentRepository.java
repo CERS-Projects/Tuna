@@ -12,11 +12,11 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     
     /* フロントに返す用のカスタムクエリ */
     @Query ("""
-            select user.showUserId, user.name, student.grade
-            from UserEntity as user
-            INNER JOIN FETCH 
-            StudentEntity as student
-            user.userId = student.userId
+            SELECT user.showUserId, user.name, student.grade
+            FROM UserEntity AS user
+            INNER JOIN 
+            StudentEntity AS student
+            ON user.userId = student.userId
             """)
-    List<GetUserResponse> findAllStudentUsers();
+    List<GetUserResponse> findAllStudentUsers(Integer schoolId);
 }
