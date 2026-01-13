@@ -13,13 +13,13 @@ const AccountList = () => {
   const methods = useForm<AccountSearchType>({
     defaultValues: {
       query: "",
-      authority: -1,
+      authority: -2,
     },
   });
 
   const [searchInfo, setSearchInfo] = useState<AccountSearchType>({
     query: "",
-    authority: -1,
+    authority: -2,
   });
 
   const {

@@ -1,6 +1,6 @@
 export type AccountSearchType = {
   query: string;
-  authority: -1 | 0 | 1;
+  authority: -2 | -1 | 0 | 1;
 };
 
 export type AccountType = {

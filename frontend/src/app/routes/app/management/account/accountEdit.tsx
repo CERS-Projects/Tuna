@@ -14,7 +14,7 @@ import styles from "@/features/management/style/accountEdit.module.css";
 import { paths } from "@/config/paths";
 
 type LocationState = {
-  userId?: string;
+  userId?: number;
 };
 
 const isTeacherAccount = (
