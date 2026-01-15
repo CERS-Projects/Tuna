@@ -1,7 +1,11 @@
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { createBrowserRouter, type RouteObject } from "react-router"; // type追加
-import { RouterProvider } from "react-router/dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+  type RouteObject,
+} from "react-router";
 
 import { paths } from "@/config/paths";
 
@@ -80,6 +84,10 @@ const createAppRouter = (queryClient: QueryClient) => {
       element: <AppRoot />,
       ErrorBoundary: AppRootErrorBoundary,
       children: [
+        {
+          index: true,
+          element: <Navigate to={paths.app.timeline.path} replace />,
+        },
         route(paths.app.test.path, () => import("./routes/app/test")),
         route(paths.app.timeline.path, () => import("./routes/app/timeline")),
         route(
@@ -96,6 +104,12 @@ const createAppRouter = (queryClient: QueryClient) => {
       ErrorBoundary: ManagementErrorBoundary,
       children: [
         {
+          index: true,
+          element: (
+            <Navigate to={paths.app.management.group.root.path} replace />
+          ),
+        },
+        {
           path: paths.app.management.group.root.path,
           lazy: () =>
             import("../features/management/layouts/groupShell/groupShell").then(
@@ -104,15 +118,50 @@ const createAppRouter = (queryClient: QueryClient) => {
           children: [
             route(
               paths.app.management.group.root.path,
-              () => import("./routes/app/management/groupList")
+              () => import("./routes/app/management/group/groupList")
             ),
             route(
               paths.app.management.group.new.path,
-              () => import("./routes/app/management/groupNew")
+              () => import("./routes/app/management/group/groupNew")
             ),
             route(
               paths.app.management.group.edit.path,
-              () => import("./routes/app/management/groupEdit")
+              () => import("./routes/app/management/group/groupEdit")
+            ),
+          ],
+        },
+        {
+          path: paths.app.management.account.root.path,
+          lazy: () =>
+            import(
+              "../features/management/layouts/accountShell/accountShell"
+            ).then(convert(queryClient)),
+          children: [
+            {
+              index: true,
+              element: (
+                <Navigate to={paths.app.management.account.list.path} replace />
+              ),
+            },
+            route(
+              paths.app.management.account.list.path,
+              () => import("./routes/app/management/account/accountList")
+            ),
+            route(
+              paths.app.management.account.edit.path,
+              () => import("./routes/app/management/account/accountEdit")
+            ),
+            route(
+              paths.app.management.account.new.path,
+              () => import("./routes/app/management/account/accountNew")
+            ),
+            route(
+              paths.app.management.account.register.path,
+              () => import("./routes/app/management/account/accountRegister")
+            ),
+            route(
+              paths.app.management.account.import.path,
+              () => import("./routes/app/management/account/accountImport")
             ),
           ],
         },

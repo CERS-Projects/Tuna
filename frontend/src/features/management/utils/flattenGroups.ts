@@ -2,15 +2,21 @@ import { type TreeType } from "../types/group";
 
 export const flattenGroups = (
   groups: TreeType[],
-  selectedGroupId: number | null
+  selectedGroupId: number | null,
+  options?: { excludeDescendants?: boolean }
 ): TreeType[] => {
   const flatten: TreeType[] = [];
+  const excludeDescendants = options?.excludeDescendants ?? false;
 
   for (const group of groups) {
-    if (group.id !== selectedGroupId) flatten.push(group);
+    const isSelected = selectedGroupId != null && group.id === selectedGroupId;
+
+    if (!isSelected) flatten.push(group);
+
+    if (isSelected && excludeDescendants) continue;
 
     if (group.branch) {
-      const childGroups = flattenGroups(group.branch, selectedGroupId);
+      const childGroups = flattenGroups(group.branch, selectedGroupId, options);
       flatten.push(...childGroups);
     }
   }

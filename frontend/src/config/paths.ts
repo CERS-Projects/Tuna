@@ -99,41 +99,64 @@ export const paths = {
       },
       group: {
         root: {
-          path: "/manager/teacher/group",
-          getHref: () => "/manager/teacher/group",
+          path: "/manager/group",
+          getHref: () => "/manager/group",
         },
         new: {
-          path: "/manager/teacher/group/new",
-          getHref: () => "/manager/teacher/group/new",
+          path: "/manager/group/new",
+          getHref: () => "/manager/group/new",
         },
         edit: {
-          path: "/manager/teacher/group/edit",
-          getHref: () => "/manager/teacher/group/edit",
+          path: "/manager/group/edit",
+          getHref: () => "/manager/group/edit",
         },
       },
       post: {
-        path: "/manager/teacher/post",
-        getHref: () => "/manager/teacher/post",
+        path: "/manager/post",
+        getHref: () => "/manager/post",
       },
       classroom: {
-        path: "/manager/teacher/room",
-        getHref: () => "/manager/teacher/room",
+        path: "/manager/room",
+        getHref: () => "/manager/room",
       },
       notification: {
-        path: "/manager/teacher/notification",
-        getHref: () => "/manager/teacher/notification",
+        path: "/manager/notification",
+        getHref: () => "/manager/notification",
       },
       account: {
-        path: "/manager/teacher/account",
-        getHref: () => "/manager/teacher/account",
+        root: {
+          path: "/manager/account",
+          getHref: () => "/manager/account",
+        },
+        list: {
+          path: "/manager/account/list",
+          getHref: () => "/manager/account/list",
+        },
+        edit: {
+          path: "/manager/account/edit/:showUserId",
+          getHref: (showUserId: string) =>
+            `/manager/account/edit/${showUserId}`,
+        },
+        new: {
+          path: "/manager/account/new",
+          getHref: () => "/manager/account/new",
+        },
+        register: {
+          path: "/manager/account/register",
+          getHref: () => "/manager/account/register",
+        },
+        import: {
+          path: "/manager/account/import",
+          getHref: () => "/manager/account/import",
+        },
       },
       report: {
-        path: "/manager/teacher/report",
-        getHref: () => "/manager/teacher/report",
+        path: "/manager/report",
+        getHref: () => "/manager/report",
       },
       schoolInfo: {
-        path: "/manager/teacher/school-info",
-        getHref: () => "/manager/teacher/school-info",
+        path: "/manager/school-info",
+        getHref: () => "/manager/school-info",
       },
     },
   },
