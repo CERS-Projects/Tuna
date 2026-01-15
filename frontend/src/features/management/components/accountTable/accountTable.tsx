@@ -67,7 +67,7 @@ export const AccountTable = ({ accounts }: Props) => {
                     {account.accountStopFlag === 0 ? (
                       <span className={styles.isAvailable}>{"利用可"}</span>
                     ) : (
-                      <span className={styles.isStoped}>{"停止中"}</span>
+                      <span className={styles.isStopped}>{"停止中"}</span>
                     )}
                   </td>
                 </tr>

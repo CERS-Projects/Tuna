@@ -93,7 +93,7 @@
 }
 
 .isAvailable,
-.isStoped {
+.isStopped {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -112,7 +112,7 @@
   color: #166534;
 }
 
-.isStoped {
+.isStopped {
   background-color: #fee2e2;
   border-color: #fca5a5;
   color: #991b1b;
