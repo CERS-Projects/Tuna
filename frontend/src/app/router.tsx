@@ -1,7 +1,11 @@
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { createBrowserRouter, type RouteObject } from "react-router"; // type追加
-import { RouterProvider } from "react-router/dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+  type RouteObject,
+} from "react-router";
 
 import { paths } from "@/config/paths";
 
@@ -80,6 +84,10 @@ const createAppRouter = (queryClient: QueryClient) => {
       element: <AppRoot />,
       ErrorBoundary: AppRootErrorBoundary,
       children: [
+        {
+          index: true,
+          element: <Navigate to={paths.app.timeline.path} replace />,
+        },
         route(paths.app.test.path, () => import("./routes/app/test")),
         route(paths.app.timeline.path, () => import("./routes/app/timeline")),
         route(
@@ -95,6 +103,12 @@ const createAppRouter = (queryClient: QueryClient) => {
       element: <ManagementRoot />,
       ErrorBoundary: ManagementErrorBoundary,
       children: [
+        {
+          index: true,
+          element: (
+            <Navigate to={paths.app.management.group.root.path} replace />
+          ),
+        },
         {
           path: paths.app.management.group.root.path,
           lazy: () =>
@@ -123,6 +137,12 @@ const createAppRouter = (queryClient: QueryClient) => {
               "../features/management/layouts/accountShell/accountShell"
             ).then(convert(queryClient)),
           children: [
+            {
+              index: true,
+              element: (
+                <Navigate to={paths.app.management.account.list.path} replace />
+              ),
+            },
             route(
               paths.app.management.account.list.path,
               () => import("./routes/app/management/account/accountList")
