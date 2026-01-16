@@ -37,7 +37,7 @@ const MENU_ITEMS = [
     icon: <FaBell />,
   },
   {
-    path: paths.app.management.account.list.path,
+    path: paths.app.management.account.root.path,
     name: "アカウント管理",
     icon: <MdManageAccounts />,
   },
