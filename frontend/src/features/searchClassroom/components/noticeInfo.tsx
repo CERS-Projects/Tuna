@@ -1,13 +1,5 @@
 import styles from "./noticeInfo.module.css";
-
-type NoticeInfoItem = {
-  noticeId: number;
-  groupId: number;
-  noticeTitle: string;
-  noticeContent: string;
-  noticeDate: string;
-  teacherName: string;
-};
+import type { NoticeInfoItem } from "../types/SelectClassroom";
 
 type NoticeInfoProps = {
   items: NoticeInfoItem[];

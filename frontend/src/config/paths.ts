@@ -1,5 +1,3 @@
-import { get } from "react-hook-form";
-
 export const paths = {
   // ログイン不要ルート
   welcome: {

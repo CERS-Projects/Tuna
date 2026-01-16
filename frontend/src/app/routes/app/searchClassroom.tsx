@@ -121,7 +121,7 @@ const SearchClassroom = () => {
 
   const [query, setQuery] = useState<string>("");
   const [searchClassroom, setSearchClassroom] =
-    useState<typeof dummyClass>(dummyClass);
+    useState<Classroom[]>(dummyClass);
 
   const handleSearch = () => {
     if (!query.trim()) {
