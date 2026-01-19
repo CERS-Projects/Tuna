@@ -1,0 +1,36 @@
+.profileTabContainer {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  white-space: nowrap;
+  border-top: 1px solid rgb(50, 85, 150);
+  border-bottom: 1px solid rgb(50, 85, 150);
+}
+
+.profileTabContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.navItem {
+  flex: 25%;
+  min-width: 100px;
+  text-align: center;
+  padding: 12px 20px;
+  text-decoration: none;
+  cursor: pointer;
+  color: black;
+}
+
+.navItem + .navItem {
+  border-left: 1px solid rgb(50, 85, 150);
+}
+
+.navItem:hover {
+  background-color: rgb(220, 220, 220);
+}
+
+.navItem.active {
+  background-color: rgb(50, 85, 150);
+  color: white;
+}

@@ -98,6 +98,28 @@ export const paths = {
         getHref: (id: number | string) => `/app/searchClassroom/${id}`,
       },
     },
+    profile: {
+      root: {
+        path: "/app/profile",
+        getHref: () => "/app/profile",
+      },
+      posts: {
+        path: "/app/profile/posts",
+        getHref: () => "/app/profile/posts",
+      },
+      responses: {
+        path: "/app/profile/responses",
+        getHref: () => "/app/profile/responses",
+      },
+      goods: {
+        path: "/app/profile/goods",
+        getHref: () => "/app/profile/goods",
+      },
+      bookmarks: {
+        path: "/app/profile/bookmarks",
+        getHref: () => "/app/profile/bookmarks",
+      },
+    },
     test: {
       path: "/app/test",
       getHref: () => "/app/test",

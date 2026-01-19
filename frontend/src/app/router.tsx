@@ -102,6 +102,31 @@ const createAppRouter = (queryClient: QueryClient) => {
           paths.app.searchClassroom.path,
           () => import("./routes/app/searchClassroom")
         ),
+        {
+          path: paths.app.profile.root.path,
+          lazy: () =>
+            import("../features/profile/layout/profileLayout").then(
+              convert(queryClient)
+            ),
+          children: [
+            route(
+              paths.app.profile.posts.path,
+              () => import("./routes/app/profile/posts")
+            ),
+            route(
+              paths.app.profile.responses.path,
+              () => import("./routes/app/profile/responses")
+            ),
+            route(
+              paths.app.profile.goods.path,
+              () => import("./routes/app/profile/goods")
+            ),
+            route(
+              paths.app.profile.bookmarks.path,
+              () => import("./routes/app/profile/bookmarks")
+            ),
+          ],
+        },
       ],
     },
 
