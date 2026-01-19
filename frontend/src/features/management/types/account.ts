@@ -28,3 +28,20 @@ export type StudentAccountEditType = AccountEditType & {
 export type TeacherAccountEditType = AccountEditType & {
   authority: 0 | 1;
 };
+
+export type StudentAccountRegisterType = {
+  name: string;
+  grade: number;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  entryDate: string;
+  graduateDate: string;
+};
+
+export type TeacherAccountRegisterType = {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+};

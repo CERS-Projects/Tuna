@@ -1,0 +1,129 @@
+.accountTableContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.tableScroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.accountTable {
+  min-width: 49rem;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  table-layout: fixed;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.accountTable th,
+.accountTable td {
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.accountTable th,
+.accountTable td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.accountTable thead th:nth-child(1),
+.accountTable tbody td:nth-child(1) {
+  width: 9rem;
+}
+
+.accountTable thead th:nth-child(2),
+.accountTable tbody td:nth-child(2) {
+  width: 3.5rem;
+  text-align: center;
+}
+
+.accountTable thead th:nth-child(3),
+.accountTable tbody td:nth-child(3) {
+  width: 12rem;
+}
+
+.accountTable thead th:nth-child(4),
+.accountTable tbody td:nth-child(4) {
+  width: 7rem;
+}
+
+.accountTable thead th:nth-child(5),
+.accountTable tbody td:nth-child(5),
+.accountTable thead th:nth-child(6),
+.accountTable tbody td:nth-child(6) {
+  width: 6.5rem;
+  text-align: center;
+}
+
+.accountTable thead th:nth-child(7),
+.accountTable tbody td:nth-child(7) {
+  width: 4.5rem;
+  text-align: center;
+}
+
+.actionsInner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.accountTable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: rgb(50, 85, 150);
+  color: #fff;
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgb(56, 94, 164);
+}
+
+.accountTable tbody td {
+  padding: 0.55rem 0.6rem;
+  border-bottom: 1px solid #eef2f7;
+  font-size: 0.9rem;
+}
+
+.actionsHead {
+  text-align: center;
+}
+
+.passwordCol {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actionButton {
+  font-size: 1.2rem;
+  height: 32px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: #334155;
+  border-radius: 9999px;
+}
+
+.actionButton:hover {
+  background-color: #f1f5f9;
+}
