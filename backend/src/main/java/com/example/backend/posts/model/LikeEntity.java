@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 
 @Getter
@@ -14,11 +16,12 @@ import jakarta.validation.constraints.NotNull;
 public class LikeEntity {
 
     @Id
+    @MongoId(FieldType.OBJECT_ID)
     private String id;
 
     @NotNull
-    @Field("post_id")
-    private Integer postId;
+    @Field(value = "post_id", targetType = FieldType.OBJECT_ID)
+    private String postId;
 
 
     @NotNull
