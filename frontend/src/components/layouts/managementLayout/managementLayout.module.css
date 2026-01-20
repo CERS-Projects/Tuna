@@ -7,25 +7,35 @@
 }
 
 .container {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 60px 20px 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "menu toggle main";
   flex: 1;
   width: 100%;
   min-height: 0;
+  height: 100%; /* 追加：子要素の height:100% を確定させる */
 }
 
-.menuContainer {
-  display: flex;
-  flex-direction: row;
+.containerOpen {
+  grid-template-columns: 60px 250px 1fr;
+  grid-template-areas: "menu drawer main";
+}
+
+.drawerWrapper {
+  grid-area: drawer;
   height: 100%;
+  min-height: 0;
 }
 
 .menuWrapper {
+  grid-area: menu;
   width: 60px;
   height: 100%;
 }
 
 .openDrawer {
+  grid-area: toggle;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -39,31 +49,26 @@
 }
 
 .main {
-  flex: 1;
+  grid-area: main;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding: 1rem 1.5rem;
   background-color: #f1f5f9;
+  min-height: 0;
 }
 
-/* 960px以下のレイアウト */
 @media (max-width: 960px) {
   .container {
-    flex-direction: column;
-  }
-
-  .contentContainer {
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
+    grid-template-columns: 20px 1fr;
+    grid-template-rows: 1fr 60px;
+    grid-template-areas:
+      "toggle main"
+      "menu menu";
   }
 
   .menuWrapper {
     width: 100%;
     height: 60px;
-    flex-shrink: 0;
   }
 }
