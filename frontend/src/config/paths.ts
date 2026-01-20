@@ -86,6 +86,14 @@ export const paths = {
       path: "/app/search",
       getHref: () => "/app/search",
     },
+    searchClassroom: {
+      path: "/app/searchClassroom",
+      getHref: () => "/app/searchClassroom",
+      contents: {
+        path: "/searchClassroom/:id",
+        getHref: (id: number | string) => `/app/searchClassroom/${id}`,
+      },
+    },
     test: {
       path: "/app/test",
       getHref: () => "/app/test",

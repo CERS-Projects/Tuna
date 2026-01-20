@@ -1,0 +1,79 @@
+.searchClassroomLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.searchClassroomContainer {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 40%;
+}
+
+.searchClassroomMain {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mainTop {
+  padding-bottom: 5px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgb(50, 85, 150);
+  z-index: 10;
+}
+
+.mainBottom {
+  padding-top: 20px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.searchClassroomSub {
+  border-left: 1px solid rgb(50, 85, 150);
+  overflow: auto;
+  min-width: 0;
+}
+
+.modalButton {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .searchClassroomContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  .searchClassroomMain {
+    order: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .searchClassroomSub {
+    display: none;
+  }
+  .modalButton {
+    position: fixed;
+    display: block;
+    font-size: 3rem;
+    z-index: 1;
+    background: none;
+    border: none;
+    right: 3%;
+    color: rgb(50, 85, 150);
+  }
+  .modalButton:hover {
+    color: #007bff;
+  }
+}

@@ -124,7 +124,7 @@ export const SearchHistory = () => {
       </div>
 
       {searchData && (
-        <div className={styles.resultList}>
+        <div>
           {searchData.map((item) => (
             <PostBox key={item.postId} {...item} />
           ))}

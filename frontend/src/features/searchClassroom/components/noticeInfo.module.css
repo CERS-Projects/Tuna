@@ -1,0 +1,63 @@
+.noticeInfoContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.noticeInfoContainer h2 {
+  position: sticky;
+  background-color: white;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.separator {
+  width: 100%;
+  border: none;
+  border-top: 1px solid rgb(50, 85, 150);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.scrollArea {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.noticeInfoContent {
+  width: 90%;
+  padding: 15px 5px;
+  border-bottom: 1px solid rgb(50, 85, 150);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  margin: 0 auto;
+}
+
+.noticeInfoContent h3 {
+  grid-column: 1;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.noticeInfoContent small {
+  grid-column: 2;
+  text-align: right;
+  color: #666;
+}
+
+.noticeInfoContent p {
+  grid-column: 1 / span 2;
+  margin: 10px 0;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}
+
+.noticeInfoContent big {
+  grid-column: 2;
+  text-align: right;
+  font-size: 0.9rem;
+}
