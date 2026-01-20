@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import java.util.List;
 
 @NoArgsConstructor
@@ -15,6 +17,7 @@ import java.util.List;
 @Document(collection = "search_history_collection")
 public class SerchHistoryEntity {
     @Id
+    @MongoId(FieldType.OBJECT_ID)
     private String id;
 
     @NonNull
