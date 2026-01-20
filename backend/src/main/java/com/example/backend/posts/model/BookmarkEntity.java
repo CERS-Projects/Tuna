@@ -4,10 +4,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 import jakarta.validation.constraints.NotNull;
-
+import org.bson.types.ObjectId;
+import java.util.Date;
 
 @NoArgsConstructor
 @Getter
@@ -16,11 +19,11 @@ import jakarta.validation.constraints.NotNull;
 public class BookmarkEntity {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     @NotNull
     @Field("post_id")
-    private Integer postId;
+    private ObjectId postId;
 
     @NotNull
     @Field("user_id")
@@ -28,5 +31,5 @@ public class BookmarkEntity {
     
     @NotNull
     @Field("bookmarked_at")
-    private String bookmarkedAt;
+    private Date bookmarkedAt;
 }
