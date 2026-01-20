@@ -6,6 +6,8 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -13,6 +15,9 @@ import org.springframework.web.client.HttpServerErrorException.InternalServerErr
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.example.backend.exception.AuthException;
 import com.example.backend.exception.Model.ErrorResponseEntity;
 import com.example.backend.exception.Model.SchoolNotFoundException;
 
@@ -39,6 +44,26 @@ public class ExceptionCatch {
         return response;
     }
 
+    // 401
+    @ExceptionHandler({ AuthException.class, UsernameNotFoundException.class, TokenExpiredException.class,
+            JWTVerificationException.class })
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponseEntity expError(Exception e) {
+        ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
+        log.error(response.getErrorMessage());
+        System.out.println(response);
+        return response;
+    }
+
+    // 403
+    @ExceptionHandler({ AccessDeniedException.class })
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponseEntity authorityError(Exception e) {
+        ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.FORBIDDEN.value(), e.getMessage());
+        log.error(response.getErrorMessage());
+        return response;
+    }
+
     // 404
     @ExceptionHandler({ NoResourceFoundException.class, EmptyResultDataAccessException.class, SchoolNotFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -61,7 +86,8 @@ public class ExceptionCatch {
     @ExceptionHandler({ InternalServerError.class, IOException.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseEntity serverError(Exception e) {
-        ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                e.getMessage());
         log.error(response.getErrorMessage());
         return response;
     }
