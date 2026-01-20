@@ -3,14 +3,19 @@ package com.example.backend.posts.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -19,8 +24,9 @@ import java.util.List;
 @Document(collection = "post_collection")
 public class PostEntity {
     
+
     @Id
-    private String id;
+    private ObjectId id;
     
     @Field("user_id")
     @NotNull
@@ -44,6 +50,10 @@ public class PostEntity {
     @Field("like_Count")
     @NotNull
     private Integer likeCount;
+
+    @Field("response_Count")
+    @NotNull
+    private Integer responseCount;
     
     @Field("share_range")
     @NotNull
@@ -54,5 +64,5 @@ public class PostEntity {
     private Boolean postFlag;
 
     @Field("response_to")
-    private String responseTo;
+    private ObjectId responseTo;
 }
