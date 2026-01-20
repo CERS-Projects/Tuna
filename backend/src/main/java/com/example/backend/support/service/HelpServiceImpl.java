@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.support.model.HelpContentEntity;
 import com.example.backend.support.model.HelpCategoryEntity;
 import com.example.backend.support.repository.HelpContentRepository;
+
 import com.example.backend.support.repository.HelpCategoryRepository;
 
 @Service
@@ -24,6 +25,7 @@ public class HelpServiceImpl implements HelpService {
 
     @Override
     public List<HelpCategoryEntity> findHelpCategories() {
+
         return helpCategoryRepository.findAll();
     }
 
@@ -37,6 +39,7 @@ public class HelpServiceImpl implements HelpService {
         if (helpCategoryRepository.existsByCategoryId(id) == false) {
             throw new EmptyResultDataAccessException("見つかりません", 0);
         }
+
         return helpContentRepository.findByCategoryId(id);
     }
 
@@ -108,7 +111,6 @@ public class HelpServiceImpl implements HelpService {
         } else {
             throw new EmptyResultDataAccessException("削除項目が存在しません", 0);
         }
-
 
     }
 

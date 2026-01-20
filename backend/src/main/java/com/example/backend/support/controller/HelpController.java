@@ -11,6 +11,7 @@ import com.example.backend.support.service.HelpService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,9 @@ public class HelpController {
     private final HelpService helpService;
 
     @GetMapping("/category")
-    public List<HelpCategoryEntity> getHelpCategory() {
-        return helpService.findHelpCategories();
+    public ResponseEntity<List<HelpCategoryEntity>> getHelpCategory() {
+        List<HelpCategoryEntity> category = helpService.findHelpCategories();
+        return ResponseEntity.ok(category);
     }
 
     @GetMapping("/category/{categoryId}")
