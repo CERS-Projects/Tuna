@@ -2,16 +2,23 @@ package com.example.backend.posts.repository;
 
 
 
-import com.example.backend.posts.dto.PostDetailDto;
+import com.example.backend.posts.dto.PostDetailResponse;
 import com.example.backend.posts.model.PostEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.mongodb.repository.Aggregation;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.Update;
+import org.bson.types.ObjectId;
 import java.util.List;
 
 @Repository
 public interface PostRepository extends MongoRepository<PostEntity, String> {
+
+    //返信Countをインクリメント
+    @Query("{ '_id': ?0 }")
+    @Update("{ '$inc': { 'response_Count': 2 } }")
+    long incrementResponseCount(ObjectId postId);
 
 
     // ユーザーIDと投稿IDで存在確認(ユーザーチェック)
@@ -26,20 +33,27 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "{ $match: { response_to: null } }",
         
         // 2. share_rangeの条件でフィルタ
-        "{ $match: { share_range: { $in: ?1 } } }",
+        "{ $match: { $expr: { $gt: [ { $size: { $setIntersection: [ '$share_range', ?1 ] } }, 0 ] } } }",
+
+        //3.5 post_flagがfalseのものを除外
+        "{ $match: { post_flag: { $ne: false } } }",
         
-        // 3. muteWordの条件でフィルタ
+        // 4. ミュートワードフィルタ
         "{ $match: { " +
         "  $expr: { " +
         "    $cond: { " +
         "      if: { $and: [ { $ne: [?2, null] }, { $gt: [{ $size: { $ifNull: [?2, []] } }, 0] } ] }, " +
-        "      then: { $not: { $anyElementTrue: { $map: { input: ?2, as: 'word', in: { $regexMatch: { input: '$sentence', regex: '$$word' } } } } } }, " +
+        "      then: { $not: { $anyElementTrue: { $map: { input: ?2, as: 'word', in: { $regexMatch: { input: '$sentence', regex: '$$word', options: 'i' } } } } } }, " +
         "      else: true " +
         "    } " +
         "  } " +
         "} }",
+    
+        // 5. ソート＆制限
+        "{ $sort: { post_date: -1 } }",
+        "{ $limit: 50 }",
         
-        // 4. profile_collectionとuser_idで結合
+        // 6. profile_collectionとuser_idで結合
         "{ $lookup: { " +
         "  from: 'profile_collection', " +
         "  localField: 'user_id', " +
@@ -47,21 +61,10 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'profile' " +
         "} }",
         
-        // 5. profileを展開（preserveNullAndEmptyArraysをtrueに）
+        // 7. profileを展開（preserveNullAndEmptyArraysをtrueに）
         "{ $unwind: { path: '$profile', preserveNullAndEmptyArrays: true } }",
         
-        // 6. response_countを計算
-        "{ $lookup: { " +
-        "  from: 'post_collection', " +
-        "  let: { postId: '$_id' }, " +
-        "  pipeline: [ " +
-        "    { $match: { $expr: { $eq: ['$response_to', '$$postId'] } } }, " +
-        "    { $count: 'count' } " +
-        "  ], " +
-        "  as: 'responses' " +
-        "} }",
-        
-        // 7. like_collectionから検索
+        // 9. like_collectionから検索
         "{ $lookup: { " +
         "  from: 'like_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -78,7 +81,7 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'likes' " +
         "} }",
         
-        // 8. bookmark_collectionから検索
+        // 10. bookmark_collectionから検索
         "{ $lookup: { " +
         "  from: 'bookmark_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -95,30 +98,25 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'bookmarks' " +
         "} }",
         
-        // 9. 最終的なフィールドを整形
+        // 11. 最終的なフィールドを整形
         "{ $project: { " +
-        "  _id: 0, " +
-        "  postId: { $toString: '$_id' }, " +
+        "  _id: 1, " +
+        "  postId: '$_id' , " +
         "  userId: '$user_id', " +
         "  sentence: '$sentence', " +
         "  imageUrl: '$image_objectKey', " +
+        "  shareRange: '$share_range', " +
         "  postDate: '$post_date', " +
         "  likeCount: '$like_Count', " +
         "  nickname: '$profile.nickname', " +
         "  showUserId: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
-        "  responseCount: { $ifNull: [{ $arrayElemAt: ['$responses.count', 0] }, 0] }, " +
+        "  responseCount: '$response_Count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
         "  isBookmarked: { $gt: [{ $size: '$bookmarks' }, 0] } " +
         "} }",
-
-        // 10. ソート：postDate降順
-        "{ $sort: { postDate: -1 } }",
-    
-        // 11. 50件に制限
-        "{ $limit: 50 }"
     })
-    List<PostDetailDto> findPostsWithDetails(
+    List<PostDetailResponse> findPostsWithDetails(
         Integer currentUserId,
         List<Integer> shareRangeList,
         List<String> muteWords
@@ -133,7 +131,11 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "{ $match: { user_id: ?1 } }",
 
         // 3 .ユーザーのshare_rangeリストでフィルタ
-        "{ $match: { share_range: { $in: ?2 } } }",
+        "{ $match: { $expr: { $gt: [ { $size: { $setIntersection: [ '$share_range', ?1 ] } }, 0 ] } } }",
+
+
+        //3.5 post_flagがfalseのものを除外
+        "{ $match: { post_flag: { $ne: false } } }",
         
         // 4. profile_collectionとuser_idで結合
         "{ $lookup: { " +
@@ -191,30 +193,25 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'bookmarks' " +
         "} }",
         
-        // 10. 最終的なフィールドを整形
+        // 11. 最終的なフィールドを整形
         "{ $project: { " +
-        "  _id: 0, " +
-        "  postId: { $toString: '$_id' }, " +
+        "  _id: 1, " +
+        "  postId: '$_id', " +
         "  userId: '$user_id', " +
         "  sentence: '$sentence', " +
         "  imageUrl: '$image_objectKey', " +
+        "  shareRange: '$share_range', " +
         "  postDate: '$post_date', " +
         "  likeCount: '$like_Count', " +
         "  nickname: '$profile.nickname', " +
         "  showUserId: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
-        "  responseCount: { $ifNull: [{ $arrayElemAt: ['$responses.count', 0] }, 0] }, " +
+        "  responseCount: '$response_Count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
         "  isBookmarked: { $gt: [{ $size: '$bookmarks' }, 0] } " +
         "} }",
-
-        // 11. ソート：postDate降順
-        "{ $sort: { postDate: -1 } }",
-    
-        // 12. 50件に制限
-        "{ $limit: 50 }"
     })
-    List<PostDetailDto> findUserPostsWithDetails(
+    List<PostDetailResponse> findUserPostsWithDetails(
         Integer currentUserId,
         Integer targetUserId,
         List<Integer> shareRangeList
@@ -223,34 +220,42 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
     //投稿返信取得
         @Aggregation(pipeline = {
         // 1. response_toが指定したpostIdのドキュメントをフィルタ
-        "{ $match: { response_to: ?1 } }",
+        "{ $match: { response_to:  ?1 }  }",
 
         // 2 .ユーザーのmuteWordsリストでフィルタ
         "{ $match: { " +
         "  $expr: { " +
         "    $cond: { " +
         "      if: { $and: [ { $ne: [?2, null] }, { $gt: [{ $size: { $ifNull: [?2, []] } }, 0] } ] }, " +
-        "      then: { $not: { $anyElementTrue: { $map: { input: ?2, as: 'word', in: { $regexMatch: { input: '$sentence', regex: '$$word' } } } } } }, " +
+        "      then: { $not: { $anyElementTrue: { $map: { input: ?2, as: 'word', in: { $regexMatch: { input: '$sentence', regex: '$$word', options: 'i' } } } } } }, " +
         "      else: true " +
         "    } " +
         "  } " +
         "} }",
-
-        // 3 .ユーザーのshare_rangeリストでフィルタ
-        "{ $match: { share_range: { $in: ?2 } } }",
         
-        // 4. profile_collectionとuser_idで結合
+        // 3 post_flagがfalseのものを除外
+        "{ $match: { post_flag: { $ne: false } } }",
+
+        // 4. ソート＆制限
+        "{ $sort: { postDate: -1 } }",
+        "{ $limit: 50 }",
+
+        // 5. profile_collectionとuser_idで結合
         "{ $lookup: { " +
         "  from: 'profile_collection', " +
         "  localField: 'user_id', " +
         "  foreignField: 'user_id', " +
         "  as: 'profile' " +
         "} }",
+
+        //6. ソート＆制限
+        "{ $sort: { postDate: -1 } }",
+        "{ $limit: 50 }",
         
-        // 5. profileを展開（preserveNullAndEmptyArraysをtrueに）
+        // 7. profileを展開（preserveNullAndEmptyArraysをtrueに）
         "{ $unwind: { path: '$profile', preserveNullAndEmptyArrays: true } }",
         
-        // 6. response_countを計算
+        // 8. response_countを計算
         "{ $lookup: { " +
         "  from: 'post_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -261,7 +266,7 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'responses' " +
         "} }",
         
-        // 7. like_collectionから検索
+        // 9. like_collectionから検索
         "{ $lookup: { " +
         "  from: 'like_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -278,7 +283,7 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'likes' " +
         "} }",
         
-        // 9. bookmark_collectionから検索
+        // 10. bookmark_collectionから検索
         "{ $lookup: { " +
         "  from: 'bookmark_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -295,33 +300,27 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'bookmarks' " +
         "} }",
         
-        // 10. 最終的なフィールドを整形
+        // 11. 最終的なフィールドを整形
         "{ $project: { " +
-        "  _id: 0, " +
-        "  postId: { $toString: '$_id' }, " +
+        "  _id: 1, " +
+        "  postId: '$_id', " +
         "  userId: '$user_id', " +
         "  sentence: '$sentence', " +
         "  imageUrl: '$image_objectKey', " +
+        "  shareRange: '$share_range', " +
         "  postDate: '$post_date', " +
         "  likeCount: '$like_Count', " +
         "  nickname: '$profile.nickname', " +
         "  showUserId: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
-        "  responseCount: { $ifNull: [{ $arrayElemAt: ['$responses.count', 0] }, 0] }, " +
+        "  responseCount: '$response_Count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
         "  isBookmarked: { $gt: [{ $size: '$bookmarks' }, 0] } " +
         "} }",
-
-        // 11. ソート：postDate降順
-        "{ $sort: { postDate: -1 } }",
-    
-        // 12. 50件に制限
-        "{ $limit: 50 }"
     })
-    List<PostDetailDto> findPostsResponseWithDetails(
+    List<PostDetailResponse> findPostsResponseWithDetails(
         Integer UserId,
-        String responsePostId,
+        ObjectId ReplyPostId,
         List<String> muteWords
     );
-}
-
+    }
