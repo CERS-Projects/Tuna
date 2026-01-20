@@ -28,4 +28,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
             )
             """)
     Boolean existsByUserIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
+
+    UserEntity findByShowUserId(String showUserId);
+
+    Boolean existsByShowUserId(String showUserId);
 }
