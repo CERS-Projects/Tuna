@@ -44,6 +44,11 @@ try {
 						minimum: 0,
 						description: "投稿についているいいねの総数",
 					},
+					response_Count: {
+						bsonType: "int",
+						minimum: 0,
+						description: "投稿に対する返信の総数",
+					},
 					share_range: {
 						bsonType: "array",
 						description: "共有したいグループの配列",
@@ -59,7 +64,7 @@ try {
 					post_flag: {
 						bsonType: "bool",
 						description:
-							"論理削除されているかの状態管理 false=未論理削除, true=論理削除済",
+							"論理削除されているかの状態管理 true=未論理削除, false=論理削除済",
 					},
 				},
 			},
