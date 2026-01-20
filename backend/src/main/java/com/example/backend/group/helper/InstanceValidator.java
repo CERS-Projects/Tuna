@@ -25,7 +25,6 @@ public class InstanceValidator implements Serializable{
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         InstanceValidator that = (InstanceValidator) obj;
-        return Objects.equals(groupId, that.groupId) &&
-               Objects.equals(userId, that.userId);
+        return Objects.equals(groupId, that.groupId) && Objects.equals(userId, that.userId);
     }
 }

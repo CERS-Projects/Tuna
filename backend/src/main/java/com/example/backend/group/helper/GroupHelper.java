@@ -1,7 +1,13 @@
 package com.example.backend.group.helper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
+import com.example.backend.group.dto.GetGroupResponse;
 import com.example.backend.group.model.GroupEntity;
 import com.example.backend.group.repository.GroupRepository;
 
@@ -15,16 +21,52 @@ public class GroupHelper {
 
     /* グループIDから参照先のGroupEntityを取得 */
     public GroupEntity findGroupEntityById(Integer propsUpperGroupId){
-        /* debug_begin */
-        System.out.println("取得テスト");
-        /* end_debug */
 
         GroupEntity upperGroupId = (propsUpperGroupId != null) ? 
         groupRepository.findById(propsUpperGroupId).orElse(null) : null;
-        
-        /* debug_begin */
-        System.out.println("テスト完了: upperGroupId =" + upperGroupId);
-        /* end_debug */                                        
+                                           
         return upperGroupId;
+    }
+
+    public void updateParentGroup(final Integer NEW_PARENT_ID, final Integer MY_ID){
+
+        List<GroupEntity> targetGroups = groupRepository.findAllByGroup_GroupId(MY_ID);
+        if(targetGroups != null && !targetGroups.isEmpty()){
+            groupRepository.modifyGroupParentId(NEW_PARENT_ID, targetGroups);
+        }
+    }
+
+
+    
+    public List<GetGroupResponse> getTree(Integer schoolId){
+        List<GroupEntity> entities = groupRepository.findBySchool_SchoolId(schoolId);
+
+        Map<Integer,GetGroupResponse> groupMap = entities.stream()
+        .map(entity->{
+            GetGroupResponse dto = new GetGroupResponse();
+            dto.setGroupId(entity.getGroupId());
+            dto.setGroupName(entity.getGroupName());
+
+            if(entity.getGroup() != null){
+                dto.setUpperGroupId(entity.getGroup().getGroupId());
+            }
+            return dto;
+        })
+        .collect(Collectors.toMap(GetGroupResponse::getGroupId, group->group));
+
+        List<GetGroupResponse> rootGroups = new ArrayList<>();
+
+        for(GetGroupResponse group : groupMap.values()){
+            if(group.getUpperGroupId() == null){
+                rootGroups.add(group);
+            } else {
+                GetGroupResponse parentGroup = groupMap.get(group.getUpperGroupId());
+                if(parentGroup != null){
+                    parentGroup.getBranchGroups().add(group);
+                }
+            }
+        }
+
+        return rootGroups;
     }
 }

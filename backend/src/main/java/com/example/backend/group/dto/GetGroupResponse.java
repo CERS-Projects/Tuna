@@ -5,20 +5,23 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class GroupCreateRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class GetGroupResponse {
     @NotNull
-    private Integer schoolId;
+    private Integer groupId;
 
     @NotBlank
     private String groupName;
 
-    private Integer parentGroupId;
-    
-    @NotNull
-    private List<Integer> membersUserId = new ArrayList<>();
+    private Integer upperGroupId;
+
+    private List<GetGroupResponse> branchGroups = new ArrayList<>();
 }
