@@ -2,16 +2,22 @@ package com.example.backend.posts.service;
 
 import java.util.List;
 
-import com.example.backend.posts.dto.PostDetailDto;
-import com.example.backend.posts.dto.GetTimelineRequestDto;
-import com.example.backend.posts.dto.PostInsertRequestDto;
+import com.example.backend.posts.dto.PostDetailResponse;
+import com.example.backend.posts.dto.PostsReplyRequest;
+import com.example.backend.posts.dto.ProfilePostsRequest;
+import com.example.backend.posts.dto.TimelinePostsRequest;
+import com.example.backend.posts.dto.PostInsertRequest;
 import org.springframework.stereotype.Service;
 
 public interface PostService {
 
-    void insertPost(PostInsertRequestDto post);
+    void insertPost(PostInsertRequest post);
 
-    List<PostDetailDto> getTimelinePosts(GetTimelineRequestDto requestDto);
+    List<PostDetailResponse> getTimelinePosts(TimelinePostsRequest requestDto);
+
+    List<PostDetailResponse> getUserPosts(ProfilePostsRequest requestDto);
+
+    List<PostDetailResponse> getReplyPosts(PostsReplyRequest requestDto);
 
     void deletePost(String postId, Integer userId); 
 
