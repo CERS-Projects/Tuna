@@ -179,8 +179,6 @@ const AccountRegister = () => {
           )}
         </div>
 
-        <div></div>
-
         {activeTab === "student" ? (
           <StudentAccountRegisterTable
             setCurrent={setCurrentStudent}
