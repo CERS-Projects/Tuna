@@ -17,7 +17,7 @@ public class PostDetailResponse {
     //postから取得
     @NotNull
     @Field("_id")
-    private ObjectId postId;
+    private String postId;
 
     @NotNull
     @Field("user_id")
