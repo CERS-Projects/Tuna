@@ -6,12 +6,14 @@ import com.example.backend.posts.repository.BookmarkRepository;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 
 import com.example.backend.posts.model.BookmarkEntity;
+import com.example.backend.posts.dto.IsBookmarkRequest;
 import java.util.List;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
+import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.RequiredArgsConstructor;
@@ -29,19 +31,23 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     private final FileControlHelper fileControlHelper;
 
-    private boolean isBookmarked(String userId, String postId) {
+    private boolean isBookmarked(Integer userId, ObjectId postId) {
         return bookmarkRepository.existsByUserIdAndPostId(userId, postId);
     }
 
     @Override
-    public void addBookmark(BookmarkEntity bookmark) {
+    public void addBookmark(IsBookmarkRequest requestDto) {
+        BookmarkEntity bookmark = new BookmarkEntity();
+        bookmark.setUserId(requestDto.getUserId());
+        bookmark.setPostId(requestDto.getPostId());
         bookmark.setBookmarkedAt(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
-        if (bookmarkRepository.existsByUserIdAndPostId(bookmark.getUserId().toString(), bookmark.getPostId().toString())) {
+        if (bookmarkRepository.existsByUserIdAndPostId(bookmark.getUserId(), bookmark.getPostId())) {
             log.info("すでにブックマークされています userId: {} and postId: {}", bookmark.getUserId(), bookmark.getPostId());
             throw new IllegalStateException("すでにブックマークされています");
         }
         try{
         bookmarkRepository.save(bookmark);
+        log.info("ブックマークが正常に追加されました userId: {} and postId: {}", bookmark.getUserId(), bookmark.getPostId());
         } catch(Exception e){
             log.error("ブックマークの追加に失敗しました userId: {} and postId: {} エラー: {}" , bookmark.getUserId(), bookmark.getPostId(), e);
             throw new RuntimeException("ブックマークの追加に失敗しました");
@@ -49,15 +55,16 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public void removeBookmark(BookmarkEntity bookmark) {
-        if (!bookmarkRepository.existsByUserIdAndPostId(bookmark.getUserId().toString(), bookmark.getPostId().toString())) {
-            log.info("ブックマークが存在しません userId: {} and postId: {}", bookmark.getUserId(), bookmark.getPostId());
+    public void removeBookmark(IsBookmarkRequest requestDto) {
+        if (!bookmarkRepository.existsByUserIdAndPostId(requestDto.getUserId(), requestDto.getPostId())) {
+            log.info("ブックマークが存在しません userId: {} and postId: {}", requestDto.getUserId(), requestDto.getPostId());
             throw new IllegalStateException("ブックマークが存在しません");
         }
         try{
-        bookmarkRepository.deleteByUserIdAndPostId(bookmark.getUserId().toString(), bookmark.getPostId().toString());
+        bookmarkRepository.deleteByUserIdAndPostId(requestDto.getUserId(), requestDto.getPostId());
+        log.info("ブックマークが正常に削除されました userId: {} and postId: {}", requestDto.getUserId(), requestDto.getPostId());
         } catch(Exception e){
-            log.error("ブックマークの削除に失敗しました userId: {} and postId: {} エラー: {}" , bookmark.getUserId(), bookmark.getPostId(), e);
+            log.error("ブックマークの削除に失敗しました userId: {} and postId: {} エラー: {}" , requestDto.getUserId(), requestDto.getPostId(), e);
             throw new RuntimeException("ブックマークの削除に失敗しました");
         }
     }
