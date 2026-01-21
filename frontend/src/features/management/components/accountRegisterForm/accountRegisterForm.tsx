@@ -56,15 +56,15 @@ export const StudentAccountRegisterForm = ({
     }));
   };
 
-  const onSubmit = (formDate: StudentAccountRegisterType) => {
+  const onSubmit = (formData: StudentAccountRegisterType) => {
     const targetIndex = editingIndex !== null ? editingIndex : accounts.length;
 
     if (editingIndex !== null) {
-      const next = accounts.map((a, i) => (i === editingIndex ? formDate : a));
+      const next = accounts.map((a, i) => (i === editingIndex ? formData : a));
       setAccounts(next);
       setEditingIndex(null);
     } else {
-      setAccounts([...accounts, formDate]);
+      setAccounts([...accounts, formData]);
     }
 
     setCurrent(initialStudent);
@@ -299,17 +299,17 @@ export const TeacherAccountRegisterForm = ({
     }));
   };
 
-  const onSubmit = (formDate: TeacherAccountRegisterType) => {
-    console.log(formDate);
+  const onSubmit = (formData: TeacherAccountRegisterType) => {
+    console.log(formData);
 
     const targetIndex = editingIndex !== null ? editingIndex : accounts.length;
 
     if (editingIndex !== null) {
-      const next = accounts.map((a, i) => (i === editingIndex ? formDate : a));
+      const next = accounts.map((a, i) => (i === editingIndex ? formData : a));
       setAccounts(next);
       setEditingIndex(null);
     } else {
-      setAccounts([...accounts, formDate]);
+      setAccounts([...accounts, formData]);
     }
 
     setCurrent(initialTeacher);
