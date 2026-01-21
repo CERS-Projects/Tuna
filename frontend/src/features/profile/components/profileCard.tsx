@@ -1,12 +1,12 @@
 import { CiEdit } from "react-icons/ci";
 import styles from "./profileCard.module.css";
-import type { profileCard } from "../types/profileTypes";
+import { type ProfileData } from "../types/profileTypes";
 import { Link } from "react-router";
 
-type ProfileCardProps = profileCard;
+type ProfileCardProps = ProfileData;
 
 export const ProfileCard = ({
-  userId,
+  showUserId,
   userName,
   iconUrl,
   follow,
@@ -16,21 +16,34 @@ export const ProfileCard = ({
   return (
     <div className={styles.profileCard}>
       <div className={styles.profileCardLeft}>
-        {iconUrl && <img src={iconUrl} className={styles.profileIcon} alt="" />}
+        {iconUrl && (
+          <img
+            src={iconUrl}
+            className={styles.profileIcon}
+            alt="${userName}のプロフィール画像"
+          />
+        )}
       </div>
       <div className={styles.profileCardRight}>
         <h3>
           {userName}
           <CiEdit className={styles.iconStyle} />
         </h3>
-        <small>@{userId}</small>
+        <small>@{showUserId}</small>
         <p>{introduction}</p>
-        <Link href="" className={styles.followLink}>
-          <small>フォロー</small>
-          <span>{follow}</span>
-          <small>フォロワー</small>
-          <span>{follower}</span>
-        </Link>
+        <div className={styles.followWrapper}>
+          <Link to="" className={styles.followLink}>
+            <small>フォロー</small>
+            <span>{follow}</span>
+          </Link>
+
+          <span className={styles.separator}>/</span>
+
+          <Link to="" className={styles.followLink}>
+            <small>フォロワー</small>
+            <span>{follower}</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

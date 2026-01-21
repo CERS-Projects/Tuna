@@ -21,7 +21,6 @@
 }
 
 .profileCardRight h3 {
-  padding-top: -3px;
   margin-bottom: -3px;
   font-size: 1.5rem;
   text-decoration: none;
@@ -30,6 +29,18 @@
 
 .profileCardRight p {
   overflow-wrap: break-word;
+}
+
+.followWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.separator {
+  color: #888;
+  font-size: 0.9rem;
 }
 
 .iconStyle {
