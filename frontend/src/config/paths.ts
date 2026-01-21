@@ -102,6 +102,10 @@ export const paths = {
       path: "/app/test",
       getHref: () => "/app/test",
     },
+    material: {
+      path: "/app/classroom/material",
+      getHref: () => "/app/classroom/material",
+    },
 
     // 教師ルート
     management: {

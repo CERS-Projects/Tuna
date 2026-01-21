@@ -1,0 +1,90 @@
+.materialCard {
+  border: 2px solid rgb(50, 85, 150);
+  border-radius: 12px;
+  background-color: #fff;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  margin: 10px 0;
+  width: 100%;
+}
+
+.materialCard:hover {
+  box-shadow: 0 4px 12px rgba(50, 85, 150, 0.2);
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+.materialCard a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 16px;
+}
+
+.materialContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.titleArea h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 4px 0;
+  width: 90%;
+}
+
+.fileMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.fileName {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdfIcon {
+  color: rgb(50, 85, 150);
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.downloadIcon {
+  color: #999;
+  font-size: 1.4rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+@media screen and (max-width: 960px) {
+  .materialCard {
+    max-width: 80%;
+  }
+  .materialCard a {
+    padding: 12px;
+  }
+  .titleArea h3 {
+    font-size: 0.95rem;
+  }
+
+  .fileMeta {
+    font-size: 0.85rem;
+  }
+  .pdfIcon,
+  .downloadIcon {
+    font-size: 1.25rem;
+  }
+}

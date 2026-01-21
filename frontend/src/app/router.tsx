@@ -95,6 +95,10 @@ const createAppRouter = (queryClient: QueryClient) => {
           () => import("./routes/app/detailPost"),
         ),
         route(
+          paths.app.material.path,
+          () => import("./routes/app/classroom/material"),
+        ),
+        route(
           paths.app.searchPost.path,
           () => import("./routes/app/searchPost"),
         ),
@@ -126,24 +130,24 @@ const createAppRouter = (queryClient: QueryClient) => {
           children: [
             route(
               paths.app.management.group.root.path,
-              () => import("./routes/app/management/group/groupList")
+              () => import("./routes/app/management/group/groupList"),
             ),
             route(
               paths.app.management.group.new.path,
-              () => import("./routes/app/management/group/groupNew")
+              () => import("./routes/app/management/group/groupNew"),
             ),
             route(
               paths.app.management.group.edit.path,
-              () => import("./routes/app/management/group/groupEdit")
+              () => import("./routes/app/management/group/groupEdit"),
             ),
           ],
         },
         {
           path: paths.app.management.account.root.path,
           lazy: () =>
-            import(
-              "../features/management/layouts/accountShell/accountShell"
-            ).then(convert(queryClient)),
+            import("../features/management/layouts/accountShell/accountShell").then(
+              convert(queryClient),
+            ),
           children: [
             {
               index: true,
@@ -153,23 +157,23 @@ const createAppRouter = (queryClient: QueryClient) => {
             },
             route(
               paths.app.management.account.list.path,
-              () => import("./routes/app/management/account/accountList")
+              () => import("./routes/app/management/account/accountList"),
             ),
             route(
               paths.app.management.account.edit.path,
-              () => import("./routes/app/management/account/accountEdit")
+              () => import("./routes/app/management/account/accountEdit"),
             ),
             route(
               paths.app.management.account.new.path,
-              () => import("./routes/app/management/account/accountNew")
+              () => import("./routes/app/management/account/accountNew"),
             ),
             route(
               paths.app.management.account.register.path,
-              () => import("./routes/app/management/account/accountRegister")
+              () => import("./routes/app/management/account/accountRegister"),
             ),
             route(
               paths.app.management.account.import.path,
-              () => import("./routes/app/management/account/accountImport")
+              () => import("./routes/app/management/account/accountImport"),
             ),
           ],
         },
