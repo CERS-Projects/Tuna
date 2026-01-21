@@ -86,9 +86,7 @@ const AccountRegister = () => {
     null,
   );
 
-  useBlockNavigation(
-    teacherAccounts.length > 0 || studentAccounts.length > 0 ? true : false,
-  );
+  useBlockNavigation(teacherAccounts.length > 0 || studentAccounts.length > 0);
 
   useBeforeUnload(
     useCallback(

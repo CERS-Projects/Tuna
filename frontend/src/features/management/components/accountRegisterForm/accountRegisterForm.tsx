@@ -172,6 +172,8 @@ export const StudentAccountRegisterForm = ({
                   if (pass !== getValues("password")) {
                     return "パスワードが一致しません";
                   }
+
+                  return true;
                 },
                 required: "確認は必須です",
               })}
