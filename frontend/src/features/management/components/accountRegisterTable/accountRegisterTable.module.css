@@ -44,10 +44,6 @@
   text-overflow: ellipsis;
 }
 
-.student .accountTable {
-  min-width: 49rem;
-}
-
 .student .accountTable :is(thead th, tbody td):nth-child(1) {
   width: 9rem;
 }
@@ -74,9 +70,6 @@
   text-align: center;
 }
 
-.teacher .accountTable {
-  min-width: 28rem;
-}
 .teacher .accountTable :is(thead th, tbody td):nth-child(1) {
   width: 9rem;
 }
