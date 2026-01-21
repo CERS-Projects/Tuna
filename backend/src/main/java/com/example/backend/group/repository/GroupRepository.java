@@ -11,23 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.group.model.GroupEntity;
 
 public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
-
-    /*@Query(value = """
-            WITH RECURSIVE 
-            search_parent AS (
-                --- 最上位のグループを取得 ---
-                SELECT group_id, group_name, upper_group
-                FROM group_tb
-                WHERE school_id = :schoolId
-
-                UNION ALL
-
-                --- 最上位グループに紐づく下位グループを再帰的に取得 ---
-                SELECT child.group_id, child.group_name, child.upper_group
-                FROM group_tb AS child
-                JOIN group_tb AS parent ON child.upper_group = parent.group_id)
-            """, nativeQuery = true)*/
-
     
     List<GroupEntity> findBySchool_SchoolId(Integer schoolId);
 

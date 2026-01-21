@@ -22,10 +22,10 @@ public class GroupHelper {
     /* グループIDから参照先のGroupEntityを取得 */
     public GroupEntity findGroupEntityById(Integer propsUpperGroupId){
 
-        GroupEntity upperGroupId = (propsUpperGroupId != null) ? 
+        GroupEntity upperGroup = (propsUpperGroupId != null) ? 
         groupRepository.findById(propsUpperGroupId).orElse(null) : null;
                                            
-        return upperGroupId;
+        return upperGroup;
     }
 
     public void updateParentGroup(final Integer NEW_PARENT_ID, final Integer MY_ID){

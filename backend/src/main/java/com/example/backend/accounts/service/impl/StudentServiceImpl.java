@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -52,7 +53,6 @@ public class StudentServiceImpl implements StudentService{
         this.studentRepository = studentRepository;
         this.accountsHelper = accountsHelper;
 
-
         /* CSVマッパーを使用できるようにするための処理 */
         CsvMapper csvMapper = new CsvMapper();
         /* 引数をcsvMapperで使用できるようにするための設定 */
@@ -77,6 +77,7 @@ public class StudentServiceImpl implements StudentService{
 
     /* ユーザデータの基本情報を登録（生徒） */
     @Override
+    @Transactional
     public UserEntity createStudent(StudentCreateRequest dto){
 
         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
@@ -93,6 +94,7 @@ public class StudentServiceImpl implements StudentService{
 
     /* 登録した基本情報のユーザIDを元に、生徒情報を付加する */
     @Override
+    @Transactional
     public void setStudentEnrollmentInformation(StudentCreateRequest dto, UserEntity savedStudentAccount){
 
         StudentEntity studentInformation = toStudentEntity(savedStudentAccount,
@@ -116,6 +118,7 @@ public class StudentServiceImpl implements StudentService{
      * try-with-resources構文: InputStreamを自動的に閉じるための構文
      */
     @Override
+    @Transactional
     public void createStudentByFile(MultipartFile csvFile, final Integer schoolId) throws IOException{
         try (InputStream inputStream = csvFile.getInputStream()){
             List<ReadCSVFileStudentCreateRequest> records = this.readCsv(inputStream);
@@ -145,17 +148,13 @@ public class StudentServiceImpl implements StudentService{
      * isJoin:グループに所属しているかどうか
      */
     @Override
-    public List<GetUserResponse> findAllGroup(GetUserBySchoolId dto){
+    @Transactional
+    public List<GetUserResponse> findAllGroups(GetUserBySchoolId dto){
         List<GetUserResponse> response = studentRepository.findAllStudentUsers(dto.getSchoolId());
+
         return response.stream()
-                       .map(user -> 
-                               new GetUserResponse(
-                               user.getShowUserId(),
-                               user.getUserName(),
-                               user.getGrade(),
-                               isJoined(user)
-                       ))
-                       .collect(Collectors.toList());
+        .peek(user -> user.setIsJoin(isJoined(user)))
+        .collect(Collectors.toList());
     }
 
     /* グループに所属しているかチェックする */
@@ -167,7 +166,8 @@ public class StudentServiceImpl implements StudentService{
     /*
      * UserEntity->StudentEntityに変換するヘルプメソッド 
      */
-    private StudentEntity toStudentEntity(UserEntity studentAccount, Integer grade, LocalDate admissionDate, LocalDate graduateDate){
+    private StudentEntity toStudentEntity(UserEntity studentAccount, Integer grade, 
+                                          LocalDate admissionDate, LocalDate graduateDate){
         StudentEntity studentEnrollmentInformation = new StudentEntity();
 
         studentEnrollmentInformation.setUser(studentAccount);

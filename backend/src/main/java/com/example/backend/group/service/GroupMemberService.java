@@ -10,5 +10,5 @@ import com.example.backend.group.dto.ModifyGroupMembersRequest;
 public interface GroupMemberService {
     void GroupMemberToDB(List<Integer> membersUserId, Integer groupId);
     void modifyGroupMembers(ModifyGroupMembersRequest dto);
-    void toDeleteMembersByGroupId(Integer groupId);
+    void deleteMembersByGroupId(Integer groupId);
 }

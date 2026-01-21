@@ -14,5 +14,5 @@ public interface StudentService {
     UserEntity createStudent(StudentCreateRequest dto);
     void setStudentEnrollmentInformation(StudentCreateRequest dto, UserEntity savedStudentAccount);
     void createStudentByFile(MultipartFile csvFile, final Integer schoolId) throws IOException;
-    List<GetUserResponse> findAllGroup(GetUserBySchoolId dto);
+    List<GetUserResponse> findAllGroups(GetUserBySchoolId dto);
 }

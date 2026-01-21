@@ -40,7 +40,7 @@ public class GroupController {
     @Transactional
     @GetMapping("/get-user")
     public ResponseEntity<List<GetUserResponse>> getUsersList(@Valid @ModelAttribute GetUserBySchoolId dto){
-        List<GetUserResponse> usersList = studentService.findAllGroup(dto);
+        List<GetUserResponse> usersList = studentService.findAllGroups(dto);
         return ResponseEntity.ok().body(usersList);
     }
 

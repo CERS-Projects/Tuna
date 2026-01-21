@@ -68,7 +68,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     @Override
     @Transactional
-    public void toDeleteMembersByGroupId(Integer groupId) {
+    public void deleteMembersByGroupId(Integer groupId) {
         groupMemberRepository.deleteByGroupId(groupId);
     }
 }

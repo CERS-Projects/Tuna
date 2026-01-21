@@ -35,8 +35,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     @Override
     public void createGroup(GroupCreateRequest dto){
-        GroupEntity groupEntity = toGroupEntity(dto);
-        groupRepository.save(groupEntity);
+        toGroupEntity(dto);
     }
 
     @Transactional
@@ -54,12 +53,11 @@ public class GroupServiceImpl implements GroupService {
 
         groupHelper.updateParentGroup(NEW_PARENT_ID, MY_ID);
 
-        groupMemberService.toDeleteMembersByGroupId(MY_ID);
+        groupMemberService.deleteMembersByGroupId(MY_ID);
         groupRepository.deleteAllById(MY_ID);
     }
 
     /* GroupCreateRequest DTOをGroupEntityに変換 */
-    @Transactional
     private GroupEntity toGroupEntity(GroupCreateRequest dto){
         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
         GroupEntity groupEntity = new GroupEntity();
