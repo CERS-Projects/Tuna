@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.example.backend.accounts.dto.StudentInformationResponse;
 import com.example.backend.accounts.model.StudentEntity;
 import com.example.backend.group.dto.GetUserResponse;
 
@@ -13,12 +14,30 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     
     /* フロントに返す用のカスタムクエリ */
     @Query ("""
-            SELECT new com.example.backend.group.dto.GetUserResponse(user.showUserId, user.name, student.grade)
+            SELECT new com.example.backend.group.dto.GetUserResponse(
+                user.showUserId, 
+                user.name,
+                student.grade)
             FROM UserEntity AS user
             INNER JOIN 
             StudentEntity AS student
-            ON user.userId = student.userId
-            WHERE student.schoolId = :schoolId
+                ON user.userId = student.userId
+            WHERE user.school.schoolId = :schoolId
             """)
     List<GetUserResponse> findAllStudentUsers(@Param("schoolId") Integer schoolId);
+
+    @Query ("""
+            SELECT new com.example.backend.accounts.dto.StudentInformationResponse(
+                user.userId,
+                user.showUserId, 
+                user.name, 
+                student.grade, 
+                user.accountsStopFlag)
+            FROM UserEntity AS user
+            INNER JOIN 
+            StudentEntity AS student
+                ON user.userId = student.userId
+            WHERE user.school.schoolId = :schoolId
+            """)
+    List<StudentInformationResponse> findAllStudentInformation(@Param("schoolId") Integer schoolId);
 }

@@ -5,16 +5,17 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.backend.accounts.dto.GetFindAllStudentAccountRequest;
 import com.example.backend.accounts.dto.StudentCreateRequest;
-import com.example.backend.accounts.dto.StudentInformationResponses;
+import com.example.backend.accounts.dto.StudentInformationResponse;
 import com.example.backend.accounts.model.UserEntity;
-import com.example.backend.group.dto.GetUserBySchoolId;
+import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
 
 public interface StudentService {
     UserEntity createStudent(StudentCreateRequest dto);
     void setStudentEnrollmentInformation(StudentCreateRequest dto, UserEntity savedStudentAccount);
     void createStudentByFile(MultipartFile csvFile, final Integer schoolId) throws IOException;
-    List<GetUserResponse> findAllGroup(GetUserBySchoolId dto);
-    List<StudentInformationResponses> findStudentInformationResponses();
+    List<GetUserResponse> findAllGroups(GetUserBySchoolIdRequest dto);
+    List<StudentInformationResponse> findStudentInformationResponses(GetFindAllStudentAccountRequest dto);
 }

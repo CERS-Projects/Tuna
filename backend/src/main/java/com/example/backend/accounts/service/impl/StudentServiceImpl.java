@@ -14,16 +14,17 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import com.example.backend.accounts.dto.GetFindAllStudentAccountRequest;
 import com.example.backend.accounts.dto.ReadCSVFileStudentCreateRequest;
 import com.example.backend.accounts.dto.StudentCreateRequest;
+import com.example.backend.accounts.dto.StudentInformationResponse;
 import com.example.backend.accounts.helper.AccountsHelper;
 import com.example.backend.accounts.model.StudentEntity;
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.StudentRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.StudentService;
-import com.example.backend.group.dto.GetUserBySchoolId;
+import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
 import com.example.backend.school.model.SchoolEntity;
 
@@ -149,12 +150,19 @@ public class StudentServiceImpl implements StudentService{
      */
     @Override
     @Transactional
-    public List<GetUserResponse> findAllGroups(GetUserBySchoolId dto){
+    public List<GetUserResponse> findAllGroups(GetUserBySchoolIdRequest dto){
         List<GetUserResponse> response = studentRepository.findAllStudentUsers(dto.getSchoolId());
 
         return response.stream()
         .peek(user -> user.setIsJoin(isJoined(user)))
         .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public List<StudentInformationResponse> findStudentInformationResponses(GetFindAllStudentAccountRequest dto){
+        List<StudentInformationResponse> responses = studentRepository.findAllStudentInformation(dto.getSchoolId());
+        return responses; 
     }
 
     /* グループに所属しているかチェックする */
