@@ -12,7 +12,7 @@ import com.example.backend.accounts.service.StudentService;
 import com.example.backend.group.dto.DelGroupRequest;
 import com.example.backend.group.dto.GetGroupRequest;
 import com.example.backend.group.dto.GetGroupResponse;
-import com.example.backend.group.dto.GetUserBySchoolId;
+import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
 import com.example.backend.group.dto.GroupCreateRequest;
 import com.example.backend.group.dto.ModifyGroupMembersRequest;
@@ -37,7 +37,7 @@ public class GroupController {
     private final StudentService studentService;
 
     @GetMapping("/get-user")
-    public ResponseEntity<List<GetUserResponse>> getUsersList(@Valid @ModelAttribute GetUserBySchoolId dto){
+    public ResponseEntity<List<GetUserResponse>> getUsersList(@Valid @ModelAttribute GetUserBySchoolIdRequest dto){
         List<GetUserResponse> usersList = studentService.findAllGroups(dto);
         return ResponseEntity.ok().body(usersList);
     }
