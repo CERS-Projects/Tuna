@@ -84,7 +84,6 @@ export const StudentAccountRegisterTable = ({
               return (
                 <tr
                   key={index}
-                  tabIndex={0}
                   ref={(e) => {
                     tableRef.current[index] = e;
                   }}
@@ -221,7 +220,6 @@ export const TeacherAccountRegisterTable = ({
               return (
                 <tr
                   key={index}
-                  tabIndex={0}
                   ref={(e) => {
                     tableRef.current[index] = e;
                   }}
