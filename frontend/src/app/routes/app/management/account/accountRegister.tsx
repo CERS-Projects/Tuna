@@ -7,7 +7,9 @@ import {
   type StudentAccountRegisterType,
   type TeacherAccountRegisterType,
 } from "@/features/management/types/account";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
+import { useBeforeUnload } from "react-router";
+import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 import { paths } from "@/config/paths";
 import styles from "@/features/management/style/accountRegister.module.css";
 import {
@@ -87,6 +89,21 @@ const AccountRegister = () => {
 
   const [editingTeacherIndex, setEditingTeacherIndex] = useState<number | null>(
     null,
+  );
+
+  useBlockNavigation(
+    teacherAccounts.length > 0 || studentAccounts.length > 0 ? true : false,
+  );
+
+  useBeforeUnload(
+    useCallback(
+      (e) => {
+        if (teacherAccounts.length > 0 || studentAccounts.length > 0) {
+          e.preventDefault();
+        }
+      },
+      [studentAccounts, teacherAccounts],
+    ),
   );
 
   const handleSubmit = () => {
