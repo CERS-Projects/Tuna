@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,31 +80,43 @@ public class StudentServiceImpl implements StudentService{
     /* ユーザデータの基本情報を登録（生徒） */
     @Override
     @Transactional
-    public UserEntity createStudent(StudentCreateRequest dto){
+    public List<UserEntity> createStudent(List<StudentCreateRequest> dto){
 
-        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
-        UserEntity newStudentAccount = accountsHelper.toUserEntity(schoolEntity,    
-                                                                   dto.getShowUserId(),
-                                                                   dto.getName(),
-                                                                   dto.getMailAddress(),
-                                                                   dto.getPassword()
-                                                                   );
-                                                        
-        UserEntity savedUserEntity = userRepository.save(newStudentAccount);
-        return savedUserEntity;
+        List<UserEntity> newStudentAccounts = dto
+        .stream()
+        .map(newStudent->{
+            SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(newStudent.getSchoolId());
+            UserEntity newStudentAccount = accountsHelper.toUserEntity(schoolEntity,    
+                                                                       newStudent.getShowUserId(),
+                                                                       newStudent.getName(),
+                                                                       newStudent.getMailAddress(),
+                                                                       newStudent.getPassword()
+                                                                       );
+            return newStudentAccount;
+        })
+        .collect(Collectors.toList());
+
+        List<UserEntity> savedUserEntities = userRepository.saveAll(newStudentAccounts);
+        return savedUserEntities;
     }
 
     /* 登録した基本情報のユーザIDを元に、生徒情報を付加する */
     @Override
     @Transactional
-    public void setStudentEnrollmentInformation(StudentCreateRequest dto, UserEntity savedStudentAccount){
+    public void setStudentEnrollmentInformation(List<StudentCreateRequest> dto, List<UserEntity> savedStudentAccounts){
 
-        StudentEntity studentInformation = toStudentEntity(savedStudentAccount,
-                                                           dto.getGrade(),
-                                                           dto.getAdmissionDate(),
-                                                           dto.getGraduateDate()
-                                                          );
-        studentRepository.save(studentInformation);
+        List<StudentEntity> studentEntities = IntStream.range(0, savedStudentAccounts.size())
+            .mapToObj(index -> {
+                UserEntity savedStudentAccount = savedStudentAccounts.get(index);
+                StudentCreateRequest request = dto.get(index);
+                return toStudentEntity(
+                    savedStudentAccount,
+                    request.getGrade(),
+                    request.getAdmissionDate(),
+                    request.getGraduateDate());
+            })
+            .collect(Collectors.toList());
+        studentRepository.saveAll(studentEntities);
     }
 
     /*

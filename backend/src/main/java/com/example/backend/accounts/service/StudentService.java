@@ -13,8 +13,8 @@ import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
 
 public interface StudentService {
-    UserEntity createStudent(StudentCreateRequest dto);
-    void setStudentEnrollmentInformation(StudentCreateRequest dto, UserEntity savedStudentAccount);
+    List<UserEntity> createStudent(List<StudentCreateRequest> dto);
+    void setStudentEnrollmentInformation(List<StudentCreateRequest> dto, List<UserEntity> savedStudentAccount);
     void createStudentByFile(MultipartFile csvFile, final Integer schoolId) throws IOException;
     List<GetUserResponse> findAllGroups(GetUserBySchoolIdRequest dto);
     List<StudentInformationResponse> findStudentInformationResponses(GetFindAllStudentAccountRequest dto);

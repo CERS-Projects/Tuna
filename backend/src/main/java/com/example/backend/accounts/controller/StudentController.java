@@ -41,11 +41,11 @@ public class StudentController {
 
     @Transactional
     @PostMapping("/student")
-    public ResponseEntity<Void> createStudent(@RequestBody @Valid StudentCreateRequest requestDto){
+    public ResponseEntity<Void> createStudent(@RequestBody @Valid List<StudentCreateRequest> Dto){
          /* 基本ユーザ情報を登録する */
-        UserEntity savedStudentAccount = studentService.createStudent(requestDto);
+        List<UserEntity> savedStudentAccount = studentService.createStudent(Dto);
         /* 生徒情報を登録する */
-        studentService.setStudentEnrollmentInformation(requestDto, savedStudentAccount);
+        studentService.setStudentEnrollmentInformation(Dto, savedStudentAccount);
 
         return ResponseEntity.ok().build();
     }
