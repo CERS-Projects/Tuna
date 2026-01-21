@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.bson.types.ObjectId;
+import java.util.Date;
 
 
 @Getter
@@ -17,19 +19,21 @@ public class LikeEntity {
 
     @Id
     @MongoId(FieldType.OBJECT_ID)
-    private String id;
+    private ObjectId id;
 
+    
     @NotNull
     @Field(value = "post_id", targetType = FieldType.OBJECT_ID)
-    private String postId;
+    private ObjectId postId;
 
 
     @NotNull
     @Field("user_id")
     private Integer userId;
 
+
     @NotNull
     @Field("liked_at")
-    private String likedAt;
+    private Date likedAt;
 
 }
