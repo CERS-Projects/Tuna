@@ -43,39 +43,39 @@ const createAppRouter = (queryClient: QueryClient) => {
     route(paths.inquiry.inquiry.path, () => import("./routes/inquiry")),
     route(
       paths.inquiry.complete.path,
-      () => import("./routes/completeInquiry")
+      () => import("./routes/completeInquiry"),
     ),
     route(paths.school.request.path, () => import("./routes/schoolRequest")),
     route(
       paths.school.confirm.path,
-      () => import("./routes/confirmSchoolRequest")
+      () => import("./routes/confirmSchoolRequest"),
     ),
 
     // 認証関連ルート
     route(paths.auth.login.path, () => import("./routes/auth/login")),
     route(
       paths.auth.passReset.passReset.path,
-      () => import("./routes/auth/passwordReset")
+      () => import("./routes/auth/passwordReset"),
     ),
     route(
       paths.auth.passChange.passChange.path,
-      () => import("./routes/auth/passwordChange")
+      () => import("./routes/auth/passwordChange"),
     ),
     route(
       paths.auth.twoFactorAuth.path,
-      () => import("./routes/auth/twoFactorAuth")
+      () => import("./routes/auth/twoFactorAuth"),
     ),
     route(
       paths.auth.passReset.confirm.path,
-      () => import("./routes/auth/emailSentConfirm")
+      () => import("./routes/auth/emailSentConfirm"),
     ),
     route(
       paths.auth.passChange.confirm.path,
-      () => import("./routes/auth/completePasswordChange")
+      () => import("./routes/auth/completePasswordChange"),
     ),
     route(
       paths.auth.accountLock.path,
-      () => import("./routes/auth/accountLock")
+      () => import("./routes/auth/accountLock"),
     ),
 
     // アプリ内ルート (ログイン必要)
@@ -91,12 +91,12 @@ const createAppRouter = (queryClient: QueryClient) => {
         route(paths.app.test.path, () => import("./routes/app/test")),
         route(paths.app.timeline.path, () => import("./routes/app/timeline")),
         route(
-          paths.app.timeline.contents.path,
-          () => import("./routes/app/detailPost")
+          paths.app.timeline.detail.path,
+          () => import("./routes/app/detailPost"),
         ),
         route(
           paths.app.searchPost.path,
-          () => import("./routes/app/searchPost")
+          () => import("./routes/app/searchPost"),
         ),
         route(
           paths.app.searchClassroom.path,
@@ -121,7 +121,7 @@ const createAppRouter = (queryClient: QueryClient) => {
           path: paths.app.management.group.root.path,
           lazy: () =>
             import("../features/management/layouts/groupShell/groupShell").then(
-              convert(queryClient)
+              convert(queryClient),
             ),
           children: [
             route(

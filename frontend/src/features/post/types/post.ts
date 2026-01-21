@@ -1,6 +1,6 @@
 export type PostData = {
   postId: number;
-  userId: string;
+  showUserId: string;
   userName: string;
   iconUrl?: string;
   mainPost: string;

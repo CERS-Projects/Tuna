@@ -81,7 +81,7 @@ export const paths = {
     timeline: {
       path: "/app/timeline",
       getHref: () => "/app/timeline",
-      contents: {
+      detail: {
         path: "/app/timeline/:id",
         getHref: (id: number | string) => `/app/timeline/${id}`,
       },

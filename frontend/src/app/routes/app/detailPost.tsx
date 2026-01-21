@@ -6,12 +6,12 @@ import styles from "@/features/timeline/styles/timeline.module.css";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
 import { useRef } from "react";
 import { useLocation } from "react-router";
-import type { PostData } from "@/features/post/types/post";
+import { type PostData } from "@/features/post/types/post";
 
 const dummyReply: PostData[] = [
   {
     postId: 1001,
-    userId: "user_a1",
+    showUserId: "user_a1",
     userName: "エンジニアA",
     mainPost: "この実装方法、非常にスマートで勉強になります！",
     goodCount: 5,
@@ -24,7 +24,7 @@ const dummyReply: PostData[] = [
   },
   {
     postId: 1002,
-    userId: "user_b2",
+    showUserId: "user_b2",
     userName: "デザイナーB",
     mainPost:
       "色使いがとても綺麗ですね。補足ですが、アクセシビリティの観点からコントラスト比をもう少し上げるとさらに良くなるかもしれません。",
@@ -39,7 +39,7 @@ const dummyReply: PostData[] = [
   },
   {
     postId: 1003,
-    userId: "user_c3",
+    showUserId: "user_c3",
     userName: "佐藤",
     // iconUrlなし
     mainPost:
@@ -54,7 +54,7 @@ const dummyReply: PostData[] = [
   },
   {
     postId: 1004,
-    userId: "user_d4",
+    showUserId: "user_d4",
     userName: "田中",
     mainPost: "これって、最新のライブラリでも動作しますか？",
     goodCount: 0,
@@ -67,7 +67,7 @@ const dummyReply: PostData[] = [
   },
   {
     postId: 1005,
-    userId: "user_e5",
+    showUserId: "user_e5",
     userName: "Tech Lover",
     mainPost: "関連する資料のスクリーンショットを添付します。参考にどうぞ。",
     goodCount: 8,
@@ -90,6 +90,18 @@ const DetailPost = () => {
 
   const location = useLocation();
   const postData = location.state?.item;
+
+  if (!postData) {
+    return (
+      <div className={styles.timelineLayout}>
+        <div className={styles.timelineContainer}>
+          <div className={styles.timelineMain}>
+            <p>投稿情報を取得できませんでした。</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.timelineLayout}>

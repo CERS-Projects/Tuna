@@ -10,12 +10,12 @@ import type React from "react";
 import { useState, useRef } from "react";
 import styles from "./postBox.module.css";
 import { Modal, type ModalHandle } from "../modal/modal";
-import type { PostData } from "@/features/post/types/post";
+import { type PostData } from "@/features/post/types/post";
 
 export const PostBox = (props: PostData) => {
   const {
     postId,
-    userId,
+    showUserId,
     userName,
     iconUrl,
     mainPost,
@@ -28,7 +28,7 @@ export const PostBox = (props: PostData) => {
     isLink = true,
   } = props;
 
-  const nameData = `${userName}@${userId}`;
+  const nameData = `${userName}@${showUserId}`;
   const navigate = useNavigate();
 
   const [goodOn, setGoodOn] = useState(goodCheck);
