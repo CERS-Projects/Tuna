@@ -57,9 +57,9 @@ const Timeline = () => {
     }
   };
   return (
-    <div className={styles.timelineLayout}>
-      <div className={styles.timelineContainer}>
-        <div className={styles.timelineMain}>
+    <div className={styles.materialLayout}>
+      <div className={styles.materialContainer}>
+        <div className={styles.materialMain}>
           <div className={styles.feedWrapper}>
             <button onClick={modalButtonClick} className={styles.modalButton}>
               <div className={styles.modalIcon}>
@@ -78,7 +78,7 @@ const Timeline = () => {
             </div>
           </div>
         </div>
-        <div className={styles.timelineSub}>
+        <div className={styles.materialSub}>
           <InfoBox>
             <MaterialCategory
               categories={sampleCategories}
