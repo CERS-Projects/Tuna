@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import {
   type StudentAccountRegisterType,
@@ -12,20 +12,37 @@ type ShowPassConfigsType = {
 };
 
 type StudentFormProps = {
+  current: StudentAccountRegisterType;
+  setCurrent: (current: StudentAccountRegisterType) => void;
   accounts: StudentAccountRegisterType[];
   setAccounts: (accounts: StudentAccountRegisterType[]) => void;
+  editingIndex: number | null;
+  setEditingIndex: (index: number | null) => void;
+  initialStudent: StudentAccountRegisterType;
+  onFormDone: (index: number | null) => void;
 };
 
 export const StudentAccountRegisterForm = ({
+  current,
+  setCurrent,
   accounts,
   setAccounts,
+  editingIndex,
+  setEditingIndex,
+  initialStudent,
+  onFormDone,
 }: StudentFormProps) => {
   const {
     register,
     handleSubmit,
     getValues,
+    reset,
     formState: { errors },
   } = useForm<StudentAccountRegisterType>();
+
+  useEffect(() => {
+    reset(current);
+  }, [current, reset]);
 
   const [show, setShow] = useState<ShowPassConfigsType>({
     1: false,
@@ -40,8 +57,22 @@ export const StudentAccountRegisterForm = ({
   };
 
   const onSubmit = (formDate: StudentAccountRegisterType) => {
-    console.log(formDate);
-    setAccounts([...accounts, formDate]);
+    const targetIndex = editingIndex !== null ? editingIndex : accounts.length;
+
+    if (editingIndex !== null) {
+      const next = accounts.map((a, i) => (i === editingIndex ? formDate : a));
+      setAccounts(next);
+      setEditingIndex(null);
+    } else {
+      setAccounts([...accounts, formDate]);
+    }
+
+    setCurrent(initialStudent);
+    reset(initialStudent);
+
+    requestAnimationFrame(() => {
+      onFormDone(targetIndex);
+    });
   };
 
   return (
@@ -177,7 +208,16 @@ export const StudentAccountRegisterForm = ({
           <input
             id="graduateDate"
             type="date"
-            {...register("graduateDate", { required: "この項目は必須です" })}
+            {...register("graduateDate", {
+              required: "この項目は必須です",
+              validate: (date) => {
+                const entryDate = new Date(getValues("entryDate"));
+                const graduateDate = new Date(date);
+
+                if (entryDate > graduateDate)
+                  return "入学時期より後の日付を設定してください";
+              },
+            })}
           />
           {errors.graduateDate?.message && (
             <p className={styles.isError}>{errors.graduateDate.message}</p>
@@ -185,28 +225,63 @@ export const StudentAccountRegisterForm = ({
         </div>
       </div>
 
-      <button className={styles.button} type="submit">
-        追加
-      </button>
+      <div
+        className={`${styles.row} ${editingIndex !== null ? styles.buttonRowTwo : ""}`}
+      >
+        <button className={styles.button} type="submit">
+          {editingIndex !== null ? "更新" : "追加"}
+        </button>
+
+        {editingIndex !== null ? (
+          <button
+            className={styles.button}
+            type="button"
+            onClick={() => {
+              setEditingIndex(null);
+              setCurrent(initialStudent);
+              reset(initialStudent);
+            }}
+          >
+            キャンセル
+          </button>
+        ) : null}
+      </div>
     </form>
   );
 };
 
 type TeacherFormProps = {
+  current: TeacherAccountRegisterType;
+  setCurrent: (current: TeacherAccountRegisterType) => void;
   accounts: TeacherAccountRegisterType[];
   setAccounts: (accounts: TeacherAccountRegisterType[]) => void;
+  editingIndex: number | null;
+  setEditingIndex: (index: number | null) => void;
+  initialTeacher: TeacherAccountRegisterType;
+  onFormDone: (index: number | null) => void;
 };
 
 export const TeacherAccountRegisterForm = ({
+  current,
+  setCurrent,
   accounts,
   setAccounts,
+  editingIndex,
+  setEditingIndex,
+  initialTeacher,
+  onFormDone,
 }: TeacherFormProps) => {
   const {
     register,
     handleSubmit,
     getValues,
+    reset,
     formState: { errors },
   } = useForm<TeacherAccountRegisterType>();
+
+  useEffect(() => {
+    reset(current);
+  }, [current, reset]);
 
   const [show, setShow] = useState<ShowPassConfigsType>({
     1: false,
@@ -222,7 +297,23 @@ export const TeacherAccountRegisterForm = ({
 
   const onSubmit = (formDate: TeacherAccountRegisterType) => {
     console.log(formDate);
-    setAccounts([...accounts, formDate]);
+
+    const targetIndex = editingIndex !== null ? editingIndex : accounts.length;
+
+    if (editingIndex !== null) {
+      const next = accounts.map((a, i) => (i === editingIndex ? formDate : a));
+      setAccounts(next);
+      setEditingIndex(null);
+    } else {
+      setAccounts([...accounts, formDate]);
+    }
+
+    setCurrent(initialTeacher);
+    reset(initialTeacher);
+
+    requestAnimationFrame(() => {
+      onFormDone(targetIndex);
+    });
   };
 
   return (
@@ -321,9 +412,27 @@ export const TeacherAccountRegisterForm = ({
         </div>
       </div>
 
-      <button className={styles.button} type="submit">
-        追加
-      </button>
+      <div
+        className={`${styles.row} ${editingIndex !== null ? styles.buttonRowTwo : ""}`}
+      >
+        <button className={styles.button} type="submit">
+          {editingIndex !== null ? "更新" : "追加"}
+        </button>
+
+        {editingIndex !== null ? (
+          <button
+            className={styles.button}
+            type="button"
+            onClick={() => {
+              setEditingIndex(null);
+              setCurrent(initialTeacher);
+              reset(initialTeacher);
+            }}
+          >
+            キャンセル
+          </button>
+        ) : null}
+      </div>
     </form>
   );
 };
