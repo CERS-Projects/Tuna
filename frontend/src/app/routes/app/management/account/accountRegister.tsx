@@ -68,12 +68,7 @@ const AccountRegister = () => {
     useState<StudentAccountRegisterType>(initialStudent);
 
   const [currentTeacher, setCurrentTeacher] =
-    useState<TeacherAccountRegisterType>({
-      name: "",
-      email: "",
-      password: "",
-      passwordConfirm: "",
-    });
+    useState<TeacherAccountRegisterType>(initialTeacher);
 
   const [studentAccounts, setStudentAccounts] = useState<
     StudentAccountRegisterType[]
