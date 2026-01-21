@@ -5,12 +5,15 @@ import com.example.backend.posts.dto.ProfilePostsRequest;
 import com.example.backend.posts.dto.PostInsertRequest;
 import com.example.backend.posts.dto.PostDetailResponse;
 import com.example.backend.posts.dto.PostsReplyRequest;
+import com.example.backend.posts.dto.IsBookmarkRequest;
 import com.example.backend.posts.model.PostEntity;
 import com.example.backend.posts.model.BookmarkEntity;
+import com.example.backend.posts.dto.IsLikeRequest;
 
 import com.example.backend.posts.model.PostEntity;
 import com.example.backend.posts.service.PostService;
 import com.example.backend.posts.service.BookmarkService;
+import com.example.backend.posts.service.LikeService;
 import lombok.extern.log4j.Log4j2;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +43,7 @@ public class PostController {
     
     private final PostService postService;
     private final BookmarkService bookmarkService;
-
+    private final LikeService likeService;
     //投稿を作成
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> insertPost(@Valid @ModelAttribute PostInsertRequest postRequest) { 
@@ -97,10 +100,10 @@ public class PostController {
     }
     
     //ブックマーク追加
-    @PostMapping("/bookmarks/add")
-    public ResponseEntity<Void> addBookmark(@Valid @RequestBody BookmarkEntity bookmark) {
+    @PostMapping("/addbookmarks")
+    public ResponseEntity<Void> addBookmark(@Valid @RequestBody IsBookmarkRequest requestDto) {
         try {
-            bookmarkService.addBookmark(bookmark);
+            bookmarkService.addBookmark(requestDto);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error("ブックマークの追加に失敗しました。", e);
@@ -109,13 +112,14 @@ public class PostController {
     }
 
     //ブックマーク削除
-    @PostMapping("/bookmarks/remove")
-    public ResponseEntity<Void> removeBookmark(@Valid @RequestBody BookmarkEntity bookmark) {
+    @DeleteMapping("/removebookmarks")
+    public ResponseEntity<Void> removeBookmark(@Valid @RequestBody IsBookmarkRequest requestDto) {
         try {
-            bookmarkService.removeBookmark(bookmark);
+            bookmarkService.removeBookmark(requestDto);
+            log.info("ブックマークが正常に削除されました userId: {} and postId: {}", requestDto.getUserId(), requestDto.getPostId());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            log.error("ブックマークの削除に失敗しました。", e);
+            log.error("ブックマークの削除に失敗しました。 userId: {} and postId: {} エラー: {}", requestDto.getUserId(), requestDto.getPostId(), e);
             return ResponseEntity.status(500).build();
         }
     }
@@ -127,12 +131,50 @@ public class PostController {
         try{
             bookmarkedPosts = bookmarkService.getBookmarkedPosts(userId);
         }catch(Exception e){
-            log.error("ブックマーク投稿の取得に失敗しました。", e);
+            log.error("ブックマーク投稿の取得に失敗しました。 userId: {} エラー: {}", userId, e);
             return ResponseEntity.status(500).build();
         }
         return ResponseEntity.ok(bookmarkedPosts);
     }
+
+    //いいね追加
+    @PostMapping("/addlikes")
+    public ResponseEntity<Void> addLikes(@Valid @RequestBody IsLikeRequest requestDto) {
+        try {
+            likeService.addLikes(requestDto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("いいねの追加に失敗しました。 userId: {} and postId: {} エラー: {}", requestDto.getUserId(), requestDto.getPostId(), e);
+            return ResponseEntity.status(500).build();
+        }
+    }
     
+    //いいね削除
+    @DeleteMapping("/removelikes")
+    public ResponseEntity<Void> removeLikes(@Valid @RequestBody IsLikeRequest requestDto)
+    {
+        try {
+            likeService.removeLikes(requestDto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("いいねの削除に失敗しました。 userId: {} and postId: {} エラー: {}", requestDto.getUserId(), requestDto.getPostId(), e);
+            return ResponseEntity.status(500).build();
+        }
+    }
+    //いいね取得
+    @GetMapping("/likes/{userId}")
+    public ResponseEntity<List<PostDetailResponse>> getLikedPosts(@PathVariable Integer userId){
+        List<PostDetailResponse> likedPosts;
+        try{
+            likedPosts = likeService.getLikedPosts(userId);
+        }catch(Exception e){
+            log.error("いいねした投稿の取得に失敗しました。 userId: {} エラー: {}", userId, e);
+            return ResponseEntity.status(500).build();
+        }
+        return ResponseEntity.ok(likedPosts);
+    }
+
+
     //投稿を削除
     @DeleteMapping("/{postId}/user/{userId}")
     public ResponseEntity<Void> deletePost(@PathVariable String postId, @PathVariable Integer userId){
