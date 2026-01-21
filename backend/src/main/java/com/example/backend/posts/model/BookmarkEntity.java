@@ -21,15 +21,15 @@ public class BookmarkEntity {
     @Id
     private ObjectId id;
 
-    @NotNull
+
     @Field("post_id")
     private ObjectId postId;
 
-    @NotNull
+
     @Field("user_id")
     private Integer userId;
     
-    @NotNull
+
     @Field("bookmarked_at")
     private Date bookmarkedAt;
 }
