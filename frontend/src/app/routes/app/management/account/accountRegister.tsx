@@ -134,12 +134,14 @@ const AccountRegister = () => {
 
         <div className={styles.toggleTab} data-active={activeTab}>
           <button
+            type="button"
             className={activeTab === "student" ? styles.tabActive : ""}
             onClick={() => setActiveTab("student")}
           >
             生徒
           </button>
           <button
+            type="button"
             className={activeTab === "teacher" ? styles.tabActive : ""}
             onClick={() => setActiveTab("teacher")}
           >
@@ -197,7 +199,7 @@ const AccountRegister = () => {
           />
         )}
 
-        <button className={styles.button} onClick={handleSubmit}>
+        <button type="button" className={styles.button} onClick={handleSubmit}>
           作成完了
         </button>
       </div>
