@@ -1,0 +1,135 @@
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+  background-color: #f1f5f9;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1.5rem;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.row > .input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.rowTwoCols {
+  flex-wrap: wrap;
+}
+
+.colName {
+  flex: 2 1 0;
+  min-width: min(240px, 100%);
+}
+
+.colGrade {
+  flex: 1 1 0;
+  min-width: min(140px, 100%);
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+}
+
+.input label {
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.input input,
+.input select {
+  width: 100%;
+  box-sizing: border-box;
+  height: 38px;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.inputWithIconInner {
+  position: relative;
+  width: 100%;
+}
+
+.inputWithIconInner input {
+  padding-right: 40px;
+}
+
+.eyeButton {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  height: 38px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: #334155;
+}
+
+.button {
+  height: 38px;
+  width: 100%;
+  padding: 5px 14px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: rgb(56, 94, 164);
+  color: #fff;
+  cursor: pointer;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.buttonRowTwo .button {
+  width: auto;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.isError {
+  color: red;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .row {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+
+  .row .button {
+    width: 100%;
+  }
+
+  .buttonRowTwo .button {
+    width: 100%;
+    flex: 0 0 auto;
+  }
+}
