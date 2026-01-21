@@ -216,6 +216,8 @@ export const StudentAccountRegisterForm = ({
 
                 if (entryDate > graduateDate)
                   return "入学時期より後の日付を設定してください";
+
+                return true;
               },
             })}
           />
@@ -393,6 +395,8 @@ export const TeacherAccountRegisterForm = ({
                   if (pass !== getValues("password")) {
                     return "パスワードが一致しません";
                   }
+
+                  return true;
                 },
                 required: "確認は必須です",
               })}
