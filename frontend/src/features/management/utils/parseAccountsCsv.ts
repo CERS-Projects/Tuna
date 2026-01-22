@@ -17,14 +17,17 @@ export const parseAccountsCsv = (
 
   lines.forEach((row, index) => {
     if (index === 0) return;
-
     if (!row.trim()) return;
-
     if (row.trim().startsWith("//")) return;
 
     const rowArray = row.split(",").map((v) => v.trim());
     if (rowArray.length < 7) {
       errors.push(`${index + 1}行目: 列数が不足しています（7列必要）`);
+      return;
+    }
+
+    if (rowArray.some((v) => v.length === 0)) {
+      errors.push(`${index + 1}行目: いずれの値も空白は無効です`);
       return;
     }
 
@@ -43,6 +46,7 @@ export const parseAccountsCsv = (
       errors.push(
         `${index + 1}行目: 有効なメールアドレスを入力してください（例: school@example.com）`,
       );
+      return;
     }
 
     const account: StudentAccountImportType = {
