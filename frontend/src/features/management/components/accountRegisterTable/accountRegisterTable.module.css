@@ -39,9 +39,16 @@
 .accountTable :is(th, td) {
   box-sizing: border-box;
   vertical-align: middle;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.student .accountTable :is(thead th, tbody td):nth-child(2),
+.student .accountTable :is(thead th, tbody td):nth-child(5),
+.student .accountTable :is(thead th, tbody td):nth-child(6) {
+  white-space: nowrap;
 }
 
 .student .accountTable :is(thead th, tbody td):nth-child(1) {
