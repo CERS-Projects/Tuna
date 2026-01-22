@@ -34,7 +34,9 @@ const AccountImport = () => {
         }
       };
       reader.onerror = () => {
-        console.error("failed to read file");
+        alert(
+          "ファイルの読み込みに失敗しました。別のファイルを選択するか、再度お試しください。",
+        );
       };
       reader.readAsText(file, "utf-8");
     }
