@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import styles from "./accountImportTable.module.css";
-import { type StudentAccountRegisterType } from "../../types/account";
+import { type StudentAccountImportType } from "../../types/account";
 
 type ShowPassConfigsType = {
   [key: number]: boolean;
 };
 
 type Props = {
-  accounts: StudentAccountRegisterType[];
+  accounts: StudentAccountImportType[];
 };
 
 export const AccountImportTable = ({ accounts }: Props) => {
@@ -39,6 +39,7 @@ export const AccountImportTable = ({ accounts }: Props) => {
         <table className={styles.accountTable}>
           <thead>
             <tr>
+              <th>表示用ユーザID</th>
               <th>名前</th>
               <th>学年</th>
               <th>メールアドレス</th>
@@ -51,6 +52,7 @@ export const AccountImportTable = ({ accounts }: Props) => {
             {accounts.map((account, index) => {
               return (
                 <tr key={index}>
+                  <td>{account.showUserId}</td>
                   <td>{account.name}</td>
                   <td>{account.grade}</td>
                   <td>{account.email}</td>

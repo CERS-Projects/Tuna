@@ -6,15 +6,15 @@ import { CsvUploadField } from "@/features/management/components/csvUploadField/
 import { AccountImportTable } from "@/features/management/components/accountImportTable/accountImportTable";
 import { paths } from "@/config/paths";
 import styles from "@/features/management/style/accountImport.module.css";
-import type { StudentAccountRegisterType } from "@/features/management/types/account";
+import type { StudentAccountImportType } from "@/features/management/types/account";
 
 const isAccount = (
-  v: StudentAccountRegisterType | null,
-): v is StudentAccountRegisterType => v !== null;
+  v: StudentAccountImportType | null,
+): v is StudentAccountImportType => v !== null;
 
 const mapCsvToArray = (
   csv: string | ArrayBuffer | null | undefined,
-): StudentAccountRegisterType[] => {
+): StudentAccountImportType[] => {
   if (typeof csv === "string")
     return csv
       .split(/\r?\n/)
@@ -26,7 +26,8 @@ const mapCsvToArray = (
 
         if (rowArray.length < 7) return null;
 
-        const account: StudentAccountRegisterType = {
+        const account: StudentAccountImportType = {
+          showUserId: rowArray[0],
           name: rowArray[3],
           grade: Number(rowArray[4]),
           email: rowArray[2],
@@ -44,7 +45,7 @@ const mapCsvToArray = (
 const AccountImport = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
-  const [accounts, setAccounts] = useState<StudentAccountRegisterType[]>([]);
+  const [accounts, setAccounts] = useState<StudentAccountImportType[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [shouldNavigate, setShouldNavigate] = useState(false);
 

@@ -1,12 +1,12 @@
 import { useRef } from "react";
 import { FaFileUpload, FaFileCsv, FaRegTrashAlt } from "react-icons/fa";
 import styles from "./csvUploadField.module.css";
-import { type StudentAccountRegisterType } from "../../types/account";
+import { type StudentAccountImportType } from "../../types/account";
 
 type Props = {
   file: File | null;
   setFile: (file: File | null) => void;
-  setAccounts: (accounts: StudentAccountRegisterType[]) => void;
+  setAccounts: (accounts: StudentAccountImportType[]) => void;
 };
 
 export const CsvUploadField = ({ file, setFile, setAccounts }: Props) => {
