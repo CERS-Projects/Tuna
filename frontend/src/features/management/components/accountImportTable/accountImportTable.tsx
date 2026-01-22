@@ -55,7 +55,7 @@ export const AccountImportTable = ({ accounts }: Props) => {
                   <td>{account.showUserId}</td>
                   <td>{account.name}</td>
                   <td>{account.grade}</td>
-                  <td>{account.email}</td>
+                  <td>{account.mailaddress}</td>
                   <td>
                     <div className={styles.passwordCol}>
                       {show[index] ? (
@@ -83,7 +83,7 @@ export const AccountImportTable = ({ accounts }: Props) => {
                       )}
                     </div>
                   </td>
-                  <td>{account.entryDate}</td>
+                  <td>{account.admissionDate}</td>
                   <td>{account.graduateDate}</td>
                 </tr>
               );

@@ -50,8 +50,8 @@ export type StudentAccountImportType = {
   showUserId: string;
   name: string;
   grade: number;
-  email: string;
+  mailaddress: string;
   password: string;
-  entryDate: string;
+  admissionDate: string;
   graduateDate: string;
 };

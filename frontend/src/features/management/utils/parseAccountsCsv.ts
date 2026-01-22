@@ -51,11 +51,11 @@ export const parseAccountsCsv = (
 
     const account: StudentAccountImportType = {
       showUserId: rowArray[0],
+      password: rowArray[1],
+      mailaddress: rowArray[2],
       name: rowArray[3],
       grade: Number(rowArray[4]),
-      email: rowArray[2],
-      password: rowArray[1],
-      entryDate: rowArray[5],
+      admissionDate: rowArray[5],
       graduateDate: rowArray[6],
     };
 
