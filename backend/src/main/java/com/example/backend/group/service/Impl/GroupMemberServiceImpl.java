@@ -1,6 +1,7 @@
 package com.example.backend.group.service.Impl;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -70,5 +71,12 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     @Transactional
     public void deleteMembersByGroupId(Integer groupId) {
         groupMemberRepository.deleteByGroupId(groupId);
+    }
+
+    @Override
+    @Transactional
+    public Set<Integer> findJoinUserIdsByGroupId(Integer groupId) {
+        Set<Integer> members = groupMemberRepository.findUserIdsByGroupId(groupId);
+        return members;
     }
 }

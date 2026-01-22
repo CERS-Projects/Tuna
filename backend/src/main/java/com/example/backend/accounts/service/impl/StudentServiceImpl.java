@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,6 +28,7 @@ import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.StudentService;
 import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
+import com.example.backend.group.service.GroupMemberService;
 import com.example.backend.school.model.SchoolEntity;
 
 @Service
@@ -44,16 +46,19 @@ public class StudentServiceImpl implements StudentService{
     /* CSVファイルの読み取りとそのデータをJavaで扱えるようにデシリアライズするもの */
     private final ObjectReader csvObjectReader;
 
+    private final GroupMemberService groupMemberService;
+
     /* 生徒アカウントをレコードとして関連つけている */
     private record StudentAccountPair(UserEntity newUserAccount, StudentEntity newStudentAccount){}
 
     /* CSVファイル扱えるようにするための初期設定 */
     public StudentServiceImpl(UserRepository userRepository, StudentRepository studentRepository,
-                              AccountsHelper accountsHelper){
+                              AccountsHelper accountsHelper, GroupMemberService groupMemberService) {
         /* 依存の注入 */
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.accountsHelper = accountsHelper;
+        this.groupMemberService = groupMemberService;
 
         /* CSVマッパーを使用できるようにするための処理 */
         CsvMapper csvMapper = new CsvMapper();
@@ -166,8 +171,12 @@ public class StudentServiceImpl implements StudentService{
     public List<GetUserResponse> findAllGroups(GetUserBySchoolIdRequest dto){
         List<GetUserResponse> response = studentRepository.findAllStudentUsers(dto.getSchoolId());
 
+        Set<Integer> members = groupMemberService.findJoinUserIdsByGroupId(dto.getGroupId());
         return response.stream()
-        .peek(user -> user.setIsJoin(isJoined(user)))
+        .peek(user -> {
+            Boolean isJoined = members.contains(user.getUserId());
+            user.setIsJoin(isJoined);
+        })
         .collect(Collectors.toList());
     }
 
@@ -176,12 +185,6 @@ public class StudentServiceImpl implements StudentService{
     public List<StudentInformationResponse> findStudentInformationResponses(GetFindAllStudentAccountRequest dto){
         List<StudentInformationResponse> responses = studentRepository.findAllStudentInformation(dto.getSchoolId());
         return responses; 
-    }
-
-    /* グループに所属しているかチェックする */
-    private Boolean isJoined(GetUserResponse user){
-        // ロジックを実装して、ユーザーがグループに参加しているかどうかを判定
-        return false; // 仮の戻り値
     }
 
     /*

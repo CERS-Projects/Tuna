@@ -1,6 +1,7 @@
 package com.example.backend.accounts.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,7 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     /* フロントに返す用のカスタムクエリ */
     @Query ("""
             SELECT new com.example.backend.group.dto.GetUserResponse(
+                user.userId,
                 user.showUserId, 
                 user.name,
                 student.grade)
@@ -40,4 +42,10 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             WHERE user.school.schoolId = :schoolId
             """)
     List<StudentInformationResponse> findAllStudentInformation(@Param("schoolId") Integer schoolId);
+
+    @Query ("""
+            SELECT userId FROM UserEntity 
+            WHERE school.schoolId = :schoolId
+            """)
+    Set<Integer> findAllBySchoolId(@Param("schoolId") Integer schoolId);
 }
