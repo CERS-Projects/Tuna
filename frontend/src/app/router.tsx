@@ -103,6 +103,14 @@ const createAppRouter = (queryClient: QueryClient) => {
           () => import("./routes/app/searchClassroom"),
         ),
         route(
+          paths.app.profile.follow.path,
+          () => import("./routes/app/profile/follow"),
+        ),
+        route(
+          paths.app.profile.follower.path,
+          () => import("./routes/app/profile/follower"),
+        ),
+        route(
           paths.app.classroom.contents.path,
           () => import("./routes/app/classroom/material"),
         ),
@@ -110,24 +118,24 @@ const createAppRouter = (queryClient: QueryClient) => {
           path: paths.app.profile.root.path,
           lazy: () =>
             import("../features/profile/layout/profileLayout").then(
-              convert(queryClient)
+              convert(queryClient),
             ),
           children: [
             route(
               paths.app.profile.posts.path,
-              () => import("./routes/app/profile/posts")
+              () => import("./routes/app/profile/posts"),
             ),
             route(
               paths.app.profile.responses.path,
-              () => import("./routes/app/profile/responses")
+              () => import("./routes/app/profile/responses"),
             ),
             route(
               paths.app.profile.goods.path,
-              () => import("./routes/app/profile/goods")
+              () => import("./routes/app/profile/goods"),
             ),
             route(
               paths.app.profile.bookmarks.path,
-              () => import("./routes/app/profile/bookmarks")
+              () => import("./routes/app/profile/bookmarks"),
             ),
           ],
         },
