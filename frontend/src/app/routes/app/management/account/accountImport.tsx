@@ -72,7 +72,7 @@ const AccountImport = () => {
           e.preventDefault();
         }
       },
-      [accounts.length, isSubmitting],
+      [accounts, isSubmitting],
     ),
   );
 
