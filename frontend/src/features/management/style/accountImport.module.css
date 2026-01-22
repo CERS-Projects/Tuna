@@ -46,3 +46,8 @@
   white-space: nowrap;
   margin-top: auto;
 }
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

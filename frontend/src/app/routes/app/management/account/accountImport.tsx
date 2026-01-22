@@ -18,6 +18,13 @@ const AccountImport = () => {
 
   useEffect(() => {
     if (file && file.type === "text/csv") {
+      const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5,242,880 bytes
+
+      if (file.size > MAX_FILE_SIZE) {
+        alert("ファイルサイズが大きすぎます（上限5MB）");
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (event) => {
         const csvString = event.target?.result;

@@ -12,9 +12,19 @@ type Props = {
 export const CsvUploadField = ({ file, setFile, setAccounts }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const selected = e.currentTarget.files?.[0] ?? null;
     setFile(selected);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const selected = e.dataTransfer.files?.[0] ?? null;
+    setFile(selected);
+  };
+
+  const handleDragOver: React.DragEventHandler<HTMLDivElement> = (e) => {
+    e.preventDefault();
   };
 
   const clear = () => {
@@ -34,6 +44,8 @@ export const CsvUploadField = ({ file, setFile, setAccounts }: Props) => {
         onClick={() => {
           inputRef.current?.click();
         }}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
       >
         {isUploaded ? (
           <div className={styles.dropzoneDetails}>
@@ -73,14 +85,13 @@ export const CsvUploadField = ({ file, setFile, setAccounts }: Props) => {
           ref={inputRef}
           type="file"
           accept=".csv,text/csv"
-          onChange={onChange}
+          onChange={handleChange}
         />
       </div>
 
       <div className={styles.templateField}>
-        <label htmlFor="template">フォーマット</label>
+        <span>フォーマット</span>
         <a
-          id="template"
           href="/templates/account_import_template.csv"
           download={"一括登録テンプレート.csv"}
         >
