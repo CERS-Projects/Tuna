@@ -28,16 +28,20 @@ public class GroupHelper {
         return upperGroup;
     }
 
-    public void updateParentGroup(final Integer NEW_PARENT_ID, final Integer MY_ID){
+    /* 複数のグループのアップデート用 */
+    public void updateParentGroups(final Integer NEW_PARENT_ID, final Integer MY_ID){
 
         List<GroupEntity> targetGroups = groupRepository.findAllByGroup_GroupId(MY_ID);
         if(targetGroups != null && !targetGroups.isEmpty()){
-            groupRepository.modifyGroupParentId(NEW_PARENT_ID, targetGroups);
+            groupRepository.modifyGroupParentIds(NEW_PARENT_ID, targetGroups);
         }
     }
 
+    /* 単一のグループのアップデート用 */
+    public void updateParentGroup(final Integer NEW_PARENT_ID, final Integer MY_ID){
+        groupRepository.modifyGroupParentId(NEW_PARENT_ID, MY_ID);
+    }
 
-    
     public List<GetGroupResponse> getTree(Integer schoolId){
         List<GroupEntity> entities = groupRepository.findBySchool_SchoolId(schoolId);
 

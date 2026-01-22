@@ -16,6 +16,7 @@ import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
 import com.example.backend.group.dto.GroupCreateRequest;
 import com.example.backend.group.dto.ModifyGroupMembersRequest;
+import com.example.backend.group.dto.ModifyUpperGroupRequest;
 import com.example.backend.group.service.GroupMemberService;
 import com.example.backend.group.service.GroupService;
 
@@ -63,6 +64,12 @@ public class GroupController {
     @PostMapping("/delete-group")
     public ResponseEntity<Void> deleteGroup(@Valid @RequestBody DelGroupRequest dto){
         groupService.deleteGroup(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/modify-upper-group")
+    public ResponseEntity<Void> modifyUpperGroup(@Valid @RequestBody ModifyUpperGroupRequest dto){
+        groupService.modifyUpperGroup(dto);
         return ResponseEntity.ok().build();
     }
 }
