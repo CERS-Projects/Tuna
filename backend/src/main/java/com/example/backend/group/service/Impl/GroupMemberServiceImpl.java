@@ -51,7 +51,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
     @Override
     @Transactional
-    public void GroupMemberToDB(List<Integer> membersUserId, Integer groupId) {
+    public void groupMemberToDB(List<Integer> membersUserId, Integer groupId) {
 
         List<GroupMemberEntity> members = membersUserId
         .stream()

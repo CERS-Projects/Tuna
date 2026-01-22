@@ -8,7 +8,7 @@ import com.example.backend.group.dto.ModifyGroupMembersRequest;
  * グループメンバーに関するサービスインターフェース
  */
 public interface GroupMemberService {
-    void GroupMemberToDB(List<Integer> membersUserId, Integer groupId);
+    void groupMemberToDB(List<Integer> membersUserId, Integer groupId);
     void modifyGroupMembers(ModifyGroupMembersRequest dto);
     void deleteMembersByGroupId(Integer groupId);
 }

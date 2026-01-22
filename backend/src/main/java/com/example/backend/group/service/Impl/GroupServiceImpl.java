@@ -48,27 +48,27 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void deleteGroup(DelGroupRequest dto){
 
-        final Integer NEW_PARENT_ID = dto.getParentId();
-        final Integer MY_ID = dto.getGroupId();
+        final Integer newParentId = dto.getParentId();
+        final Integer myId = dto.getGroupId();
 
-        groupHelper.updateParentGroup(NEW_PARENT_ID, MY_ID);
+        groupHelper.updateParentGroup(newParentId, myId);
 
-        groupMemberService.deleteMembersByGroupId(MY_ID);
-        groupRepository.deleteAllById(MY_ID);
+        groupMemberService.deleteMembersByGroupId(myId);
+        groupRepository.deleteAllById(myId);
     }
 
     /* GroupCreateRequest DTOをGroupEntityに変換 */
     private GroupEntity toGroupEntity(GroupCreateRequest dto){
         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
         GroupEntity groupEntity = new GroupEntity();
-        GroupEntity parentGroupId = groupHelper.findGroupEntityById(dto.getParentGroupId());
+        GroupEntity parentGroup = groupHelper.findGroupEntityById(dto.getParentGroupId());
         groupEntity.setGroupName(dto.getGroupName());
         groupEntity.setSchool(schoolEntity);
-        groupEntity.setGroup(parentGroupId);
+        groupEntity.setGroup(parentGroup);
 
         GroupEntity savedGroupEntity = groupRepository.save(groupEntity);
 
-        groupMemberService.GroupMemberToDB(dto.getMembersUserId(), savedGroupEntity.getGroupId());
+        groupMemberService.groupMemberToDB(dto.getMembersUserId(), savedGroupEntity.getGroupId());
 
         return groupEntity;
     }

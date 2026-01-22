@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /* 同じオブジェクト、同じ形なのか、DBの主キーにする関係で一意性を担保するためのクラス */
-public class InstanceValidator implements Serializable{
+public class GroupMemberIds implements Serializable{
     private Integer groupId;
     private Integer userId;
 
-    public InstanceValidator(){}
+    public GroupMemberIds(){}
 
-    public InstanceValidator(Integer groupId, Integer userId){
+    public GroupMemberIds(Integer groupId, Integer userId){
         this.groupId = groupId;
         this.userId = userId;
     }
@@ -24,7 +24,7 @@ public class InstanceValidator implements Serializable{
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        InstanceValidator that = (InstanceValidator) obj;
+        GroupMemberIds that = (GroupMemberIds) obj;
         return Objects.equals(groupId, that.groupId) && Objects.equals(userId, that.userId);
     }
 }

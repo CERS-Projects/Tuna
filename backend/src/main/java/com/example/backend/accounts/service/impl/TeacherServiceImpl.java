@@ -11,6 +11,7 @@ import com.example.backend.accounts.repository.TeacherRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.AdminUserService;
 import com.example.backend.accounts.service.TeacherService;
+import com.example.backend.exception.Model.SchoolNotFoundException;
 import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
 import com.example.backend.school.model.SchoolEntity;
 import com.example.backend.school.repository.SchoolRepository;
@@ -44,7 +45,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     public UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId){
 
         SchoolEntity schoolEntity = schoolRepository.findById(schoolId)
-            .orElseThrow(() -> new RuntimeException("学校が見つかりません"));
+            .orElseThrow(() -> new SchoolNotFoundException("学校が見つかりません"));
         UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity, 
                                                                    dto.getShowUserId(),
                                                                    dto.getName(),

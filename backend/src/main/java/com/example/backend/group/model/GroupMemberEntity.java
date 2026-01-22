@@ -1,7 +1,7 @@
 package com.example.backend.group.model;
 
 import com.example.backend.accounts.model.UserEntity;
-import com.example.backend.group.helper.InstanceValidator;
+import com.example.backend.group.helper.GroupMemberIds;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@IdClass(InstanceValidator.class)
+@IdClass(GroupMemberIds.class)
 @Table(name = "group_member_tb")
 public class GroupMemberEntity {
     @Id
