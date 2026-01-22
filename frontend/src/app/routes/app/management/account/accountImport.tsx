@@ -59,7 +59,7 @@ const AccountImport = () => {
       reader.onerror = () => {
         console.error("failed to read file");
       };
-      reader.readAsText(file);
+      reader.readAsText(file, "utf-8");
     }
   }, [file]);
 
