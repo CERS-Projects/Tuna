@@ -3,28 +3,14 @@ import { useState } from "react";
 import { TiRefresh } from "react-icons/ti";
 import { PostBox } from "@/components/ui/postBox/postBox";
 import styles from "./searchHistory.module.css";
+import {type PostDataItem } from "@/features/search/types/searchPost";
 
 const dummyHistory = ["e", "d", "c", "b", "a"];
-
-type PostDataItem = {
-  postId: number;
-  userId: string;
-  userName: string;
-  iconUrl?: string;
-  mainPost: string;
-  goodCount: number;
-  commentCount: number;
-  goodCheck: boolean;
-  bookmarkCheck: boolean;
-  postTo: string;
-  userTo: string;
-  postImgs?: string[];
-};
 
 const PostDummy: PostDataItem[] = [
   {
     postId: 1,
-    userId: "u001",
+    showUserId: "u001",
     userName: "田中 太郎",
     iconUrl: "https://placehold.co/100x100/orange/white?text=T",
     mainPost:
@@ -42,7 +28,7 @@ const PostDummy: PostDataItem[] = [
   },
   {
     postId: 2,
-    userId: "u002",
+    showUserId: "u002",
     userName: "エンジニア見習い",
     iconUrl: "https://placehold.co/100x100/333/white?text=Dev",
     mainPost:
@@ -57,7 +43,7 @@ const PostDummy: PostDataItem[] = [
   },
   {
     postId: 3,
-    userId: "u003",
+    showUserId: "u003",
     userName: "Traveler J",
     // iconUrlなしパターン（デフォルトアイコン表示のテスト用）
     mainPost:

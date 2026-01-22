@@ -8,7 +8,7 @@ import { useRef } from "react";
 
 type PostDataItem = {
   postId: number;
-  userId: string;
+  showUserId: string;
   userName: string;
   iconUrl?: string;
   mainPost: string;
@@ -24,7 +24,7 @@ type PostDataItem = {
 const PostDummy: PostDataItem[] = [
   {
     postId: 1,
-    userId: "u001",
+    showUserId: "u001",
     userName: "田中 太郎",
     iconUrl: "https://placehold.co/100x100/orange/white?text=T",
     mainPost:
@@ -42,7 +42,7 @@ const PostDummy: PostDataItem[] = [
   },
   {
     postId: 2,
-    userId: "u002",
+    showUserId: "u002",
     userName: "エンジニア見習い",
     iconUrl: "https://placehold.co/100x100/333/white?text=Dev",
     mainPost:
@@ -57,7 +57,7 @@ const PostDummy: PostDataItem[] = [
   },
   {
     postId: 3,
-    userId: "u003",
+    showUserId: "u003",
     userName: "Traveler J",
     // iconUrlなしパターン（デフォルトアイコン表示のテスト用）
     mainPost:
@@ -89,7 +89,7 @@ const Timeline = () => {
           {PostDummy.map((item) => (
             <PostBox
               postId={item.postId}
-              userId={item.userId}
+              showUserId={item.showUserId}
               userName={item.userName}
               iconUrl={item.iconUrl}
               mainPost={item.mainPost}
