@@ -127,6 +127,10 @@ export const paths = {
         path: "/app/profile/follower",
         getHref: () => "/app/profile/follower",
       },
+      settingMenu: {
+        path: "/app/profile/settingMenu",
+        getHref: () => "/app/profile/settingMenu",
+      }
     },
     test: {
       path: "/app/test",

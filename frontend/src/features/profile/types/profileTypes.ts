@@ -1,3 +1,5 @@
+import { type ReactNode } from "react";
+
 export type ProfileData = {
   showUserId: string;
   userName: string;
@@ -14,4 +16,11 @@ export type FollowData = {
   isFollowed: boolean;
   isFollowing: boolean;
   iconUrl: string;
+};
+
+export type menuItemType = {
+  menuName: string;
+  menuPath: string;
+  menuIcon: ReactNode;
+  menuLabel: string;
 };
