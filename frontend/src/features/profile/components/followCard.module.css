@@ -1,0 +1,130 @@
+.cardContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #eff3f4;
+  transition: background-color 0.2s;
+  box-sizing: border-box;
+}
+
+.cardContainer:hover {
+  background-color: #f7f9f9;
+}
+
+.userInfoLink {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  margin-right: 12px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.iconWrapper {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.profileIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.textWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  gap: 2px;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.userName {
+  font-weight: 700;
+  font-size: 15px;
+  color: #0f1419;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.userId {
+  font-size: 14px;
+  color: #536471;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.followedBadge {
+  background-color: #eff3f4;
+  color: #536471;
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.actionArea {
+  flex-shrink: 0;
+}
+
+.buttonFollow,
+.buttonFollowing {
+  font-size: 14px;
+  font-weight: 700;
+  height: 32px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.buttonFollow {
+  background-color: #fff;
+  border: 1px solid rgb(50, 85, 150);
+}
+
+.buttonFollow:hover {
+  background-color: rgba(50, 85, 150, 0.1);
+}
+
+.buttonFollowing {
+  background-color: rgb(50, 85, 150);
+  color: #fff;
+  border: 1px solid rgb(50, 85, 150);
+}
+
+.buttonFollowing:hover {
+  opacity: 0.9;
+}
+
+@media screen and (max-width: 480px) {
+  .buttonFollow,
+  .buttonFollowing {
+    height: 28px;
+    font-size: 12px;
+    width: 100px;
+  }
+}
