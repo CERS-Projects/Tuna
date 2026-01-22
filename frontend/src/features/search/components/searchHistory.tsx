@@ -3,23 +3,9 @@ import { useState } from "react";
 import { TiRefresh } from "react-icons/ti";
 import { PostBox } from "@/components/ui/postBox/postBox";
 import styles from "./searchHistory.module.css";
+import {type PostDataItem } from "@/features/search/types/searchPost";
 
 const dummyHistory = ["e", "d", "c", "b", "a"];
-
-type PostDataItem = {
-  postId: number;
-  showUserId: string;
-  userName: string;
-  iconUrl?: string;
-  mainPost: string;
-  goodCount: number;
-  commentCount: number;
-  goodCheck: boolean;
-  bookmarkCheck: boolean;
-  postTo: string;
-  userTo: string;
-  postImgs?: string[];
-};
 
 const PostDummy: PostDataItem[] = [
   {
