@@ -34,7 +34,7 @@ export type StudentAccountRegisterType = {
   grade: number;
   email: string;
   password: string;
-  passwordConfirm: string;
+  passwordConfirm?: string;
   entryDate: string;
   graduateDate: string;
 };

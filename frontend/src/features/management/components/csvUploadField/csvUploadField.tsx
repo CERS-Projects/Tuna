@@ -1,13 +1,15 @@
 import { useRef } from "react";
 import { FaFileUpload, FaFileCsv, FaRegTrashAlt } from "react-icons/fa";
 import styles from "./csvUploadField.module.css";
+import { type StudentAccountRegisterType } from "../../types/account";
 
 type Props = {
   file: File | null;
   setFile: (file: File | null) => void;
+  setAccounts: (accounts: StudentAccountRegisterType[]) => void;
 };
 
-export const CsvUploadField = ({ file, setFile }: Props) => {
+export const CsvUploadField = ({ file, setFile, setAccounts }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -17,6 +19,7 @@ export const CsvUploadField = ({ file, setFile }: Props) => {
 
   const clear = () => {
     setFile(null);
+    setAccounts([]);
     if (inputRef.current) {
       inputRef.current.value = "";
     }
