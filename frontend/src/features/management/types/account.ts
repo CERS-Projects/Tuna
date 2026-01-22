@@ -45,3 +45,13 @@ export type TeacherAccountRegisterType = {
   password: string;
   passwordConfirm: string;
 };
+
+export type StudentAccountImportType = {
+  showUserId: string;
+  name: string;
+  grade: number;
+  mailaddress: string;
+  password: string;
+  admissionDate: string;
+  graduateDate: string;
+};

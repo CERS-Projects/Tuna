@@ -7,8 +7,8 @@ import {
   type StudentAccountRegisterType,
   type TeacherAccountRegisterType,
 } from "@/features/management/types/account";
-import { useState, useRef, useCallback } from "react";
-import { useBeforeUnload } from "react-router";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useBeforeUnload, useNavigate } from "react-router";
 import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 import { paths } from "@/config/paths";
 import styles from "@/features/management/style/accountRegister.module.css";
@@ -35,6 +35,9 @@ const initialTeacher: TeacherAccountRegisterType = {
 };
 
 const AccountRegister = () => {
+  const navigate = useNavigate();
+  const [shouldNavigate, setShouldNavigate] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<"student" | "teacher">("student");
   const formRef = useRef<HTMLDivElement | null>(null);
   const scrollToForm = () => {
@@ -86,18 +89,28 @@ const AccountRegister = () => {
     null,
   );
 
-  useBlockNavigation(teacherAccounts.length > 0 || studentAccounts.length > 0);
+  useBlockNavigation(
+    (teacherAccounts.length > 0 || studentAccounts.length > 0) && !isSubmitting,
+  );
 
   useBeforeUnload(
     useCallback(
       (e) => {
-        if (teacherAccounts.length > 0 || studentAccounts.length > 0) {
+        if (
+          (teacherAccounts.length > 0 || studentAccounts.length > 0) &&
+          !isSubmitting
+        ) {
           e.preventDefault();
         }
       },
-      [studentAccounts, teacherAccounts],
+      [studentAccounts, teacherAccounts, isSubmitting],
     ),
   );
+
+  useEffect(() => {
+    if (!shouldNavigate) return;
+    navigate(paths.app.management.account.list.path);
+  }, [shouldNavigate, navigate]);
 
   const handleSubmit = () => {
     const cancel = confirm("この内容で登録しますか？");
@@ -110,16 +123,28 @@ const AccountRegister = () => {
         return;
       }
 
-      console.log(studentAccounts);
-      setStudentAccounts([]);
+      setIsSubmitting(true);
+      try {
+        console.log(studentAccounts);
+        setShouldNavigate(true);
+      } catch (e) {
+        setIsSubmitting(false);
+        throw e;
+      }
     } else {
       if (teacherAccounts.length === 0) {
         alert("データが追加されていません");
         return;
       }
 
-      console.log(teacherAccounts);
-      setTeacherAccounts([]);
+      setIsSubmitting(true);
+      try {
+        console.log(teacherAccounts);
+        setShouldNavigate(true);
+      } catch (e) {
+        setIsSubmitting(false);
+        throw e;
+      }
     }
   };
 

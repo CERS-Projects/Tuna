@@ -8,8 +8,6 @@
 
 .student {
 }
-.teacher {
-}
 
 .tableScroll {
   width: 100%;
@@ -32,10 +30,6 @@
   min-width: 49rem;
 }
 
-.teacher .accountTable {
-  min-width: 28rem;
-}
-
 .accountTable :is(th, td) {
   box-sizing: border-box;
   vertical-align: middle;
@@ -45,49 +39,35 @@
   text-overflow: ellipsis;
 }
 
-.student .accountTable :is(thead th, tbody td):nth-child(2),
-.student .accountTable :is(thead th, tbody td):nth-child(5),
-.student .accountTable :is(thead th, tbody td):nth-child(6) {
+.student .accountTable :is(thead th, tbody td):nth-child(3),
+.student .accountTable :is(thead th, tbody td):nth-child(6),
+.student .accountTable :is(thead th, tbody td):nth-child(7) {
   white-space: nowrap;
 }
 
 .student .accountTable :is(thead th, tbody td):nth-child(1) {
-  width: 9rem;
+  width: 8rem;
 }
+
 .student .accountTable :is(thead th, tbody td):nth-child(2) {
+  width: 7rem;
+}
+.student .accountTable :is(thead th, tbody td):nth-child(3) {
   width: 3.5rem;
   text-align: center;
 }
-.student .accountTable :is(thead th, tbody td):nth-child(3) {
+.student .accountTable :is(thead th, tbody td):nth-child(4) {
   width: 12rem;
 }
-.student .accountTable :is(thead th, tbody td):nth-child(4) {
-  width: 7rem;
-}
 .student .accountTable :is(thead th, tbody td):nth-child(5) {
-  width: 6.5rem;
-  text-align: center;
+  width: 7rem;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(6) {
   width: 6.5rem;
   text-align: center;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(7) {
-  width: 4.5rem;
-  text-align: center;
-}
-
-.teacher .accountTable :is(thead th, tbody td):nth-child(1) {
-  width: 9rem;
-}
-.teacher .accountTable :is(thead th, tbody td):nth-child(2) {
-  width: 14rem;
-}
-.teacher .accountTable :is(thead th, tbody td):nth-child(3) {
-  width: 7rem;
-}
-.teacher .accountTable :is(thead th, tbody td):nth-child(4) {
-  width: 4.5rem;
+  width: 6.5rem;
   text-align: center;
 }
 
