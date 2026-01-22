@@ -49,12 +49,18 @@ export const parseAccountsCsv = (
       return;
     }
 
+    const grade = Number(rowArray[4]);
+    if (Number.isNaN(grade)) {
+      errors.push(`${index + 1}行目: 学年が不正な値です`);
+      return null;
+    }
+
     const account: StudentAccountImportType = {
       showUserId: rowArray[0],
       password: rowArray[1],
       mailaddress: rowArray[2],
       name: rowArray[3],
-      grade: Number(rowArray[4]),
+      grade: grade,
       admissionDate: rowArray[5],
       graduateDate: rowArray[6],
     };
