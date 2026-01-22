@@ -51,7 +51,7 @@ export const AccountImportTable = ({ accounts }: Props) => {
           <tbody>
             {accounts.map((account, index) => {
               return (
-                <tr key={index}>
+                <tr key={`${account.showUserId}-${index}`}>
                   <td>{account.showUserId}</td>
                   <td>{account.name}</td>
                   <td>{account.grade}</td>
