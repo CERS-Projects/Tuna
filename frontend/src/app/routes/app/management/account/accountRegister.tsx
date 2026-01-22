@@ -130,8 +130,6 @@ const AccountRegister = () => {
       } catch (e) {
         setIsSubmitting(false);
         throw e;
-      } finally {
-        setStudentAccounts([]);
       }
     } else {
       if (teacherAccounts.length === 0) {
@@ -146,8 +144,6 @@ const AccountRegister = () => {
       } catch (e) {
         setIsSubmitting(false);
         throw e;
-      } finally {
-        setTeacherAccounts([]);
       }
     }
   };
