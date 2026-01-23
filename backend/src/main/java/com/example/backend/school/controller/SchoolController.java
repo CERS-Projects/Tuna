@@ -2,6 +2,8 @@ package com.example.backend.school.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.service.AdminUserService;
 import com.example.backend.accounts.service.TeacherService;
+import com.example.backend.school.dto.GetSchoolInformationRequest;
+import com.example.backend.school.dto.GetSchoolInformationResponse;
+import com.example.backend.school.dto.ModifySchoolInformationRequest;
+import com.example.backend.school.dto.ModifySchoolInformationResponse;
 import com.example.backend.school.dto.SchoolIntegrationCreate;
 import com.example.backend.school.service.SchoolService;
 
@@ -45,6 +51,18 @@ public class SchoolController {
 
         /* HTTPステータスコード 200 で返す。その際レスポンスボディは空 */
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/information")
+    public ResponseEntity<GetSchoolInformationResponse> getSchoolInformation(@Valid @ModelAttribute GetSchoolInformationRequest dto){
+        GetSchoolInformationResponse response = schoolService.getSchoolInformation(dto);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/modify")
+    public ResponseEntity<ModifySchoolInformationResponse> modifySchoolInformation(@Valid @RequestBody ModifySchoolInformationRequest dto){
+        ModifySchoolInformationResponse response = schoolService.modifySchoolInformation(dto);
+        return ResponseEntity.ok(response);
     }
 
 } 

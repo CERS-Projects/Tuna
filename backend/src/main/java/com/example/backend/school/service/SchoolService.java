@@ -1,5 +1,9 @@
 package com.example.backend.school.service;
 
+import com.example.backend.school.dto.GetSchoolInformationRequest;
+import com.example.backend.school.dto.GetSchoolInformationResponse;
+import com.example.backend.school.dto.ModifySchoolInformationRequest;
+import com.example.backend.school.dto.ModifySchoolInformationResponse;
 import com.example.backend.school.dto.SchoolCreateRequest;
 
 /*
@@ -8,4 +12,6 @@ import com.example.backend.school.dto.SchoolCreateRequest;
  */
 public interface SchoolService {
     Integer createSchool(SchoolCreateRequest dto);
+    GetSchoolInformationResponse getSchoolInformation(GetSchoolInformationRequest dto);
+    ModifySchoolInformationResponse modifySchoolInformation(ModifySchoolInformationRequest dto);
 }
