@@ -19,4 +19,12 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
             """)
     void modifyBasicInformationBySchoolId(Integer userId, String name,
                                         String mailAddress, Boolean accountStopFlag);
+
+    @Query("""
+            SELECT EXISTS(
+                SELECT userId FROM UserEntity
+                WHERE school.schoolId = :schoolId AND userId = :userId
+            )
+            """)
+    Boolean existsByUserIdAndSchoolId(Integer userId, Integer schoolId);
 }
