@@ -20,7 +20,7 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
     @Update("{ '$inc': { 'response_Count': 2 } }")
     long incrementResponseCount(ObjectId postId);
 
-
+    
     // ユーザーIDと投稿IDで存在確認(ユーザーチェック)
     boolean existsByIdAndUserId(String id, Integer userId);
 
@@ -247,15 +247,11 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  foreignField: 'user_id', " +
         "  as: 'profile' " +
         "} }",
-
-        //6. ソート＆制限
-        "{ $sort: { postDate: -1 } }",
-        "{ $limit: 50 }",
         
-        // 7. profileを展開（preserveNullAndEmptyArraysをtrueに）
+        // 6. profileを展開（preserveNullAndEmptyArraysをtrueに）
         "{ $unwind: { path: '$profile', preserveNullAndEmptyArrays: true } }",
         
-        // 8. response_countを計算
+        // 7. response_countを計算
         "{ $lookup: { " +
         "  from: 'post_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -266,7 +262,7 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'responses' " +
         "} }",
         
-        // 9. like_collectionから検索
+        // 8. like_collectionから検索
         "{ $lookup: { " +
         "  from: 'like_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -283,7 +279,7 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'likes' " +
         "} }",
         
-        // 10. bookmark_collectionから検索
+        // 9. bookmark_collectionから検索
         "{ $lookup: { " +
         "  from: 'bookmark_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -300,7 +296,7 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "  as: 'bookmarks' " +
         "} }",
         
-        // 11. 最終的なフィールドを整形
+        // 10. 最終的なフィールドを整形
         "{ $project: { " +
         "  _id: 1, " +
         "  postId: '$_id', " +
@@ -319,8 +315,97 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
         "} }",
     })
     List<PostDetailResponse> findPostsResponseWithDetails(
-        Integer UserId,
-        ObjectId ReplyPostId,
+        Integer userId,
+        ObjectId replyPostId,
         List<String> muteWords
     );
+
+
+    //キーワード検索投稿取得
+    @Aggregation(pipeline = {
+        // 1. sentenceにキーワードが含まれるドキュメントをフィルタ
+        "{ $match: { sentence: { $regex: ?1, $options: 'i' } } }",
+
+        // 2. post_flagがfalseのものを除外
+        "{ $match: { post_flag: { $ne: false } } }",
+
+        // 5. profile_collectionとuser_idで結合
+        "{ $lookup: { " +
+        "  from: 'profile_collection', " +
+        "  localField: 'user_id', " +
+        "  foreignField: 'user_id', " +
+        "  as: 'profile' " +
+        "} }",
+        
+        // 6. profileを展開（preserveNullAndEmptyArraysをtrueに）
+        "{ $unwind: { path: '$profile', preserveNullAndEmptyArrays: true } }",
+        
+        // 7. response_countを計算
+        "{ $lookup: { " +
+        "  from: 'post_collection', " +
+        "  let: { postId: '$_id' }, " +
+        "  pipeline: [ " +
+        "    { $match: { $expr: { $eq: ['$response_to', '$$postId'] } } }, " +
+        "    { $count: 'count' } " +
+        "  ], " +
+        "  as: 'responses' " +
+        "} }",
+        
+        // 8. like_collectionから検索
+        "{ $lookup: { " +
+        "  from: 'like_collection', " +
+        "  let: { postId: '$_id' }, " +
+        "  pipeline: [ " +
+        "    { $match: { " +
+        "      $expr: { " +
+        "        $and: [ " +
+        "          { $eq: ['$user_id', ?0] }, " +
+        "          { $eq: ['$post_id', '$$postId'] } " +
+        "        ] " +
+        "      } " +
+        "    } } " +
+        "  ], " +
+        "  as: 'likes' " +
+        "} }",
+        
+        // 9. bookmark_collectionから検索
+        "{ $lookup: { " +
+        "  from: 'bookmark_collection', " +
+        "  let: { postId: '$_id' }, " +
+        "  pipeline: [ " +
+        "    { $match: { " +
+        "      $expr: { " +
+        "        $and: [ " +
+        "          { $eq: ['$user_id', ?0] }, " +
+        "          { $eq: ['$post_id', '$$postId'] } " +
+        "        ] " +
+        "      } " +
+        "    } } " +
+        "  ], " +
+        "  as: 'bookmarks' " +
+        "} }",
+        
+        // 10. 最終的なフィールドを整形
+        "{ $project: { " +
+        "  _id: 1, " +
+        "  postId: '$_id', " +
+        "  userId: '$user_id', " +
+        "  sentence: '$sentence', " +
+        "  imageUrl: '$image_objectKey', " +
+        "  shareRange: '$share_range', " +
+        "  postDate: '$post_date', " +
+        "  likeCount: '$like_Count', " +
+        "  nickname: '$profile.nickname', " +
+        "  showUserId: '$profile.show_user_id', " +
+        "  icon: '$profile.icon', " +
+        "  responseCount: '$response_Count', " +
+        "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
+        "  isBookmarked: { $gt: [{ $size: '$bookmarks' }, 0] } " +
+        "} }",
+    })
+    List<PostDetailResponse> findPostsByKeywordWithDetails(
+        Integer currentUserId,
+        String keyword
+    );
+
     }
