@@ -5,6 +5,7 @@ import com.example.backend.posts.dto.ProfilePostsRequest;
 import com.example.backend.posts.dto.PostInsertRequest;
 import com.example.backend.posts.dto.PostDetailResponse;
 import com.example.backend.posts.dto.PostsReplyRequest;
+import com.example.backend.posts.dto.SearchPostsRequest;    
 import com.example.backend.posts.model.PostEntity;
 import org.bson.types.ObjectId;
 
@@ -42,6 +43,7 @@ public class PostServiceImpl implements PostService {
     private final FileControlHelper fileControlHelper;
     
     // 投稿作成
+    @Override
     public void insertPost(PostInsertRequest post) {
         PostEntity postEntity = new PostEntity();
         List<String> fileObjectKeys = null;
@@ -94,6 +96,7 @@ public class PostServiceImpl implements PostService {
     }
 
     //タイムライン取得
+    @Override
     public List<PostDetailResponse> getTimelinePosts(TimelinePostsRequest requestDto) {
         try {
             List<PostDetailResponse> postDetails =
@@ -122,6 +125,7 @@ public class PostServiceImpl implements PostService {
     }
 
     //ユーザー投稿取得
+    @Override
     public List<PostDetailResponse> getUserPosts(ProfilePostsRequest requestDto) {
         List<PostDetailResponse> postDetails;
         try{
@@ -142,6 +146,7 @@ public class PostServiceImpl implements PostService {
         return postDetails;
     }
     //返信取得
+    @Override
     public List<PostDetailResponse> getReplyPosts(PostsReplyRequest requestDto) {
         List<PostDetailResponse> postDetails;
         try{
@@ -157,6 +162,26 @@ public class PostServiceImpl implements PostService {
             postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
         }
 
+        return postDetails;
+    }
+
+    //キーワード検索投稿取得
+    @Override
+    public List<PostDetailResponse> getPostsByKeyword(SearchPostsRequest requestDto) {
+        List<PostDetailResponse> postDetails;
+        try{
+            
+            log.info("キーワード検索投稿取得を開始しました キーワード: " + requestDto.getKeyword() + " 取得 currentUserId: " + requestDto.getCurrentUserId() );
+            postDetails = postRepository.findPostsByKeywordWithDetails(requestDto.getCurrentUserId(), requestDto.getKeyword());
+        }catch(Exception e){
+            log.error("キーワード検索投稿の取得に失敗しました。", e.getMessage(), e);
+            e.printStackTrace();
+            throw new RuntimeException("キーワード検索投稿の取得に失敗しました。", e);
+        }
+        for(PostDetailResponse postDetail : postDetails){
+            postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
+            postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+        }
         return postDetails;
     }
 
