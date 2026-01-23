@@ -14,6 +14,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.example.backend.exception.Model.ErrorResponseEntity;
+import com.example.backend.exception.Model.SchoolNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +40,7 @@ public class ExceptionCatch {
     }
 
     // 404
-    @ExceptionHandler({ NoResourceFoundException.class, EmptyResultDataAccessException.class })
+    @ExceptionHandler({ NoResourceFoundException.class, EmptyResultDataAccessException.class, SchoolNotFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponseEntity notFound(Exception e) {
         ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.NOT_FOUND.value(), e.getMessage());

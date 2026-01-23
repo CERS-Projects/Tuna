@@ -26,7 +26,6 @@ public class TeacherEntity {
     @MapsId
     @OneToOne
     @JoinColumn(name = "user_id", 
-                referencedColumnName = "userId",
                 nullable = false)
     private UserEntity teacherAccountId;
 

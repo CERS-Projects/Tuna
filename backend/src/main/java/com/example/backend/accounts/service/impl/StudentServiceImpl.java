@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import com.example.backend.accounts.dto.ReadCSVFileStudentCreateRequest;
 import com.example.backend.accounts.dto.StudentCreateRequest;
@@ -17,10 +23,9 @@ import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.StudentRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.StudentService;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.example.backend.group.dto.GetUserBySchoolId;
+import com.example.backend.group.dto.GetUserResponse;
+import com.example.backend.school.model.SchoolEntity;
 
 @Service
 public class StudentServiceImpl implements StudentService{
@@ -72,9 +77,11 @@ public class StudentServiceImpl implements StudentService{
 
     /* ユーザデータの基本情報を登録（生徒） */
     @Override
+    @Transactional
     public UserEntity createStudent(StudentCreateRequest dto){
 
-        UserEntity newStudentAccount = accountsHelper.toUserEntity(dto.getSchoolId(),
+        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
+        UserEntity newStudentAccount = accountsHelper.toUserEntity(schoolEntity,    
                                                                    dto.getShowUserId(),
                                                                    dto.getName(),
                                                                    dto.getMailAddress(),
@@ -87,6 +94,7 @@ public class StudentServiceImpl implements StudentService{
 
     /* 登録した基本情報のユーザIDを元に、生徒情報を付加する */
     @Override
+    @Transactional
     public void setStudentEnrollmentInformation(StudentCreateRequest dto, UserEntity savedStudentAccount){
 
         StudentEntity studentInformation = toStudentEntity(savedStudentAccount,
@@ -110,6 +118,7 @@ public class StudentServiceImpl implements StudentService{
      * try-with-resources構文: InputStreamを自動的に閉じるための構文
      */
     @Override
+    @Transactional
     public void createStudentByFile(MultipartFile csvFile, final Integer schoolId) throws IOException{
         try (InputStream inputStream = csvFile.getInputStream()){
             List<ReadCSVFileStudentCreateRequest> records = this.readCsv(inputStream);
@@ -131,12 +140,37 @@ public class StudentServiceImpl implements StudentService{
     }
 
     /*
+     *フロントに返す用の値を取得、加工するメソッド
+     * 以下の値を取得し、Dtoにセットする
+     * showUserId:表示用ユーザID
+     * name:ユーザ名
+     * grade:学年
+     * isJoin:グループに所属しているかどうか
+     */
+    @Override
+    @Transactional
+    public List<GetUserResponse> findAllGroups(GetUserBySchoolId dto){
+        List<GetUserResponse> response = studentRepository.findAllStudentUsers(dto.getSchoolId());
+
+        return response.stream()
+        .peek(user -> user.setIsJoin(isJoined(user)))
+        .collect(Collectors.toList());
+    }
+
+    /* グループに所属しているかチェックする */
+    private Boolean isJoined(GetUserResponse user){
+        // ロジックを実装して、ユーザーがグループに参加しているかどうかを判定
+        return false; // 仮の戻り値
+    }
+
+    /*
      * UserEntity->StudentEntityに変換するヘルプメソッド 
      */
-    private StudentEntity toStudentEntity(UserEntity studentAccount, Integer grade, LocalDate admissionDate, LocalDate graduateDate){
+    private StudentEntity toStudentEntity(UserEntity studentAccount, Integer grade, 
+                                          LocalDate admissionDate, LocalDate graduateDate){
         StudentEntity studentEnrollmentInformation = new StudentEntity();
 
-        studentEnrollmentInformation.setStudentAccount(studentAccount);
+        studentEnrollmentInformation.setUser(studentAccount);
         studentEnrollmentInformation.setGrade(grade);
         studentEnrollmentInformation.setAdmissionDate(admissionDate);
 
@@ -155,7 +189,8 @@ public class StudentServiceImpl implements StudentService{
     /* エンティティに挿入する処理 */
     private StudentAccountPair toStudentEntityByFile(ReadCSVFileStudentCreateRequest records, final Integer schoolId){
 
-        UserEntity newUserAccount = accountsHelper.toUserEntity(schoolId,
+        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(schoolId);
+        UserEntity newUserAccount = accountsHelper.toUserEntity(schoolEntity,
                                                                 records.showUserId(),
                                                                 records.password(),
                                                                 records.mailAddress(),
@@ -170,6 +205,4 @@ public class StudentServiceImpl implements StudentService{
 
         return new StudentAccountPair(newUserAccount, newStudentAccount);
     }
-
-
 }

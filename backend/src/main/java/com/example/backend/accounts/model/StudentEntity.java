@@ -23,9 +23,8 @@ public class StudentEntity {
     @MapsId
     @OneToOne
     @JoinColumn(name = "user_id",
-                referencedColumnName = "userId",
                 nullable = false)
-    private UserEntity studentAccount;
+    private UserEntity user;
 
     @Column(name = "grade",
             nullable = false,
