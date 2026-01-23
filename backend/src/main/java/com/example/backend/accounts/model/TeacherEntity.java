@@ -31,6 +31,6 @@ public class TeacherEntity {
 
     @Column(name = "authority_flag",
             nullable = false,
-            columnDefinition = "TINYINT(1)")
-    private Integer authorityFlag;
+            columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean authorityFlag;
 }
