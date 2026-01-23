@@ -8,12 +8,12 @@ import {
 
 import { type MaterialType, type CategoryType } from "../types/material";
 
-type materialProps = {
-  categories: CategoryType[];
-  items: MaterialType[];
+type MaterialProps = {
+  categories: categoryType[];
+  items: materialType[];
 };
 
-export const MaterialCategory = ({ categories, items }: materialProps) => {
+export const MaterialCategory = ({ categories, items }: MaterialProps) => {
   const [openIds, setOpenIds] = useState<number[]>([]);
 
   const groupedData = useMemo(() => {
@@ -53,9 +53,9 @@ export const MaterialCategory = ({ categories, items }: materialProps) => {
             >
               <div className={styles.overflowInner}>
                 <div className={styles.contentList}>
-                  {category.children.map((item, index) => (
+                  {category.children.map((item) => (
                     <a
-                      key={index}
+                      key={item.materialId}
                       href={item.fileUrl}
                       download={item.fileName}
                       className={styles.pdfLink}
