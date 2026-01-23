@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.accounts.dto.GetFindAllStudentAccountRequest;
+import com.example.backend.accounts.dto.ModifyStudentAccountRequest;
 import com.example.backend.accounts.dto.StudentCreateRequest;
 import com.example.backend.accounts.dto.StudentInformationResponse;
 import com.example.backend.accounts.model.UserEntity;
@@ -65,6 +66,13 @@ public class StudentController {
             return ResponseEntity.ok().body("生徒アカウントの一括登録が完了しました。");
         }
     }
+
+    @PostMapping("/student/modify")
+    public ResponseEntity<Void> modifyStudentAccount(@RequestBody @Valid ModifyStudentAccountRequest dto){
+        studentService.modifyStudentAccount(dto);
+        return ResponseEntity.ok().build();
+    }
+
 
     /* Validationパッケージに移動予定　D5,まっつん */
     public ResponseEntity<String> fileValidation(MultipartFile uploadFile){

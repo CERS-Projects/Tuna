@@ -1,11 +1,14 @@
 package com.example.backend.accounts.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.accounts.dto.StudentInformationResponse;
 import com.example.backend.accounts.model.StudentEntity;
@@ -48,4 +51,13 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             WHERE school.schoolId = :schoolId
             """)
     Set<Integer> findAllBySchoolId(@Param("schoolId") Integer schoolId);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            UPDATE StudentEntity
+            SET graduateDate = :graduateDate
+            WHERE userId = :userId
+            """)
+    void modifyStudentAccountBySchoolId(Integer userId, LocalDate graduateDate);
 }

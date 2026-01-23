@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import com.example.backend.accounts.dto.GetFindAllTeacherAccountRequest;
+import com.example.backend.accounts.dto.ModifyTeacherAccountRequest;
 import com.example.backend.accounts.dto.TeacherCreateRequestInApp;
 import com.example.backend.accounts.dto.TeacherInformationResponse;
 import com.example.backend.accounts.model.UserEntity;
@@ -46,6 +47,12 @@ public class TeacherController {
         /* 権限の設定(権限無し) */
         adminUserService.authorityNotGrant(newTeacherAccount);
 
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/teacher/modify")
+    public ResponseEntity<Void> modifyTeacherAccount(@RequestBody @Valid ModifyTeacherAccountRequest dto){
+        teacherService.ModifyTeacherAccountBySchoolId(dto);
         return ResponseEntity.ok().build();
     }
 }

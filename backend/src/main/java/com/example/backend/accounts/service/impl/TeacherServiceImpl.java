@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.example.backend.accounts.dto.GetFindAllTeacherAccountRequest;
+import com.example.backend.accounts.dto.ModifyTeacherAccountRequest;
 import com.example.backend.accounts.dto.TeacherCreateRequestInApp;
 import com.example.backend.accounts.dto.TeacherInformationResponse;
 import com.example.backend.accounts.model.TeacherEntity;
@@ -95,7 +96,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Transactional
     public void authorityGrant(UserEntity newTeacher){
         
-        final Integer AUTHORITY_FLAG = 1;
+        final Boolean AUTHORITY_FLAG = true;
 
         TeacherEntity newAdmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
 
@@ -109,7 +110,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Override
     @Transactional
     public void authorityNotGrant(UserEntity newTeacher){
-        final Integer AUTHORITY_FLAG = 0;
+        final Boolean AUTHORITY_FLAG = false;
 
         TeacherEntity newAdmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
 
@@ -117,13 +118,28 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
         teacherRepository.save(newAdmin);
     }
 
+    @Override
+    @Transactional
+    public void ModifyTeacherAccountBySchoolId(ModifyTeacherAccountRequest dto){
+        userRepository.modifyBasicInformationBySchoolId(
+         dto.getUserId(),
+         dto.getName(),
+         dto.getMailAddress(),
+         dto.getAccountStopFlag()
+        );
+        teacherRepository.modifyTeacherAccountBySchoolId(
+         dto.getAuthorityFlag(),
+         dto.getUserId()
+        );
+    }
+
     /* TeacherEntityに変換 */
-    private TeacherEntity toTeacherEntity(UserEntity newTeacher, Integer AuthorityFlag){
+    private TeacherEntity toTeacherEntity(UserEntity newTeacher, Boolean authorityFlag){
         TeacherEntity newTeacherEntity = new TeacherEntity();
         /* エンティティに値をセット */
         newTeacherEntity.setTeacherAccountId(newTeacher);
         /* 権限の登録*/
-        newTeacherEntity.setAuthorityFlag(AuthorityFlag);
+        newTeacherEntity.setAuthorityFlag(authorityFlag);
 
         return newTeacherEntity;
     }
