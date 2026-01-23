@@ -6,16 +6,21 @@ import com.example.backend.posts.dto.PostInsertRequest;
 import com.example.backend.posts.dto.PostDetailResponse;
 import com.example.backend.posts.dto.PostsReplyRequest;
 import com.example.backend.posts.dto.IsBookmarkRequest;
+import com.example.backend.posts.dto.SearchPostsRequest;
+import com.example.backend.posts.model.SearchHistoryEntity;
+import com.example.backend.posts.model.SearchHistoryItem;
 import com.example.backend.posts.model.PostEntity;
 import com.example.backend.posts.model.BookmarkEntity;
 import com.example.backend.posts.dto.IsLikeRequest;
+import com.example.backend.posts.dto.SearchHistoryRemoveRequest;
 
 import com.example.backend.posts.model.PostEntity;
 import com.example.backend.posts.service.PostService;
 import com.example.backend.posts.service.BookmarkService;
 import com.example.backend.posts.service.LikeService;
-import lombok.extern.log4j.Log4j2;
+import com.example.backend.posts.service.SearchHistoryService;
 
+import lombok.extern.log4j.Log4j2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +49,7 @@ public class PostController {
     private final PostService postService;
     private final BookmarkService bookmarkService;
     private final LikeService likeService;
+    private final SearchHistoryService searchHistoryService;
     //投稿を作成
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> insertPost(@Valid @ModelAttribute PostInsertRequest postRequest) { 
@@ -97,6 +103,21 @@ public class PostController {
             return ResponseEntity.status(500).build();
         }
         return ResponseEntity.ok(responsePosts);
+    }
+
+    //キーワード検索投稿を取得
+    @GetMapping("/search")
+    public ResponseEntity<List<PostDetailResponse>> getPostsByKeyword(@Valid @RequestBody SearchPostsRequest requestDto){
+        List<PostDetailResponse> searchedPosts;
+        try{
+            //検索履歴の追加
+            searchHistoryService.addSearchHistory(requestDto.getCurrentUserId(), requestDto.getKeyword());
+            searchedPosts = postService.getPostsByKeyword(requestDto);
+        }catch(Exception e){
+            log.error("キーワード検索投稿の取得に失敗しました。", e);
+            return ResponseEntity.status(500).build();
+        }
+        return ResponseEntity.ok(searchedPosts);
     }
     
     //ブックマーク追加
@@ -161,6 +182,7 @@ public class PostController {
             return ResponseEntity.status(500).build();
         }
     }
+    
     //いいね取得
     @GetMapping("/likes/{userId}")
     public ResponseEntity<List<PostDetailResponse>> getLikedPosts(@PathVariable Integer userId){
@@ -174,7 +196,27 @@ public class PostController {
         return ResponseEntity.ok(likedPosts);
     }
 
+    //検索履歴を取得
+    @GetMapping("/searchhistory/{userId}")
+    public ResponseEntity<List<SearchHistoryItem>> getHistory(
+            @PathVariable Integer userId
+    ) {
+        List<SearchHistoryItem> response = searchHistoryService.getSearchHistory(userId);
+        return ResponseEntity.ok(response);
+    }
 
+    //検索履歴を削除
+    @DeleteMapping("/searchhistory")
+    public ResponseEntity<Void> removeSearchHistory(@RequestBody SearchHistoryRemoveRequest requestDto) {
+        try{
+            searchHistoryService.removeSearchHistory(requestDto.getUserId(), requestDto.getKeyword());
+        }catch(Exception e){
+            log.error("検索履歴の削除に失敗しました。", e);
+            return ResponseEntity.status(500).build();
+        }
+        return ResponseEntity.ok().build();
+    }
+    
     //投稿を削除
     @DeleteMapping("/{postId}/user/{userId}")
     public ResponseEntity<Void> deletePost(@PathVariable String postId, @PathVariable Integer userId){
