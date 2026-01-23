@@ -1,10 +1,11 @@
 import { PostBox } from "@/components/ui/postBox/postBox";
-import type { PostData } from "@/components/ui/postBox/types/postBox";
+import { type PostData } from "@/components/ui/postBox/types/postBox";
 
 const dummyPostData: PostData[] = [
   {
     postId: 2,
-    userId: "dummy_user_01",
+    userId: 1,
+    showUserId: "dummy_user_01",
     userName: "dummy_user_01",
     mainPost: "あああああああああああああああああああああああああああああああ",
     goodCount: 5,
@@ -16,7 +17,8 @@ const dummyPostData: PostData[] = [
   },
   {
     postId: 3,
-    userId: "dummy_user_01",
+    userId: 1,
+    showUserId: "dummy_user_01",
     userName: "dummy_user_01",
     mainPost: "なまたまごは飲み物",
     goodCount: 25,
@@ -29,7 +31,8 @@ const dummyPostData: PostData[] = [
   },
   {
     postId: 4,
-    userId: "dummy_user_01",
+    userId: 1,
+    showUserId: "dummy_user_01",
     userName: "dummy_user_01",
     mainPost: "♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪♪",
     goodCount: 0,
@@ -41,7 +44,8 @@ const dummyPostData: PostData[] = [
   },
   {
     postId: 5,
-    userId: "dummy_user_01",
+    userId: 1,
+    showUserId: "dummy_user_01",
     userName: "dummy_user_01",
     mainPost: "タツノオトシゴ",
     goodCount: 100,
