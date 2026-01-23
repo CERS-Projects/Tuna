@@ -6,7 +6,7 @@ import {
   MdFileDownload,
 } from "react-icons/md";
 
-import { type MaterialType, type CategoryType } from "../types/material";
+import { type materialType, type categoryType } from "../types/material";
 
 type MaterialProps = {
   categories: categoryType[];
