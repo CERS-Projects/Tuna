@@ -18,7 +18,7 @@ export type FollowData = {
   iconUrl: string;
 };
 
-export type menuItemType = {
+export type MenuItemType = {
   menuName: string;
   menuPath: string;
   menuIcon: ReactNode;

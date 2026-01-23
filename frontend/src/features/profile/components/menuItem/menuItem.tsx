@@ -1,9 +1,9 @@
 import { Link } from "react-router";
-import { type menuItemType } from "../../types/profileTypes";
+import { type MenuItemType } from "../../types/profileTypes";
 import styles from "./menuItem.module.css";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 
-type MenuItemProps = menuItemType;
+type MenuItemProps = MenuItemType;
 
 export const MenuItem = ({ menuName, menuPath, menuIcon, menuLabel }: MenuItemProps) => {
   return (

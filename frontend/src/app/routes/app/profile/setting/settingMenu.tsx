@@ -1,11 +1,11 @@
-import { type menuItemType } from "@/features/profile/types/profileTypes";
+import { type MenuItemType } from "@/features/profile/types/profileTypes";
 import { MenuItem } from "@/features/profile/components/menuItem/menuItem";
 import { FaSignOutAlt } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { IoFilterOutline } from "react-icons/io5";
 import styles from "@/features/profile/styles/settingMenu.module.css";
 
-const MenuItems: menuItemType[] = [
+const MenuItems: MenuItemType[] = [
   {
     menuName: "パスワード更新",
     menuPath: "/password", 
@@ -26,7 +26,7 @@ const MenuItems: menuItemType[] = [
   },
 ];
 
-const MenuList = () => {
+const SettingMenu = () => {
   return (
     <div>
       <div className={styles.settingMenuHeader}>
@@ -44,4 +44,4 @@ const MenuList = () => {
   );
 };
 
-export default MenuList;
+export default SettingMenu;
