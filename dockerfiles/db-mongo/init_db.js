@@ -655,13 +655,13 @@ try {
 	// E. follow_and_follower_collection
 	db.follow_and_follower_collection.insertMany([
 		{
-			follower_id: 101,
-			following_id: 102,
+			follower_id: 101, //フォローしてる人
+			following_id: 102, //フォローされている人
 			created_at: new Date(),
 		},
 		{
-			follower_id: 102,
-			following_id: 101,
+			follower_id: 102, //フォローしてる人
+			following_id: 101, //フォローされている人
 			created_at: new Date(Date.now() - 86400000), // 1日前
 		},
 	]);
@@ -690,7 +690,7 @@ try {
 			liked_at: new Date(),
 		},
 	]);
-	print("✅ like_collectionに3件挿入しました。");
+	print("✅ like_collectionに4件挿入しました。");
 
 	// G. classroom_collection
 	db.classroom_collection.insertMany([
