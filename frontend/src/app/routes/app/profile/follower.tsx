@@ -49,7 +49,7 @@ const dummyFollowers: followData[] = [
   },
 ];
 
-const Timeline = () => {
+const Follower = () => {
   const modalRef = useRef<ModalHandle>(null);
   const modalButtonClick = () => {
     if (modalRef.current) {
@@ -64,7 +64,7 @@ const Timeline = () => {
             <RiCompass3Line />
           </button>
           <div className={styles.followHeader}>
-            <h2>フォロー</h2>
+            <h2>フォロワー</h2>
           </div>
           <hr />
           {dummyFollowers.map((user) => (
@@ -86,4 +86,4 @@ const Timeline = () => {
   );
 };
 
-export default Timeline;
+export default Follower;

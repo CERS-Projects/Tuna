@@ -49,7 +49,7 @@ const dummyFollowers: followData[] = [
   },
 ];
 
-const Timeline = () => {
+const Follow = () => {
   const modalRef = useRef<ModalHandle>(null);
   const modalButtonClick = () => {
     if (modalRef.current) {
@@ -86,4 +86,4 @@ const Timeline = () => {
   );
 };
 
-export default Timeline;
+export default Follow;
