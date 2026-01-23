@@ -2,11 +2,11 @@ import styles from "./materialCard.module.css";
 import { type MaterialType } from "../types/material";
 import { MdOutlinePictureAsPdf, MdFileDownload } from "react-icons/md";
 
-type materialProps = {
-  item: MaterialType;
+type MaterialProps = {
+  item: materialType;
 };
 
-export const MaterialCard = ({ item }: materialProps) => {
+export const MaterialCard = ({ item }: MaterialProps) => {
   return (
     <div className={styles.materialCard}>
       <a href={item.fileUrl} download={item.fileName}>

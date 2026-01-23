@@ -49,7 +49,7 @@ const sampleItems = [
   },
 ];
 
-const Timeline = () => {
+const Material = () => {
   const modalRef = useRef<ModalHandle>(null);
   const modalButtonClick = () => {
     if (modalRef.current) {
@@ -62,7 +62,7 @@ const Timeline = () => {
         <div className={styles.materialMain}>
           <div className={styles.feedWrapper}>
             <button onClick={modalButtonClick} className={styles.modalButton}>
-              <div className={styles.modalIcon}>
+              <div>
                 <RiCompass3Line />
               </div>
             </button>
@@ -96,4 +96,4 @@ const Timeline = () => {
   );
 };
 
-export default Timeline;
+export default Material;
