@@ -1,0 +1,66 @@
+.profileCard {
+  width: 100%;
+  height: auto;
+  display: grid;
+  grid-template-columns: 25% 1fr;
+}
+
+.profileCardLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.profileCardRight {
+  display: flex;
+  flex-direction: column;
+  gap: 3%;
+  justify-content: center;
+}
+
+.profileCardRight h3 {
+  margin-bottom: -3px;
+  font-size: 1.5rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.profileCardRight p {
+  overflow-wrap: break-word;
+}
+
+.followWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.separator {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.iconStyle {
+  gap: 5px;
+  font-size: 1.8rem;
+  margin-left: 5px;
+  transform: translateY(5px);
+}
+
+.followLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.profileIcon {
+  width: 70%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+}

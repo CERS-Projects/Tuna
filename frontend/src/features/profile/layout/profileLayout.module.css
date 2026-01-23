@@ -1,0 +1,61 @@
+.profileLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.profileContainer {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 40%;
+}
+
+.profileMain {
+  overflow-y: auto;
+}
+
+.profileMain::-webkit-scrollbar {
+  display: none;
+}
+
+.profileSub {
+  border-left: 1px solid rgb(50, 85, 150);
+  overflow: auto;
+  min-height: 100%;
+}
+
+.modalButton {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .profileContainer {
+    display: flex;
+    flex-direction: column;
+  }
+  .profileMain {
+    order: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .profileSub {
+    display: none;
+  }
+  .modalButton {
+    position: fixed;
+    display: block;
+    font-size: 3rem;
+    z-index: 100;
+    background: none;
+    border: none;
+    right: 3%;
+    color: rgb(50, 85, 150);
+  }
+  .modalButton:hover {
+    color: #007bff;
+  }
+}
