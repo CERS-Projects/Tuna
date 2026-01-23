@@ -17,6 +17,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.example.backend.accounts.dto.GetFindAllStudentAccountRequest;
+import com.example.backend.accounts.dto.ModifyStudentAccountRequest;
 import com.example.backend.accounts.dto.ReadCSVFileStudentCreateRequest;
 import com.example.backend.accounts.dto.StudentCreateRequest;
 import com.example.backend.accounts.dto.StudentInformationResponse;
@@ -185,6 +186,21 @@ public class StudentServiceImpl implements StudentService{
     public List<StudentInformationResponse> findStudentInformationResponses(GetFindAllStudentAccountRequest dto){
         List<StudentInformationResponse> responses = studentRepository.findAllStudentInformation(dto.getSchoolId());
         return responses; 
+    }
+
+    @Override
+    @Transactional
+    public void modifyStudentAccount(ModifyStudentAccountRequest dto){
+       userRepository.modifyBasicInformationBySchoolId(
+        dto.getUserId(),
+        dto.getName(),
+        dto.getMailAddress(),
+        dto.getAccountStopFlag()
+       );
+       studentRepository.modifyStudentAccountBySchoolId(
+        dto.getUserId(),
+        dto.getGraduateDate()
+       );
     }
 
     /*
