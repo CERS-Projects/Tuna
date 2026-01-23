@@ -6,6 +6,7 @@ import { Link } from "react-router";
 type ProfileCardProps = followData;
 
 export const FollowCard = ({
+  userId,
   showUserId,
   userName,
   iconUrl,
@@ -28,7 +29,7 @@ export const FollowCard = ({
             <img
               src={iconUrl}
               className={styles.profileIcon}
-              alt="${userName}のプロフィール画像"
+              alt={`${userName}のプロフィール画像`}
             />
           )}
         </div>
