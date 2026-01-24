@@ -168,7 +168,8 @@ export const paths = {
         },
         edit: {
           path: "/manager/account/edit/:userId",
-          getHref: (userId: number) => `/manager/account/edit/${userId}`,
+          getHref: (userId: number | string) =>
+            `/manager/account/edit/${userId}`,
         },
         new: {
           path: "/manager/account/new",
