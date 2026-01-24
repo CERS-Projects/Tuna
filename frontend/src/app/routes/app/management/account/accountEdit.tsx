@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useAccount } from "@/features/management/hooks/useAccount";
 import { BackPage } from "@/features/management/components/backPage/backPage";
 import {
@@ -13,29 +13,25 @@ import {
 import styles from "@/features/management/style/accountEdit.module.css";
 import { paths } from "@/config/paths";
 
-type LocationState = {
-  userId?: number;
-};
-
 const isTeacherAccount = (
-  account: StudentAccountEditType | TeacherAccountEditType
+  account: StudentAccountEditType | TeacherAccountEditType,
 ): account is TeacherAccountEditType => {
   return "authority" in account;
 };
 
 const AccountEdit = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const state = (location.state as LocationState | null) ?? null;
-  const userId = Number(state?.userId);
+  const { userId } = useParams();
 
   useEffect(() => {
-    if (!userId)
+    const parsed = Number(userId);
+    if (!userId || Number.isNaN(parsed) || parsed <= 0) {
       navigate(paths.app.management.account.list.path, { replace: true });
+    }
   }, [userId, navigate]);
 
-  const { data: account, isFetching, isError } = useAccount(userId);
+  const parsedUserId = Number(userId) || 0;
+  const { data: account, isFetching, isError } = useAccount(parsedUserId);
 
   const handleDelete = async () => {
     if (!userId) {

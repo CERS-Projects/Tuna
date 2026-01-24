@@ -167,9 +167,8 @@ export const paths = {
           getHref: () => "/manager/account/list",
         },
         edit: {
-          path: "/manager/account/edit/:showUserId",
-          getHref: (showUserId: string) =>
-            `/manager/account/edit/${showUserId}`,
+          path: "/manager/account/edit/:userId",
+          getHref: (userId: number) => `/manager/account/edit/${userId}`,
         },
         new: {
           path: "/manager/account/new",
