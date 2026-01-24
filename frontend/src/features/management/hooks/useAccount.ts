@@ -31,7 +31,7 @@ export const useAccount = (userId: number) => {
     StudentAccountEditType | TeacherAccountEditType
   >({
     queryKey: ["account", userId],
-    enabled: false,
+    enabled: userId > 0,
     queryFn: async (): Promise<
       StudentAccountEditType | TeacherAccountEditType
     > => {
