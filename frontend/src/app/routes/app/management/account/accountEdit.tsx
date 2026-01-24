@@ -22,15 +22,14 @@ const isTeacherAccount = (
 const AccountEdit = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
+  const parsedUserId = Number(userId) || 0;
 
   useEffect(() => {
-    const parsed = Number(userId);
-    if (!userId || Number.isNaN(parsed) || parsed <= 0) {
+    if (!userId || Number.isFinite(parsedUserId) || parsedUserId <= 0) {
       navigate(paths.app.management.account.list.path, { replace: true });
     }
-  }, [userId, navigate]);
+  }, [userId, navigate, parsedUserId]);
 
-  const parsedUserId = Number(userId) || 0;
   const { data: account, isFetching, isError } = useAccount(parsedUserId);
 
   const handleDelete = async () => {
