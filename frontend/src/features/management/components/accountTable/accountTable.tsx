@@ -10,11 +10,8 @@ type Props = {
 export const AccountTable = ({ accounts }: Props) => {
   const navigate = useNavigate();
 
-  const handleUserNavigate = (userId: number, showUserId: string) => {
-    navigate(paths.app.management.account.edit.getHref(showUserId), {
-      relative: "route",
-      state: { userId: userId },
-    });
+  const handleUserNavigate = (userId: number) => {
+    navigate(paths.app.management.account.edit.getHref(userId));
   };
 
   return (
@@ -36,13 +33,11 @@ export const AccountTable = ({ accounts }: Props) => {
                 <tr
                   key={account.userId}
                   tabIndex={0}
-                  onClick={() =>
-                    handleUserNavigate(account.userId, account.showUserId)
-                  }
+                  onClick={() => handleUserNavigate(account.userId)}
                   onKeyDown={(e) => {
                     if (e.key !== "Enter") return;
                     e.preventDefault();
-                    handleUserNavigate(account.userId, account.showUserId);
+                    handleUserNavigate(account.userId);
                   }}
                 >
                   <td>{account.showUserId}</td>
