@@ -52,6 +52,4 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>
     void modifyTeacherAccountByUserId(@Param("authorityFlag") Boolean authorityFlag, @Param("userId") Integer userId);
 
     Boolean existsByUserId(Integer userId);
-
-    TeacherEntity findByUserId(Integer showUserId);
 }
