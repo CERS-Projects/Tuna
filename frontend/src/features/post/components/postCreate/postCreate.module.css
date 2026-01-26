@@ -1,21 +1,93 @@
-.header {
-  min-width: 300px;
+.checkboxPlace {
+  height: 33%;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modalContent {
+  border: rgb(50, 85, 150) solid 3px;
+  background-color: #fff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 700px;
+  height: auto;
+  max-height: 450px;
+  overflow-y: auto;
+  position: relative;
+}
+.modalContent::-webkit-scrollbar {
+  display: none;
 }
 .postCreate {
-  margin: auto;
-  max-width: 700px;
+  margin-bottom: 10px;
+}
+.postCreateTitle {
+  display: block;
+  width: 100%;
+  padding-top: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+.button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.backIcon {
+  position: absolute;
+  right: 2px;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+.hr {
+  height: 1.5px;
+  background-color: rgb(50, 85, 150);
+  border: none;
 }
 .user {
+  gap: 10px;
   display: flex;
-  width: 250px;
-  height: 40px;
+  width: 300px;
+  height: auto;
   margin: 10px 0 10px 10px;
-  background-color: blue;
+}
+.userIcon {
+  border: solid 1px black;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+}
+.userInfoText {
+  align-items: center;
+  gap: 5px;
+  display: flex;
+}
+.user_name {
+  padding-top: 5px;
+  font-size: 1.1rem;
+}
+.user_id {
+  padding-top: 10px;
+  font-size: 0.8rem;
 }
 .postBox {
   position: relative;
   max-width: 850px;
-  min-width: 300px;
+  min-width: 280px;
   width: 80%;
   height: 290px;
   margin: auto;
@@ -24,18 +96,22 @@
   outline: solid 3px rgb(50, 85, 150);
   font-size: 0;
 }
-
 .postBox:hover {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.confirmPostBox {
+  padding-left: 20px;
+  padding-right: 20px;
+  min-height: 130px;
 }
 .textarea {
   overflow-y: auto;
   resize: none;
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   box-sizing: border-box;
   width: 100%;
   margin-left: -7px;
-  padding: 10px 10px 10px 30px;
+  padding: 10px 10px 15px 25px;
   height: 220px;
   border: none;
   border-radius: 18px 18px 0 0;
@@ -53,6 +129,17 @@
 .textarea:focus {
   outline: none;
 }
+.confirmTextDisplay {
+  padding-bottom: 10px;
+  font-size: 1.4rem;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  color: #333;
+}
+.hrNone {
+  display: none;
+}
 .postLength {
   text-align: right;
   display: block;
@@ -67,18 +154,13 @@
   color: rgb(255, 0, 0);
   font-weight: bold;
 }
-.hr {
-  height: 1px;
-  background-color: rgb(50, 85, 150);
-  border: none;
-}
 .imageSection {
   display: flex;
 }
 .pictureAndButton {
   border: none;
   border-radius: 2px;
-  margin-left: 40px;
+  margin-left: 30px;
   margin-top: 15px;
   width: 30px;
   height: 1px;
@@ -105,23 +187,23 @@
 .pictureIconPush:hover {
   z-index: 2;
 }
-
-.fileButton {
-  display: none;
-}
-
-.previewArea {
-  margin-left: 20px;
-}
 .previewImage {
   display: flex;
+}
+.previewArea {
+  margin-left: 20px;
 }
 .preview {
   margin-top: 19px;
   max-width: 70px;
-  min-width: 45px;
+  min-width: 40px;
   max-height: 45px;
   min-height: 30px;
+}
+.confirmPreview {
+  width: 100%;
+  margin-bottom: 10px;
+  border: solid 1px rgb(50, 80, 140);
 }
 .removeButton {
   position: absolute;
@@ -137,64 +219,9 @@
   width: 30px;
   height: 30px;
 }
-
-.postRange {
-  margin: auto;
-  border-radius: 18px;
-  outline: solid 3px rgb(50, 85, 150);
-  max-width: 850px;
-  min-width: 300px;
-  width: 80%;
-  height: 180px;
+.fileButton {
+  display: none;
 }
-.postRange:hover {
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-}
-.postRangeGuide {
-  padding: 14px;
-  margin-bottom: 7px;
-  font-size: 1.7rem;
-  border-bottom: 1px solid rgb(50, 85, 150);
-}
-
-.checkboxGroup {
-  margin-left: 18px;
-  margin-right: 7px;
-  height: 100px;
-  overflow-y: auto;
-}
-.checkboxGroup::-webkit-scrollbar {
-  width: 3px;
-}
-.checkboxGroup::-webkit-scrollbar-thumb {
-  background-color: rgb(57, 107, 255);
-  border-radius: 20px;
-}
-.checkboxPlace {
-  height: 33%;
-}
-
-.nextButton {
-  display: flex;
-  margin-top: 10px;
-  margin-right: 10px;
-}
-.next {
-  margin-left: auto;
-  border-radius: 8px;
-  background-color: rgb(50, 85, 150);
-  color: rgba(255, 255, 255, 0.904);
-  transition: box-shadow 0.2s;
-  border: none;
-  width: 150px;
-  height: 50px;
-  font-weight: 750;
-}
-.next:hover {
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 4px 10px;
-  cursor: pointer;
-}
-
 .errorTextInline {
   color: red;
   font-size: 1rem;
@@ -211,6 +238,71 @@
   position: absolute;
   top: 100%;
   margin-top: 204px;
+}
+.postRange {
+  margin: auto;
+  border-radius: 18px;
+  outline: solid 3px rgb(50, 85, 150);
+  max-width: 850px;
+  min-width: 280px;
+  width: 80%;
+  height: 180px;
+}
+.postRange:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.postRangeGuide {
+  font-weight: bold;
+  padding: 14px;
+  margin-bottom: 5px;
+  font-size: 1.7rem;
+  border-bottom: 1px solid rgb(50, 85, 150);
+}
+.checkboxGroup {
+  margin-left: 18px;
+  margin-right: 7px;
+  height: 113px;
+  overflow-y: auto;
+}
+.checkboxGroup::-webkit-scrollbar {
+  width: 3px;
+}
+.checkboxGroup::-webkit-scrollbar-thumb {
+  background-color: rgb(57, 107, 255);
+  border-radius: 20px;
+}
+.confirmPostRange {
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+}
+.confirmTag {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #555;
+}
+.noSelectionMessage {
+  font-size: 1.1rem;
+}
+.next {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+.nextButton {
+  margin-right: 10px;
+}
+.confirmButtons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.confirmBack {
+  margin-left: 10px;
+  justify-content: flex-start;
+}
+.confirmPost {
+  margin-right: 10px;
 }
 
 @media (max-width: 600px) {
