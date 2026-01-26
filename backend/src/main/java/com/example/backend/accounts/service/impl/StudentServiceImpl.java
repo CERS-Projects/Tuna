@@ -27,6 +27,7 @@ import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.StudentRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.StudentService;
+import com.example.backend.exception.Model.SchoolNotFoundException;
 import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
 import com.example.backend.group.service.GroupMemberService;
@@ -134,6 +135,9 @@ public class StudentServiceImpl implements StudentService{
     @Transactional(readOnly = true)
     public StudentInformationResponse findOneStudentInformationResponse(final Integer studentId){
         StudentInformationResponse response = studentRepository.findOneStudentInformation(studentId);
+        if(response == null){
+            throw new SchoolNotFoundException("指定した学校が見つかりません");
+        }
         return response;
     }
 

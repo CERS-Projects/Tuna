@@ -39,15 +39,15 @@ public class TeacherController {
     }
 
     @GetMapping("/teacher/{teacherId}/information")
-    public ResponseEntity<TeacherInformationResponse> getOneTeacherInformation(@Valid @ModelAttribute @PathVariable final Integer teacherId){
+    public ResponseEntity<TeacherInformationResponse> getOneTeacherInformation(@ModelAttribute @PathVariable final Integer teacherId){
         TeacherInformationResponse response = teacherService.findOneTeacherInformationResponse(teacherId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/teacher")
-    public ResponseEntity<Void> createTeacher(@RequestBody @Valid TeacherCreateRequestInApp requestDto){
+    public ResponseEntity<Void> createTeacher(@RequestBody @Valid TeacherCreateRequestInApp dto){
         /* 教師アカウントの作成 */
-       UserEntity newTeacherAccount = teacherService.createTeacher(requestDto);
+       UserEntity newTeacherAccount = teacherService.createTeacher(dto);
         
         /* 権限の設定(権限無し) */
         adminUserService.authorityNotGrant(newTeacherAccount);
