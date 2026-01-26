@@ -20,7 +20,6 @@ public class JwtUtils {
 
         String secretKey = System.getenv("SECRET_KEY");
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
-
         Map<String, Object> headerMap = new HashMap<>();
         headerMap.put(HeaderParams.ALGORITHM, "HS256");
         headerMap.put(HeaderParams.TYPE, "JWT");
@@ -53,8 +52,7 @@ public class JwtUtils {
         headerMap.put(HeaderParams.TYPE, "refresh");
 
         Instant now = Instant.now();
-        Instant exp = now.plusSeconds(60 * 60);
-
+        Instant exp = now.plusSeconds(60 * 60 * 24 * 7);
         String refreshToken = JWT.create()
                 .withHeader(headerMap)
                 .withIssuer("TUNA")
@@ -68,6 +66,9 @@ public class JwtUtils {
     public DecodedJWT confirmToken(String token) {
 
         // 秘密鍵は環境変数から読み込む
+        if (System.getenv("SECRET_KEY") == null) {
+            throw new IllegalStateException("サーバー内でエラーが発生しました");
+        }
         String secretKey = System.getenv("SECRET_KEY");
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
@@ -75,7 +76,6 @@ public class JwtUtils {
                 .withIssuer("TUNA")
                 .build();
         DecodedJWT correctToken = verificationTool.verify(token);
-        System.out.println("テストテスト" + correctToken.getSubject());
         return correctToken;
     }
 
