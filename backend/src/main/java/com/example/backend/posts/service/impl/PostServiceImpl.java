@@ -1,6 +1,7 @@
 package com.example.backend.posts.service.impl;
 
 import com.example.backend.posts.dto.TimelinePostsRequest;
+import com.example.backend.posts.model.PostEntity;
 import com.example.backend.posts.dto.ProfilePostsRequest;
 import com.example.backend.posts.dto.PostInsertRequest;
 import com.example.backend.posts.dto.PostDetailResponse;
@@ -41,6 +42,10 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
 
     private final FileControlHelper fileControlHelper;
+
+    private final LikeRepository likeRepository;
+
+    private final BookmarkRepository bookmarkRepository;
     
     // 投稿作成
     @Override
@@ -187,19 +192,39 @@ public class PostServiceImpl implements PostService {
 
     // 投稿削除
     public void deletePost(String postId, Integer userId) {
+        PostEntity post = postRepository.findById(postId);
+        List<String> fileObjectKeys = post.getImageObjectKey();
+
+        //権限チェック
+        if(!postRepository.existsByIdAndUserId(postId, userId)){
+            throw new IllegalArgumentException("投稿の削除権限がありません。");
+        }
+
         //投稿IDチェック
         if(postId == null || postId.isEmpty()){
             throw new IllegalArgumentException("投稿IDが無効です。");
         }
 
-        //ユーザーチェック
-        if(!postRepository.existsByIdAndUserId(postId, userId)){
-            throw new IllegalArgumentException("投稿の削除権限がありません。");
-        }
         try{
-            postRepository.deleteById(postId);
-        } catch(Exception e){
-            throw new RuntimeException("投稿の削除に失敗しました。", e);
+            if(likeRepository.existsByPostIdAndUserId(new ObjectId(postId), userId)){
+                likeRepository.deleteByPostIdAndUserId(new ObjectId(postId), userId);
+            }
+
+            if(bookmarkRepository.existsByUserIdAndPostId(userId, new ObjectId(postId))){
+                bookmarkRepository.deleteByUserIdAndPostId(userId,new ObjectId(postId));
+            }
+
+            //ファイル削除
+            if (fileObjectKeys != null && !fileObjectKeys.isEmpty()) {
+            fileControlHelper.deleteFile(fileObjectKeys.toArray(new String[0]));
+            }
+            //投稿削除
+            postRepository.deleteByIdAndUserId(postId, userId);
+            log.info("投稿の削除に成功しました。 投稿ID: {}", postId);
+
+            } catch(Exception e){
+            log.error("投稿の削除に失敗しました。 投稿ID: {}", postId, e);
+                throw new RuntimeException("投稿の削除に失敗しました。", e);
         }
     }
 
