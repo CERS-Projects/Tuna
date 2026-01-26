@@ -1,13 +1,18 @@
 package com.example.backend.auth.service;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HexFormat;
+import java.util.List;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseCookie;
@@ -19,7 +24,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.backend.accounts.model.TeacherEntity;
 import com.example.backend.accounts.model.UserEntity;
+import com.example.backend.accounts.repository.TeacherRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.auth.dto.LoginSelectRequest;
 import com.example.backend.auth.dto.LoginTokenResponse;
@@ -43,15 +50,15 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     private final UserRepository userRepository;
+    private final TeacherRepository teacherRepository;
     private final JwtUtils jwtUtils;
-    private final LoginUserDetailsServiceImpl loginUserDetailsServiceImpl;
     private final LoginAttemptService loginAttemptService;
-    private String hashJwtRefreshToken;
     private final StringRedisTemplate stringRedisTemplate;
 
+    @Override
     public LoginTokenResponse login(LoginSelectRequest loginSelectRequest) {
         String lockUserKey = loginSelectRequest.getShowUserId() + "LockUser";
-
+        String hashJwtRefreshToken;
         if (loginSelectRequest.getShowUserId() == null || loginSelectRequest.getPassword() == null) {
             throw new IllegalArgumentException("ログインIDまたはパスワード、両方がnullです");
         }
@@ -76,7 +83,6 @@ public class AuthServiceImpl implements AuthService {
 
             // JWTトークンに付与する権限を取得
             String role = loginUserDetails.getAuthorities().iterator().next().getAuthority();
-            System.out.println(role);
 
             // springに知らせるためのを作成
             SecurityContext context = SecurityContextHolder.getContext();
@@ -85,9 +91,11 @@ public class AuthServiceImpl implements AuthService {
             context.setAuthentication(authentication);
 
             // トークン生成
-            UserEntity userEntity = userRepository.findByShowUserId(authentication.getName());
+            UserEntity userEntity = userRepository.findByShowUserId(authentication.getName())
+                    .orElseThrow(() -> new AuthException("ユーザーIDまたはパスワードが異なります"));
             String jwtAccessToken = jwtUtils.createToken((userEntity.getUserId()).toString(), role);
-            String jwtRefreshToken = jwtUtils.createRefreshToken(loginSelectRequest.getShowUserId());
+            // リフレッシュトークンに入れる識別子をshowUserIdからgetUserIdに変更
+            String jwtRefreshToken = jwtUtils.createRefreshToken(userEntity.getUserId().toString());
             try {
                 MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
                 byte[] hash = sha256.digest(jwtRefreshToken.getBytes(StandardCharsets.UTF_8));
@@ -112,30 +120,33 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
     public LoginTokenResponse refreshTokenCheck(String refreshToken) {
-
+        String hashJwtRefreshToken;
         try {
             DecodedJWT decodeRefreshToken = jwtUtils.confirmRefreshToken(refreshToken);
-            String showUserId = decodeRefreshToken.getSubject();
-            UserEntity userEntity = userRepository.findByShowUserId(showUserId);
-            RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByUserId(userEntity.getUserId());
+            String userId = decodeRefreshToken.getSubject();
+
+            RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findById(Integer.parseInt(userId))
+                    .orElseThrow(() -> new AuthException("ログインしなおしてください"));
 
             MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
             byte[] hash = sha256.digest(refreshToken.getBytes(StandardCharsets.UTF_8));
             hashJwtRefreshToken = HexFormat.of().formatHex(hash);
-            System.out.println(hashJwtRefreshToken);
             if (hashJwtRefreshToken.equals(refreshTokenEntity.getRefreshToken())) {
-                LoginUserDetails loginUserDetails = (LoginUserDetails) loginUserDetailsServiceImpl
-                        .loadUserByUsername(showUserId);
-                String role = loginUserDetails.getAuthorities().iterator().next().getAuthority();
-                String jwtAccessToken = jwtUtils.createToken(showUserId, role);
-                String jwtRefreshToken = jwtUtils.createRefreshToken(showUserId);
+                UserEntity userEntity = userRepository.findById(Integer.parseInt(userId))
+                        .orElseThrow(() -> new UsernameNotFoundException("ログインしなおしてください"));
+
+                List<GrantedAuthority> authorities = giveAuthority(userEntity);
+                String role = authorities.get(0).getAuthority();
+                String jwtAccessToken = jwtUtils.createToken(userId, role);
+                String jwtRefreshToken = jwtUtils.createRefreshToken(userId);
                 log.info("新しいアクセストークン" + jwtAccessToken);
                 log.info("新しいリフレッシュトークン" + jwtRefreshToken);
                 hash = sha256.digest(jwtRefreshToken.getBytes(StandardCharsets.UTF_8));
                 String newHashJwtRefreshToken = HexFormat.of().formatHex(hash);
                 refreshTokenRepository
-                        .save(new RefreshTokenEntity(userEntity.getUserId(), newHashJwtRefreshToken));
+                        .save(new RefreshTokenEntity(Integer.valueOf(userId), newHashJwtRefreshToken));
                 ResponseCookie responseCookie = ResponseCookie.from("refreshToken", jwtRefreshToken)
                         .httpOnly(true)
                         .sameSite("Strict")
@@ -152,6 +163,27 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    public List<GrantedAuthority> giveAuthority(@NonNull UserEntity userEntity) {
+        List<GrantedAuthority> authority = new ArrayList<>();
+        Integer userId = userEntity.getUserId();
+        if (userId == null) {
+            throw new IllegalArgumentException("値がnullです");
+        }
+        if (teacherRepository.existsByUserId(userEntity.getUserId()).equals(false)) {
+            authority.add(new SimpleGrantedAuthority("STUDENT"));
+            return authority;
+        }
+        TeacherEntity teacherEntity = teacherRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("ログインしなおしてください"));
+        if (teacherEntity.getAuthorityFlag() == 1) {
+            authority.add(new SimpleGrantedAuthority("ADMIN_SCHOOL"));
+        } else {
+            authority.add(new SimpleGrantedAuthority("TEACHER"));
+        }
+        return authority;
+    }
+
+    @Override
     public void logout(@NonNull Integer userId) {
         refreshTokenRepository.deleteById(userId);
     }

@@ -28,14 +28,17 @@ public class LoginUserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
-        UserEntity userEntity = userRepository.findByShowUserId(id);
+        UserEntity userEntity = userRepository.findByShowUserId(id)
+                .orElseThrow(() -> new UsernameNotFoundException("ユーザーIDまたはパスワードが異なります"));
         List<GrantedAuthority> authority = new ArrayList<>();
         if (teacherRepository.existsByUserId(userEntity.getUserId()).equals(false)) {
-            authority.add(new SimpleGrantedAuthority("TEACHER"));
+            authority.add(new SimpleGrantedAuthority("STUDENT"));
             return new LoginUserDetails(userEntity, authority);
         }
 
-        TeacherEntity teacherEntity = teacherRepository.findByUserId(userEntity.getUserId());
+        TeacherEntity teacherEntity = teacherRepository.findById(userEntity.getUserId())
+                .orElseThrow(() -> new UsernameNotFoundException("ログインしなおしてください"));
+
         if (teacherEntity.getAuthorityFlag() == 1) {
             authority.add(new SimpleGrantedAuthority("ADMIN_SCHOOL"));
         } else {
