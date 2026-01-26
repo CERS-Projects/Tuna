@@ -19,6 +19,7 @@ public class ModifyTeacherAccountRequest {
     private String name;
 
     @Email
+    @Size(min = 1, max = 254)
     @NotBlank
     private String mailAddress;
 

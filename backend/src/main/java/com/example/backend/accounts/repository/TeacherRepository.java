@@ -17,7 +17,7 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>
                 user.userId,
                 user.showUserId,
                 user.name,
-                CASE WHEN teacher.authorityFlag = true THEN true ELSE false END,
+                teacher.authorityFlag,
                 user.accountsStopFlag)
             FROM UserEntity AS user
             INNER JOIN
@@ -34,5 +34,5 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>
             SET authorityFlag = :authorityFlag
             WHERE userId = :userId
             """)
-    void modifyTeacherAccountBySchoolId(@Param("authorityFlag") Boolean authorityFlag, @Param("userId") Integer userId);
+    void modifyTeacherAccountByUserId(@Param("authorityFlag") Boolean authorityFlag, @Param("userId") Integer userId);
 }

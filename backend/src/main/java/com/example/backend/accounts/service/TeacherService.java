@@ -17,5 +17,5 @@ public interface TeacherService {
     UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId);
     UserEntity createTeacher(TeacherCreateRequestInApp dto);
     List<TeacherInformationResponse> findTeacherInformationResponses(GetFindAllTeacherAccountRequest dto);
-    void ModifyTeacherAccountBySchoolId(ModifyTeacherAccountRequest dto);
+    void modifyTeacherAccountByUserId(ModifyTeacherAccountRequest dto);
 }

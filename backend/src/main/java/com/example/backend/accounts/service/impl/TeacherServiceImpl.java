@@ -42,7 +42,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     private final SchoolRepository schoolRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<TeacherInformationResponse> findTeacherInformationResponses(GetFindAllTeacherAccountRequest dto){
         final Integer SCHOOL_ID = dto.getSchoolId();
         return teacherRepository.findAllTeacherInformation(SCHOOL_ID);
@@ -120,14 +120,14 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
 
     @Override
     @Transactional
-    public void ModifyTeacherAccountBySchoolId(ModifyTeacherAccountRequest dto){
-        userRepository.modifyBasicInformationBySchoolId(
+    public void modifyTeacherAccountByUserId(ModifyTeacherAccountRequest dto){
+        userRepository.modifyBasicInformationByUserId(
          dto.getUserId(),
          dto.getName(),
          dto.getMailAddress(),
          dto.getAccountStopFlag()
         );
-        teacherRepository.modifyTeacherAccountBySchoolId(
+        teacherRepository.modifyTeacherAccountByUserId(
          dto.getAuthorityFlag(),
          dto.getUserId()
         );

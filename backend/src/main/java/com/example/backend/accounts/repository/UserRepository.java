@@ -3,6 +3,7 @@ package com.example.backend.accounts.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.accounts.model.UserEntity;
@@ -17,8 +18,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
                 accountsStopFlag = :accountStopFlag
             WHERE userId = :userId
             """)
-    void modifyBasicInformationBySchoolId(Integer userId, String name,
-                                        String mailAddress, Boolean accountStopFlag);
+    void modifyBasicInformationByUserId(@Param("userId") Integer userId, @Param("name") String name,
+                                        @Param("mailAddress") String mailAddress, @Param("accountStopFlag") Boolean accountStopFlag);
 
     @Query("""
             SELECT EXISTS(
@@ -26,5 +27,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
                 WHERE school.schoolId = :schoolId AND userId = :userId
             )
             """)
-    Boolean existsByUserIdAndSchoolId(Integer userId, Integer schoolId);
+    Boolean existsByUserIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
 }
