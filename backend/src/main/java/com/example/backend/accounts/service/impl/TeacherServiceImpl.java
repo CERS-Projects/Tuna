@@ -41,6 +41,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
 
     private final SchoolRepository schoolRepository;
 
+    /* schoolIdに紐づく教師情報を全件取得する */
     @Override
     @Transactional(readOnly = true)
     public List<TeacherInformationResponse> findTeacherInformationResponses(GetFindAllTeacherAccountRequest dto){
@@ -48,10 +49,16 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
         return teacherRepository.findAllTeacherInformation(SCHOOL_ID);
     }
 
+    /* 特定のuserIdに紐づく教師情報を1件取得する */
+    @Override
+    @Transactional(readOnly = true)
+    public TeacherInformationResponse findOneTeacherInformationResponse(final Integer teacherId){
+        TeacherInformationResponse response = teacherRepository.findOneTeacherInformation(teacherId);
+        return response;
+    }
 
-    /*
-     *　学校登録に付随する、アカウント登録に係る基本情報をMySQLに登録する機能
-     */
+
+    /* 学校登録に付随する、アカウント登録に係る基本情報をMySQLに登録する機能 */
     @Override
     @Transactional
     public UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId){
@@ -69,9 +76,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
         return savedTeacherEntity;
     }
 
-    /*
-     *　ウェブアプリ内からの教師アカウント作成機能を提供する
-     */
+    /* ウェブアプリ内からの教師アカウント作成機能を提供する */
     @Override
     @Transactional
     public UserEntity createTeacher(TeacherCreateRequestInApp dto){
@@ -89,9 +94,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     }
 
 
-    /* 
-     *  管理者権限あり状態を登録する機能
-     */
+    /* 管理者権限あり状態を登録する機能 */
     @Override
     @Transactional
     public void authorityGrant(UserEntity newTeacher){
@@ -104,9 +107,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
         teacherRepository.save(newAdmin);
     }
 
-    /*
-     * 権限フラグをなしで設定する
-     */
+    /* 権限フラグをなしで設定する */
     @Override
     @Transactional
     public void authorityNotGrant(UserEntity newTeacher){
@@ -118,6 +119,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
         teacherRepository.save(newAdmin);
     }
 
+    /* 教師アカウント情報を更新する機能 */
     @Override
     @Transactional
     public void modifyTeacherAccountByUserId(ModifyTeacherAccountRequest dto){

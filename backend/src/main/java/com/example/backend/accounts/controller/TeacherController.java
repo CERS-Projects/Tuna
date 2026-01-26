@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,10 +32,16 @@ public class TeacherController {
     /* AdminUserServiceの依存注入 */
     private final AdminUserService adminUserService;
 
-    @GetMapping("/teacher/information")
+    @GetMapping("/teacher/all/information")
     public ResponseEntity<List<TeacherInformationResponse>> getTeacherInformation(@Valid @ModelAttribute GetFindAllTeacherAccountRequest dto){
         List<TeacherInformationResponse> responses = teacherService.findTeacherInformationResponses(dto);
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/teacher/{teacherId}/information")
+    public ResponseEntity<TeacherInformationResponse> getOneTeacherInformation(@Valid @ModelAttribute @PathVariable final Integer teacherId){
+        TeacherInformationResponse response = teacherService.findOneTeacherInformationResponse(teacherId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/teacher")
