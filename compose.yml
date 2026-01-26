@@ -105,13 +105,6 @@ services:
     # volumes:
     #   - redis-data:/data
 
-# spring.mail.host=smtp.gmail.com
-# spring.mail.port=587
-# spring.mail.username=xxx@gmail.com
-# spring.mail.password=Googleのアプリパスワード
-# spring.mail.properties.mail.smtp.auth=true
-# spring.mail.properties.mail.smtp.starttls.enable=true
-
 # mongo-express:
 #   image: mongo-express
 #   restart: no
