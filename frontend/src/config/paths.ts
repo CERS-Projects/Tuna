@@ -158,8 +158,23 @@ export const paths = {
         getHref: () => "/manager/post",
       },
       classroom: {
-        path: "/manager/room",
-        getHref: () => "/manager/room",
+        root: {
+          path: "/manager/classroom",
+          getHref: () => "/manager/classroom",
+        },
+        list: {
+          path: "/manager/classroom/list",
+          getHref: () => "/manager/classroom/list",
+        },
+        edit: {
+          path: "/manager/classroom/edit/:roomId",
+          getHref: (roomId: number | string) =>
+            `/manager/classroom/edit/${roomId}`,
+        },
+        new: {
+          path: "/manager/classroom/new",
+          getHref: () => "/manager/classroom/new",
+        },
       },
       notification: {
         path: "/manager/notification",
