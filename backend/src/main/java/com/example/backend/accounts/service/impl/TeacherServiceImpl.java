@@ -54,6 +54,9 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Transactional(readOnly = true)
     public TeacherInformationResponse findOneTeacherInformationResponse(final Integer teacherId){
         TeacherInformationResponse response = teacherRepository.findOneTeacherInformation(teacherId);
+        if(response == null){
+            throw new SchoolNotFoundException("指定した学校が見つかりません");
+        }
         return response;
     }
 
