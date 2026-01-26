@@ -3,7 +3,6 @@ package com.example.backend.accounts.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +32,6 @@ public class TeacherController {
     private final AdminUserService adminUserService;
 
     @GetMapping("/teacher/information")
-    @Transactional
     public ResponseEntity<List<TeacherInformationResponse>> getTeacherInformation(@Valid @ModelAttribute GetFindAllTeacherAccountRequest dto){
         List<TeacherInformationResponse> responses = teacherService.findTeacherInformationResponses(dto);
         return ResponseEntity.ok(responses);
@@ -52,7 +50,7 @@ public class TeacherController {
 
     @PostMapping("/teacher/modify")
     public ResponseEntity<Void> modifyTeacherAccount(@RequestBody @Valid ModifyTeacherAccountRequest dto){
-        teacherService.ModifyTeacherAccountBySchoolId(dto);
+        teacherService.modifyTeacherAccountByUserId(dto);
         return ResponseEntity.ok().build();
     }
 }

@@ -59,5 +59,5 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             SET graduateDate = :graduateDate
             WHERE userId = :userId
             """)
-    void modifyStudentAccountBySchoolId(Integer userId, LocalDate graduateDate);
+    void modifyStudentAccountByUserId(@Param("userId") Integer userId, @Param("graduateDate") LocalDate graduateDate);
 }

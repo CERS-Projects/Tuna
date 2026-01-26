@@ -44,7 +44,7 @@ public class SchoolServiceImpl implements SchoolService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public GetSchoolInformationResponse getSchoolInformation(GetSchoolInformationRequest dto){
         SchoolEntity schoolEntity = schoolRepository.findById(dto.getSchoolId())
             .orElseThrow(() -> new SchoolNotFoundException("学校が見つかりません"));

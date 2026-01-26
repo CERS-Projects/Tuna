@@ -74,7 +74,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Set<Integer> findJoinUserIdsByGroupId(Integer groupId) {
         Set<Integer> members = groupMemberRepository.findUserIdsByGroupId(groupId);
         return members;

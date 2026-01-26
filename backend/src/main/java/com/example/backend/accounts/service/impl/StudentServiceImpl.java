@@ -88,10 +88,11 @@ public class StudentServiceImpl implements StudentService{
     @Transactional
     public List<UserEntity> createStudent(List<StudentCreateRequest> dto){
 
+         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.get(0).getSchoolId());
+
         List<UserEntity> newStudentAccounts = dto
         .stream()
         .map(newStudent->{
-            SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(newStudent.getSchoolId());
             UserEntity newStudentAccount = accountsHelper.toUserEntity(schoolEntity,    
                                                                        newStudent.getShowUserId(),
                                                                        newStudent.getName(),
@@ -110,6 +111,10 @@ public class StudentServiceImpl implements StudentService{
     @Override
     @Transactional
     public void setStudentEnrollmentInformation(List<StudentCreateRequest> dto, List<UserEntity> savedStudentAccounts){
+
+        if(dto.size() != savedStudentAccounts.size()){
+            throw new IllegalArgumentException("DTOのサイズと保存された生徒アカウントのサイズが一致しません。");
+        }
 
         List<StudentEntity> studentEntities = IntStream.range(0, savedStudentAccounts.size())
             .mapToObj(index -> {
@@ -168,7 +173,7 @@ public class StudentServiceImpl implements StudentService{
      * isJoin:グループに所属しているかどうか
      */
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<GetUserResponse> findAllGroups(GetUserBySchoolIdRequest dto){
         List<GetUserResponse> response = studentRepository.findAllStudentUsers(dto.getSchoolId());
 
@@ -182,7 +187,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<StudentInformationResponse> findStudentInformationResponses(GetFindAllStudentAccountRequest dto){
         List<StudentInformationResponse> responses = studentRepository.findAllStudentInformation(dto.getSchoolId());
         return responses; 
@@ -191,13 +196,13 @@ public class StudentServiceImpl implements StudentService{
     @Override
     @Transactional
     public void modifyStudentAccount(ModifyStudentAccountRequest dto){
-       userRepository.modifyBasicInformationBySchoolId(
+       userRepository.modifyBasicInformationByUserId(
         dto.getUserId(),
         dto.getName(),
         dto.getMailAddress(),
         dto.getAccountStopFlag()
        );
-       studentRepository.modifyStudentAccountBySchoolId(
+       studentRepository.modifyStudentAccountByUserId(
         dto.getUserId(),
         dto.getGraduateDate()
        );

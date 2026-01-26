@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,21 +32,19 @@ public class StudentController {
     /* StudentServiceの依存注入 */
     private final StudentService studentService;
 
-    @Transactional
+    
     @GetMapping("/student/information")
-    public ResponseEntity<List<StudentInformationResponse>> getStudentInformation(@Valid @ModelAttribute GetFindAllStudentAccountRequest requestDto){
-        List<StudentInformationResponse> responses = studentService.findStudentInformationResponses(requestDto);
+    public ResponseEntity<List<StudentInformationResponse>> getStudentInformation(@Valid @ModelAttribute GetFindAllStudentAccountRequest dto){
+        List<StudentInformationResponse> responses = studentService.findStudentInformationResponses(dto);
         return ResponseEntity.ok(responses);
     }
 
-    @Transactional
     @PostMapping("/student")
-    public ResponseEntity<Void> createStudent(@RequestBody @Valid List<StudentCreateRequest> Dto){
+    public ResponseEntity<Void> createStudent(@RequestBody @Valid List<StudentCreateRequest> dto){
          /* 基本ユーザ情報を登録する */
-        List<UserEntity> savedStudentAccount = studentService.createStudent(Dto);
+        List<UserEntity> savedStudentAccount = studentService.createStudent(dto);
         /* 生徒情報を登録する */
-        studentService.setStudentEnrollmentInformation(Dto, savedStudentAccount);
-
+        studentService.setStudentEnrollmentInformation(dto, savedStudentAccount);
         return ResponseEntity.ok().build();
     }
 
@@ -55,7 +52,6 @@ public class StudentController {
      * 操作されているユーザのトークンに含まれているschoolIdと
      * 実際のそのリクエストのユーザ名がschoolIdに紐づけられているユーザ名があるかどうかで整合性を検証する 
      */
-    @Transactional
     @PostMapping("/student/csv-file")
     public ResponseEntity<String> createStudentByFile(@RequestPart("file") MultipartFile uploadCsvFile, @RequestParam("refId") final Integer schoolId)throws IOException{
         ResponseEntity<String> validationResult = fileValidation(uploadCsvFile);
