@@ -1,17 +1,19 @@
 import style from "./spinner.module.css";
+import { useId } from "react";
 
 type SpinnerProps = {
-  isDark?: number;
-  onClose?: () => void;
+  isDark?: boolean;
+  // onClose?: () => void;
 };
 
-export const Spinner = ({ isDark = 0 }: SpinnerProps) => {
+export const Spinner = ({ isDark = false }: SpinnerProps) => {
   const isDarkMode = Boolean(isDark);
   const containerClass = isDarkMode
     ? style.blockingOverlay
     : style.passiveOverlay;
   const bgColor = isDarkMode ? "rgba(0, 0, 0, 0.5)" : "rgba(0, 0, 0, 0)";
   const mainColor = isDarkMode ? "#ffffff" : "#3498db";
+  const id = useId();
 
   return (
     <div
@@ -28,12 +30,12 @@ export const Spinner = ({ isDark = 0 }: SpinnerProps) => {
         width="27%"
       >
         <defs>
-          <clipPath id="bubble-area">
+          <clipPath id={id}>
             <rect x="0" y="0" width="120" height="80" />
           </clipPath>
         </defs>
 
-        <g clipPath="url(#bubble-area)" fill={mainColor} opacity="0.6">
+        <g clipPath={`url(#${id})`} fill={mainColor} opacity="0.6">
           <circle cx="40" cy="90" r="5">
             <animate
               attributeName="cy"
