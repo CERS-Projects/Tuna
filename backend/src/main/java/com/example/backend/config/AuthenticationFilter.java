@@ -38,7 +38,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        System.out.println("doFilter通過");
         String sub;
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         // トークンがないとき
@@ -61,8 +60,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = new UsernamePasswordAuthenticationToken(sub, null, authority);
             SecurityContext context = SecurityContextHolder.getContext();
             context.setAuthentication(authentication);
-            System.out.println("ROLE = " + role);
-            System.out.println("AUTHORITIES = " + authority);
 
         } catch (TokenExpiredException e) {
             request.setAttribute("ERROR_MESSAGE", "トークンの有効切れです");
@@ -71,10 +68,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             request.setAttribute("ERROR_MESSAGE", "トークンが不正です");
             throw new BadCredentialsException("");
         }
-        System.out.println("アカウント停止確認直前");
         // アカウント停止フラグチェック
         loginAttemptService.isStop(request, sub);
-        System.out.println("アカウント停止確認後");
         filterChain.doFilter(request, response);
     }
 }
