@@ -24,3 +24,11 @@ export type MenuItemType = {
   menuIcon: ReactNode;
   menuLabel: string;
 };
+
+export type EditProfileData = {
+  userId: number;
+  showUserId: string;
+  userName: string;
+  iconUrl?: string;
+  introduction?: string;
+};

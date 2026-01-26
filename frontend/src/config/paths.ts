@@ -130,7 +130,11 @@ export const paths = {
       settingMenu: {
         path: "/app/profile/settingMenu",
         getHref: () => "/app/profile/settingMenu",
-      }
+      },
+      edit: {
+        path: "/app/profile/edit",
+        getHref: () => "/app/profile/edit",
+      },
     },
     test: {
       path: "/app/test",
