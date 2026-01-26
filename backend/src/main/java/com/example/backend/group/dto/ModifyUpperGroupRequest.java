@@ -6,7 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GetUserBySchoolId {
+public class ModifyUpperGroupRequest {
     @NotNull
-    private Integer schoolId;
+    private Integer groupId;
+
+    private Integer newParentGroupId;
 }

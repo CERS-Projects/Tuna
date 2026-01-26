@@ -6,6 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetUserResponse {
+    private Integer userId;
+
     private String showUserId;
 
     private String userName;
@@ -14,7 +16,8 @@ public class GetUserResponse {
     
     private Boolean isJoin;
 
-    public GetUserResponse(String showUserId, String userName, Integer grade) {
+    public GetUserResponse(Integer userId, String showUserId, String userName, Integer grade) {
+        this.userId = userId;
         this.showUserId = showUserId;
         this.userName = userName;
         this.grade = grade;

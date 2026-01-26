@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,17 +16,20 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import com.example.backend.accounts.dto.GetFindAllStudentAccountRequest;
+import com.example.backend.accounts.dto.ModifyStudentAccountRequest;
 import com.example.backend.accounts.dto.ReadCSVFileStudentCreateRequest;
 import com.example.backend.accounts.dto.StudentCreateRequest;
+import com.example.backend.accounts.dto.StudentInformationResponse;
 import com.example.backend.accounts.helper.AccountsHelper;
 import com.example.backend.accounts.model.StudentEntity;
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.StudentRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.StudentService;
-import com.example.backend.group.dto.GetUserBySchoolId;
+import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
+import com.example.backend.group.service.GroupMemberService;
 import com.example.backend.school.model.SchoolEntity;
 
 @Service
@@ -42,16 +47,19 @@ public class StudentServiceImpl implements StudentService{
     /* CSVファイルの読み取りとそのデータをJavaで扱えるようにデシリアライズするもの */
     private final ObjectReader csvObjectReader;
 
+    private final GroupMemberService groupMemberService;
+
     /* 生徒アカウントをレコードとして関連つけている */
     private record StudentAccountPair(UserEntity newUserAccount, StudentEntity newStudentAccount){}
 
     /* CSVファイル扱えるようにするための初期設定 */
     public StudentServiceImpl(UserRepository userRepository, StudentRepository studentRepository,
-                              AccountsHelper accountsHelper){
+                              AccountsHelper accountsHelper, GroupMemberService groupMemberService) {
         /* 依存の注入 */
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.accountsHelper = accountsHelper;
+        this.groupMemberService = groupMemberService;
 
         /* CSVマッパーを使用できるようにするための処理 */
         CsvMapper csvMapper = new CsvMapper();
@@ -78,31 +86,48 @@ public class StudentServiceImpl implements StudentService{
     /* ユーザデータの基本情報を登録（生徒） */
     @Override
     @Transactional
-    public UserEntity createStudent(StudentCreateRequest dto){
+    public List<UserEntity> createStudent(List<StudentCreateRequest> dto){
 
-        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
-        UserEntity newStudentAccount = accountsHelper.toUserEntity(schoolEntity,    
-                                                                   dto.getShowUserId(),
-                                                                   dto.getName(),
-                                                                   dto.getMailAddress(),
-                                                                   dto.getPassword()
-                                                                   );
-                                                        
-        UserEntity savedUserEntity = userRepository.save(newStudentAccount);
-        return savedUserEntity;
+         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.get(0).getSchoolId());
+
+        List<UserEntity> newStudentAccounts = dto
+        .stream()
+        .map(newStudent->{
+            UserEntity newStudentAccount = accountsHelper.toUserEntity(schoolEntity,    
+                                                                       newStudent.getShowUserId(),
+                                                                       newStudent.getName(),
+                                                                       newStudent.getMailAddress(),
+                                                                       newStudent.getPassword()
+                                                                       );
+            return newStudentAccount;
+        })
+        .collect(Collectors.toList());
+
+        List<UserEntity> savedUserEntities = userRepository.saveAll(newStudentAccounts);
+        return savedUserEntities;
     }
 
     /* 登録した基本情報のユーザIDを元に、生徒情報を付加する */
     @Override
     @Transactional
-    public void setStudentEnrollmentInformation(StudentCreateRequest dto, UserEntity savedStudentAccount){
+    public void setStudentEnrollmentInformation(List<StudentCreateRequest> dto, List<UserEntity> savedStudentAccounts){
 
-        StudentEntity studentInformation = toStudentEntity(savedStudentAccount,
-                                                           dto.getGrade(),
-                                                           dto.getAdmissionDate(),
-                                                           dto.getGraduateDate()
-                                                          );
-        studentRepository.save(studentInformation);
+        if(dto.size() != savedStudentAccounts.size()){
+            throw new IllegalArgumentException("DTOのサイズと保存された生徒アカウントのサイズが一致しません。");
+        }
+
+        List<StudentEntity> studentEntities = IntStream.range(0, savedStudentAccounts.size())
+            .mapToObj(index -> {
+                UserEntity savedStudentAccount = savedStudentAccounts.get(index);
+                StudentCreateRequest request = dto.get(index);
+                return toStudentEntity(
+                    savedStudentAccount,
+                    request.getGrade(),
+                    request.getAdmissionDate(),
+                    request.getGraduateDate());
+            })
+            .collect(Collectors.toList());
+        studentRepository.saveAll(studentEntities);
     }
 
     /*
@@ -148,19 +173,39 @@ public class StudentServiceImpl implements StudentService{
      * isJoin:グループに所属しているかどうか
      */
     @Override
-    @Transactional
-    public List<GetUserResponse> findAllGroups(GetUserBySchoolId dto){
+    @Transactional(readOnly = true)
+    public List<GetUserResponse> findAllGroups(GetUserBySchoolIdRequest dto){
         List<GetUserResponse> response = studentRepository.findAllStudentUsers(dto.getSchoolId());
 
+        Set<Integer> members = groupMemberService.findJoinUserIdsByGroupId(dto.getGroupId());
         return response.stream()
-        .peek(user -> user.setIsJoin(isJoined(user)))
+        .peek(user -> {
+            Boolean isJoined = members.contains(user.getUserId());
+            user.setIsJoin(isJoined);
+        })
         .collect(Collectors.toList());
     }
 
-    /* グループに所属しているかチェックする */
-    private Boolean isJoined(GetUserResponse user){
-        // ロジックを実装して、ユーザーがグループに参加しているかどうかを判定
-        return false; // 仮の戻り値
+    @Override
+    @Transactional(readOnly = true)
+    public List<StudentInformationResponse> findStudentInformationResponses(GetFindAllStudentAccountRequest dto){
+        List<StudentInformationResponse> responses = studentRepository.findAllStudentInformation(dto.getSchoolId());
+        return responses; 
+    }
+
+    @Override
+    @Transactional
+    public void modifyStudentAccount(ModifyStudentAccountRequest dto){
+       userRepository.modifyBasicInformationByUserId(
+        dto.getUserId(),
+        dto.getName(),
+        dto.getMailAddress(),
+        dto.getAccountStopFlag()
+       );
+       studentRepository.modifyStudentAccountByUserId(
+        dto.getUserId(),
+        dto.getGraduateDate()
+       );
     }
 
     /*

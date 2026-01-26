@@ -10,6 +10,7 @@ import com.example.backend.group.dto.DelGroupRequest;
 import com.example.backend.group.dto.GetGroupRequest;
 import com.example.backend.group.dto.GetGroupResponse;
 import com.example.backend.group.dto.GroupCreateRequest;
+import com.example.backend.group.dto.ModifyUpperGroupRequest;
 import com.example.backend.group.helper.GroupHelper;
 import com.example.backend.group.model.GroupEntity;
 import com.example.backend.group.repository.GroupRepository;
@@ -51,12 +52,18 @@ public class GroupServiceImpl implements GroupService {
         final Integer newParentId = dto.getParentId();
         final Integer myId = dto.getGroupId();
 
-        groupHelper.updateParentGroup(newParentId, myId);
+        groupHelper.updateParentGroups(newParentId, myId);
 
         groupMemberService.deleteMembersByGroupId(myId);
         groupRepository.deleteAllById(myId);
     }
 
+    @Transactional
+    @Override
+    public void modifyUpperGroup(final ModifyUpperGroupRequest dto){
+        groupHelper.updateParentGroup(dto.getNewParentGroupId(), dto.getGroupId());
+    }
+    
     /* GroupCreateRequest DTOをGroupEntityに変換 */
     private GroupEntity toGroupEntity(GroupCreateRequest dto){
         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());

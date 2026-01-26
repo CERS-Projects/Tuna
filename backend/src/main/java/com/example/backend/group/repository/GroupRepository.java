@@ -29,8 +29,20 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
             SET g.group.groupId = :newParentId 
             WHERE g IN :targetGroups
             """)
-    void modifyGroupParentId(
+    void modifyGroupParentIds(
         @Param("newParentId") Integer newParentId, 
         @Param("targetGroups") List<GroupEntity> targetGroups
+    );
+
+    @Modifying
+    @Transactional
+    @Query("""
+            UPDATE GroupEntity g
+            SET g.group.groupId = :newParentId 
+            WHERE g.groupId = :targetGroup
+            """)
+    void modifyGroupParentId(
+        @Param("newParentId") Integer newParentId, 
+        @Param("targetGroup") Integer targetGroup
     );
 } 

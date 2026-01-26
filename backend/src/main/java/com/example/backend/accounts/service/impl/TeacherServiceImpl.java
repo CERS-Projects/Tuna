@@ -1,10 +1,15 @@
 package com.example.backend.accounts.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import com.example.backend.accounts.dto.GetFindAllTeacherAccountRequest;
+import com.example.backend.accounts.dto.ModifyTeacherAccountRequest;
 import com.example.backend.accounts.dto.TeacherCreateRequestInApp;
+import com.example.backend.accounts.dto.TeacherInformationResponse;
 import com.example.backend.accounts.model.TeacherEntity;
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.TeacherRepository;
@@ -36,6 +41,13 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
 
     private final SchoolRepository schoolRepository;
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<TeacherInformationResponse> findTeacherInformationResponses(GetFindAllTeacherAccountRequest dto){
+        final Integer SCHOOL_ID = dto.getSchoolId();
+        return teacherRepository.findAllTeacherInformation(SCHOOL_ID);
+    }
+
 
     /*
      *　学校登録に付随する、アカウント登録に係る基本情報をMySQLに登録する機能
@@ -53,7 +65,6 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
                                                                    dto.getPassword()
                                                                    );
 
-        /* セットした値をDBに追加 */
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
         return savedTeacherEntity;
     }
@@ -85,7 +96,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Transactional
     public void authorityGrant(UserEntity newTeacher){
         
-        final Integer AUTHORITY_FLAG = 1;
+        final Boolean AUTHORITY_FLAG = true;
 
         TeacherEntity newAdmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
 
@@ -99,7 +110,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     @Override
     @Transactional
     public void authorityNotGrant(UserEntity newTeacher){
-        final Integer AUTHORITY_FLAG = 0;
+        final Boolean AUTHORITY_FLAG = false;
 
         TeacherEntity newAdmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
 
@@ -107,13 +118,28 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
         teacherRepository.save(newAdmin);
     }
 
+    @Override
+    @Transactional
+    public void modifyTeacherAccountByUserId(ModifyTeacherAccountRequest dto){
+        userRepository.modifyBasicInformationByUserId(
+         dto.getUserId(),
+         dto.getName(),
+         dto.getMailAddress(),
+         dto.getAccountStopFlag()
+        );
+        teacherRepository.modifyTeacherAccountByUserId(
+         dto.getAuthorityFlag(),
+         dto.getUserId()
+        );
+    }
+
     /* TeacherEntityに変換 */
-    private TeacherEntity toTeacherEntity(UserEntity newTeacher, Integer AuthorityFlag){
+    private TeacherEntity toTeacherEntity(UserEntity newTeacher, Boolean authorityFlag){
         TeacherEntity newTeacherEntity = new TeacherEntity();
         /* エンティティに値をセット */
         newTeacherEntity.setTeacherAccountId(newTeacher);
         /* 権限の登録*/
-        newTeacherEntity.setAuthorityFlag(AuthorityFlag);
+        newTeacherEntity.setAuthorityFlag(authorityFlag);
 
         return newTeacherEntity;
     }
