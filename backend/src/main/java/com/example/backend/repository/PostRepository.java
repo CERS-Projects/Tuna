@@ -13,19 +13,21 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 @Repository
-public interface PostRepository extends MongoRepository<PostEntity, String> {
+public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
+    
+    //投稿IDで投稿取得
+    PostEntity findById(ObjectId id);
 
     //返信Countをインクリメント
     @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'response_Count': 2 } }")
+    @Update("{ '$inc': { 'response_Count': 1 } }")
     long incrementResponseCount(ObjectId postId);
 
     
     // ユーザーIDと投稿IDで存在確認(ユーザーチェック)
-    boolean existsByIdAndUserId(String id, Integer userId);
-
+    boolean existsByIdAndUserId(ObjectId id, Integer userId);
     //投稿を削除
-    void deleteByIdAndUserId(String id, Integer userId);
+    void deleteByIdAndUserId(ObjectId id, Integer userId);
 
     //タイムライン投稿取得
         @Aggregation(pipeline = {
