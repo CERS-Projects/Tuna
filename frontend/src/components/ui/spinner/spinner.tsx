@@ -3,7 +3,6 @@ import { useId } from "react";
 
 type SpinnerProps = {
   isDark?: boolean;
-  // onClose?: () => void;
 };
 
 export const Spinner = ({ isDark = false }: SpinnerProps) => {
