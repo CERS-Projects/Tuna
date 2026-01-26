@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -46,12 +47,12 @@ public class ExceptionCatch {
 
     // 401
     @ExceptionHandler({ AuthException.class, UsernameNotFoundException.class, TokenExpiredException.class,
-            JWTVerificationException.class })
+            JWTVerificationException.class,
+            BadCredentialsException.class })
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponseEntity expError(Exception e) {
         ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
         log.error(response.getErrorMessage());
-        System.out.println(response);
         return response;
     }
 
@@ -83,7 +84,8 @@ public class ExceptionCatch {
     }
 
     // 500
-    @ExceptionHandler({ InternalServerError.class, IOException.class })
+    @ExceptionHandler({ InternalServerError.class, IOException.class,
+            IllegalStateException.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseEntity serverError(Exception e) {
         ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.value(),
