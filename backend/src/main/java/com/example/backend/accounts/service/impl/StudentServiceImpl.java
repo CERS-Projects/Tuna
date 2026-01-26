@@ -130,6 +130,13 @@ public class StudentServiceImpl implements StudentService{
         studentRepository.saveAll(studentEntities);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public StudentInformationResponse findOneStudentInformationResponse(final Integer studentId){
+        StudentInformationResponse response = studentRepository.findOneStudentInformation(studentId);
+        return response;
+    }
+
     /*
      * CSVファイルから一括で生徒アカウントを登録する機能
      * InputStream inputStream = csvFile.getInputStream(): アップロードされたCSVファイルの内容を読み取るためのストリーム

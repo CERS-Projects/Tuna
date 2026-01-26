@@ -47,6 +47,21 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
     List<StudentInformationResponse> findAllStudentInformation(@Param("schoolId") Integer schoolId);
 
     @Query ("""
+            SELECT new com.example.backend.accounts.dto.StudentInformationResponse(
+                user.userId,
+                user.showUserId, 
+                user.name, 
+                student.grade, 
+                user.accountsStopFlag)
+            FROM UserEntity AS user
+            INNER JOIN 
+            StudentEntity AS student
+                ON user.userId = student.userId
+            WHERE user.userId = :studentId
+            """)
+    StudentInformationResponse findOneStudentInformation(@Param("studentId") final Integer studentId);
+
+    @Query ("""
             SELECT userId FROM UserEntity 
             WHERE school.schoolId = :schoolId
             """)

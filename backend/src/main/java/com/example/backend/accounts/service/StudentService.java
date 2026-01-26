@@ -20,4 +20,5 @@ public interface StudentService {
     List<GetUserResponse> findAllGroups(GetUserBySchoolIdRequest dto);
     List<StudentInformationResponse> findStudentInformationResponses(GetFindAllStudentAccountRequest dto);
     void modifyStudentAccount(ModifyStudentAccountRequest dto);
+    StudentInformationResponse findOneStudentInformationResponse(final Integer studentId);
 }
