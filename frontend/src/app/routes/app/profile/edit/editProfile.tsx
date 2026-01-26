@@ -78,7 +78,7 @@ const EditProfile = () => {
           <div className={styles.avatarPreview}>
             <img src={previewUrl} alt="Preview" />
           </div>
-          <div className="styles.avatarControls">
+          <div className={styles.avatarControls}>
             <input
               type="file"
               accept="image/*"
