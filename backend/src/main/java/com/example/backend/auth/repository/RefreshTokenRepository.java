@@ -8,5 +8,4 @@ import com.example.backend.auth.model.RefreshTokenEntity;
 @Repository
 public interface RefreshTokenRepository extends
         JpaRepository<RefreshTokenEntity, Integer> {
-    RefreshTokenEntity findByUserId(Integer userId);
 }
