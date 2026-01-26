@@ -25,7 +25,7 @@ const AccountEdit = () => {
   const parsedUserId = Number(userId) || 0;
 
   useEffect(() => {
-    if (!userId || Number.isFinite(parsedUserId) || parsedUserId <= 0) {
+    if (!userId || !Number.isFinite(parsedUserId) || parsedUserId <= 0) {
       navigate(paths.app.management.account.list.path, { replace: true });
     }
   }, [userId, navigate, parsedUserId]);
