@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS tuna_db.refresh_token_tb(
 
     FOREIGN KEY (user_id)
     REFERENCES tuna_db.user_tb(user_id)
+    ON DELETE CASCADE
 );
 
 /* ヘルプカテゴリー */
