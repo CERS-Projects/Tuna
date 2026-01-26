@@ -6,7 +6,9 @@ import com.example.backend.auth.dto.LoginSelectRequest;
 import com.example.backend.auth.dto.LoginTokenResponse;
 import com.example.backend.auth.service.AuthService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +20,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequiredArgsConstructor
 @Transactional
+@Log4j2
 public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginSelectRequest loginSelectRequest) {
+    public ResponseEntity<String> loginUser(@Valid @RequestBody LoginSelectRequest loginSelectRequest) {
         LoginTokenResponse loginTokenResponse = authService.login(loginSelectRequest);
-        System.out.println("アクセストークン" + loginTokenResponse.getAccessToken());
-        System.out.println("リフレッシュトークン" + loginTokenResponse.getRefreshToken());
+        log.info("アクセストークン" + loginTokenResponse.getAccessToken());
+        log.info("リフレッシュトークン" + loginTokenResponse.getRefreshToken());
         return ResponseEntity.ok().header("Set-Cookie",
                 loginTokenResponse.getRefreshToken().toString())
                 .body(loginTokenResponse.getAccessToken());
