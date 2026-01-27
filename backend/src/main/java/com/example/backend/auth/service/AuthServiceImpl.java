@@ -35,6 +35,7 @@ import com.example.backend.auth.model.RefreshTokenEntity;
 
 import com.example.backend.auth.repository.RefreshTokenRepository;
 import com.example.backend.exception.AuthException;
+import com.example.backend.school.model.SchoolEntity;
 import com.example.backend.utils.jwt.JwtUtils;
 
 import lombok.NonNull;
@@ -93,7 +94,11 @@ public class AuthServiceImpl implements AuthService {
             // トークン生成
             UserEntity userEntity = userRepository.findByShowUserId(authentication.getName())
                     .orElseThrow(() -> new AuthException("ユーザーIDまたはパスワードが異なります"));
-            String jwtAccessToken = jwtUtils.createToken((userEntity.getUserId()).toString(), role);
+
+            SchoolEntity schoolEntity = userEntity.getSchool();
+
+            String jwtAccessToken = jwtUtils.createToken((userEntity.getUserId()).toString(), role,
+                    schoolEntity.getSchoolId());
             // リフレッシュトークンに入れる識別子をshowUserIdからgetUserIdに変更
             String jwtRefreshToken = jwtUtils.createRefreshToken(userEntity.getUserId().toString());
             try {
@@ -137,9 +142,11 @@ public class AuthServiceImpl implements AuthService {
                 UserEntity userEntity = userRepository.findById(Integer.parseInt(userId))
                         .orElseThrow(() -> new UsernameNotFoundException("ログインしなおしてください"));
 
+                SchoolEntity schoolEntity = userEntity.getSchool();
+
                 List<GrantedAuthority> authorities = giveAuthority(userEntity);
                 String role = authorities.get(0).getAuthority();
-                String jwtAccessToken = jwtUtils.createToken(userId, role);
+                String jwtAccessToken = jwtUtils.createToken(userId, role, schoolEntity.getSchoolId());
                 String jwtRefreshToken = jwtUtils.createRefreshToken(userId);
                 log.info("新しいアクセストークン" + jwtAccessToken);
                 log.info("新しいリフレッシュトークン" + jwtRefreshToken);

@@ -16,7 +16,7 @@ import lombok.extern.log4j.Log4j2;
 @Component
 public class JwtUtils {
 
-    public String createToken(String userId, String role) {
+    public String createToken(String userId, String role, Integer schoolId) {
 
         String secretKey = System.getenv("SECRET_KEY");
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
@@ -33,6 +33,8 @@ public class JwtUtils {
                 .withIssuer("TUNA")
                 // ユーザの識別子
                 .withSubject(userId)
+                // 学校識別子
+                .withClaim("schoolId", schoolId)
                 // 権限
                 .withClaim("role", role)
                 // 有効期限
