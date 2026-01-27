@@ -5,11 +5,10 @@ import { useRef } from "react";
 import { RiCompass3Line } from "react-icons/ri";
 import { InfoBox } from "@/components/ui/infoBox/infoBox";
 import styles from "@/features/classroom/material/styles/material.module.css";
-import { useLocation } from "react-router";
 
-type ClassData = {
-  name: string;
-  description: string;
+const ClassData = {
+  name: "c",
+  description: "サカバンバスピス",
 };
 
 // 1. カテゴリー（親）のデータ
@@ -18,7 +17,6 @@ const sampleCategories = [
   { id: 2, name: "授業資料", createdAt: "2025/07/03" },
   { id: 3, name: "期末試験", createdAt: "2025/07/03" },
 ];
-
 // 2. PDFファイル（子）のデータ
 const sampleItems = [
   // カテゴリーID: 1 (課題資料) に紐づくデータ
@@ -58,14 +56,6 @@ const Material = () => {
     }
   };
 
-  const location = useLocation();
-  const state = location.state as ClassData | null;
-
-  const classData = state || {
-    name: "エラー",
-    description: "データが見つかりませんでした。再度選択してください。",
-  };
-
   return (
     <div className={styles.materialLayout}>
       <div className={styles.materialContainer}>
@@ -77,8 +67,8 @@ const Material = () => {
               </div>
             </button>
             <div className={styles.headerArea}>
-              <h1>{classData.name}</h1>
-              <p>{classData.description}</p>
+              <h1>{ClassData.name}</h1>
+              <p>{ClassData.description}</p>
             </div>
             <hr className={styles.divider} />
             <div className={styles.cardList}>

@@ -99,11 +99,11 @@ const createAppRouter = (queryClient: QueryClient) => {
           () => import("./routes/app/searchPost"),
         ),
         route(
-          paths.app.Classroom.path,
+          paths.app.classroom.path,
           () => import("./routes/app/searchClassroom"),
         ),
         route(
-          paths.app.Classroom.contents.path,
+          paths.app.classroom.contents.path,
           () => import("./routes/app/classroom/material"),
         ),
       ],
