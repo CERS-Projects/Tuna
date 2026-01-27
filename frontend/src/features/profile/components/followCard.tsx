@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styles from "./followCard.module.css";
-import { type followData } from "../types/profileTypes";
+import { type FollowData } from "../types/profileTypes";
 import { Link } from "react-router";
 
-type ProfileCardProps = followData;
+type ProfileCardProps = FollowData;
 
 export const FollowCard = ({
   userId,
