@@ -5,10 +5,11 @@ import { useRef } from "react";
 import { RiCompass3Line } from "react-icons/ri";
 import { InfoBox } from "@/components/ui/infoBox/infoBox";
 import styles from "@/features/classroom/material/styles/material.module.css";
+import { useLocation } from "react-router";
 
-const dummyClass = {
-  name: "C言語",
-  information: "C言語の授業ルームですわ～～～～～～",
+type ClassData = {
+  name: string;
+  description: string;
 };
 
 // 1. カテゴリー（親）のデータ
@@ -56,6 +57,15 @@ const Material = () => {
       modalRef.current.show();
     }
   };
+
+  const location = useLocation();
+  const state = location.state as ClassData | null;
+
+  const classData = state || {
+    name: "エラー",
+    description: "データが見つかりませんでした。再度選択してください。",
+  };
+
   return (
     <div className={styles.materialLayout}>
       <div className={styles.materialContainer}>
@@ -67,8 +77,8 @@ const Material = () => {
               </div>
             </button>
             <div className={styles.headerArea}>
-              <h1>{dummyClass.name}</h1>
-              <p>{dummyClass.information}</p>
+              <h1>{classData.name}</h1>
+              <p>{classData.description}</p>
             </div>
             <hr className={styles.divider} />
             <div className={styles.cardList}>

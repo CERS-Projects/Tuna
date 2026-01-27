@@ -83,19 +83,19 @@ export const paths = {
       getHref: () => "/app/timeline",
       detail: {
         path: "/app/timeline/:id",
-        getHref: (id: number | string) => `/app/timeline/${id}`,
+        getHref: (id: number) => `/app/timeline/${id}`,
       },
     },
     searchPost: {
       path: "/app/search",
       getHref: () => "/app/search",
     },
-    searchClassroom: {
-      path: "/app/searchClassroom",
-      getHref: () => "/app/searchClassroom",
+    Classroom: {
+      path: "/app/Classroom",
+      getHref: () => "/app/Classroom",
       contents: {
-        path: "/searchClassroom/:id",
-        getHref: (id: number | string) => `/app/searchClassroom/${id}`,
+        path: "Classroom/:id",
+        getHref: (id: number) => `/app/Classroom/${id}`,
       },
     },
     profile: {
@@ -123,10 +123,6 @@ export const paths = {
     test: {
       path: "/app/test",
       getHref: () => "/app/test",
-    },
-    material: {
-      path: "/app/classroom/material",
-      getHref: () => "/app/classroom/material",
     },
 
     // 教師ルート

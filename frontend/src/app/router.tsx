@@ -95,16 +95,16 @@ const createAppRouter = (queryClient: QueryClient) => {
           () => import("./routes/app/detailPost"),
         ),
         route(
-          paths.app.material.path,
-          () => import("./routes/app/classroom/material"),
-        ),
-        route(
           paths.app.searchPost.path,
           () => import("./routes/app/searchPost"),
         ),
         route(
-          paths.app.searchClassroom.path,
-          () => import("./routes/app/searchClassroom")
+          paths.app.Classroom.path,
+          () => import("./routes/app/searchClassroom"),
+        ),
+        route(
+          paths.app.Classroom.contents.path,
+          () => import("./routes/app/classroom/material"),
         ),
         {
           path: paths.app.profile.root.path,
