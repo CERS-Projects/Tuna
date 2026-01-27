@@ -83,19 +83,19 @@ export const paths = {
       getHref: () => "/app/timeline",
       detail: {
         path: "/app/timeline/:id",
-        getHref: (id: number | string) => `/app/timeline/${id}`,
+        getHref: (id: number) => `/app/timeline/${id}`,
       },
     },
     searchPost: {
       path: "/app/search",
       getHref: () => "/app/search",
     },
-    searchClassroom: {
-      path: "/app/searchClassroom",
-      getHref: () => "/app/searchClassroom",
+    classroom: {
+      path: "/app/classroom",
+      getHref: () => "/app/classroom",
       contents: {
-        path: "/searchClassroom/:id",
-        getHref: (id: number | string) => `/app/searchClassroom/${id}`,
+        path: "/app/classroom/:id",
+        getHref: (id: number) => `/app/classroom/${id}`,
       },
     },
     profile: {

@@ -1,0 +1,99 @@
+.materialLayout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f5f8fa;
+}
+
+.materialContainer {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 40%;
+}
+
+.materialMain {
+  overflow-y: auto;
+  padding-top: 24px;
+}
+
+.feedWrapper {
+  width: 90%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.headerArea {
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.headerArea h1 {
+  font-size: 1.8rem;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.headerArea p {
+  color: #666;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e1e8ed;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.materialSub {
+  border-left: 1px solid #e1e8ed;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.modalButton {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .materialContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .materialMain {
+    padding: 16px;
+  }
+
+  .feedWrapper {
+    max-width: 100%;
+  }
+
+  .materialSub {
+    display: none;
+  }
+  .modalButton {
+    position: fixed;
+    display: block;
+    font-size: 3rem;
+    z-index: 100;
+    background: none;
+    border: none;
+    right: 3%;
+    color: rgb(50, 85, 150);
+  }
+  .modalButton:hover {
+    color: #007bff;
+  }
+}
