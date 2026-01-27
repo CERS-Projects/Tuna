@@ -17,8 +17,10 @@ const ClassroomList = () => {
     navigate(paths.app.management.classroom.new.path);
   };
 
-  const handleDelete = (roomId: number) => {
-    const isDelete = confirm(`授業ルーム:${roomId}を削除しますか？`);
+  const handleDelete = (roomId: number, roomName: string) => {
+    const isDelete = confirm(
+      `授業ルーム:${roomId}:${roomName}を削除しますか？`,
+    );
 
     if (isDelete) {
       alert("授業ルームを削除しました");
@@ -36,7 +38,7 @@ const ClassroomList = () => {
             <SearchBar
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onSearch={() => 1}
+              onSearch={() => {}}
             />
           </div>
 
@@ -64,7 +66,7 @@ const ClassroomList = () => {
                       paths.app.management.classroom.edit.getHref(c.roomId),
                     )
                   }
-                  onDelete={() => handleDelete(c.roomId)}
+                  onDelete={() => handleDelete(c.roomId, c.roomName)}
                 />
               );
             } else return null;
