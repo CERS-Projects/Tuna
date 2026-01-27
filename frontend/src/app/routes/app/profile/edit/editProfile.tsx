@@ -15,6 +15,15 @@ const dummyEditProfileData: EditProfileData = {
 
 type EditState = Omit<EditProfileData, "userId">;
 
+const maxFileSize = 1024 * 1024 * 5;
+const fileTypes = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/bmp",
+];
+
 const EditProfile = () => {
   const [editData, setEditData] = useState<EditState>({
     showUserId: dummyEditProfileData.showUserId,
@@ -28,15 +37,31 @@ const EditProfile = () => {
   );
 
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    setImageError(null);
     if (file) {
+      if (!fileTypes.includes(file.type)) {
+        setImageError("対応していないファイル形式です");
+        return;
+      }
+      if (file.size > maxFileSize) {
+        setImageError(
+          "サイズが大きすぎます。画像ファイルのサイズは5MB以下にしてください",
+        );
+        return;
+      }
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result as string);
+      };
+      reader.onerror = () => {
+        console.error("画像の読み込みに失敗しました", reader.error);
+        window.alert("画像の読み込みに失敗しました");
       };
       reader.readAsDataURL(file);
     }
@@ -76,7 +101,7 @@ const EditProfile = () => {
 
         <div className={styles.avatarSection}>
           <div className={styles.avatarPreview}>
-            <img src={previewUrl} alt="Preview" />
+            <img src={previewUrl} alt="プロフィール画像" />
           </div>
           <div className={styles.avatarControls}>
             <input
@@ -96,14 +121,15 @@ const EditProfile = () => {
             {imageFile && (
               <p className={styles.fileName}>変更中: {imageFile.name}</p>
             )}
+            {imageError && <p className={styles.imageError}>{imageError}</p>}
           </div>
         </div>
 
         <div className={styles.fieldsContainer}>
           <div className={styles.inputGroup}>
-            <label>名前</label>
+            <label htmlFor="userName">名前</label>
             <input
-              name="userName"
+              id="userName"
               value={editData.userName}
               maxLength={50}
               onChange={handleChange}
@@ -111,9 +137,9 @@ const EditProfile = () => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label>ユーザーID</label>
+            <label htmlFor="showUserId">ユーザーID</label>
             <input
-              name="showUserId"
+              id="showUserId"
               value={editData.showUserId}
               maxLength={20}
               onChange={handleChange}
@@ -121,10 +147,10 @@ const EditProfile = () => {
             />
           </div>
           <div className={styles.inputGroup}>
-            <label>自己紹介</label>
+            <label htmlFor="introduction">自己紹介</label>
             <textarea
-              name="introduction"
-              value={editData.introduction}
+              id="introduction"
+              value={editData.introduction ?? ""}
               maxLength={200}
               onChange={handleChange}
               className={styles.textAreaInput}
