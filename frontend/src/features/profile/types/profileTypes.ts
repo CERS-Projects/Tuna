@@ -6,7 +6,7 @@ export type ProfileData = {
   follower: number;
   introduction?: string;
 };
-export type followData = {
+export type FollowData = {
   userId: number;
   userName: string;
   showUserId: string;

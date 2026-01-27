@@ -3,10 +3,10 @@ import { RiCompass3Line } from "react-icons/ri";
 import styles from "@/features/profile/styles/follow.module.css";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
 import { useRef } from "react";
-import { type followData } from "@/features/profile/types/profileTypes";
+import { type FollowData } from "@/features/profile/types/profileTypes";
 import { FollowCard } from "@/features/profile/components/followCard";
 
-const dummyFollowers: followData[] = [
+const dummyFollowers: FollowData[] = [
   {
     userId: 1,
     showUserId: "tanaka_tech",
