@@ -1,5 +1,6 @@
 package com.example.backend.group.repository;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMemberEntity, 
 
     @Query("SELECT userId FROM GroupMemberEntity WHERE groupId = :groupId")
     Set<Integer> findUserIdsByGroupId(@Param("groupId") Integer groupId);
+
+    @Query("SELECT COUNT(DISTINCT groupId) FROM GroupMemberEntity WHERE groupId IN :groupIds")
+    Long countDistinctByGroupIdIn(@Param("groupIds") List<Integer> groupIds);
 }
