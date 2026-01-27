@@ -31,15 +31,16 @@ public class LoginUserDetailsServiceImpl implements UserDetailsService {
         UserEntity userEntity = userRepository.findByShowUserId(id)
                 .orElseThrow(() -> new UsernameNotFoundException("ユーザーIDまたはパスワードが異なります"));
         List<GrantedAuthority> authority = new ArrayList<>();
-        if (teacherRepository.existsByUserId(userEntity.getUserId()).equals(false)) {
+        Integer userId = userEntity.getUserId();
+        if (teacherRepository.existsByUserId(userId).equals(false)) {
             authority.add(new SimpleGrantedAuthority("STUDENT"));
             return new LoginUserDetails(userEntity, authority);
         }
 
-        TeacherEntity teacherEntity = teacherRepository.findById(userEntity.getUserId())
+        TeacherEntity teacherEntity = teacherRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("ログインしなおしてください"));
 
-        if (teacherEntity.getAuthorityFlag() == 1) {
+        if (teacherEntity.getAuthorityFlag()) {
             authority.add(new SimpleGrantedAuthority("ADMIN_SCHOOL"));
         } else {
             authority.add(new SimpleGrantedAuthority("TEACHER"));

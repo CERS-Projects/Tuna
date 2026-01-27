@@ -175,7 +175,7 @@ public class AuthServiceImpl implements AuthService {
         }
         TeacherEntity teacherEntity = teacherRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("ログインしなおしてください"));
-        if (teacherEntity.getAuthorityFlag() == 1) {
+        if (teacherEntity.getAuthorityFlag()) {
             authority.add(new SimpleGrantedAuthority("ADMIN_SCHOOL"));
         } else {
             authority.add(new SimpleGrantedAuthority("TEACHER"));
