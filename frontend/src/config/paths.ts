@@ -90,12 +90,12 @@ export const paths = {
 			path: "/app/search",
 			getHref: () => "/app/search",
 		},
-		Classroom: {
-			path: "/app/Classroom",
-			getHref: () => "/app/Classroom",
+		classroom: {
+			path: "/app/classroom",
+			getHref: () => "/app/classroom",
 			contents: {
-				path: "Classroom/:id",
-				getHref: (id: number) => `/app/Classroom/${id}`,
+				path: "/app/classroom/:id",
+				getHref: (id: number) => `/app/classroom/${id}`,
 			},
 		},
 		profile: {
@@ -118,14 +118,6 @@ export const paths = {
 			bookmarks: {
 				path: "/app/profile/bookmarks",
 				getHref: () => "/app/profile/bookmarks",
-			},
-			follow: {
-				path: "/app/profile/follow",
-				getHref: () => "/app/profile/follow",
-			},
-			follower: {
-				path: "/app/profile/follower",
-				getHref: () => "/app/profile/follower",
 			},
 		},
 		test: {

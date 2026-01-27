@@ -12,11 +12,7 @@ export const SelectClassroom = ({
 }: Classroom) => {
 	return (
 		<Link
-			to={`/app/Classroom/${roomId}`}
-			state={{
-				name: roomName,
-				description: description,
-			}}
+			to={paths.app.classroom.contents.getHref(roomId)}
 			relative="path"
 			className={styles.selectClassroomBox}>
 			<div className={styles.selectClassroomLayout}>
