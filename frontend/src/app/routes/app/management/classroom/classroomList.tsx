@@ -50,19 +50,25 @@ const ClassroomList = () => {
         </div>
 
         <div className={styles.cardsGrid}>
-          {classrooms.map((c) => (
-            <ClassroomCard
-              key={c.roomId}
-              roomId={c.roomId}
-              roomName={c.roomName}
-              teacherName={c.teacherName}
-              latestUpdate={c.latestUpdate}
-              onClick={() =>
-                navigate(paths.app.management.classroom.edit.getHref(c.roomId))
-              }
-              onDelete={() => handleDelete(c.roomId)}
-            />
-          ))}
+          {classrooms.map((c) => {
+            if (c.roomName.toLowerCase().includes(query)) {
+              return (
+                <ClassroomCard
+                  key={c.roomId}
+                  roomId={c.roomId}
+                  roomName={c.roomName}
+                  teacherName={c.teacherName}
+                  latestUpdate={c.latestUpdate}
+                  onClick={() =>
+                    navigate(
+                      paths.app.management.classroom.edit.getHref(c.roomId),
+                    )
+                  }
+                  onDelete={() => handleDelete(c.roomId)}
+                />
+              );
+            } else return null;
+          })}
         </div>
       </main>
     </div>
