@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.auth.service.LoginAttemptService;
 import com.example.backend.utils.jwt.JwtUtils;
 import org.springframework.lang.NonNull;
@@ -39,6 +40,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         String sub;
+        Integer schoolId;
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         // トークンがないとき
         if (header == null || header.isBlank()) {
@@ -54,10 +56,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         try {
             DecodedJWT successToken = jwtUtils.confirmToken(token);
             sub = successToken.getSubject();
+            schoolId = successToken.getClaim("schoolId").asInt();
+
+            UserInfo userInfo =new UserInfo(Integer.parseInt(sub),schoolId);
+            
             String role = successToken.getClaim("role").asString();
             List<GrantedAuthority> authority = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(sub, null, authority);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userInfo, null, authority);
             SecurityContext context = SecurityContextHolder.getContext();
             context.setAuthentication(authentication);
 
