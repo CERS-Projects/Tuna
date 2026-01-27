@@ -20,6 +20,11 @@ const EditPassword = () => {
   const newPasswordValue = watch("newPassword");
 
   const onSubmit = (data: editPasswordForm) => {
+    const isConfirmed = window.confirm("パスワードを変更しますか？");
+    if (!isConfirmed) {
+      return;
+    }
+
     console.log("変更しました", data);
   };
 
