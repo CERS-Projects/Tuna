@@ -11,7 +11,11 @@ export const SelectClassroom = ({
 }: Classroom) => {
   return (
     <Link
-      to={`${roomId}`}
+      to={`/app/Classroom/${roomId}`}
+      state={{
+        name: roomName,
+        description: description,
+      }}
       relative="path"
       className={styles.selectClassroomBox}
     >
