@@ -27,7 +27,7 @@ const MENU_ITEMS = [
     icon: <FaComments />,
   },
   {
-    path: paths.app.management.classroom.path,
+    path: paths.app.management.classroom.root.path,
     name: "授業ルーム管理",
     icon: <MdMeetingRoom />,
   },

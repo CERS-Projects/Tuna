@@ -210,6 +210,32 @@ const createAppRouter = (queryClient: QueryClient) => {
             ),
           ],
         },
+        {
+          path: paths.app.management.classroom.root.path,
+          children: [
+            {
+              index: true,
+              element: (
+                <Navigate
+                  to={paths.app.management.classroom.list.path}
+                  replace
+                />
+              ),
+            },
+            route(
+              paths.app.management.classroom.list.path,
+              () => import("./routes/app/management/classroom/classroomList"),
+            ),
+            route(
+              paths.app.management.classroom.edit.path,
+              () => import("./routes/app/management/classroom/classroomEdit"),
+            ),
+            route(
+              paths.app.management.classroom.new.path,
+              () => import("./routes/app/management/classroom/classroomNew"),
+            ),
+          ],
+        },
       ],
     },
 

@@ -1,22 +1,26 @@
 .searchContainer {
   position: relative;
-  display: inline-block;
+  display: block;
   max-width: 1000px;
-  width: 80%;
+  width: 100%;
   height: auto;
-  margin-top: 5%;
-  margin-bottom: 10px;
 }
 
 .searchIcon {
   position: absolute;
-  top: 50%;
   left: 15px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  padding: 0;
+  line-height: 1;
   background: none;
   border: none;
   font-size: 1.5rem;
   color: rgb(50, 85, 150);
-  transform: translateY(-50%);
 }
 
 .searchInput {
@@ -42,8 +46,8 @@
 
 @media (max-width: 960px) {
   .searchContainer {
-    width: 60%;
-    margin-top: 2%;
-    margin-bottom: 5px;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
