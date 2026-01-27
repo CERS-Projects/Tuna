@@ -5,10 +5,17 @@ import { useRef } from "react";
 import { RiCompass3Line } from "react-icons/ri";
 import { InfoBox } from "@/components/ui/infoBox/infoBox";
 import styles from "@/features/classroom/material/styles/material.module.css";
+import { useLocation } from "react-router";
 
+<<<<<<< HEAD
 const ClassData = {
   name: "c",
   description: "サカバンバスピス",
+=======
+type ClassData = {
+  name: string;
+  description: string;
+>>>>>>> 8111413 (refactor:レビュー内容の修正。)
 };
 
 // 1. カテゴリー（親）のデータ
@@ -56,6 +63,17 @@ const Material = () => {
     }
   };
 
+<<<<<<< HEAD
+=======
+  const location = useLocation();
+  const state = location.state as ClassData | null;
+
+  const classData = state || {
+    name: "エラー",
+    description: "データが見つかりませんでした。再度選択してください。",
+  };
+
+>>>>>>> 8111413 (refactor:レビュー内容の修正。)
   return (
     <div className={styles.materialLayout}>
       <div className={styles.materialContainer}>
@@ -67,8 +85,8 @@ const Material = () => {
               </div>
             </button>
             <div className={styles.headerArea}>
-              <h1>{ClassData.name}</h1>
-              <p>{ClassData.description}</p>
+              <h1>{classData.name}</h1>
+              <p>{classData.description}</p>
             </div>
             <hr className={styles.divider} />
             <div className={styles.cardList}>

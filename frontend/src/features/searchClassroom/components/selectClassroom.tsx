@@ -4,33 +4,36 @@ import type { Classroom } from "@/features/searchClassroom/types/SelectClassroom
 import { paths } from "@/config/paths";
 
 export const SelectClassroom = ({
-  roomId,
-  teacherName,
-  roomName,
-  description,
-  latestUpdate,
+	roomId,
+	teacherName,
+	roomName,
+	description,
+	latestUpdate,
 }: Classroom) => {
-  return (
-    <Link
-      to={paths.app.classroom.contents.getHref(roomId)}
-      relative="path"
-      className={styles.selectClassroomBox}
-    >
-      <div className={styles.selectClassroomLayout}>
-        <div className={styles.selectClassroomContainer}>
-          <div className={styles.classroomHeader}>
-            <h3>{roomName}</h3>
-            <small>{latestUpdate}</small>
-          </div>
+	return (
+		<Link
+			to={`/app/Classroom/${roomId}`}
+			state={{
+				name: roomName,
+				description: description,
+			}}
+			relative="path"
+			className={styles.selectClassroomBox}>
+			<div className={styles.selectClassroomLayout}>
+				<div className={styles.selectClassroomContainer}>
+					<div className={styles.classroomHeader}>
+						<h3>{roomName}</h3>
+						<small>{latestUpdate}</small>
+					</div>
 
-          <hr />
+					<hr />
 
-          <div className={styles.classroomExplanation}>
-            <p>{description}</p>
-            <p>作成者：{teacherName}</p>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
+					<div className={styles.classroomExplanation}>
+						<p>{description}</p>
+						<p>作成者：{teacherName}</p>
+					</div>
+				</div>
+			</div>
+		</Link>
+	);
 };
