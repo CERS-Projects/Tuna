@@ -10,6 +10,7 @@ import deleteButton from "@/assets/×ボタン.png";
 import defaultIcon from "@/assets/default-user.png";
 import { usePostCreate } from "./hooks/usePostCreate";
 import { createPortal } from "react-dom";
+import { memo } from "react";
 
 const currentUser = {
   user_id: "mito_denden",
@@ -25,25 +26,27 @@ const items = [
   { group_id: 5, group_name: "八文字学園" },
 ];
 
-const Range = ({
-  id,
-  title,
-  checked,
-  onChange,
-}: {
-  id: number;
-  title: string;
-  checked: boolean;
-  onChange: (id: number) => void;
-}) => (
-  <div className={styles.checkboxPlace}>
-    <Checkbox
-      labelTextAfterLink={title}
-      fontSize="1.3rem"
-      checked={checked}
-      onChange={() => onChange(id)}
-    />
-  </div>
+const Range = memo(
+  ({
+    id,
+    title,
+    checked,
+    onChange,
+  }: {
+    id: number;
+    title: string;
+    checked: boolean;
+    onChange: (id: number) => void;
+  }) => (
+    <div className={styles.checkboxPlace}>
+      <Checkbox
+        labelTextAfterLink={title}
+        fontSize="1.3rem"
+        checked={checked}
+        onChange={() => onChange(id)}
+      />
+    </div>
+  ),
 );
 
 export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
@@ -69,12 +72,13 @@ export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
   }));
 
   const handleOpenConfirm = () => {
-    const finalContent = state.postText.slice(0, state.MAX_LENGTH);
-    actions.handleTextChange(finalContent);
-    if (!state.postText && state.images.length === 0) {
+    const finalContent = state.postText.trim();
+    if (!finalContent && state.images.length === 0) {
       actions.setSubmitError("投稿内容がありません");
       return;
     }
+    actions.setPostText(finalContent);
+    actions.setSubmitError(null);
     actions.setStep("confirm");
   };
 
@@ -160,16 +164,24 @@ export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
                   onClick={() => refs.fileInputRef.current?.click()}
                   className={styles.pictureAndButton}
                 >
-                  <img src={imgBefore} className={styles.pictureIcon} />
-                  <img src={imgAfter} className={styles.pictureIconPush} />
+                  <img
+                    src={imgBefore}
+                    alt="画像選択"
+                    className={styles.pictureIcon}
+                  />
+                  <img
+                    src={imgAfter}
+                    alt="画像選択(押下時)"
+                    className={styles.pictureIconPush}
+                  />
                 </button>
               )}
               <div
                 className={state.step === "input" ? styles.previewImage : ""}
               >
-                {state.images.map((img, index) => (
+                {state.images.map((img) => (
                   <div
-                    key={index}
+                    key={img.url}
                     className={state.step === "input" ? styles.previewArea : ""}
                   >
                     <img
@@ -179,16 +191,18 @@ export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
                           ? styles.preview
                           : styles.confirmPreview
                       }
+                      alt="投稿画像プレビュー"
                     />
                     {state.step === "input" && (
                       <button
-                        onClick={() => actions.removeImage(index)}
+                        onClick={() => actions.removeImage(img.url)}
                         className={styles.removeButton}
                         type="button"
                       >
                         <img
                           src={previewRemove}
                           className={styles.removeIcon}
+                          alt="画像削除"
                         />
                       </button>
                     )}
