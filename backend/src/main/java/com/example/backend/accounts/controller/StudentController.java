@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.example.backend.accounts.dto.StudentCreateRequest;
 import com.example.backend.accounts.dto.StudentInformationResponse;
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.service.StudentService;
+import com.example.backend.utils.fileUtil.validation.DocumentFileValidation;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +31,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudentController {
 
-    /* StudentServiceの依存注入 */
     private final StudentService studentService;
 
-    
-    @GetMapping("/student/information")
+    private final DocumentFileValidation documentFileValidation;
+
+    /* 特定のschoolIdに紐づく生徒情報を全件取得する */
+    @GetMapping("/student/all/information")
     public ResponseEntity<List<StudentInformationResponse>> getStudentInformation(@Valid @ModelAttribute GetFindAllStudentAccountRequest dto){
         List<StudentInformationResponse> responses = studentService.findStudentInformationResponses(dto);
         return ResponseEntity.ok(responses);
     }
 
+    /* 特定のuserIdに紐づく生徒情報を1件取得する */
+    @GetMapping("/student/{studentId}/information")
+    public ResponseEntity<StudentInformationResponse> getOneStudentInformation(@PathVariable final Integer studentId){
+        StudentInformationResponse response = studentService.findOneStudentInformationResponse(studentId);
+        return ResponseEntity.ok(response);
+    }
+
+    /* 生徒アカウントを作成する */
     @PostMapping("/student")
     public ResponseEntity<Void> createStudent(@RequestBody @Valid List<StudentCreateRequest> dto){
          /* 基本ユーザ情報を登録する */
@@ -54,39 +65,18 @@ public class StudentController {
      */
     @PostMapping("/student/csv-file")
     public ResponseEntity<String> createStudentByFile(@RequestPart("file") MultipartFile uploadCsvFile, @RequestParam("refId") final Integer schoolId)throws IOException{
-        ResponseEntity<String> validationResult = fileValidation(uploadCsvFile);
-        studentService.createStudentByFile(uploadCsvFile, schoolId);
-        if(validationResult != null){
-            return validationResult;
-        } else {
-            return ResponseEntity.ok().body("生徒アカウントの一括登録が完了しました。");
+        boolean validationResult = documentFileValidation.isValidDocumentFile(uploadCsvFile);
+        if(!validationResult){
+            return ResponseEntity.badRequest().body("アカウント生成に失敗しました。");
         }
+        studentService.createStudentByFile(uploadCsvFile, schoolId);
+        return ResponseEntity.ok().body("アカウントを正常に生成しました。");
     }
 
+    /* 生徒情報を変更する */
     @PostMapping("/student/modify")
     public ResponseEntity<Void> modifyStudentAccount(@RequestBody @Valid ModifyStudentAccountRequest dto){
         studentService.modifyStudentAccount(dto);
         return ResponseEntity.ok().build();
-    }
-
-
-    /* Validationパッケージに移動予定　D5,まっつん */
-    public ResponseEntity<String> fileValidation(MultipartFile uploadFile){
-        if(uploadFile.isEmpty()){
-            return ResponseEntity.badRequest().body("ファイルが選択されていません。CSVファイルをアップロードしてください。");
-        }
-
-        String contentType = uploadFile.getContentType();
-        if(contentType == null || !contentType.equals("text/csv")){
-            return ResponseEntity.badRequest().body("ファイル形式が不正です。CSVファイルをアップロードしてください。");
-        }
-
-        final long MAX_CSV_SIZE = 1 * 1024 * 1024; // 1MB
-        if(uploadFile.getSize() > MAX_CSV_SIZE){
-            throw new IllegalArgumentException("ファイルサイズが大きすぎます。1MB以下のファイルをアップロードしてください。");
-        }
-
-        ResponseEntity<String> successValidation = null;
-        return successValidation;
     }
 }

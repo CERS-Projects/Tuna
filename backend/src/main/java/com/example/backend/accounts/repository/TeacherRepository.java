@@ -27,6 +27,21 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>
             """)
     List<TeacherInformationResponse> findAllTeacherInformation(@Param("schoolId") Integer schoolId);
 
+    @Query("""
+            SELECT new com.example.backend.accounts.dto.TeacherInformationResponse(
+                user.userId,
+                user.showUserId,
+                user.name,
+                teacher.authorityFlag,
+                user.accountsStopFlag)
+            FROM UserEntity AS user
+            INNER JOIN
+            TeacherEntity AS teacher
+                ON user.userId = teacher.userId
+            WHERE user.userId = :teacherId
+            """)
+    TeacherInformationResponse findOneTeacherInformation(@Param("teacherId") Integer teacherId);
+
     @Modifying
     @Transactional
     @Query("""

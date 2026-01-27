@@ -18,4 +18,5 @@ public interface TeacherService {
     UserEntity createTeacher(TeacherCreateRequestInApp dto);
     List<TeacherInformationResponse> findTeacherInformationResponses(GetFindAllTeacherAccountRequest dto);
     void modifyTeacherAccountByUserId(ModifyTeacherAccountRequest dto);
+    TeacherInformationResponse findOneTeacherInformationResponse(final Integer teacherId);
 }
