@@ -119,6 +119,14 @@ export const paths = {
         path: "/app/profile/bookmarks",
         getHref: () => "/app/profile/bookmarks",
       },
+      follow: {
+        path: "/app/profile/follow",
+        getHref: () => "/app/profile/follow",
+      },
+      follower: {
+        path: "/app/profile/follower",
+        getHref: () => "/app/profile/follower",
+      },
     },
     test: {
       path: "/app/test",
