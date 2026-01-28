@@ -1,9 +1,9 @@
 package com.example.backend.posts.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import org.bson.types.ObjectId;
 import jakarta.validation.constraints.NotBlank;
@@ -16,14 +16,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.List;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostInsertRequest {
     @NotNull
     @Min(1)
-    private Integer user_id;
+    private Integer userId;
     
     @NotNull
     @NotBlank
