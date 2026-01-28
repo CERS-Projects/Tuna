@@ -12,5 +12,13 @@ public class SearchPostsRequest {
     private String keyword;
 
     @NotNull
+    private String shareRange;
+
+
+    //ダミー項目
+    @NotNull
     private Integer currentUserId;
+    
+
+    private List<String> muteWords;
 }
