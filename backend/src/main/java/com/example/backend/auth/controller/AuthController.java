@@ -29,8 +29,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@Valid @RequestBody LoginSelectRequest loginSelectRequest) {
         LoginTokenResponse loginTokenResponse = authService.login(loginSelectRequest);
-        log.info("アクセストークン" + loginTokenResponse.getAccessToken());
-        log.info("リフレッシュトークン" + loginTokenResponse.getRefreshToken());
         return ResponseEntity.ok().header("Set-Cookie",
                 loginTokenResponse.getRefreshToken().toString())
                 .body(loginTokenResponse.getAccessToken());
