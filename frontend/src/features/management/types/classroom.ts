@@ -13,7 +13,7 @@ export type ClassroomCategoryDocument = {
 
 export type ClassroomCategory = {
   category: string;
-  document: ClassroomCategoryDocument[];
+  documents: ClassroomCategoryDocument[];
 };
 
 export type ClassroomCreateInput = {
