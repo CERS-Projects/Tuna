@@ -14,9 +14,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
-    
-    //投稿IDで投稿取得
-    PostEntity findById(ObjectId id);
+
 
     //返信Countをインクリメント
     @Query("{ '_id': ?0 }")
@@ -26,6 +24,10 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
     
     // ユーザーIDと投稿IDで存在確認(ユーザーチェック)
     boolean existsByIdAndUserId(ObjectId id, Integer userId);
+
+    //投稿の存在確認
+    boolean existsById(ObjectId id);
+
     //投稿を削除
     void deleteByIdAndUserId(ObjectId id, Integer userId);
 
@@ -35,7 +37,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "{ $match: { response_to: null } }",
         
         // 2. share_rangeの条件でフィルタ
-        "{ $match: { $expr: { $gt: [ { $size: { $setIntersection: [ '$share_range', ?1 ] } }, 0 ] } } }",
+        "{ $match: { share_range: { $in: [?1] } } }",
 
         //3.5 post_flagがfalseのものを除外
         "{ $match: { post_flag: { $ne: false } } }",
@@ -120,7 +122,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
     })
     List<PostDetailResponse> findPostsWithDetails(
         Integer currentUserId,
-        List<Integer> shareRangeList,
+        Integer shareRange,
         List<String> muteWords
     );
 
@@ -328,8 +330,29 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         // 1. sentenceにキーワードが含まれるドキュメントをフィルタ
         "{ $match: { sentence: { $regex: ?1, $options: 'i' } } }",
 
+        //1.5 response_toがnullのドキュメントのみをフィルタ
+        "{ $match: { response_to: null } }",
+
         // 2. post_flagがfalseのものを除外
         "{ $match: { post_flag: { $ne: false } } }",
+
+        //2.5 share_rangeの条件でフィルタ
+        "{ $match: { share_range: { $in: [?3] } } }",
+
+        // 3. ミュートワードフィルタ
+        "{ $match: { " +
+        "  $expr: { " +
+        "    $cond: { " +
+        "      if: { $and: [ { $ne: [?2, null] }, { $gt: [{ $size: { $ifNull: [?2, []] } }, 0] } ] }, " +
+        "      then: { $not: { $anyElementTrue: { $map: { input: ?2, as: 'word', in: { $regexMatch: { input: '$sentence', regex: '$$word', options: 'i' } } } } } }, " +
+        "      else: true " +
+        "    } " +
+        "  } " +
+        "} }",
+
+        // 4. ソート＆制限
+        "{ $sort: { postDate: -1 } }",
+        "{ $limit: 50 }",
 
         // 5. profile_collectionとuser_idで結合
         "{ $lookup: { " +
@@ -339,6 +362,8 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  as: 'profile' " +
         "} }",
         
+
+
         // 6. profileを展開（preserveNullAndEmptyArraysをtrueに）
         "{ $unwind: { path: '$profile', preserveNullAndEmptyArrays: true } }",
         
@@ -407,7 +432,9 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
     })
     List<PostDetailResponse> findPostsByKeywordWithDetails(
         Integer currentUserId,
-        String keyword
+        String keyword,
+        List<String> muteWords,
+        Integer shareRange
     );
 
-    }
+}
