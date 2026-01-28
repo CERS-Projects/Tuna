@@ -57,8 +57,6 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
         return [...prev, ...newImages];
       });
       e.target.value = "";
-      // setImages((prev) => [...prev, ...newImages]);
-      // e.target.value = "";
     },
     [],
   );
@@ -128,11 +126,6 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
     ],
   );
   const imagesRef = useRef(images);
-  // useEffect(() => {
-  //   return () => {
-  //     imagesRef.current.forEach((img) => URL.revokeObjectURL(img.url));
-  //   };
-  // }, []);
   useEffect(() => {
     imagesRef.current = images;
   }, [images]);

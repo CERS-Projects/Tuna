@@ -1,13 +1,11 @@
 import { useState, useEffect, useImperativeHandle, type Ref } from "react";
 import styles from "./postCreate.module.css";
 import { Checkbox } from "@/components/ui/checkbox/checkbox";
-import imgBefore from "@/assets/img押下前.png";
-import imgAfter from "@/assets/img押下.png";
-import previewRemove from "@/assets/ゴミ箱ボタン.png";
+import { ImFilePicture } from "react-icons/im";
+import { MdDeleteForever } from "react-icons/md";
 import { Button } from "@/components/ui/button/button";
 import { type ModalHandle } from "@/components/ui/modal/modal";
-import deleteButton from "@/assets/×ボタン.png";
-import defaultIcon from "@/assets/default-user.png";
+import { IoIosClose } from "react-icons/io";
 import { usePostCreate } from "./hooks/usePostCreate";
 import { createPortal } from "react-dom";
 import { memo } from "react";
@@ -102,18 +100,14 @@ export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
                 className={styles.button}
                 onClick={() => setIsOpen(false)}
               >
-                <img
-                  src={deleteButton}
-                  alt="閉じる"
-                  className={styles.backIcon}
-                />
+                <IoIosClose className={styles.backIcon} />
               </button>
             )}
           </div>
           <hr className={styles.hr} />
           <div className={styles.user}>
             <img
-              src={currentUser.user_icon || defaultIcon}
+              src={currentUser.user_icon}
               alt="User Icon"
               className={styles.userIcon}
             />
@@ -164,16 +158,8 @@ export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
                   onClick={() => refs.fileInputRef.current?.click()}
                   className={styles.pictureAndButton}
                 >
-                  <img
-                    src={imgBefore}
-                    alt="画像選択"
-                    className={styles.pictureIcon}
-                  />
-                  <img
-                    src={imgAfter}
-                    alt="画像選択(押下時)"
-                    className={styles.pictureIconPush}
-                  />
+                  <ImFilePicture className={styles.pictureIcon} />
+                  <ImFilePicture className={styles.pictureIconPush} />
                 </button>
               )}
               <div
@@ -199,11 +185,7 @@ export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
                         className={styles.removeButton}
                         type="button"
                       >
-                        <img
-                          src={previewRemove}
-                          className={styles.removeIcon}
-                          alt="画像削除"
-                        />
+                        <MdDeleteForever className={styles.removeIcon} />
                       </button>
                     )}
                   </div>
