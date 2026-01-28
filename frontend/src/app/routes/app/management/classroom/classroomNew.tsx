@@ -1,5 +1,6 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { Input } from "@/components/ui/input/input";
+import { Button } from "@/components/ui/button/button";
 import { type ClassroomCreateInput } from "@/features/management/types/classroom";
 import { ClassroomCategoryUploader } from "@/features/management/components/classroomCategoryUploader/classroomCategoryUploader";
 import commonStyles from "@/features/management/style/classroom.module.css";
@@ -78,9 +79,7 @@ const ClassroomNew = () => {
               ＋ 新しいカテゴリを追加
             </button>
           </div>
-          <button type="submit" className={styles.submitButton}>
-            作成
-          </button>
+          <Button type="submit">作成</Button>
         </form>
       </main>
     </div>
