@@ -19,6 +19,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.auth.service.LoginAttemptService;
+import com.example.backend.exception.Model.InternalSecurityException;
 import com.example.backend.utils.jwt.JwtUtils;
 import org.springframework.lang.NonNull;
 
@@ -58,8 +59,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             sub = successToken.getSubject();
             schoolId = successToken.getClaim("schoolId").asInt();
 
-            UserInfo userInfo =new UserInfo(Integer.parseInt(sub),schoolId);
-            
+            if (schoolId == null) {
+                throw new InternalSecurityException("");
+            }
+
+            UserInfo userInfo = new UserInfo(Integer.parseInt(sub), schoolId);
+
             String role = successToken.getClaim("role").asString();
             List<GrantedAuthority> authority = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
@@ -73,6 +78,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         } catch (JWTVerificationException e) {
             request.setAttribute("ERROR_MESSAGE", "トークンが不正です");
             throw new BadCredentialsException("");
+        } catch (InternalSecurityException e) {
+            request.setAttribute("IS_INTERNAL_ERROR", true);
+            request.setAttribute("ERROR_MESSAGE", "サーバー内部でエラーが発生しました");
+            throw new InternalSecurityException("");
         }
         // アカウント停止フラグチェック
         loginAttemptService.isStop(request, sub);

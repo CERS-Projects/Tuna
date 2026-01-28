@@ -131,15 +131,22 @@ public class AuthServiceImpl implements AuthService {
         try {
             DecodedJWT decodeRefreshToken = jwtUtils.confirmRefreshToken(refreshToken);
             String userId = decodeRefreshToken.getSubject();
+            Integer userIdInteger;
 
-            RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findById(Integer.parseInt(userId))
+            try {
+                userIdInteger = Integer.parseInt(userId);
+            } catch (NumberFormatException e) {
+                throw new IllegalStateException("サーバー内部でエラーが発生しました");
+            }
+
+            RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findById(userIdInteger)
                     .orElseThrow(() -> new AuthException("ログインしなおしてください"));
 
             MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
             byte[] hash = sha256.digest(refreshToken.getBytes(StandardCharsets.UTF_8));
             hashJwtRefreshToken = HexFormat.of().formatHex(hash);
             if (hashJwtRefreshToken.equals(refreshTokenEntity.getRefreshToken())) {
-                UserEntity userEntity = userRepository.findById(Integer.parseInt(userId))
+                UserEntity userEntity = userRepository.findById(userIdInteger)
                         .orElseThrow(() -> new UsernameNotFoundException("ログインしなおしてください"));
 
                 SchoolEntity schoolEntity = userEntity.getSchool();
@@ -148,12 +155,10 @@ public class AuthServiceImpl implements AuthService {
                 String role = authorities.get(0).getAuthority();
                 String jwtAccessToken = jwtUtils.createToken(userId, role, schoolEntity.getSchoolId());
                 String jwtRefreshToken = jwtUtils.createRefreshToken(userId);
-                log.info("新しいアクセストークン" + jwtAccessToken);
-                log.info("新しいリフレッシュトークン" + jwtRefreshToken);
                 hash = sha256.digest(jwtRefreshToken.getBytes(StandardCharsets.UTF_8));
                 String newHashJwtRefreshToken = HexFormat.of().formatHex(hash);
                 refreshTokenRepository
-                        .save(new RefreshTokenEntity(Integer.valueOf(userId), newHashJwtRefreshToken));
+                        .save(new RefreshTokenEntity(userIdInteger, newHashJwtRefreshToken));
                 ResponseCookie responseCookie = ResponseCookie.from("refreshToken", jwtRefreshToken)
                         .httpOnly(true)
                         .sameSite("Strict")
@@ -170,6 +175,7 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
     public List<GrantedAuthority> giveAuthority(@NonNull UserEntity userEntity) {
         List<GrantedAuthority> authority = new ArrayList<>();
         Integer userId = userEntity.getUserId();

@@ -24,16 +24,23 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             HttpServletResponse response,
             AuthenticationException authException) throws IOException {
         String authErrorMessage;
+        ErrorResponseEntity errorResponseEntity;
+
         if (request.getAttribute("ERROR_MESSAGE") == null) {
             authErrorMessage = "ログインしなおしてください";
         } else {
             authErrorMessage = request.getAttribute("ERROR_MESSAGE").toString();
         }
 
-        ErrorResponseEntity errorResponseEntity = new ErrorResponseEntity(HttpStatus.UNAUTHORIZED.value(),
-                authErrorMessage);
+        if (Boolean.TRUE.equals(request.getAttribute("IS_INTERNAL_ERROR"))) {
+            errorResponseEntity = new ErrorResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.value(), authErrorMessage);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        } else {
+            errorResponseEntity = new ErrorResponseEntity(HttpStatus.UNAUTHORIZED.value(),
+                    authErrorMessage);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        }
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(errorResponseEntity));
 
