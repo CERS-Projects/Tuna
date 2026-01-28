@@ -36,10 +36,6 @@ public class PostEntity {
     @NotNull
     private Date postDate;
     
-    @Field("school_code")
-    @NotNull
-    private String schoolCode;
-    
     @Field("sentence")
     @NotNull
     private String sentence;
