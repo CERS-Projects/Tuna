@@ -592,6 +592,16 @@ try {
 			response_to: null,
 			post_flag: true,
 		},
+		{
+			user_id: 4,
+			post_date: new Date(Date.now() - 600000), // 10分前
+			sentence: "情報処理学科の投稿です。",
+			like_Count: 0,
+			response_Count: 0,
+			share_range: [5],
+			response_to: null,
+			post_flag: true,
+		},
 	]);
 	print("✅ post_collectionに9件挿入しました。");
 
