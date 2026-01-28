@@ -1,6 +1,4 @@
 package com.example.backend.auth.dto;
-
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +8,6 @@ import lombok.Getter;
 public class UserInfo {
     @NotNull
     private Integer userId;
-    @NotBlank
+    @NotNull
     private Integer schoolId;
 }

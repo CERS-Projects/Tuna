@@ -59,7 +59,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             sub = successToken.getSubject();
             schoolId = successToken.getClaim("schoolId").asInt();
 
-            if (schoolId == null) {
+            if (schoolId == null || sub == null) {
                 throw new InternalSecurityException("");
             }
 

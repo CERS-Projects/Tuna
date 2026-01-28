@@ -26,8 +26,6 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
     public void isStop(HttpServletRequest request, String userId) {
         try {
 
-            userRepository.existsById(Integer.parseInt(userId));
-
             UserEntity userEntity = userRepository.findById(Integer.parseInt(userId))
                     .orElseThrow(() -> {
                         request.setAttribute("ERROR_MESSAGE", "ユーザーIDまたはパスワードが異なります");
@@ -38,7 +36,7 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
                 throw new AccessDeniedException("");
             }
         } catch (NumberFormatException e) {
-            throw new BadCredentialsException("不正なリクエストです");
+            throw new IllegalStateException("サーバー内部でエラーが発生しました");
         }
     }
 
@@ -54,6 +52,9 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
             return;
         } else {
             missCount = Integer.valueOf(stringRedisTemplate.opsForValue().get(missCountKey));
+            if(missCount == null) {
+                throw new IllegalStateException("サーバー内部でエラーが発生しました");
+            }
             missCount++;
             stringRedisTemplate.opsForValue().set(missCountKey, Objects.requireNonNull(missCount.toString()), 2,
                     TimeUnit.MINUTES);
