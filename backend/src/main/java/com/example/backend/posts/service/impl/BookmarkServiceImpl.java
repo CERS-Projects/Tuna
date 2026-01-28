@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import com.example.backend.posts.service.BookmarkService;
 import com.example.backend.posts.repository.BookmarkRepository;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
+import com.example.backend.posts.repository.PostRepository;
 
 import com.example.backend.posts.model.BookmarkEntity;
 import com.example.backend.posts.dto.IsBookmarkRequest;
@@ -31,6 +32,14 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     private final FileControlHelper fileControlHelper;
 
+    private final PostRepository postRepository;
+
+    //投稿の存在確認
+    private boolean existsPost(ObjectId postId) {
+        return postRepository.existsById(postId);
+    }
+
+    //ブックマークの存在確認
     private boolean isBookmarked(Integer userId, ObjectId postId) {
         return bookmarkRepository.existsByUserIdAndPostId(userId, postId);
     }
@@ -41,7 +50,13 @@ public class BookmarkServiceImpl implements BookmarkService {
         bookmark.setUserId(requestDto.getUserId());
         bookmark.setPostId(requestDto.getPostId());
         bookmark.setBookmarkedAt(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
-        if (bookmarkRepository.existsByUserIdAndPostId(bookmark.getUserId(), bookmark.getPostId())) {
+
+        if (!existsPost(bookmark.getPostId())) {
+            log.info("投稿が存在しません userId: {} and postId: {}", bookmark.getUserId(), bookmark.getPostId());
+            throw new IllegalStateException("投稿が存在しません");
+        }
+
+        if (isBookmarked(bookmark.getUserId(), bookmark.getPostId())) {
             log.info("すでにブックマークされています userId: {} and postId: {}", bookmark.getUserId(), bookmark.getPostId());
             throw new IllegalStateException("すでにブックマークされています");
         }
@@ -56,7 +71,8 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public void removeBookmark(IsBookmarkRequest requestDto) {
-        if (!bookmarkRepository.existsByUserIdAndPostId(requestDto.getUserId(), requestDto.getPostId())) {
+
+        if (!isBookmarked(requestDto.getUserId(), requestDto.getPostId())) {
             log.info("ブックマークが存在しません userId: {} and postId: {}", requestDto.getUserId(), requestDto.getPostId());
             throw new IllegalStateException("ブックマークが存在しません");
         }

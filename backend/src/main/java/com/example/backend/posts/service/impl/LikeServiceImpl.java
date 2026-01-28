@@ -6,6 +6,7 @@ import com.example.backend.posts.repository.LikeRepository;
 import com.example.backend.posts.dto.IsLikeRequest;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import com.example.backend.posts.repository.PostCounterRepository;
+import com.example.backend.posts.repository.PostRepository;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -32,6 +33,15 @@ public class LikeServiceImpl implements LikeService {
 
     private final PostCounterRepository postCounterRepository;
 
+    private final PostRepository postRepository;
+
+
+    //投稿の存在確認
+    private boolean existsPost(ObjectId postId) {
+        return postRepository.existsById(postId);
+    }
+
+    //いいねの存在確認
     private boolean isLiked(ObjectId postId, Integer userId) {
         return likeRepository.existsByPostIdAndUserId(postId, userId);
     }
@@ -43,6 +53,12 @@ public class LikeServiceImpl implements LikeService {
         like.setUserId(requestDto.getUserId());
         like.setPostId(requestDto.getPostId());
         like.setLikedAt(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
+
+        if (!existsPost(like.getPostId())) {
+            log.info("投稿が存在しません userId: {} and postId: {}", like.getUserId(), like.getPostId());
+            throw new IllegalStateException("投稿が存在しません");
+        }
+
         if (isLiked(like.getPostId(), like.getUserId())) {
             log.info("すでにいいねされています userId: {} and postId: {}", like.getUserId(), like.getPostId());
             throw new IllegalStateException("すでにいいねされています");
@@ -61,6 +77,7 @@ public class LikeServiceImpl implements LikeService {
     //いいね削除
     @Override
     public void removeLikes(IsLikeRequest requestDto) {
+
         if (!isLiked(requestDto.getPostId(), requestDto.getUserId())) {
             log.info("いいねが存在しません userId: {} and postId: {}", requestDto.getUserId(), requestDto.getPostId());
             throw new IllegalStateException("いいねが存在しません");
