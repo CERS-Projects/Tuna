@@ -25,7 +25,7 @@ public class AccountConfirm {
     public Boolean isExistsAllGroups(Integer userId, Integer... groupIds) {
         Set<Integer> uniqueGroupIds = Arrays.stream(groupIds).collect(Collectors.toSet());
 
-        Long joinedCount = groupMemberRepository.countDistinctByGroupIdIn(new ArrayList<>(uniqueGroupIds));
+        Long joinedCount = groupMemberRepository.countDistinctByGroupIdIn(new ArrayList<>(uniqueGroupIds), userId);
 
         return joinedCount == uniqueGroupIds.size();
     }
