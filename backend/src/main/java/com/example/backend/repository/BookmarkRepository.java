@@ -13,11 +13,16 @@ import org.springframework.data.mongodb.repository.Aggregation;
 @Repository
 public interface BookmarkRepository extends MongoRepository<BookmarkEntity, String> {
 
+        
+
         // ユーザーIDと投稿IDでブックマークの存在を確認
         boolean existsByUserIdAndPostId(Integer userId, ObjectId postId);
 
         // ユーザーIDと投稿IDでブックマークを削除
         void deleteByUserIdAndPostId(Integer userId, ObjectId postId);
+
+        //投稿idでブックマークを削除
+        void deleteByPostId(ObjectId postId);
 
         // ユーザーIDでブックマークされた投稿を取得
         @Aggregation(pipeline = {

@@ -12,10 +12,16 @@ import org.springframework.data.mongodb.repository.Aggregation;
 
 @Repository 
 public interface LikeRepository extends MongoRepository<LikeEntity, String> {
-
+        
+        // ユーザーIDと投稿IDでいいねの存在を確認
         boolean existsByPostIdAndUserId(ObjectId post, Integer userId);
 
+        // ユーザーIDと投稿IDでいいねを削除
         void deleteByPostIdAndUserId(ObjectId post, Integer userId);
+
+        // 投稿idでいいねを削除
+        void deleteByPostId(ObjectId postId);
+
 
         // ユーザーIDでいいねした投稿を取得
         @Aggregation(pipeline = {
