@@ -1,13 +1,14 @@
 package com.example.backend.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public class UserInfo {
-    @NotBlank
+    @NotNull
     private Integer userId;
     @NotBlank
     private Integer schoolId;
