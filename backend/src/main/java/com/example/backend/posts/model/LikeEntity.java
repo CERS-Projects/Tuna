@@ -18,12 +18,11 @@ import java.util.Date;
 public class LikeEntity {
 
     @Id
-    @MongoId(FieldType.OBJECT_ID)
     private ObjectId id;
 
     
     @NotNull
-    @Field(value = "post_id", targetType = FieldType.OBJECT_ID)
+    @Field("post_id")
     private ObjectId postId;
 
 
