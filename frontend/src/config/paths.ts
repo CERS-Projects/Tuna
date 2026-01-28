@@ -81,6 +81,10 @@ export const paths = {
     timeline: {
       path: "/app/timeline",
       getHref: () => "/app/timeline",
+      post: {
+        path: "/app/timeline/post",
+        getHref: () => "/app/timeline/post",
+      },
       detail: {
         path: "/app/timeline/:id",
         getHref: (id: number) => `/app/timeline/${id}`,

@@ -5,6 +5,7 @@ import { RiCompass3Line } from "react-icons/ri";
 import styles from "@/features/timeline/styles/timeline.module.css";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
 import { useRef } from "react";
+import { Outlet } from "react-router";
 
 type PostDataItem = {
   postId: number;
@@ -114,6 +115,7 @@ const Timeline = () => {
           <TimelineFilter />
         </InfoBox>
       </Modal>
+      <Outlet />
     </div>
   );
 };

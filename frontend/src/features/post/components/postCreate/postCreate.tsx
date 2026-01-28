@@ -1,4 +1,10 @@
-import { useState, useEffect, useImperativeHandle, type Ref } from "react";
+import {
+  useState,
+  useEffect,
+  useImperativeHandle,
+  type Ref,
+  memo,
+} from "react";
 import styles from "./postCreate.module.css";
 import { Checkbox } from "@/components/ui/checkbox/checkbox";
 import { ImFilePicture } from "react-icons/im";
@@ -8,7 +14,6 @@ import { type ModalHandle } from "@/components/ui/modal/modal";
 import { IoIosClose } from "react-icons/io";
 import { usePostCreate } from "./hooks/usePostCreate";
 import { createPortal } from "react-dom";
-import { memo } from "react";
 
 const currentUser = {
   user_id: "mito_denden",
@@ -36,10 +41,10 @@ const Range = memo(
     checked: boolean;
     onChange: (id: number) => void;
   }) => (
-    <div className={styles.checkboxPlace}>
+    <div className={styles.rangeItem}>
       <Checkbox
         labelTextAfterLink={title}
-        fontSize="1.3rem"
+        className={styles.checkboxCustom}
         checked={checked}
         onChange={() => onChange(id)}
       />
@@ -47,9 +52,16 @@ const Range = memo(
   ),
 );
 
-export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
+export const PostCreateModal = ({
+  ref,
+  onClose,
+}: {
+  ref: Ref<ModalHandle>;
+  onClose?: () => void;
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { state, actions, refs } = usePostCreate(setIsOpen);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -61,18 +73,25 @@ export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
     };
   }, [isOpen]);
 
+  const handleClose = () => {
+    setIsOpen(false);
+    if (onClose) {
+      onClose();
+    }
+  };
+
   useImperativeHandle(ref, () => ({
     show: () => {
       actions.setStep("input");
       setIsOpen(true);
     },
-    close: () => setIsOpen(false),
+    close: handleClose,
   }));
 
   const handleOpenConfirm = () => {
     const finalContent = state.postText.trim();
     if (!finalContent && state.images.length === 0) {
-      actions.setSubmitError("投稿内容がありません");
+      actions.setSubmitError("投稿内容を入力してください");
       return;
     }
     actions.setPostText(finalContent);
@@ -82,145 +101,82 @@ export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
 
   if (!isOpen) return null;
 
+  const isInputStep = state.step === "input";
+
   return createPortal(
     <div
       className={styles.overlay}
       onClick={() => {
-        if (state.step === "input") {
-          setIsOpen(false);
-        }
+        if (isInputStep) handleClose();
       }}
     >
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.postCreate}>
-          <div className={styles.postCreateTitle}>
-            {state.step === "input" ? "投稿作成" : "投稿内容の確認"}
-            {state.step === "input" && (
-              <button
-                className={styles.button}
-                onClick={() => setIsOpen(false)}
-              >
-                <IoIosClose className={styles.backIcon} />
-              </button>
-            )}
+        <div className={styles.header}>
+          <div className={styles.headerTitle}>
+            {isInputStep ? "投稿を作成" : "投稿内容の確認"}
           </div>
-          <hr className={styles.hr} />
-          <div className={styles.user}>
+          {isInputStep && (
+            <button className={styles.closeButton} onClick={handleClose}>
+              <IoIosClose size={28} />
+            </button>
+          )}
+        </div>
+
+        <div className={styles.bodyScroll}>
+          <div className={styles.userInfo}>
             <img
               src={currentUser.user_icon}
               alt="User Icon"
               className={styles.userIcon}
             />
-            <div className={styles.userInfoText}>
-              <div className={styles.user_name}>{currentUser.user_name}</div>
-              <div className={styles.user_id}>@{currentUser.user_id}</div>
+            <div>
+              <div className={styles.userName}>{currentUser.user_name}</div>
+              <div className={styles.userId}>@{currentUser.user_id}</div>
             </div>
           </div>
 
-          <div
-            className={
-              state.step === "input" ? styles.postBox : styles.confirmPostBox
-            }
-          >
-            {state.step === "input" ? (
+          <div className={styles.inputArea}>
+            {isInputStep ? (
               <textarea
                 className={styles.textarea}
-                placeholder="投稿内容を入力してください"
+                placeholder="いまどうしてる？"
                 value={state.postText}
                 onChange={(e) => actions.handleTextChange(e.target.value)}
               />
             ) : (
               <div className={styles.confirmTextDisplay}>{state.postText}</div>
             )}
-
-            <hr
-              className={state.step === "input" ? styles.hr : styles.hrNone}
-            />
-            {state.step === "input" && (
-              <div className={styles.postLength}>
-                <span
-                  className={
-                    state.postText.length >= state.MAX_LENGTH
-                      ? styles.charLimit
-                      : ""
-                  }
-                >
-                  {state.postText.length}
-                </span>
-                /{state.MAX_LENGTH}
-              </div>
-            )}
-
-            <div className={state.step === "input" ? styles.imageSection : ""}>
-              {state.step === "input" && (
-                <button
-                  type="button"
-                  onClick={() => refs.fileInputRef.current?.click()}
-                  className={styles.pictureAndButton}
-                >
-                  <ImFilePicture className={styles.pictureIcon} />
-                  <ImFilePicture className={styles.pictureIconPush} />
-                </button>
-              )}
-              <div
-                className={state.step === "input" ? styles.previewImage : ""}
-              >
-                {state.images.map((img) => (
-                  <div
-                    key={img.url}
-                    className={state.step === "input" ? styles.previewArea : ""}
-                  >
-                    <img
-                      src={img.url}
-                      className={
-                        state.step === "input"
-                          ? styles.preview
-                          : styles.confirmPreview
-                      }
-                      alt="投稿画像プレビュー"
-                    />
-                    {state.step === "input" && (
-                      <button
-                        onClick={() => actions.removeImage(img.url)}
-                        className={styles.removeButton}
-                        type="button"
-                      >
-                        <MdDeleteForever className={styles.removeIcon} />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <input
-              type="file"
-              ref={refs.fileInputRef}
-              onChange={actions.onImageChange}
-              multiple
-              accept="image/*"
-              className={styles.fileButton}
-            />
-            {state.imageError && (
-              <span className={styles.errorTextInline}>{state.imageError}</span>
-            )}
-            {state.submitError && (
-              <span className={styles.errorTextBlock}>{state.submitError}</span>
-            )}
           </div>
 
-          <div className={state.step === "input" ? styles.postRange : ""}>
-            <div className={styles.postRangeGuide}>
-              {state.step === "input" ? "投稿の共有範囲" : "選択された共有範囲"}
+          {(state.images.length > 0 || !isInputStep) && (
+            <div className={styles.previewContainer}>
+              {state.images.map((img) => (
+                <div key={img.url} className={styles.previewItem}>
+                  <img
+                    src={img.url}
+                    className={styles.previewImage}
+                    alt="投稿画像"
+                  />
+                  {isInputStep && (
+                    <button
+                      onClick={() => actions.removeImage(img.url)}
+                      className={styles.removeButton}
+                      type="button"
+                    >
+                      <MdDeleteForever size={18} />
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
-            <div
-              className={
-                state.step === "input"
-                  ? styles.checkboxGroup
-                  : styles.confirmPostRange
-              }
-            >
-              {state.step === "input" ? (
+          )}
+
+          <div className={styles.rangeSection}>
+            <div className={styles.rangeLabel}>
+              {isInputStep ? "公開範囲を選択" : "公開範囲"}
+            </div>
+            <div className={styles.rangeList}>
+              {isInputStep ? (
                 items.map((item) => (
                   <Range
                     key={item.group_id}
@@ -237,56 +193,91 @@ export const PostCreateModal = ({ ref }: { ref: Ref<ModalHandle> }) => {
                   )
                   .map((item) => (
                     <span key={item.group_id} className={styles.confirmTag}>
-                      ・{item.group_name}
+                      {item.group_name}
                     </span>
                   ))
               ) : (
                 <span className={styles.noSelectionMessage}>
-                  共有範囲は設定されていません
+                  指定なし（全体公開）
                 </span>
               )}
             </div>
           </div>
 
-          <div className={styles.next}>
-            {state.step === "input" ? (
-              <div className={styles.nextButton}>
+          {(state.imageError || state.submitError) && (
+            <div className={styles.errorArea}>
+              {state.imageError && <span>{state.imageError}</span>}
+              {state.submitError && <span>{state.submitError}</span>}
+            </div>
+          )}
+        </div>
+
+        <div className={styles.footer}>
+          <div className={styles.footerTools}>
+            {isInputStep && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => refs.fileInputRef.current?.click()}
+                  className={styles.iconButton}
+                  title="画像を追加"
+                >
+                  <ImFilePicture size={22} />
+                </button>
+                <input
+                  type="file"
+                  ref={refs.fileInputRef}
+                  onChange={actions.onImageChange}
+                  multiple
+                  accept="image/*"
+                  style={{ display: "none" }}
+                />
+              </>
+            )}
+          </div>
+
+          <div className={styles.footerActions}>
+            {isInputStep ? (
+              <>
+                <div className={styles.charCount}>
+                  <span
+                    className={
+                      state.postText.length >= state.MAX_LENGTH
+                        ? styles.charLimit
+                        : ""
+                    }
+                  >
+                    {state.postText.length}
+                  </span>
+                  <span className={styles.charMax}> / {state.MAX_LENGTH}</span>
+                </div>
                 <Button
                   type="button"
-                  width="100px"
-                  height="40px"
-                  fontSize="1.3rem"
+                  className={styles.primaryButton}
                   onClick={handleOpenConfirm}
+                  disabled={!state.postText && state.images.length === 0}
                 >
                   次へ
                 </Button>
-              </div>
+              </>
             ) : (
-              <div className={styles.confirmButtons}>
-                <div className={styles.confirmBack}>
-                  <Button
-                    type="button"
-                    width="100px"
-                    height="40px"
-                    fontSize="1.3rem"
-                    onClick={() => actions.setStep("input")}
-                  >
-                    戻る
-                  </Button>
-                </div>
-                <div className={styles.confirmPost}>
-                  <Button
-                    type="button"
-                    width="100px"
-                    height="40px"
-                    fontSize="1.3rem"
-                    onClick={() => actions.handlePost(currentUser.user_id)}
-                    disabled={state.isSubmitting}
-                  >
-                    {state.isSubmitting ? "送信中..." : "投稿"}
-                  </Button>
-                </div>
-              </div>
+              <>
+                <Button
+                  type="button"
+                  className={styles.secondaryButton}
+                  onClick={() => actions.setStep("input")}
+                >
+                  戻る
+                </Button>
+                <Button
+                  type="button"
+                  className={styles.primaryButton}
+                  onClick={() => actions.handlePost(currentUser.user_id)}
+                  disabled={state.isSubmitting}
+                >
+                  {state.isSubmitting ? "送信中..." : "投稿する"}
+                </Button>
+              </>
             )}
           </div>
         </div>

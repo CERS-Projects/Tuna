@@ -21,7 +21,10 @@ export const Menu = () => {
       <button onClick={() => navigate("")} className={styles.menuButton}>
         <IoSchoolOutline />
       </button>
-      <button onClick={() => navigate("")} className={styles.menuButton}>
+      <button
+        onClick={() => navigate("/app/timeline/post")}
+        className={styles.menuButton}
+      >
         <LuCirclePlus />
       </button>
       <button onClick={() => navigate("")} className={styles.menuButton}>
