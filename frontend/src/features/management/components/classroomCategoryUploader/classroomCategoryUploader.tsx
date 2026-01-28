@@ -13,6 +13,17 @@ type Props = {
   onRemove: () => void;
 };
 
+const MAX_FILE_SIZE = 20 * 1024 * 1024;
+const ALLOWED_EXTENSIONS = [
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+  ".ppt",
+  ".pptx",
+];
+
 export const ClassroomCategoryUploader = ({
   index,
   value,
@@ -25,14 +36,66 @@ export const ClassroomCategoryUploader = ({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      onFilesChange([...value.files, ...Array.from(e.target.files)]);
+      const files = Array.from(e.target.files);
+      const invalidFile = files.find(
+        (file) =>
+          file.size > MAX_FILE_SIZE ||
+          !ALLOWED_EXTENSIONS.some((ext) =>
+            file.name.toLowerCase().endsWith(ext),
+          ),
+      );
+
+      if (invalidFile) {
+        alert(
+          "ファイルサイズが20MB以下、かつ指定された拡張子のみアップロードしてください",
+        );
+        return;
+      }
+
+      const duplicate = files.find((file) =>
+        value.files.some((f) => f.name === file.name),
+      );
+      if (duplicate) {
+        alert("同じファイル名のファイルが既に追加されています");
+        return;
+      }
+
+      onFilesChange([...value.files, ...files]);
+    } else {
+      alert("ファイルサイズが20MB以下のファイルをアップロードしてください");
     }
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (e.dataTransfer.files) {
-      onFilesChange([...value.files, ...Array.from(e.dataTransfer.files)]);
+      const files = Array.from(e.dataTransfer.files);
+      const invalidFile = files.find(
+        (file) =>
+          file.size > MAX_FILE_SIZE ||
+          !ALLOWED_EXTENSIONS.some((ext) =>
+            file.name.toLowerCase().endsWith(ext),
+          ),
+      );
+
+      if (invalidFile) {
+        alert(
+          "ファイルサイズが20MB以下、かつ指定された拡張子のみアップロードしてください",
+        );
+        return;
+      }
+
+      const duplicate = files.find((file) =>
+        value.files.some((f) => f.name === file.name),
+      );
+      if (duplicate) {
+        alert("同じファイル名のファイルが既に追加されています");
+        return;
+      }
+
+      onFilesChange([...value.files, ...files]);
+    } else {
+      alert("ファイルサイズが20MB以下のファイルをアップロードしてください");
     }
   };
 
@@ -109,6 +172,7 @@ export const ClassroomCategoryUploader = ({
         <input
           ref={inputRef}
           type="file"
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
           multiple
           style={{ display: "none" }}
           onChange={handleFileChange}
