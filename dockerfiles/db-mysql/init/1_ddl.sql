@@ -34,6 +34,16 @@ CREATE TABLE IF NOT EXISTS tuna_db.user_tb(
     REFERENCES tuna_db.school_info_tb(school_id)                       
 );
 
+/*リフレッシュトークン*/
+CREATE TABLE IF NOT EXISTS tuna_db.refresh_token_tb(
+    user_id INT(10) PRIMARY KEY NOT NULL,
+    refresh_token VARCHAR(64) NOT NULL,
+
+    FOREIGN KEY (user_id)
+    REFERENCES tuna_db.user_tb(user_id)
+    ON DELETE CASCADE
+);
+
 /* ヘルプカテゴリー */
 CREATE TABLE IF NOT EXISTS tuna_db.help_category_tb(
     help_category_id   INT(2)       PRIMARY KEY AUTO_INCREMENT,

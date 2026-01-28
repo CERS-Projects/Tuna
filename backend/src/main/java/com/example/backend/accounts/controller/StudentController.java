@@ -58,9 +58,9 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
-    /* 
+    /*
      * 操作されているユーザのトークンに含まれているschoolIdと
-     * 実際のそのリクエストのユーザ名がschoolIdに紐づけられているユーザ名があるかどうかで整合性を検証する 
+     * 実際のそのリクエストのユーザ名がschoolIdに紐づけられているユーザ名があるかどうかで整合性を検証する
      */
     @PostMapping("/student/csv-file")
     public ResponseEntity<String> createStudentByFile(@RequestPart("file") MultipartFile uploadCsvFile, @RequestParam("refId") final Integer schoolId)throws IOException{

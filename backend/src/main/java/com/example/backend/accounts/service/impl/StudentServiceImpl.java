@@ -34,7 +34,7 @@ import com.example.backend.group.service.GroupMemberService;
 import com.example.backend.school.model.SchoolEntity;
 
 @Service
-public class StudentServiceImpl implements StudentService{
+public class StudentServiceImpl implements StudentService {
 
     /* StudentRepository の依存性注入 */
     private final StudentRepository studentRepository;
@@ -51,11 +51,12 @@ public class StudentServiceImpl implements StudentService{
     private final GroupMemberService groupMemberService;
 
     /* 生徒アカウントをレコードとして関連つけている */
-    private record StudentAccountPair(UserEntity newUserAccount, StudentEntity newStudentAccount){}
+    private record StudentAccountPair(UserEntity newUserAccount, StudentEntity newStudentAccount) {
+    }
 
     /* CSVファイル扱えるようにするための初期設定 */
     public StudentServiceImpl(UserRepository userRepository, StudentRepository studentRepository,
-                              AccountsHelper accountsHelper, GroupMemberService groupMemberService) {
+                            AccountsHelper accountsHelper, GroupMemberService groupMemberService) {
         /* 依存の注入 */
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
@@ -74,14 +75,14 @@ public class StudentServiceImpl implements StudentService{
          * withColumnReordering(true):ヘッダーの順番が入れ替わっていても対応できるようにする
          */
         CsvSchema csvSchema = csvMapper.schemaFor(ReadCSVFileStudentCreateRequest.class)
-                                       .withHeader()
-                                       .withColumnReordering(true);
+                .withHeader()
+                .withColumnReordering(true);
 
         /*
          * デシリアライズしたデータを読み取り専用にする処理
          */
         this.csvObjectReader = csvMapper.readerFor(ReadCSVFileStudentCreateRequest.class)
-                                        .with(csvSchema);
+                .with(csvSchema);
     }
 
     /* ユーザデータの基本情報を登録（生徒） */
@@ -96,9 +97,9 @@ public class StudentServiceImpl implements StudentService{
         .map(newStudent->{
             UserEntity newStudentAccount = accountsHelper.toUserEntity(schoolEntity,    
                                                                        newStudent.getShowUserId(),
-                                                                       newStudent.getName(),
+                                                                       newStudent.getPassword(),
                                                                        newStudent.getMailAddress(),
-                                                                       newStudent.getPassword()
+                                                                       newStudent.getName()
                                                                        );
             return newStudentAccount;
         })
@@ -143,14 +144,19 @@ public class StudentServiceImpl implements StudentService{
 
     /*
      * CSVファイルから一括で生徒アカウントを登録する機能
-     * InputStream inputStream = csvFile.getInputStream(): アップロードされたCSVファイルの内容を読み取るためのストリーム
-     *                                                   　(ストリームとは入力->整形->出力までの一連の流れを指す)
-     * this.readCsv(inputStream): CSVファイルの内容をReadCSVFileStudentCreateRequestオブジェクトのリストに変換
+     * InputStream inputStream = csvFile.getInputStream():
+     * アップロードされたCSVファイルの内容を読み取るためのストリーム
+     * (ストリームとは入力->整形->出力までの一連の流れを指す)
+     * this.readCsv(inputStream):
+     * CSVファイルの内容をReadCSVFileStudentCreateRequestオブジェクトのリストに変換
      * records.stream(): recordsとして取得したリストをストリームとして処理を始める
-     * .map(eachElement->this.toStudentEntityByFile(eachElement, schoolId)): 各レコードをStudentAccountPairオブジェクトに変換
+     * .map(eachElement->this.toStudentEntityByFile(eachElement, schoolId)):
+     * 各レコードをStudentAccountPairオブジェクトに変換
      * .collect(Collectors.toList()): toStudentEntityByFileで変換した結果をList<?>に集約
-     * StudentAccountPair::newUserAccount: StudentAccountPairオブジェクトから新しいUserEntityオブジェクトを取得
-     * StudentAccountPair::newStudentAccount: StudentAccountPairオブジェクトから新しいStudentEntityオブジェクトを取得
+     * StudentAccountPair::newUserAccount:
+     * StudentAccountPairオブジェクトから新しいUserEntityオブジェクトを取得
+     * StudentAccountPair::newStudentAccount:
+     * StudentAccountPairオブジェクトから新しいStudentEntityオブジェクトを取得
      * try-with-resources構文: InputStreamを自動的に閉じるための構文
      */
     @Override
@@ -159,16 +165,16 @@ public class StudentServiceImpl implements StudentService{
         try (InputStream inputStream = csvFile.getInputStream()){
             List<ReadCSVFileStudentCreateRequest> records = this.readCsv(inputStream);
             List<StudentAccountPair> fromCsvData = records.stream()
-                                                   .map(recordEachElement->this.toStudentEntityByFile(recordEachElement, schoolId))
-                                                   .collect(Collectors.toList());
+                    .map(recordEachElement -> this.toStudentEntityByFile(recordEachElement, schoolId))
+                    .collect(Collectors.toList());
 
             List<UserEntity> toUserData = fromCsvData.stream()
-                                          .map(StudentAccountPair::newUserAccount)
-                                          .collect(Collectors.toList());
-            
+                    .map(StudentAccountPair::newUserAccount)
+                    .collect(Collectors.toList());
+
             List<StudentEntity> toStudentData = fromCsvData.stream()
-                                                .map(StudentAccountPair::newStudentAccount)
-                                                .collect(Collectors.toList());
+                    .map(StudentAccountPair::newStudentAccount)
+                    .collect(Collectors.toList());
 
             userRepository.saveAll(toUserData);
             studentRepository.saveAll(toStudentData);
@@ -230,7 +236,7 @@ public class StudentServiceImpl implements StudentService{
         studentEnrollmentInformation.setGrade(grade);
         studentEnrollmentInformation.setAdmissionDate(admissionDate);
 
-        if(graduateDate != null){
+        if (graduateDate != null) {
             studentEnrollmentInformation.setGraduateDate(graduateDate);
         }
 
@@ -238,12 +244,12 @@ public class StudentServiceImpl implements StudentService{
     }
 
     /* CSVファイルの要素をPOJOに変換 */
-    private List<ReadCSVFileStudentCreateRequest> readCsv(InputStream inputStream) throws IOException{
+    private List<ReadCSVFileStudentCreateRequest> readCsv(InputStream inputStream) throws IOException {
         return csvObjectReader.<ReadCSVFileStudentCreateRequest>readValues(inputStream).readAll();
     }
 
     /* エンティティに挿入する処理 */
-    private StudentAccountPair toStudentEntityByFile(ReadCSVFileStudentCreateRequest records, final Integer schoolId){
+    private StudentAccountPair toStudentEntityByFile(ReadCSVFileStudentCreateRequest records, final Integer schoolId) {
 
         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(schoolId);
         UserEntity newUserAccount = accountsHelper.toUserEntity(schoolEntity,
