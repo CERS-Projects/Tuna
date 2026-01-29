@@ -16,6 +16,26 @@ export type ClassroomCategory = {
   documents: ClassroomCategoryDocument[];
 };
 
+export type ClassroomCategoryEdit = {
+  category: string;
+  existingDocuments: ClassroomCategoryDocument[];
+  deleteDocuments: ClassroomCategoryDocument[];
+  newFiles: File[];
+};
+
+export type ClassroomCategoryEditPost = {
+  category: string;
+  deleteDocuments: ClassroomCategoryDocument[];
+  newFiles: File[];
+};
+
+export type ClassroomType = {
+  roomId: number;
+  roomName: string;
+  description: string;
+  categories: ClassroomCategory[];
+};
+
 export type ClassroomCreateInput = {
   roomName: string;
   description: string;
@@ -23,4 +43,18 @@ export type ClassroomCreateInput = {
     category: string;
     files: File[];
   }[];
+};
+
+export type ClassroomEditInput = {
+  roomId: number;
+  roomName: string;
+  description: string;
+  categories: ClassroomCategoryEdit[];
+};
+
+export type ClassroomEditPost = {
+  roomId: number;
+  roomName: string;
+  description: string;
+  categories: ClassroomCategoryEditPost[];
 };
