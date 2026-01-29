@@ -241,7 +241,6 @@ try {
 			$jsonSchema: {
 				bsonType: "object",
 				required: [
-					"room_id",
 					"school_id",
 					"teacher_id",
 					"room_name",
@@ -249,11 +248,6 @@ try {
 					"categorys",
 				],
 				properties: {
-					room_id: {
-						bsonType: "int",
-						minimum: 1,
-						description: "一意の授業ルームのIDを格納",
-					},
 					school_id: {
 						bsonType: "int",
 						minimum: 1,
@@ -598,7 +592,7 @@ try {
 			sentence: "情報処理学科の投稿です。",
 			like_Count: 0,
 			response_Count: 0,
-			share_range: [5],
+			share_range: [0, 5],
 			response_to: null,
 			post_flag: true,
 		},
