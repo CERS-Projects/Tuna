@@ -8,19 +8,19 @@ import styles from "@/features/profile/styles/settingMenu.module.css";
 const MenuItems: MenuItemType[] = [
   {
     menuName: "パスワード更新",
-    menuPath: "/password", 
+    menuPath: "/app/profile/edit/editPassword",
     menuIcon: <RiLockPasswordFill />,
     menuLabel: "パスワードの変更を行います",
   },
   {
     menuName: "フィルタリング設定",
-    menuPath: "/filter",
+    menuPath: "/app/profile/edit/editFilter",
     menuIcon: <IoFilterOutline />,
     menuLabel: "フィルタリングの設定を行います",
   },
   {
     menuName: "ログアウト",
-    menuPath: "/logout",
+    menuPath: "/",
     menuIcon: <FaSignOutAlt />,
     menuLabel: "ログアウトします",
   },
@@ -34,10 +34,7 @@ const SettingMenu = () => {
       </div>
       <div className={styles.settingMenuMain}>
         {MenuItems.map((item) => (
-          <MenuItem
-            key={item.menuName} 
-            {...item} 
-          />
+          <MenuItem key={item.menuName} {...item} />
         ))}
       </div>
     </div>
