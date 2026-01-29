@@ -37,7 +37,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "{ $match: { response_to: null } }",
         
         // 2. share_rangeの条件でフィルタ
-        "{ $match: { share_range: { $in: [?1] } } }",
+        "{ $match: { $expr: { $gt: [ { $size: { $setIntersection: [ '$share_range', ?1 ] } }, 0 ] } } }",
 
         //3.5 post_flagがfalseのものを除外
         "{ $match: { post_flag: { $ne: false } } }",
@@ -122,7 +122,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
     })
     List<PostDetailResponse> findPostsWithDetails(
         Integer currentUserId,
-        Integer shareRange,
+        List<Integer> shareRangeList,
         List<String> muteWords
     );
 
@@ -337,7 +337,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "{ $match: { post_flag: { $ne: false } } }",
 
         //2.5 share_rangeの条件でフィルタ
-        "{ $match: { share_range: { $in: [?3] } } }",
+        "{ $match: { $expr: { $gt: [ { $size: { $setIntersection: [ '$share_range', ?3 ] } }, 0 ] } } }",
 
         // 3. ミュートワードフィルタ
         "{ $match: { " +
@@ -434,7 +434,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         Integer currentUserId,
         String keyword,
         List<String> muteWords,
-        Integer shareRange
+        List<Integer> shareRange
     );
 
 }

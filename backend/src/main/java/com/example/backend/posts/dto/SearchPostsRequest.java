@@ -1,6 +1,7 @@
 package com.example.backend.posts.dto;
 
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,8 +13,7 @@ public class SearchPostsRequest {
     private String keyword;
 
     @NotNull
-    private String shareRange;
-
+    private List<Integer> shareRange;
 
     //ダミー項目
     @NotNull

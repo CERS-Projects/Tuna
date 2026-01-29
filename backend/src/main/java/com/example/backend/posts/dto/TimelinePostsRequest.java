@@ -18,7 +18,7 @@ public class TimelinePostsRequest {
 
     @NotNull
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    private Integer shareRange;
+    private List<Integer> shareRange;
 
     //jwtから取得するためダミー項目
     private int userId;
