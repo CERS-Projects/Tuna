@@ -34,10 +34,9 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public List<ReportListResponse> getReportList(ReportListRequest dto) {
-        // レポート一覧取得の実装をここに追加
         List<ReportEntity> reportEntities = reportRepository.findAllBySchoolId(dto.getSchoolId());
         List<ReportListResponse> responses = reportHelper.convertEntitiesToResponses(reportEntities);
-        return responses; // 仮の戻り値
+        return responses;
     }
 
     @Override
