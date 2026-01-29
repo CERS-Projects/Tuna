@@ -3,7 +3,7 @@ package com.example.backend.report.model;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
@@ -20,7 +20,7 @@ public class ReportEntity {
     @NotNull
     private ObjectId reportId;
 
-    @Field("user_id")
+    @Field("school_id")
     @NotNull
     private Integer schoolId;
 
@@ -40,7 +40,7 @@ public class ReportEntity {
     @NotNull
     private Integer reasonId;
 
-    @Field("details")
+    @Field("detail")
     @NotNull
-    private String details;
+    private String detail;
 }

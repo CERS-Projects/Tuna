@@ -1,7 +1,5 @@
 package com.example.backend.accounts.repository;
 
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,7 +29,15 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
             """)
     Boolean existsByUserIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
 
-    Optional<UserEntity> findByShowUserId(String showUserId);
+    @Query("""
+            SELECT u.name FROM UserEntity u
+            WHERE u.userId = :userId
+            """)
+    String findNameByUserId(@Param("userId") Integer userId);
 
-    Boolean existsByShowUserId(String showUserId);
+    @Query("""
+            SELECT u.showUserId FROM UserEntity u
+            WHERE u.userId = :userId
+            """)
+    String findShowUserIdByUserId(@Param("userId") Integer userId);
 }
