@@ -15,6 +15,7 @@ import org.bson.types.ObjectId;
 import com.example.backend.posts.repository.PostRepository;
 import com.example.backend.posts.repository.LikeRepository;
 import com.example.backend.posts.repository.BookmarkRepository;
+import com.example.backend.utils.accountConfirm.AccountConfirm;
 import com.example.backend.posts.model.PostEntity;
 
 import com.example.backend.posts.service.PostService;
@@ -47,6 +48,8 @@ public class PostServiceImpl implements PostService {
     private final LikeRepository likeRepository;
 
     private final BookmarkRepository bookmarkRepository;
+
+    private final AccountConfirm accountConfirm;
     
     // 投稿作成
     @Override
@@ -55,6 +58,17 @@ public class PostServiceImpl implements PostService {
         List<String> fileObjectKeys = null;
         List<MultipartFile> imageFiles = post.getImageFile();
         ObjectId replyPost = null;
+
+
+        //publicの0を除外
+        List<Integer> userGroupIds =
+        post.getShareRange().stream()
+                .filter(i -> i != 0)
+                .toList();
+        //除外したリストをもとに権限確認
+        if(!accountConfirm.isExistsAllGroups(post.getUserId(), userGroupIds.toArray(new Integer[0]))) {
+            throw new RuntimeException("指定されたグループに所属していません。");
+        }
 
         if(imageFiles != null){
             fileObjectKeys = fileControlHelper.uploadFile("images", imageFiles.toArray(new MultipartFile[0]));
@@ -68,6 +82,7 @@ public class PostServiceImpl implements PostService {
         }
 
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        
         postEntity.setUserId(post.getUserId());
         postEntity.setSentence(post.getSentence());
         postEntity.setPostDate(Date.from(now.toInstant()));
@@ -104,6 +119,14 @@ public class PostServiceImpl implements PostService {
     //タイムライン取得
     @Override
     public List<PostDetailResponse> getTimelinePosts(TimelinePostsRequest requestDto) {
+        if(!(requestDto.getShareRange().size() == 1 && requestDto.getShareRange().get(0) == 0)){
+
+            //publicのみ指定されている場合、全グループ参加確認は不要
+            if (!accountConfirm.isExistsAllGroups(requestDto.getUserId(), requestDto.getShareRange().toArray(new Integer[0]))) {
+                throw new RuntimeException("指定されたグループに所属していません。");
+            }
+        }
+
         try {
             List<PostDetailResponse> postDetails =
                 postRepository.findPostsWithDetails(
@@ -134,14 +157,20 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDetailResponse> getUserPosts(ProfilePostsRequest requestDto) {
         List<PostDetailResponse> postDetails;
+        List<Integer> userGroupIds = requestDto.getGroupIds();
+
+        if (!accountConfirm.isExistsAllGroups(requestDto.getCurrentUserId(), userGroupIds.toArray(new Integer[0]))) {
+            throw new RuntimeException("指定されたグループに所属していません。");
+        }
+        userGroupIds.add(0); // public権限を追加
+
         try{
             log.info("取得を開始しました 相手targetUserId: " + requestDto.getTargetUserId() + " 取得 currentUserId: " + requestDto.getCurrentUserId() );
-            postDetails = postRepository.findUserPostsWithDetails(requestDto.getCurrentUserId(), requestDto.getTargetUserId(), requestDto.getGroupIds());
-            log.info("取得完了しました。 投稿数: " + postDetails);
+            postDetails = postRepository.findUserPostsWithDetails(requestDto.getCurrentUserId(), requestDto.getTargetUserId(), userGroupIds);
+            log.info("取得完了しました。 投稿数: " + postDetails.size());
         }catch(Exception e){
 
             log.error("ユーザー投稿の取得に失敗しました。", e.getMessage(), e);
-            e.printStackTrace();
             throw new RuntimeException("ユーザー投稿の取得に失敗しました。", e);
         }
         for(PostDetailResponse postDetail : postDetails){
@@ -151,10 +180,12 @@ public class PostServiceImpl implements PostService {
 
         return postDetails;
     }
+    
     //返信取得
     @Override
     public List<PostDetailResponse> getReplyPosts(PostsReplyRequest requestDto) {
         List<PostDetailResponse> postDetails;
+
         try{
             log.info("返信取得を開始しました 投稿ID: " + requestDto.getReplyPostId() + " 取得 currentUserId: " + requestDto.getCurrentUserId() );
             postDetails = postRepository.findPostsResponseWithDetails(requestDto.getCurrentUserId(), requestDto.getReplyPostId(), requestDto.getMuteWords());
@@ -175,6 +206,12 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDetailResponse> getPostsByKeyword(SearchPostsRequest requestDto) {
         List<PostDetailResponse> postDetails;
+
+        if(!(requestDto.getShareRange().size() == 1 && requestDto.getShareRange().get(0) == 0)){
+            if (!accountConfirm.isExistsAllGroups(requestDto.getCurrentUserId(), requestDto.getShareRange().toArray(new Integer[0]))) {
+                throw new RuntimeException("指定されたグループに所属していません。");
+            }
+        }
         try{
             log.info("キーワード検索投稿取得を開始しました キーワード: " + requestDto.getKeyword() + " 取得 currentUserId: " + requestDto.getCurrentUserId() );
             postDetails = postRepository.findPostsByKeywordWithDetails(requestDto.getCurrentUserId(), requestDto.getKeyword(), requestDto.getMuteWords(), requestDto.getShareRange());
