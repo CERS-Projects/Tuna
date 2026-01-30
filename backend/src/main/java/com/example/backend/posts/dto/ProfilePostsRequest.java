@@ -12,12 +12,13 @@ import java.util.List;
 @Setter
 public class ProfilePostsRequest {
 
+    //jwtから取得予定
     @NotNull
     @Min(1)
     private Integer currentUserId;
 
     @NotNull
-    @Min(1)
+    @Size(min = 1,max = 11, message = "targetUserId は1-11桁以内である必要があります")
     private Integer targetUserId;
 
     @NotNull

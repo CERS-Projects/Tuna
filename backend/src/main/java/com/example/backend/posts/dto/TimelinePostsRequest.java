@@ -14,7 +14,7 @@ public class TimelinePostsRequest {
 
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     @Size(max = 20, message = "muteWords は最大20個までです")
-    private List<@Size(max = 20, message = "muteWords の各要素は20文字以内です") String> muteWords;
+    private List<@Size(min = 1, max = 20, message = "muteWords の各要素は1-20文字以内です") String> muteWords;
 
     @NotNull
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)

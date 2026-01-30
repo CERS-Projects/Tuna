@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.bson.types.ObjectId;
 
@@ -16,14 +17,16 @@ import java.util.Date;
 public class PostDetailResponse {
     //postから取得
     @NotNull
+    @Size(min = 24, max = 24)
     @Field("_id")
     private String postId;
 
-    @NotNull
+    //Jwtから取得予定
     @Field("user_id")
     private Integer userId;
 
     @NotNull
+    @Size(min = 1, max = 255, message = "sentence は1-255文字以内である必要があります")
     @Field("sentence")
     private String sentence;
 
@@ -47,9 +50,11 @@ public class PostDetailResponse {
 
     //profileから取得
     @NotNull
+    @Size(min = 1, max = 20, message = "nickname は1-20文字以内である必要があります")
     private String nickname;
 
     @NotNull
+    @Size(min = 1, max = 20, message = "showUserId は1-20文字以内である必要があります")
     private String showUserId;
 
     @NotNull

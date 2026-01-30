@@ -21,13 +21,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostInsertRequest {
+    //jwtから取得予定
     @NotNull
     @Min(1)
     private Integer userId;
     
     @NotNull
     @NotBlank
-    @Size(max = 200 ,min = 1)
+    @Size(min = 1, max = 255, message = "sentence は1-255文字以内である必要があります")
     private String sentence;
 
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)

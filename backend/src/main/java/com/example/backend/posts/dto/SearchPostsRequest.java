@@ -10,15 +10,16 @@ import lombok.Setter;
 public class SearchPostsRequest {
     
     @NotNull
+    @Size(max = 100, message = "keyword は最大100文字までです")
     private String keyword;
 
     @NotNull
     private List<Integer> shareRange;
 
-    //ダミー項目
+    //jwtから取得予定
     @NotNull
     private Integer currentUserId;
     
-
+    //profilecolectionからの取得予定
     private List<String> muteWords;
 }
