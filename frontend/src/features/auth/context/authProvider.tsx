@@ -5,7 +5,7 @@ import { type LoginInfo, type LoginResponse } from "../types/auth.ts";
 import { useLogin } from "../hooks/useLogin.ts";
 import { useLogout } from "../hooks/useLogout.ts";
 import { useRefreshToken } from "../hooks/useRefreshToken.ts";
-import { Navigate } from "react-router";
+import { useNavigate, useLocation } from "react-router"; // ★ useLocation 追加
 import { paths } from "@/config/paths.ts";
 import { ApiRequestError } from "@/types/apiRequestError.ts";
 import { Spinner } from "@/components/ui/spinner/spinner.tsx";
@@ -16,33 +16,45 @@ type Props = {
 
 export const AuthProvider = ({ children }: Props) => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { mutate: loginMutate, isPending: isLoggingIn } = useLogin();
   const { mutate: logoutMutate, isPending: isLoggingOut } = useLogout();
   const { mutate: refreshMutate } = useRefreshToken();
 
   const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
-
   const [authToken, setAuthToken] = useState<string>("");
+
   useEffect(() => {
+    const currentPath = location.pathname;
+
+    const isLoginPath = currentPath === paths.auth.login.path;
+
     refreshMutate(undefined, {
       onSuccess: (data: LoginResponse) => {
         setAuthToken(data.token);
+
+        if (isLoginPath) {
+          navigate(paths.app.timeline.path, { replace: true });
+        }
       },
       onError: () => {
-        return <Navigate to={paths.auth.login.path} replace />;
+        if (!isLoginPath) {
+          navigate(paths.auth.login.path, { replace: true });
+        }
       },
       onSettled: () => {
         setIsAuthChecking(false);
       },
     });
-  }, [setAuthToken, setIsAuthChecking, refreshMutate]);
+  }, [navigate, setIsAuthChecking, refreshMutate, location]);
 
   const login = (info: LoginInfo) => {
     loginMutate(info, {
       onSuccess: (data: LoginResponse) => {
         setAuthToken(data.token);
-        <Navigate to={paths.app.timeline.path} />;
+        navigate(paths.app.timeline.path);
       },
       onError: (error) => {
         if (error instanceof ApiRequestError) {
@@ -59,7 +71,7 @@ export const AuthProvider = ({ children }: Props) => {
       onSettled: () => {
         queryClient.clear();
         setAuthToken("");
-        return <Navigate to={paths.auth.login.path} replace />;
+        navigate(paths.auth.login.path, { replace: true });
       },
     });
   };
