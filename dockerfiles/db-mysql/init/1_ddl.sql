@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS tuna_db.help_contents_tb(
 INSERT INTO tuna_db.school_info_tb (school_name, school_code, school_address, school_mailaddress, approval_status) VALUES
 ('マグロ市立第一中学校', 'MAGURO0000001', '東京都港区まぐろ1-1-1', 'maguro1@tuna.ac.jp',0),
 ('カツオ私立高等専門学校', 'KATSUO0000002', '大阪府中央区かつお2-2-2', 'akatsuo2@tuna.ac.jp',2),
-('水戸電子専門学校','MITO0000004','茨城県水戸市みと3-3-3','mitoDigital@tuna.ac.jp',1);
+('水戸電子専門学校','MITO0000004','茨城県水戸市浜田3-3-3','mitoDigital@tuna.ac.jp',1);
 
 -- school_id = 1 (マグロ市立第一中学校) のユーザー
 INSERT INTO tuna_db.user_tb (school_id, show_user_id, password, mailaddress, name, accounts_stop_flag) VALUES
@@ -122,9 +122,8 @@ INSERT INTO tuna_db.user_tb (school_id, show_user_id, password, mailaddress, nam
 (1, 's001_student_y', '$2a$10$UIHJ7FvDtz3wWV6.pdaCCOEMPDFEAPVND5gWNzXmV.VXavbs29g3m', 'student.y@maguro1.jp', '小林 健太 (生)', 0), -- 生徒
 -- school_id = 2 (カツオ私立高等専門学校) のユーザー
 (2, 't002_teacher_b', '$2a$10$GJOmEGnrVUH44ZbY2JygtOy3NpX0OKEGAJuhdrRLN.aDhFxZayR5S', 'teacher.b@katsuo2.jp', '山田 次郎 (教)', 0), -- 教師
-(2, 's002_student_z', '$2a$10$7f1Y8u1r0F6p0k1F0G8nUu5jF6b9HqOa8KqE6Zx9YzF1JHkL2mN3W', 'student.z@katsuo2.jp', '佐々木 一郎 (生)', 0); -- 生徒
---school_id = 3 (水戸電子専門学校) のユーザー
-INSERT INTO tuna_db.user_tb (school_id, show_user_id, password, mailaddress, name, accounts_stop_flag) VALUES
+(2, 's002_student_z', '$2a$10$7f1Y8u1r0F6p0k1F0G8nUu5jF6b9HqOa8KqE6Zx9YzF1JHkL2mN3W', 'student.z@katsuo2.jp', '佐々木 一郎 (生)', 0), -- 生徒
+-- school_id = 3 (水戸電子専門学校) のユーザー
 (3, 't003_teacher_c', '$2a$10$X9JH6FvDtz3wWV6.pdaCCOEMPDFEAPVND5gWNzXmV.VXavbs29g3m', 'mitocollege@mito.ac.jp', '上野 淳 (教)', 0), -- 教師
 (3, 's003_student_w', '$2a$10$Yf2Y8u1r0F6p0k1F0G8nUu5jF6b9HqOa8KqE6Zx9YzF1JHkL2mN3W', 'daigo_uchida@ygcollege.jp', '内田 大悟 (生)', 0), -- 生徒
 (3, 's004_student_v', '$2a$10$Zg3Y8u1r0F6p0k1F0G8nUu5jF6b9HqOa8KqE6Zx9YzF1JHkL2mN3W', 'sou_matumoto@ygcollege.jp', '松本 爽 (生)', 0), -- 生徒
@@ -133,15 +132,15 @@ INSERT INTO tuna_db.user_tb (school_id, show_user_id, password, mailaddress, nam
 INSERT INTO tuna_db.teacher_tb (user_id, authority_flag) VALUES
 (1, 1), -- 佐藤太郎 (管理者権限あり)
 (4, 0), -- 山田次郎 (管理者権限なし)
-(7, 1), -- 上野淳 (管理者権限あり)
+(6, 1); -- 上野淳 (管理者権限あり)
 -- user_id = 2, 3 を生徒として登録
 INSERT INTO tuna_db.student_tb (user_id, grade, admission_date, graduate_date) VALUES
 (2, 3, '2023-04-01', NULL), -- 田中花子: 3年生
 (3, 1, '2025-04-01', NULL), -- 小林健太: 1年生
 (5, 2, '2024-04-01', NULL), -- 佐々木一郎: 2年生
-(9, 2, '2024-04-01', NULL), -- 内田大悟: 2年生
-(10, 1, '2025-04-01', NULL), -- 松本爽: 1年生
-(11, 1, '2025-04-01', NULL); -- 菊池優希: 1年生
+(7, 2, '2024-04-01', NULL), -- 内田大悟: 2年生
+(8, 1, '2025-04-01', NULL), -- 松本爽: 1年生
+(9, 1, '2025-04-01', NULL); -- 菊池優希: 1年生
 
 INSERT INTO tuna_db.help_category_tb (help_category_name) VALUES
 ('アカウント'),
