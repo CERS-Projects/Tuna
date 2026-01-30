@@ -3,6 +3,7 @@ package com.example.backend.report.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,7 @@ public class ReportController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteReport(@Valid @RequestBody ReportDeleteRequest dto){
         reportService.deleteReport(dto);
         return ResponseEntity.ok().build();

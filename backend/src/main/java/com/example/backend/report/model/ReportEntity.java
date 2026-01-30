@@ -40,6 +40,10 @@ public class ReportEntity {
     @NotNull
     private Integer reasonId;
 
+    @Field("reported_post_id")
+    @NotNull
+    private ObjectId reportedPostId;
+
     @Field("detail")
     @NotNull
     private String detail;

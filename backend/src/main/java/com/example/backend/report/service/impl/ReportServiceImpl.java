@@ -2,6 +2,7 @@ package com.example.backend.report.service.impl;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,10 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public void deleteReport(ReportDeleteRequest dto){
-        reportRepository.deleteById(dto.getReportId());
+        if(ObjectId.isValid(dto.getReportId()) == false || reportRepository.existsById(new ObjectId(dto.getReportId())) == false) {
+            throw new IllegalArgumentException("その報告は存在しません。");
+        }
+
+        reportRepository.deleteById(new ObjectId(dto.getReportId()));
     }
 }

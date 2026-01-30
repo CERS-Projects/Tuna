@@ -25,6 +25,6 @@ public class ReportInsertRequest {
     private String detail;
 
     @NotBlank
-    private String reportByPost;
+    private String reportedPostId;
 
 }

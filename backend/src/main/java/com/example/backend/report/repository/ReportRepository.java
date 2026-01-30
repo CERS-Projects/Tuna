@@ -11,6 +11,4 @@ import com.example.backend.report.model.ReportEntity;
 @Repository
 public interface ReportRepository extends MongoRepository<ReportEntity, ObjectId>{
     List<ReportEntity> findAllBySchoolId(Integer schoolId);
-
-    void deleteById(ObjectId reportId);
 } 

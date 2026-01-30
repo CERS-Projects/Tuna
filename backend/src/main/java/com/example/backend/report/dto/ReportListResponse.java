@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 public class ReportListResponse {
     private String reportId;
-    private String name;
-    private String showUserId;
+    private String reportedName;
+    private String reportedShowUserId;
     private Integer reasonId;
     private Date reportDate;
     private String reportedPost;
