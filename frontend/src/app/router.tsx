@@ -159,6 +159,10 @@ const createAppRouter = (queryClient: QueryClient) => {
           paths.app.profile.edit.path,
           () => import("./routes/app/profile/edit/editProfile"),
         ),
+        route(
+          paths.app.profile.edit.editPassword.path,
+          () => import("./routes/app/profile/edit/editPassword"),
+        ),
       ],
     },
 

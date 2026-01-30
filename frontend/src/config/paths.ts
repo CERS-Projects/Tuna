@@ -134,6 +134,10 @@ export const paths = {
       edit: {
         path: "/app/profile/edit",
         getHref: () => "/app/profile/edit",
+        editPassword: {
+          path: "/app/profile/edit/editPassword",
+          getHref: () => "/app/profile/edit/editPassword",
+        },
       },
     },
     test: {
