@@ -13,7 +13,7 @@ export const useUser = (
     queryKey: ["user"],
     queryFn: async () => {
       const profile = await apiWithRefresh<ProfileData>({
-        url: "/api/profile",
+        url: "/profile",
         options: {
           method: "GET",
           headers: {

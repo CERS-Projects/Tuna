@@ -6,7 +6,7 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (info: LoginInfo) =>
       api<LoginResponse>({
-        url: "/api/login",
+        url: "/login",
         options: {
           method: "POST",
           headers: { "Content-Type": "application/json" },

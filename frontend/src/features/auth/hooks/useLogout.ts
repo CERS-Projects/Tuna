@@ -5,7 +5,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: (authToken: string) =>
       api<void>({
-        url: "/api/logout",
+        url: "/logout",
         options: {
           method: "POST",
           headers: {

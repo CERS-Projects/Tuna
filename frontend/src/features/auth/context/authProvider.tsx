@@ -5,7 +5,7 @@ import { type LoginInfo, type LoginResponse } from "../types/auth.ts";
 import { useLogin } from "../hooks/useLogin.ts";
 import { useLogout } from "../hooks/useLogout.ts";
 import { useRefreshToken } from "../hooks/useRefreshToken.ts";
-import { useNavigate } from "react-router";
+import { Navigate } from "react-router";
 import { paths } from "@/config/paths.ts";
 import { ApiRequestError } from "@/types/apiRequestError.ts";
 import { Spinner } from "@/components/ui/spinner/spinner.tsx";
@@ -16,7 +16,6 @@ type Props = {
 
 export const AuthProvider = ({ children }: Props) => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const { mutate: loginMutate, isPending: isLoggingIn } = useLogin();
   const { mutate: logoutMutate, isPending: isLoggingOut } = useLogout();
@@ -31,19 +30,19 @@ export const AuthProvider = ({ children }: Props) => {
         setAuthToken(data.token);
       },
       onError: () => {
-        navigate(paths.auth.login.path);
+        return <Navigate to={paths.auth.login.path} replace />;
       },
       onSettled: () => {
         setIsAuthChecking(false);
       },
     });
-  }, [navigate, setAuthToken, setIsAuthChecking, refreshMutate]);
+  }, [setAuthToken, setIsAuthChecking, refreshMutate]);
 
   const login = (info: LoginInfo) => {
     loginMutate(info, {
       onSuccess: (data: LoginResponse) => {
         setAuthToken(data.token);
-        navigate(paths.app.timeline.path);
+        <Navigate to={paths.app.timeline.path} />;
       },
       onError: (error) => {
         if (error instanceof ApiRequestError) {
@@ -60,7 +59,7 @@ export const AuthProvider = ({ children }: Props) => {
       onSettled: () => {
         queryClient.clear();
         setAuthToken("");
-        navigate(paths.auth.login.path);
+        return <Navigate to={paths.auth.login.path} replace />;
       },
     });
   };

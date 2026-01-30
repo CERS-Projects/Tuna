@@ -6,7 +6,7 @@ export const useRefreshToken = () => {
   return useMutation({
     mutationFn: () =>
       api<LoginResponse>({
-        url: "/api/refresh",
+        url: "/refresh",
         options: {
           method: "POST",
           headers: { "Content-Type": "application/json" },
