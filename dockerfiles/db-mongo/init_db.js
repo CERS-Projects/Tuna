@@ -586,7 +586,7 @@ try {
 			post_flag: true,
 		},
 	]);
-	print("✅ post_collectionに7件挿入しました。");
+	print("✅ post_collectionに9件挿入しました。");
 
 	// B. profile_collection
 	db.profile_collection.insertMany([
@@ -622,7 +622,7 @@ try {
 			user_id: 5,
 			nickname: "イチロウ",
 			icon: "images/63b81b67-68ec-4171-a28c-3042a33b8591.png",
-			show_user_id: "saburo_sample",
+			show_user_id: "ichiro_sample",
 			introduction: "テストユーザー4号。よろしく!",
 			follow: 0,
 			follower: 1,
@@ -633,7 +633,7 @@ try {
 	// C. search_history_collection
 	db.search_history_collection.insertMany([
 		{
-			user_id: 101,
+			user_id: 1,
 			search_history: [
 				{ query: "数学 勉強法", searched_at: new Date() },
 				{
@@ -643,7 +643,7 @@ try {
 			],
 		},
 		{
-			user_id: 103,
+			user_id: 3,
 			search_history: [
 				{ query: "テスト対策", searched_at: new Date(Date.now() - 1200000) },
 			],
@@ -654,7 +654,7 @@ try {
 	// D. bookmark_collection
 	db.bookmark_collection.insertMany([
 		{
-			user_id: 101,
+			user_id: 1,
 			post_id: ObjectId("669a84a2c914e6b7f329d201"),
 			bookmarked_at: new Date(),
 		},
@@ -669,13 +669,13 @@ try {
 	// E. follow_and_follower_collection
 	db.follow_and_follower_collection.insertMany([
 		{
-			follower_id: 101, //フォローしてる人
+			follower_id: 1, //フォローしてる人
 			following_id: 2, //フォローされている人
 			created_at: new Date(),
 		},
 		{
 			follower_id: 2, //フォローしてる人
-			following_id: 101, //フォローされている人
+			following_id: 1, //フォローされている人
 			created_at: new Date(Date.now() - 86400000), // 1日前
 		},
 	]);
@@ -689,7 +689,7 @@ try {
 			liked_at: new Date(),
 		},
 		{
-			user_id: 101,
+			user_id: 1,
 			post_id: ObjectId("669a84a2c914e6b7f329d201"),
 			liked_at: new Date(),
 		},
@@ -699,7 +699,7 @@ try {
 			liked_at: new Date(),
 		},
 		{
-			user_id: 101,
+			user_id: 1,
 			post_id: ObjectId("669a84a2c914e6b7f329d202"),
 			liked_at: new Date(),
 		},
@@ -729,7 +729,7 @@ try {
 		},
 		{
 			school_id: 10,
-			teacher_id: 101,
+			teacher_id: 1,
 			room_name: "化学基礎",
 			description: "化学の基礎を学びます。",
 			latest_update: new Date(),
