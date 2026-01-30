@@ -36,17 +36,18 @@ public class ReportServiceImpl implements ReportService {
     @Transactional
     public List<ReportListResponse> getReportList(ReportListRequest dto) {
         List<ReportEntity> reportEntities = reportRepository.findAllBySchoolId(dto.getSchoolId());
-        List<ReportListResponse> responses = reportHelper.convertEntitiesToResponses(reportEntities);
-        return responses;
+        return reportHelper.convertEntitiesToResponses(reportEntities);
     }
 
     @Override
     @Transactional
     public void deleteReport(ReportDeleteRequest dto){
-        if(ObjectId.isValid(dto.getReportId()) == false || reportRepository.existsById(new ObjectId(dto.getReportId())) == false) {
+        if(ObjectId.isValid(dto.getReportId()) == false) {
+            throw new IllegalArgumentException("不正なリクエストです。");
+        }
+        if(reportRepository.existsById(new ObjectId(dto.getReportId())) == false){
             throw new IllegalArgumentException("その報告は存在しません。");
         }
-
         reportRepository.deleteById(new ObjectId(dto.getReportId()));
     }
 }

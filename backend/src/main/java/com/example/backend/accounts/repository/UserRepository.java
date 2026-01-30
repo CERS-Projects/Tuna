@@ -32,18 +32,21 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
     Boolean existsByUserIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
 
     @Query("""
-            SELECT u.name FROM UserEntity u
+            SELECT u.name,u.showUserId FROM UserEntity u
             WHERE u.userId = :userId
             """)
-    String findNameByUserId(@Param("userId") Integer userId);
+    Object[] findNameShowUserIdByUserId(@Param("userId") Integer userId);
 
-    @Query("""
-            SELECT u.showUserId FROM UserEntity u
-            WHERE u.userId = :userId
-            """)
-    String findShowUserIdByUserId(@Param("userId") Integer userId);
-    
     Optional<UserEntity> findByShowUserId(String showUserId);
 
-    Boolean existsByShowUserId(String showUserId);
+    boolean existsByShowUserId(String showUserId);
+
+    @Query("""
+           SELECT COUNT(u.userId) FROM UserEntity u
+           WHERE u.school.schoolId = :schoolId 
+               AND (u.userId = :userId OR u.userId = :reportedUserId)
+           """)
+    long validateByReportBySchoolId(@Param("schoolId") Integer schoolId, 
+                                    @Param("userId") Integer userId, 
+                                    @Param("reportedUserId") Integer reportedUserId);
 }

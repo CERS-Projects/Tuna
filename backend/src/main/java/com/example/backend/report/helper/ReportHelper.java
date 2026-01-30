@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
@@ -27,6 +28,16 @@ public class ReportHelper {
     public ReportEntity setEntityFromDto(ReportInsertRequest dto){
         ReportEntity reportEntity = new ReportEntity();
         OffsetDateTime dateTimeNow = OffsetDateTime.now(ZoneOffset.UTC);
+        
+        /* 通報を作成しようとしたユーザが
+        　・そのアカウントの存在する学校で
+        　・通報対象とその通報者が存在するのか
+        　上記３つの条件を満たしているどうかを検証 */
+        long count = userRepository.validateByReportBySchoolId(dto.getSchoolId(), dto.getReportBy(), dto.getReportedUser());
+        if(count < 2){
+            throw new IllegalArgumentException("そのユーザは存在しないか、報告ができません。");
+        }
+        
         reportEntity.setSchoolId(dto.getSchoolId());
         reportEntity.setReportDate(Date.from(dateTimeNow.toInstant()));
         reportEntity.setReportBy(dto.getReportBy());
@@ -35,21 +46,27 @@ public class ReportHelper {
         if(ObjectId.isValid(dto.getReportedPostId()) == false) {
             throw new IllegalArgumentException("不正な投稿IDです。");
         }
-        ObjectId castedString = new ObjectId(dto.getReportedPostId());
-        reportEntity.setReportedPostId(castedString);
+        ObjectId reportedPostObjectId= new ObjectId(dto.getReportedPostId());
+        reportEntity.setReportedPostId(reportedPostObjectId);
         reportEntity.setDetail(dto.getDetail());
         return reportEntity;
     }
 
     public List<ReportListResponse> convertEntitiesToResponses(List<ReportEntity> reportEntities) {
+
+        if(reportEntities.isEmpty()) {
+            throw new IllegalArgumentException("報告が存在しません。");
+        }
+
         return reportEntities.stream().map(entity -> {
             ReportListResponse response = new ReportListResponse();
-            response.setReportId(entity.getReportId().toHexString()); // JSON形式で返すときにそのオブジェクトが作られた時間とマシンコードで帰ってしまうため、文字列に変換
-            response.setReportedName(userRepository.findNameByUserId(entity.getReportedUser()));
-            if(reportEntities == null || existsByUserId(entity.getReportedUser()) == false) {
+            Object[] object = userRepository.findNameShowUserIdByUserId(entity.getReportedUser());
+            response.setReportId(entity.getReportId().toHexString()); // JSON形式で返すときにそのオブジェクトが作られた時間とマシンコードで返ってしまうため、文字列に変換
+            response.setReportedName((String)object[0]);
+            if(existsByUserId(entity.getReportedUser()) == false) {
                 throw new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。");
             } 
-            response.setReportedShowUserId(userRepository.findShowUserIdByUserId(entity.getReportedUser()));
+            response.setReportedShowUserId((String)object[1]);
             response.setReasonId(entity.getReasonId());
             response.setReportDate(entity.getReportDate());
             response.setReportedPost(postRepository.findContentByPostId(entity.getReportedPostId()));
@@ -58,7 +75,12 @@ public class ReportHelper {
         }).toList();
     }
 
-    public Boolean existsByUserId(Integer userId) {
-        return userRepository.existsById(userId);
+    public boolean existsByUserId(Integer userId) {
+        Boolean exists = userRepository.existsById(userId);
+        return Boolean.TRUE.equals(exists);
+    }
+
+    private long validateByReportBySchoolId(Integer schoolId, Integer userId, Integer reportedUserId){
+        return userRepository.validateByReportBySchoolId(schoolId, userId, reportedUserId);
     }
 }
