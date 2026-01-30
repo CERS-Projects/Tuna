@@ -42,7 +42,7 @@ export const AccountSearch = ({ onSubmit, role }: Props) => {
             <option value={-2}>（選択無し）</option>
             <option value={-1}>生徒</option>
             <option value={0}>教師</option>
-            {role === "ADMINTEACHER" && <option value={1}>学校管理者</option>}
+            {role === "ADMIN_SCHOOL" && <option value={1}>学校管理者</option>}
           </select>
         </div>
 

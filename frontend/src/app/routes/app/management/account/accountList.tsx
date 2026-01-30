@@ -7,7 +7,7 @@ import { type AccountSearchType } from "@/features/management/types/account";
 import { type Role } from "@/types/user";
 import styles from "@/features/management/style/accountList.module.css";
 
-const ROLE: Role = "ADMINTEACHER";
+const ROLE: Role = "ADMIN_SCHOOL";
 
 const AccountList = () => {
   const methods = useForm<AccountSearchType>({

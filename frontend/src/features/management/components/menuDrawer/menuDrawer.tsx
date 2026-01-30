@@ -49,7 +49,7 @@ const MENU_ITEMS = [
 ];
 
 export const MenuDrawer = ({ isOpen, onClose }: Props) => {
-  const role = "ADMIN";
+  const role = "ADMIN_SCHOOL";
 
   const handleLinkClick = () => {
     if (window.innerWidth <= 768) {
@@ -98,7 +98,7 @@ export const MenuDrawer = ({ isOpen, onClose }: Props) => {
               </NavLink>
             ))}
 
-            {role === "ADMIN" && (
+            {role === "ADMIN_SCHOOL" && (
               <NavLink
                 to={paths.app.management.schoolInfo.path}
                 className={({ isActive }) =>
