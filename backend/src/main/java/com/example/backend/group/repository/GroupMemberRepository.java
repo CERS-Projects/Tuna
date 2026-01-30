@@ -30,4 +30,11 @@ public interface GroupMemberRepository extends JpaRepository<GroupMemberEntity, 
                 AND mem.userId = :userId
             """)
     Long countDistinctByGroupIdIn(@Param("groupIds") List<Integer> groupIds, @Param("userId") Integer userId);
+
+    @Query("""
+            SELECT mem.groupId 
+            FROM GroupMemberEntity mem
+            WHERE mem.userId = :userId
+            """)
+    List<Integer> findJoinedGroupIdsByUserId(@Param("userId") Integer userId);
 }
