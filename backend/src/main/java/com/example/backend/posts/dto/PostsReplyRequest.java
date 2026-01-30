@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Min;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Min;
 
 
 @Getter
@@ -20,7 +19,7 @@ public class PostsReplyRequest {
     private int currentUserId;
     
     @NotNull
-    private ObjectId ReplyPostId;
+    private ObjectId replyPostId;
     
     
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
