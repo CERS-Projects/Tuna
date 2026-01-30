@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.posts.model.SearchHistoryEntity;
 import com.example.backend.posts.model.SearchHistoryItem;
 import com.mongodb.client.result.UpdateResult;
-import java.util.Date;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -52,7 +51,7 @@ public class SearchHistoryServiceImpl  implements SearchHistoryService {
         } else {
             // 既存の履歴に追加
             userHistory.getSearchHistory().add(newItem);
-            if (userHistory.getSearchHistory().size() >= MAX_HISTORY_SIZE) {
+            if (userHistory.getSearchHistory().size() > MAX_HISTORY_SIZE) {
                 // 古い履歴を削除
                 userHistory.getSearchHistory().remove(0);
 

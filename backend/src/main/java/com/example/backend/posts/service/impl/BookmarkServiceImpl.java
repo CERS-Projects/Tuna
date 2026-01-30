@@ -8,7 +8,6 @@ import com.example.backend.posts.repository.PostRepository;
 
 import com.example.backend.posts.model.BookmarkEntity;
 import com.example.backend.posts.dto.IsBookmarkRequest;
-import java.util.List;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -16,11 +15,9 @@ import java.util.Date;
 import java.util.List;
 import org.bson.types.ObjectId;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import lombok.RequiredArgsConstructor;
 
 import com.example.backend.posts.dto.PostDetailResponse;
-import com.example.backend.posts.model.BookmarkEntity;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -8,7 +8,6 @@ import com.example.backend.posts.dto.ProfilePostsRequest;
 import com.example.backend.posts.dto.TimelinePostsRequest;
 import com.example.backend.posts.dto.SearchPostsRequest;
 import com.example.backend.posts.dto.PostInsertRequest;
-import org.springframework.stereotype.Service;
 
 public interface PostService {
 

@@ -1,6 +1,7 @@
 package com.example.backend.posts.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.backend.posts.repository.LikeRepository;
 import com.example.backend.posts.dto.IsLikeRequest;
@@ -13,7 +14,6 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import com.example.backend.posts.dto.PostDetailResponse;
-import jakarta.transaction.Transactional;
 import com.example.backend.posts.model.LikeEntity;
 import com.example.backend.posts.service.LikeService;
 import lombok.extern.slf4j.Slf4j;

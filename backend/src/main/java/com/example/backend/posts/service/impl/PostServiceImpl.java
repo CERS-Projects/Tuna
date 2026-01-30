@@ -16,15 +16,12 @@ import com.example.backend.posts.repository.PostRepository;
 import com.example.backend.posts.repository.LikeRepository;
 import com.example.backend.posts.repository.BookmarkRepository;
 import com.example.backend.utils.accountConfirm.AccountConfirm;
-import com.example.backend.posts.model.PostEntity;
 
 import com.example.backend.posts.service.PostService;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
-import java.io.File;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -33,6 +30,7 @@ import java.util.List;
 import java.util.ArrayList;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Log4j2
@@ -228,7 +226,7 @@ public class PostServiceImpl implements PostService {
     }
 
     // 投稿削除
-    @Transactional
+    @Override
     public void deletePost(String postId, Integer userId) {
 
         // 1) 入力チェック
