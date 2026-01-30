@@ -4,23 +4,24 @@ import { FaSignOutAlt } from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { IoFilterOutline } from "react-icons/io5";
 import styles from "@/features/profile/styles/settingMenu.module.css";
+import { paths } from "@/config/paths";
 
 const MenuItems: MenuItemType[] = [
   {
     menuName: "パスワード更新",
-    menuPath: "/app/profile/edit/editPassword",
+    menuPath: paths.app.profile.edit.editPassword.getHref(),
     menuIcon: <RiLockPasswordFill />,
     menuLabel: "パスワードの変更を行います",
   },
   {
     menuName: "フィルタリング設定",
-    menuPath: "/app/profile/edit/editFilter",
+    menuPath: paths.app.profile.edit.editFilter.getHref(),
     menuIcon: <IoFilterOutline />,
     menuLabel: "フィルタリングの設定を行います",
   },
   {
     menuName: "ログアウト",
-    menuPath: "/",
+    menuPath: paths.welcome.path,
     menuIcon: <FaSignOutAlt />,
     menuLabel: "ログアウトします",
   },
