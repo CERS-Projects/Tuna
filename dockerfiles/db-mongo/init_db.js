@@ -14,7 +14,7 @@ try {
 					"user_id",
 					"post_date",
 					"sentence",
-					"like_Count",
+					"like_count",
 					"share_range",
 					"post_flag",
 				],
@@ -39,12 +39,12 @@ try {
 						bsonType: "array",
 						description: "投稿に添付する画像がある場合記録",
 					},
-					like_Count: {
+					like_count: {
 						bsonType: "int",
 						minimum: 0,
 						description: "投稿についているいいねの総数",
 					},
-					response_Count: {
+					response_count: {
 						bsonType: "int",
 						minimum: 0,
 						description: "投稿に対する返信の総数",
@@ -63,8 +63,7 @@ try {
 					},
 					post_flag: {
 						bsonType: "bool",
-						description:
-							"論理削除されているかの状態管理 true=未論理削除, false=論理削除済",
+						description: "投稿の有効状態の管理 true=有効, false=論理削除済",
 					},
 				},
 			},
