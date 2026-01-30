@@ -14,7 +14,7 @@ public class GroupJoinByUserId {
 
     private final GroupMemberRepository groupMemberRepository;
 
-    List<Integer> getJoinedGroupIdsByUserId(Integer userId) {
+    public List<Integer> getJoinedGroupIdsByUserId(Integer userId) {
         return groupMemberRepository.findJoinedGroupIdsByUserId(userId);
     }
     
