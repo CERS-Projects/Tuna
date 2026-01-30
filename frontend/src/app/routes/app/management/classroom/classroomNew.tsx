@@ -24,10 +24,10 @@ const ClassroomNew = () => {
     name: "categories",
   });
 
-  const onSubmit = (data: ClassroomCreateInput) => {
+  const onSubmit = (formData: ClassroomCreateInput) => {
     if (confirm("この内容で授業ルームを作成しますか？")) {
       // API処理
-      console.log(data);
+      console.log(formData);
       navigate(paths.app.management.classroom.list.path);
     }
   };

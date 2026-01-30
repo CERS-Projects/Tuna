@@ -1,0 +1,44 @@
+.form {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.categoryArea {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.sectionName {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: rgb(50, 85, 150);
+}
+
+.addCategoryButton {
+  width: 100%;
+  color: rgb(50, 85, 150);
+  border: 1.5px dashed rgb(50, 85, 150);
+  background: #fff;
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.15s;
+}
+
+.addCategoryButton:hover {
+  background: #f1f5f9;
+}
