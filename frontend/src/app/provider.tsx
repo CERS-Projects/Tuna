@@ -4,6 +4,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import * as React from "react";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import { MainErrorFallback } from "@/components/error/main";
+import { AuthProvider } from "@/features/auth/context/authProvider";
 import { queryConfig } from "@/lib/react-query";
 import styles from "@/styles/center.module.css";
 
@@ -16,7 +17,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
     () =>
       new QueryClient({
         defaultOptions: queryConfig,
-      })
+      }),
   );
 
   return (
@@ -30,7 +31,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
       <ErrorBoundary FallbackComponent={MainErrorFallback}>
         <QueryClientProvider client={queryClient}>
           {import.meta.env.DEV && <ReactQueryDevtools />}
-          {children}
+          <AuthProvider>{children}</AuthProvider>
         </QueryClientProvider>
       </ErrorBoundary>
     </React.Suspense>
