@@ -111,6 +111,18 @@ const createAppRouter = (queryClient: QueryClient) => {
           () => import("./routes/app/profile/follower"),
         ),
         route(
+          paths.app.classroom.path,
+          () => import("./routes/app/searchClassroom"),
+        ),
+        route(
+          paths.app.profile.follow.path,
+          () => import("./routes/app/profile/follow"),
+        ),
+        route(
+          paths.app.profile.follower.path,
+          () => import("./routes/app/profile/follower"),
+        ),
+        route(
           paths.app.classroom.contents.path,
           () => import("./routes/app/classroom/material"),
         ),
@@ -139,6 +151,10 @@ const createAppRouter = (queryClient: QueryClient) => {
             ),
           ],
         },
+        route(
+          paths.app.profile.settingMenu.path,
+          () => import("./routes/app/profile/setting/settingMenu"),
+        ),
       ],
     },
 
