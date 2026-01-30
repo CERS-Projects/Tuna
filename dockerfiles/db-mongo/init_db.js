@@ -31,7 +31,7 @@ try {
 					},
 					sentence: {
 						bsonType: "string",
-						minLength: 3,
+						minLength: 1,
 						maxLength: 255,
 						description: "投稿の本文",
 					},
@@ -146,7 +146,7 @@ try {
 								query: {
 									bsonType: "string",
 									minLength: 1,
-									maxLength: 100,
+									maxLength: 20,
 									description: "検索クエリを格納",
 								},
 								searched_at: {
