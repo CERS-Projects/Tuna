@@ -19,6 +19,7 @@ import {
   ErrorBoundary as ManagementErrorBoundary,
 } from "./routes/app/management/root";
 import ProtectedRoute from "@/features/auth/components/protectedRoute";
+import TeacherProtectedRoute from "@/features/auth/components/teacherProtectedRoute";
 import { AuthWrapper } from "@/features/auth/context/authWrapper";
 
 const convert = (queryClient: QueryClient) => (m: any) => {
@@ -82,7 +83,9 @@ const createAppRouter = (queryClient: QueryClient) => {
     {
       element: <AuthWrapper />,
       children: [
-        route(paths.auth.login.path, () => import("./routes/auth/login")), // アプリ内ルート (ログイン必要)
+        route(paths.auth.login.path, () => import("./routes/auth/login")),
+
+        // アプリ内ルート (ログイン必要)
         {
           path: paths.app.root.path,
           element: <ProtectedRoute />,
@@ -169,7 +172,7 @@ const createAppRouter = (queryClient: QueryClient) => {
         // アプリ内教師ルート (ログイン必要)
         {
           path: paths.app.management.root.path,
-          element: <ProtectedRoute />,
+          element: <TeacherProtectedRoute />,
           children: [
             {
               element: <ManagementRoot />,
