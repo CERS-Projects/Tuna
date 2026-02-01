@@ -3,23 +3,20 @@ package com.example.backend.posts.service;
 import java.util.List;
 
 import com.example.backend.posts.dto.PostDetailResponse;
-import com.example.backend.posts.dto.PostsReplyRequest;
-import com.example.backend.posts.dto.ProfilePostsRequest;
-import com.example.backend.posts.dto.TimelinePostsRequest;
-import com.example.backend.posts.dto.SearchPostsRequest;
 import com.example.backend.posts.dto.PostInsertRequest;
+
 
 public interface PostService {
 
     void insertPost(PostInsertRequest post);
 
-    List<PostDetailResponse> getTimelinePosts(TimelinePostsRequest requestDto);
+    List<PostDetailResponse> getTimelinePosts(Integer shareRange, Integer currentUserId);
 
-    List<PostDetailResponse> getUserPosts(ProfilePostsRequest requestDto);
+    List<PostDetailResponse> getUserPosts(Integer targetUserId, Integer currentUserId);
 
-    List<PostDetailResponse> getReplyPosts(PostsReplyRequest requestDto);
-
-    List<PostDetailResponse> getPostsByKeyword(SearchPostsRequest requestDto);
+    List<PostDetailResponse> getReplyPosts(String replypostId, Integer currentUserId);
+    
+    List<PostDetailResponse> getPostsByKeyword(String keyword, Integer currentUserId, List<Integer> shareRange);
 
     void deletePost(String postId, Integer userId); 
 

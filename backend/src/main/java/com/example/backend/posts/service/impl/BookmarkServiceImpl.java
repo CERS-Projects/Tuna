@@ -7,7 +7,6 @@ import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import com.example.backend.posts.repository.PostRepository;
 
 import com.example.backend.posts.model.BookmarkEntity;
-import com.example.backend.posts.dto.IsBookmarkRequest;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -41,11 +40,12 @@ public class BookmarkServiceImpl implements BookmarkService {
         return bookmarkRepository.existsByUserIdAndPostId(userId, postId);
     }
 
+    //ブックマークの追加
     @Override
-    public void addBookmark(IsBookmarkRequest requestDto) {
+    public void addBookmark(ObjectId postId, Integer userId) {
         BookmarkEntity bookmark = new BookmarkEntity();
-        bookmark.setUserId(requestDto.getUserId());
-        bookmark.setPostId(requestDto.getPostId());
+        bookmark.setUserId(userId);
+        bookmark.setPostId(postId);
         bookmark.setBookmarkedAt(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
 
         if (!existsPost(bookmark.getPostId())) {
@@ -67,17 +67,17 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public void removeBookmark(IsBookmarkRequest requestDto) {
+    public void removeBookmark(ObjectId postId, Integer userId) {
 
-        if (!isBookmarked(requestDto.getUserId(), requestDto.getPostId())) {
-            log.info("ブックマークが存在しません userId: {} and postId: {}", requestDto.getUserId(), requestDto.getPostId());
+        if (!isBookmarked(userId, postId)) {
+            log.info("ブックマークが存在しません userId: {} and postId: {}", userId, postId);
             throw new IllegalStateException("ブックマークが存在しません");
         }
         try{
-        bookmarkRepository.deleteByUserIdAndPostId(requestDto.getUserId(), requestDto.getPostId());
-        log.info("ブックマークが正常に削除されました userId: {} and postId: {}", requestDto.getUserId(), requestDto.getPostId());
+        bookmarkRepository.deleteByUserIdAndPostId(userId, postId);
+        log.info("ブックマークが正常に削除されました userId: {} and postId: {}", userId, postId);
         } catch(Exception e){
-            log.error("ブックマークの削除に失敗しました userId: {} and postId: {} エラー: {}" , requestDto.getUserId(), requestDto.getPostId(), e);
+            log.error("ブックマークの削除に失敗しました userId: {} and postId: {} エラー: {}" , userId, postId, e);
             throw new RuntimeException("ブックマークの削除に失敗しました");
         }
     }

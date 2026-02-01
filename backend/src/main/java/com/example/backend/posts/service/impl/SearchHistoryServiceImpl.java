@@ -3,27 +3,23 @@ package com.example.backend.posts.service.impl;
 import org.springframework.stereotype.Service;
 import com.example.backend.posts.service.SearchHistoryService;
 
-
 import com.example.backend.posts.repository.SearchHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.posts.model.SearchHistoryEntity;
 import com.example.backend.posts.model.SearchHistoryItem;
-import com.mongodb.client.result.UpdateResult;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.bson.types.ObjectId;
 import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class SearchHistoryServiceImpl  implements SearchHistoryService {
-
+public class SearchHistoryServiceImpl implements SearchHistoryService {
     private final SearchHistoryRepository historyRepository;
 
     private final int MAX_HISTORY_SIZE = 20;

@@ -1,7 +1,6 @@
 package com.example.backend.posts.repository;
 
 
-
 import com.example.backend.posts.dto.PostDetailResponse;
 import com.example.backend.posts.model.PostEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;

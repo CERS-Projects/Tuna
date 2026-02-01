@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 import com.example.backend.posts.model.LikeEntity;
-import com.example.backend.posts.model.PostEntity;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
 
@@ -14,10 +13,10 @@ import org.springframework.data.mongodb.repository.Aggregation;
 public interface LikeRepository extends MongoRepository<LikeEntity, String> {
         
         // ユーザーIDと投稿IDでいいねの存在を確認
-        boolean existsByPostIdAndUserId(ObjectId post, Integer userId);
+        boolean existsByPostIdAndUserId(ObjectId postId, Integer userId);
 
         // ユーザーIDと投稿IDでいいねを削除
-        void deleteByPostIdAndUserId(ObjectId post, Integer userId);
+        void deleteByPostIdAndUserId(ObjectId postId, Integer userId);
 
         // 投稿idでいいねを削除
         void deleteByPostId(ObjectId postId);

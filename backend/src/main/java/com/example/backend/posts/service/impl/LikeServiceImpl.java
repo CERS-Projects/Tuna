@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.backend.posts.repository.LikeRepository;
-import com.example.backend.posts.dto.IsLikeRequest;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import com.example.backend.posts.repository.PostCounterRepository;
 import com.example.backend.posts.repository.PostRepository;
@@ -48,49 +47,52 @@ public class LikeServiceImpl implements LikeService {
 
     //いいね追加
     @Override
-    public void addLikes(IsLikeRequest requestDto) {
+    public void addLikes(ObjectId postId, Integer userId) {
         LikeEntity like = new LikeEntity();
-        like.setUserId(requestDto.getUserId());
-        like.setPostId(requestDto.getPostId());
+        like.setUserId(userId);
+        like.setPostId(postId);
         like.setLikedAt(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()));
 
-        if (!existsPost(like.getPostId())) {
-            log.info("投稿が存在しません userId: {} and postId: {}", like.getUserId(), like.getPostId());
+        if (!existsPost(postId)) {
+            log.info("投稿が存在しません userId: {} and postId: {}", userId, postId);
             throw new IllegalStateException("投稿が存在しません");
         }
 
-        if (isLiked(like.getPostId(), like.getUserId())) {
-            log.info("すでにいいねされています userId: {} and postId: {}", like.getUserId(), like.getPostId());
+        if (isLiked(postId, userId)) {
+            log.info("すでにいいねされています userId: {} and postId: {}", userId, postId);
             throw new IllegalStateException("すでにいいねされています");
 
         }
         try{
             likeRepository.save(like);
-            postCounterRepository.incrementLikeCount(like.getPostId());
-            log.info("いいねが正常に追加されました userId: {} and postId: {}", like.getUserId(), like.getPostId());
+            postCounterRepository.incrementLikeCount(postId);
+            log.info("いいねが正常に追加されました userId: {} and postId: {}", userId, postId);
 
         } catch(Exception e){
-            log.error("いいねの追加に失敗しました userId: {} and postId: {} エラー: {}" , like.getUserId(), like.getPostId(), e);
+            log.error("いいねの追加に失敗しました userId: {} and postId: {} エラー: {}" , userId, postId, e);
             throw new RuntimeException("いいねの追加に失敗しました");
         }
     }
+    
     //いいね削除
     @Override
-    public void removeLikes(IsLikeRequest requestDto) {
+    public void removeLikes(ObjectId postId, Integer userId) {
 
-        if (!isLiked(requestDto.getPostId(), requestDto.getUserId())) {
-            log.info("いいねが存在しません userId: {} and postId: {}", requestDto.getUserId(), requestDto.getPostId());
+        if (!isLiked(postId, userId)) {
+            log.info("いいねが存在しません userId: {} and postId: {}", userId, postId);
             throw new IllegalStateException("いいねが存在しません");
         }
         try{
-            likeRepository.deleteByPostIdAndUserId(requestDto.getPostId(), requestDto.getUserId());
-            postCounterRepository.decrementLikeCount(requestDto.getPostId());
-            log.info("いいねが正常に削除されました userId: {} and postId: {}", requestDto.getUserId(), requestDto.getPostId());
+            likeRepository.deleteByPostIdAndUserId(postId, userId);
+            postCounterRepository.decrementLikeCount(postId);
+            log.info("いいねが正常に削除されました userId: {} and postId: {}", userId, postId);
         } catch(Exception e){
-            log.error("いいねの削除に失敗しました userId: {} and postId: {} エラー: {}" , requestDto.getUserId(), requestDto.getPostId(), e);
+            log.error("いいねの削除に失敗しました userId: {} and postId: {} エラー: {}" , userId, postId, e);
             throw new RuntimeException("いいねの削除に失敗しました");
         }
     }
+    
+    //いいね取得
     @Override
     public List<PostDetailResponse> getLikedPosts(Integer userId) {
         List<PostDetailResponse> postDetails = null;
