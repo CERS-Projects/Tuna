@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.UserRepository;
+import com.example.backend.exception.AuthException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -52,11 +53,11 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
             return;
         } else {
             missCount = Integer.valueOf(stringRedisTemplate.opsForValue().get(missCountKey));
-            if(missCount == null) {
+            if (missCount == null) {
                 throw new IllegalStateException("サーバー内部でエラーが発生しました");
             }
             missCount++;
-            stringRedisTemplate.opsForValue().set(missCountKey, Objects.requireNonNull(missCount.toString()), 2,
+            stringRedisTemplate.opsForValue().set(missCountKey, Objects.requireNonNull(missCount.toString()), 10,
                     TimeUnit.MINUTES);
         }
 
@@ -68,6 +69,29 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
             throw new AccessDeniedException("一定回数パスワードを間違えたため、アカウントをロックしています。10分後お試しください");
         }
 
+    }
+
+    @Override
+    public void otpFailed(Integer userId) {
+        String missOtpKey = userId + "_MissOtp";
+        Integer missCount;
+        if (stringRedisTemplate.hasKey(missOtpKey) == false) {
+            stringRedisTemplate.opsForValue().set(missOtpKey, "1");
+            return;
+        } else {
+            missCount = Integer.valueOf(stringRedisTemplate.opsForValue().get(missOtpKey));
+            if (missCount == null) {
+                throw new IllegalStateException("サーバー内部でエラーが発生しました");
+            }
+            missCount++;
+            stringRedisTemplate.opsForValue().set(missOtpKey, String.valueOf(missCount));
+        }
+
+        if (missCount == 3) {
+            stringRedisTemplate.delete(userId + "_Otp");
+            stringRedisTemplate.delete(missOtpKey);
+            throw new AuthException("ワンタイムパスワードの試行回数に達成したため、ログインをしなおしてください");
+        }
     }
 
 }
