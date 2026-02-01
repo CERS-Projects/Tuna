@@ -8,6 +8,7 @@ export const useLogout = () => {
         url: "/logout",
         options: {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,

@@ -9,6 +9,7 @@ export const useLogin = () => {
         url: "/login",
         options: {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(info),
         },
