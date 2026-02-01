@@ -9,6 +9,8 @@ import { FaComments, FaBell, FaSchool } from "react-icons/fa6";
 import { NavLink } from "react-router";
 import { paths } from "@/config/paths";
 import { useEffect } from "react";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { decodeUserParams } from "@/features/auth/utils/jwt";
 
 type Props = {
   isOpen: boolean;
@@ -49,7 +51,9 @@ const MENU_ITEMS = [
 ];
 
 export const MenuDrawer = ({ isOpen, onClose }: Props) => {
-  const role = "ADMIN_SCHOOL";
+  const { authToken } = useAuth();
+  const userInfo = decodeUserParams(authToken);
+  const role = userInfo?.role ?? "STUDENT";
 
   const handleLinkClick = () => {
     if (window.innerWidth <= 768) {
