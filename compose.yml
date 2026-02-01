@@ -29,11 +29,20 @@ services:
       - ./backend:/app
       - ./backend/.gradle:/root/.gradle
       - ./backend/logs:/app/logs
+
     environment:
       - SPRING_DEVTOOLS_REMOTE_SECRET=secret
       - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
+
+      - SPRING_MAIL_HOST=smtp.gmail.com
+      - SPRING_MAIL_PORT=587
+      - SPRING_MAIL_USERNAME=tuna.official.2025@gmail.com
+      - SPRING_MAIL_PASSWORD=${MAIL_APP_PASSWORD}
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED=true
     depends_on:
       mysql:
         condition: service_healthy
