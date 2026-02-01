@@ -7,15 +7,10 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HexFormat;
 import java.util.List;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,20 +18,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import org.springframework.stereotype.Service;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.accounts.model.TeacherEntity;
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.TeacherRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.auth.dto.LoginSelectRequest;
-import com.example.backend.auth.dto.LoginTokenResponse;
-import com.example.backend.auth.model.LoginUserDetails;
-import com.example.backend.auth.model.RefreshTokenEntity;
 
 import com.example.backend.auth.repository.RefreshTokenRepository;
 import com.example.backend.exception.AuthException;
-import com.example.backend.school.model.SchoolEntity;
-import com.example.backend.utils.jwt.JwtUtils;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -52,14 +41,16 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
-    private final JwtUtils jwtUtils;
     private final LoginAttemptService loginAttemptService;
     private final StringRedisTemplate stringRedisTemplate;
+    private final OtpService otpService;
+    private final MailService mailService;
 
     @Override
-    public LoginTokenResponse login(LoginSelectRequest loginSelectRequest) {
+    public Integer login(LoginSelectRequest loginSelectRequest) {
         String lockUserKey = loginSelectRequest.getShowUserId() + "LockUser";
-        String hashJwtRefreshToken;
+        String missCountUserKey = loginSelectRequest.getShowUserId() + "MissCount";
+
         if (loginSelectRequest.getShowUserId() == null || loginSelectRequest.getPassword() == null) {
             throw new IllegalArgumentException("ログインIDまたはパスワード、両方がnullです");
         }
@@ -80,10 +71,9 @@ public class AuthServiceImpl implements AuthService {
             // 検証後成功して権限も付与したやつを格納
             Authentication authentication = authenticationManager.authenticate(token);
 
-            LoginUserDetails loginUserDetails = (LoginUserDetails) authentication.getPrincipal();
-
-            // JWTトークンに付与する権限を取得
-            String role = loginUserDetails.getAuthorities().iterator().next().getAuthority();
+            if (stringRedisTemplate.hasKey(missCountUserKey)) {
+                stringRedisTemplate.delete(missCountUserKey);
+            }
 
             // springに知らせるためのを作成
             SecurityContext context = SecurityContextHolder.getContext();
@@ -95,83 +85,16 @@ public class AuthServiceImpl implements AuthService {
             UserEntity userEntity = userRepository.findByShowUserId(authentication.getName())
                     .orElseThrow(() -> new AuthException("ユーザーIDまたはパスワードが異なります"));
 
-            SchoolEntity schoolEntity = userEntity.getSchool();
+            // ワンタイムパスワード生成
+            String otpPassword = otpService.createOtp(userEntity.getUserId());
 
-            String jwtAccessToken = jwtUtils.createToken((userEntity.getUserId()).toString(), role,
-                    schoolEntity.getSchoolId());
-            // リフレッシュトークンに入れる識別子をshowUserIdからgetUserIdに変更
-            String jwtRefreshToken = jwtUtils.createRefreshToken(userEntity.getUserId().toString());
-            try {
-                MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-                byte[] hash = sha256.digest(jwtRefreshToken.getBytes(StandardCharsets.UTF_8));
-                hashJwtRefreshToken = HexFormat.of().formatHex(hash);
-            } catch (NoSuchAlgorithmException e) {
-                throw new IllegalStateException("SHA-256 not supported", e);
-            }
+            // ワンタイムパスワードを送信
+            mailService.sendMail(userEntity, otpPassword);
 
-            refreshTokenRepository
-                    .save(new RefreshTokenEntity(userEntity.getUserId(), hashJwtRefreshToken));
-            // リフレッシュトークンをcookieに入れる
-            ResponseCookie responseCookie = ResponseCookie.from("refreshToken", jwtRefreshToken)
-                    .httpOnly(true)
-                    .sameSite("Strict")
-                    .maxAge(7 * 24 * 60 * 60)
-                    .build();
-
-            return new LoginTokenResponse(jwtAccessToken, responseCookie);
+            return userEntity.getUserId();
         } catch (BadCredentialsException e) {
             loginAttemptService.loginFailed(loginSelectRequest.getShowUserId());
             throw new AuthException("ログインIDまたはパスワードが異なります");
-        }
-    }
-
-    @Override
-    public LoginTokenResponse refreshTokenCheck(String refreshToken) {
-        String hashJwtRefreshToken;
-        try {
-            DecodedJWT decodeRefreshToken = jwtUtils.confirmRefreshToken(refreshToken);
-            String userId = decodeRefreshToken.getSubject();
-            Integer userIdInteger;
-
-            try {
-                userIdInteger = Integer.parseInt(userId);
-            } catch (NumberFormatException e) {
-                throw new IllegalStateException("サーバー内部でエラーが発生しました");
-            }
-
-            RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findById(userIdInteger)
-                    .orElseThrow(() -> new AuthException("ログインしなおしてください"));
-
-            MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-            byte[] hash = sha256.digest(refreshToken.getBytes(StandardCharsets.UTF_8));
-            hashJwtRefreshToken = HexFormat.of().formatHex(hash);
-            if (hashJwtRefreshToken.equals(refreshTokenEntity.getRefreshToken())) {
-                UserEntity userEntity = userRepository.findById(userIdInteger)
-                        .orElseThrow(() -> new UsernameNotFoundException("ログインしなおしてください"));
-
-                SchoolEntity schoolEntity = userEntity.getSchool();
-
-                List<GrantedAuthority> authorities = giveAuthority(userEntity);
-                String role = authorities.get(0).getAuthority();
-                String jwtAccessToken = jwtUtils.createToken(userId, role, schoolEntity.getSchoolId());
-                String jwtRefreshToken = jwtUtils.createRefreshToken(userId);
-                hash = sha256.digest(jwtRefreshToken.getBytes(StandardCharsets.UTF_8));
-                String newHashJwtRefreshToken = HexFormat.of().formatHex(hash);
-                refreshTokenRepository
-                        .save(new RefreshTokenEntity(userIdInteger, newHashJwtRefreshToken));
-                ResponseCookie responseCookie = ResponseCookie.from("refreshToken", jwtRefreshToken)
-                        .httpOnly(true)
-                        .sameSite("Strict")
-                        .maxAge(7 * 24 * 60 * 60)
-                        .path("/api/refresh")
-                        .build();
-                return new LoginTokenResponse(jwtAccessToken, responseCookie);
-            } else {
-                throw new AuthException("ログインしなおしてください");
-            }
-
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("SHA-256 not supported", e);
         }
     }
 
