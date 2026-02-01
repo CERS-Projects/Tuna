@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
@@ -24,6 +23,8 @@ public class ReportHelper {
     private final UserRepository userRepository;
 
     private final PostRepository postRepository;
+
+    public record ReportedUserNameAndShowUserId(String name, String showUserId){} 
 
     public ReportEntity setEntityFromDto(ReportInsertRequest dto){
         ReportEntity reportEntity = new ReportEntity();
@@ -60,13 +61,16 @@ public class ReportHelper {
 
         return reportEntities.stream().map(entity -> {
             ReportListResponse response = new ReportListResponse();
-            Object[] object = userRepository.findNameShowUserIdByUserId(entity.getReportedUser());
-            response.setReportId(entity.getReportId().toHexString()); // JSON形式で返すときにそのオブジェクトが作られた時間とマシンコードで返ってしまうため、文字列に変換
-            response.setReportedName((String)object[0]);
+            ReportedUserNameAndShowUserId object = userRepository.findUserInfo(entity.getReportedUser())
+                .orElseThrow(() -> new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。"));
+
             if(existsByUserId(entity.getReportedUser()) == false) {
                 throw new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。");
-            } 
-            response.setReportedShowUserId((String)object[1]);
+            }
+
+            response.setReportedName(object.name());
+            response.setReportId(entity.getReportId().toHexString()); // JSON形式で返すときにそのオブジェクトが作られた時間とマシンコードで返ってしまうため、文字列に変換
+            response.setReportedShowUserId(object.showUserId());
             response.setReasonId(entity.getReasonId());
             response.setReportDate(entity.getReportDate());
             response.setReportedPost(postRepository.findContentByPostId(entity.getReportedPostId()));
@@ -78,9 +82,5 @@ public class ReportHelper {
     public boolean existsByUserId(Integer userId) {
         Boolean exists = userRepository.existsById(userId);
         return Boolean.TRUE.equals(exists);
-    }
-
-    private long validateByReportBySchoolId(Integer schoolId, Integer userId, Integer reportedUserId){
-        return userRepository.validateByReportBySchoolId(schoolId, userId, reportedUserId);
     }
 }

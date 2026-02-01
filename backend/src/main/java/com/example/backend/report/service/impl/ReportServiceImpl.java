@@ -28,12 +28,15 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional
     public void createReport(ReportInsertRequest dto) {
+        if(dto.getReportedUser().equals(dto.getReportBy())) {
+            throw new IllegalArgumentException("自分自身を報告することはできません。");
+        }
         ReportEntity reportEntity = reportHelper.setEntityFromDto(dto);
         reportRepository.save(reportEntity);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ReportListResponse> getReportList(ReportListRequest dto) {
         List<ReportEntity> reportEntities = reportRepository.findAllBySchoolId(dto.getSchoolId());
         return reportHelper.convertEntitiesToResponses(reportEntities);
@@ -45,9 +48,11 @@ public class ReportServiceImpl implements ReportService {
         if(ObjectId.isValid(dto.getReportId()) == false) {
             throw new IllegalArgumentException("不正なリクエストです。");
         }
-        if(reportRepository.existsById(new ObjectId(dto.getReportId())) == false){
+        ObjectId reportId = new ObjectId(dto.getReportId());
+
+        if(reportRepository.existsById(reportId) == false){
             throw new IllegalArgumentException("その報告は存在しません。");
         }
-        reportRepository.deleteById(new ObjectId(dto.getReportId()));
+        reportRepository.deleteById(reportId);
     }
 }

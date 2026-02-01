@@ -35,6 +35,7 @@ public class ReportController {
 
     @PostMapping("/create")
     public ResponseEntity<Void> createReport(@Valid @RequestBody ReportInsertRequest dto){
+        /* 権限チェック追加 */
         reportService.createReport(dto);
         return ResponseEntity.ok().build();
     }
