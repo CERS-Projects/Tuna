@@ -55,6 +55,8 @@ const handleErrors = async (res: void | Response) => {
   }
 };
 
+let sharedRefreshPromise: Promise<string> | null = null;
+
 export const useApiWithRefresh = () => {
   const { setAuthToken } = useAuth();
   const { mutateAsync } = useRefreshToken();
@@ -69,8 +71,20 @@ export const useApiWithRefresh = () => {
         error.statusMessage === "UNAUTHORIZED"
       ) {
         try {
-          const refreshResult = await mutateAsync();
-          setAuthToken(refreshResult.token);
+          if (!sharedRefreshPromise) {
+            console.log("リフレッシュトークン再発行処理を開始します...");
+
+            sharedRefreshPromise = mutateAsync()
+              .then((res) => {
+                setAuthToken(res.token);
+                return res.token;
+              })
+              .finally(() => {
+                sharedRefreshPromise = null;
+              });
+          }
+
+          const newToken = await sharedRefreshPromise;
 
           const newParams: ApiRequestType = {
             url: params.url,
@@ -78,12 +92,13 @@ export const useApiWithRefresh = () => {
               ...(params.options ?? {}),
               headers: {
                 ...(params.options?.headers ?? {}),
-                Authorization: `Bearer ${refreshResult.token}`,
+                Authorization: `Bearer ${newToken}`,
               },
             },
           };
           return await api<T>(newParams);
         } catch {
+          setAuthToken("");
           navigate(paths.auth.login.path);
           throw error;
         }
