@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: Props) => {
     loginMutate(info, {
       onSuccess: (data: LoginResponse) => {
         setAuthToken(data.token);
-        navigate(paths.app.timeline.path);
+        navigate(paths.app.timeline.path, { replace: true });
       },
       onError: (error) => {
         if (error instanceof ApiRequestError) {

@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input/input.tsx";
 import { Link } from "react-router";
 import styles from "@/features/auth/styles/login.module.css";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { type LoginInfo } from "@/features/auth/types/auth"; // パスは環境に合わせて調整してください
+import { type LoginInfo } from "@/features/auth/types/auth";
 
 export const Login = () => {
   const { login, isLoggingIn } = useAuth();
