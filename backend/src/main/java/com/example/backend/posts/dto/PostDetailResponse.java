@@ -6,14 +6,12 @@ import lombok.Setter;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 import java.util.Date;
 
 @Getter
 @Setter
-
 public class PostDetailResponse {
     //postから取得
     @NotNull
@@ -41,11 +39,10 @@ public class PostDetailResponse {
     private Date postDate;
 
     @NotNull
-    @Field("like_Count")
+    @Field("like_count")
     private Integer likeCount;
 
     @NotNull
-    @Field("response_Count")
     private Integer responseCount;
 
     //profileから取得

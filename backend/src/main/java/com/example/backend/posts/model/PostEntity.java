@@ -43,11 +43,11 @@ public class PostEntity {
     @Field("image_objectKey")
     private List<String> imageObjectKey;
     
-    @Field("like_Count")
+    @Field("like_count")
     @NotNull
     private Integer likeCount;
 
-    @Field("response_Count")
+    @Field("response_count")
     @NotNull
     private Integer responseCount;
     
