@@ -6,6 +6,7 @@ import { type ImageData } from "@/features/post/types/post";
 
 const MAX_IMAGES = 4;
 const MAX_LENGTH = 255;
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
   const [step, setStep] = useState<"input" | "confirm">("input");
@@ -65,6 +66,16 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
       const selectedFiles = Array.from(files).filter((f) =>
         f.type.startsWith("image/"),
       );
+
+      const oversizedFiles = selectedFiles.filter(
+        (f) => f.size > MAX_FILE_SIZE,
+      );
+      if (oversizedFiles.length > 0) {
+        setImageError("画像は1枚あたり5MBまでです");
+        setTimeout(() => setImageError(null), 3500);
+        e.target.value = "";
+        return;
+      }
 
       setImages((prev) => {
         if (prev.length + selectedFiles.length > MAX_IMAGES) {
