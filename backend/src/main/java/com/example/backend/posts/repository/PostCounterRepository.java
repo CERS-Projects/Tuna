@@ -18,7 +18,7 @@ public class PostCounterRepository {
     // +1
     public void incrementLikeCount(ObjectId postId) {
         Query query = new Query(Criteria.where("_id").is(postId));
-        Update update = new Update().inc("like_Count", 1);
+        Update update = new Update().inc("like_count", 1);
 
         UpdateResult result = mongoTemplate.updateFirst(query, update, "post_collection");
         if (result.getMatchedCount() == 0) {
@@ -31,15 +31,15 @@ public class PostCounterRepository {
         Query query = new Query(
             new Criteria().andOperator(
                 Criteria.where("_id").is(postId),
-                Criteria.where("like_Count").gt(0)
+                Criteria.where("like_count").gt(0)
             )
         );
-        Update update = new Update().inc("like_Count", -1);
+        Update update = new Update().inc("like_count", -1);
 
         UpdateResult result = mongoTemplate.updateFirst(query, update, "post_collection");
         if (result.getMatchedCount() == 0) {
-            // 投稿が無い or like_Count が0 のどちらか
-            throw new IllegalStateException("対象の投稿が存在しないか、like_Countが0です postId=" + postId);
+            // 投稿が無い or like_count が0 のどちらか
+            throw new IllegalStateException("対象の投稿が存在しないか、like_countが0です postId=" + postId);
         }
     }
 }

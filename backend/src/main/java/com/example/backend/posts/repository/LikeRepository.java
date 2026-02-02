@@ -80,11 +80,11 @@ public interface LikeRepository extends MongoRepository<LikeEntity, String> {
                 "  imageUrl: '$post.image_objectKey', " +
                 "  share_range: '$post.share_range', " +
                 "  post_date: '$post.post_date', " +
-                "  like_Count: '$post.like_Count', " +
+                "  like_count: '$post.like_count', " +
                 "  nickname: '$profile.nickname', " +
                 "  showUserId: '$profile.show_user_id', " +
                 "  icon: '$profile.icon', " +
-                "  responseCount: { $ifNull: ['$post.response_Count', 0] }, " +
+                "  responseCount: '$post.response_count', " +
                 "  isLiked: { $gt: [ { $size: '$likes' }, 0 ] }, " +
                 "  isBookmarked: { $gt: [ { $size: '$bookmarks' }, 0 ] } " +
                 "} }"

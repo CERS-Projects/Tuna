@@ -56,7 +56,7 @@ public interface BookmarkRepository extends MongoRepository<BookmarkEntity, Stri
                 // 5. like join（like_collection に post_id & user_id がある前提）
                 "{ $lookup: { " +
                 "from: 'like_collection', " +
-                "let : { pid: '$post._id', uid: ?0 }, " +
+                "let: { pid: '$post._id', uid: ?0 }, " +
                 "pipeline: [ " +
                 "  { $match: { $expr: { $and: [ " +
                 "    { $eq: ['$post_id', '$$pid'] }, " +
@@ -87,14 +87,14 @@ public interface BookmarkRepository extends MongoRepository<BookmarkEntity, Stri
                 "  imageUrl: '$post.image_objectKey', " +
                 "  share_range: '$post.share_range', " +
                 "  post_date: '$post.post_date', " +
-                "  like_Count: '$post.like_Count', " +
+                "  like_count: '$post.like_count', " +
                 "  nickname: '$profile.nickname', " +
                 "  showUserId: '$profile.show_user_id', " +
                 "  icon: '$profile.icon', " +
-                "  responseCount: { $ifNull: ['$post.response_Count', 0] }, " +
+                "  responseCount: '$post.response_count', " +
                 "  isLiked: { $gt: [ { $size: '$likes' }, 0 ] }, " +
                 "  isBookmarked: { $gt: [ { $size: '$bookmarks' }, 0 ] } " +
-        "} }"
+                "} }"
 
 
         })
