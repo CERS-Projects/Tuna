@@ -108,7 +108,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         // 11. 最終的なフィールドを整形
         "{ $project: { " +
         "  _id: 1, " +
-        "  postId: '$_id' , " +
+        "  postId: { $toString: '$_id' }, " +
         "  userId: '$user_id', " +
         "  sentence: '$sentence', " +
         "  imageUrl: '$image_objectKey', " +
@@ -116,7 +116,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  postDate: '$post_date', " +
         "  likeCount: '$like_count', " +
         "  nickname: '$profile.nickname', " +
-        "  showUserId: '$profile.show_user_id', " +
+        "  show_user_id: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
         "  responseCount: '$response_count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
@@ -203,7 +203,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         // 11. 最終的なフィールドを整形
         "{ $project: { " +
         "  _id: 1, " +
-        "  postId: '$_id', " +
+        "  postId: { $toString: '$_id' }, " +
         "  userId: '$user_id', " +
         "  sentence: '$sentence', " +
         "  imageUrl: '$image_objectKey', " +
@@ -211,7 +211,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  postDate: '$post_date', " +
         "  likeCount: '$like_count', " +
         "  nickname: '$profile.nickname', " +
-        "  showUserId: '$profile.show_user_id', " +
+        "  show_user_id: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
         "  responseCount: '$response_count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
@@ -306,7 +306,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         // 10. 最終的なフィールドを整形
         "{ $project: { " +
         "  _id: 1, " +
-        "  postId: '$_id', " +
+        "  postId: { $toString: '$_id' }, " +
         "  userId: '$user_id', " +
         "  sentence: '$sentence', " +
         "  imageUrl: '$image_objectKey', " +
@@ -314,7 +314,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  postDate: '$post_date', " +
         "  likeCount: '$like_count', " +
         "  nickname: '$profile.nickname', " +
-        "  showUserId: '$profile.show_user_id', " +
+        "  show_user_id: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
         "  responseCount: '$response_count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
@@ -418,7 +418,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         // 10. 最終的なフィールドを整形
         "{ $project: { " +
         "  _id: 1, " +
-        "  postId: '$_id', " +
+        "  postId: { $toString: '$_id' }, " +
         "  userId: '$user_id', " +
         "  sentence: '$sentence', " +
         "  imageUrl: '$image_objectKey', " +
@@ -426,7 +426,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  postDate: '$post_date', " +
         "  likeCount: '$like_count', " +
         "  nickname: '$profile.nickname', " +
-        "  showUserId: '$profile.show_user_id', " +
+        "  show_user_id: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
         "  responseCount: '$response_count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +

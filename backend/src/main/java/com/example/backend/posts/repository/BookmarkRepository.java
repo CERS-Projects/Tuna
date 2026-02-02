@@ -89,9 +89,9 @@ public interface BookmarkRepository extends MongoRepository<BookmarkEntity, Stri
                 "  post_date: '$post.post_date', " +
                 "  like_count: '$post.like_count', " +
                 "  nickname: '$profile.nickname', " +
-                "  showUserId: '$profile.show_user_id', " +
+                "  show_user_id: '$profile.show_user_id', " +
                 "  icon: '$profile.icon', " +
-                "  responseCount: '$post.response_count', " +
+                "  response_count: '$post.response_count', " +
                 "  isLiked: { $gt: [ { $size: '$likes' }, 0 ] }, " +
                 "  isBookmarked: { $gt: [ { $size: '$bookmarks' }, 0 ] } " +
                 "} }"
