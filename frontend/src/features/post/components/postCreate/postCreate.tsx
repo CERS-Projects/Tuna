@@ -59,6 +59,7 @@ export const PostCreateModal = ({
   }, [isOpen]);
 
   const handleClose = () => {
+    document.body.style.overflow = "auto";
     setIsOpen(false);
     if (onClose) {
       onClose();
