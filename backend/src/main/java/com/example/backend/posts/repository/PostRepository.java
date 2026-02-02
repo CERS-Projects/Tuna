@@ -17,9 +17,13 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
 
     //返信Countをインクリメント
     @Query("{ '_id': ?0 }")
-    @Update("{ '$inc': { 'response_Count': 1 } }")
+    @Update("{ '$inc': { 'response_count': 1 } }")
     long incrementResponseCount(ObjectId postId);
 
+    //返信Countをデクリメント
+    @Query("{ '_id': ?0, 'response_count': { '$gt': 0 } }")
+    @Update("{ '$inc': { 'response_count': -1 } }")
+    long decrementResponseCount(ObjectId postId);
     
     // ユーザーIDと投稿IDで存在確認(ユーザーチェック)
     boolean existsByIdAndUserId(ObjectId id, Integer userId);
@@ -110,11 +114,11 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  imageUrl: '$image_objectKey', " +
         "  shareRange: '$share_range', " +
         "  postDate: '$post_date', " +
-        "  likeCount: '$like_Count', " +
+        "  likeCount: '$like_count', " +
         "  nickname: '$profile.nickname', " +
         "  showUserId: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
-        "  responseCount: '$response_Count', " +
+        "  responseCount: '$response_count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
         "  isBookmarked: { $gt: [{ $size: '$bookmarks' }, 0] } " +
         "} }",
@@ -205,11 +209,11 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  imageUrl: '$image_objectKey', " +
         "  shareRange: '$share_range', " +
         "  postDate: '$post_date', " +
-        "  likeCount: '$like_Count', " +
+        "  likeCount: '$like_count', " +
         "  nickname: '$profile.nickname', " +
         "  showUserId: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
-        "  responseCount: '$response_Count', " +
+        "  responseCount: '$response_count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
         "  isBookmarked: { $gt: [{ $size: '$bookmarks' }, 0] } " +
         "} }",
@@ -308,11 +312,11 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  imageUrl: '$image_objectKey', " +
         "  shareRange: '$share_range', " +
         "  postDate: '$post_date', " +
-        "  likeCount: '$like_Count', " +
+        "  likeCount: '$like_count', " +
         "  nickname: '$profile.nickname', " +
         "  showUserId: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
-        "  responseCount: '$response_Count', " +
+        "  responseCount: '$response_count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
         "  isBookmarked: { $gt: [{ $size: '$bookmarks' }, 0] } " +
         "} }",
@@ -420,11 +424,11 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  imageUrl: '$image_objectKey', " +
         "  shareRange: '$share_range', " +
         "  postDate: '$post_date', " +
-        "  likeCount: '$like_Count', " +
+        "  likeCount: '$like_count', " +
         "  nickname: '$profile.nickname', " +
         "  showUserId: '$profile.show_user_id', " +
         "  icon: '$profile.icon', " +
-        "  responseCount: '$response_Count', " +
+        "  responseCount: '$response_count', " +
         "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
         "  isBookmarked: { $gt: [{ $size: '$bookmarks' }, 0] } " +
         "} }",
