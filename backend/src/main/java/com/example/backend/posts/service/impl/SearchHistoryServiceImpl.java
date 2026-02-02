@@ -74,7 +74,7 @@ public class SearchHistoryServiceImpl implements SearchHistoryService {
         if (entity == null){
             log.info("検索履歴の削除に失敗しました。 userId: " + userId + "の検索履歴は存在しません。");
             throw new IllegalArgumentException("指定されたユーザーの検索履歴は存在しません。");
-        };
+        }
 
         List<SearchHistoryItem> list = entity.getSearchHistory();
         if (list == null || list.isEmpty()){
@@ -82,13 +82,33 @@ public class SearchHistoryServiceImpl implements SearchHistoryService {
             throw new IllegalArgumentException("指定されたユーザーの検索履歴は空です。");
         }
 
+        // デバッグ: 現在の履歴を出力
+        log.info("削除前の履歴数: " + list.size());
+        log.info("削除対象キーワード: [" + keyword + "]");
+        
+        
+        // removeIfを使用（1件だけ削除したい場合は以下のロジック）
+        boolean found = false;
         for (int i = list.size() - 1; i >= 0; i--) {
-            if (keyword.equals(list.get(i).getQuery())) {
+            String query = list.get(i).getQuery();
+            log.info("比較中: [" + query + "] == [" + keyword + "] → " + keyword.equals(query));
+            if (keyword.equals(query)) {
                 list.remove(i);
-                break; // ← 1件だけ削除
+                found = true;
+                break;
             }
         }
-        log.info("検索履歴の削除に成功しました。 userId: " + userId + ", keyword: " + keyword);
+        
+        if (!found) {
+            log.warn("キーワードが見つかりませんでした: " + keyword);
+            throw new IllegalArgumentException("指定されたキーワードの検索履歴は存在しません。");
+        }
+        
+        log.info("削除後の履歴数: " + list.size());
+        
+        // 明示的にリストをセットし直す
+        entity.setSearchHistory(list);
+        
         historyRepository.save(entity);
         log.info("検索履歴の保存に成功しました。 userId: " + userId + ", keyword: " + keyword);
     }
