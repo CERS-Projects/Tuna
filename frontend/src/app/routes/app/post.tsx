@@ -2,6 +2,7 @@ import { PostCreateModal } from "@/features/post/components/postCreate/postCreat
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import { type ModalHandle } from "@/components/ui/modal/modal";
+import { paths } from "@/config/paths";
 
 const Post = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Post = () => {
   }, []);
 
   const handleCloseTrigger = () => {
-    navigate(-1);
+    navigate(paths.app.timeline.path);
   };
 
   return <PostCreateModal ref={modalRef} onClose={handleCloseTrigger} />;
