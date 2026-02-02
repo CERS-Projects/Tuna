@@ -63,163 +63,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-}
-
-.userInfo {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.userIcon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.userName {
-  font-weight: bold;
-  font-size: 1rem;
-}
-
-.userId {
-  font-size: 0.85rem;
-  color: #657786;
-}
-
-.inputArea {
-  flex-grow: 1;
-  min-height: 120px;
-}
-
-.textarea {
-  width: 100%;
-  min-height: 150px;
-  border: none;
-  resize: none;
-  font-size: 1.2rem;
-  line-height: 1.5;
-  outline: none;
-  padding: 0;
-  margin-bottom: 10px;
-}
-
-.textarea::placeholder {
-  color: #999;
-}
-
-.textarea::-webkit-scrollbar {
-  width: 6px;
-}
-.textarea::-webkit-scrollbar-thumb {
-  background-color: #ccc;
-  border-radius: 3px;
-}
-
-.confirmTextDisplay {
-  font-size: 1.1rem;
-  white-space: pre-wrap;
-  word-break: break-all;
-  padding-bottom: 20px;
-}
-
-.previewContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.previewItem {
-  position: relative;
-  width: calc(33.33% - 7px);
-  aspect-ratio: 16 / 9;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #e1e8ed;
-}
-
-.previewImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.removeButton {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.removeButton:hover {
-  background-color: rgba(255, 0, 0, 0.8);
-}
-
-.rangeSection {
-  margin-top: auto;
-  padding: 12px;
-  border: 1px solid rgb(50, 85, 150);
-  border-radius: 12px;
-  background-color: rgba(50, 85, 150, 0.03);
-}
-
-.rangeLabel {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: rgb(50, 85, 150);
-  margin-bottom: 8px;
-}
-
-.rangeList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  max-height: 100px;
-  overflow-y: auto;
-}
-
-.rangeList::-webkit-scrollbar {
-  width: 4px;
-}
-.rangeList::-webkit-scrollbar-thumb {
-  background-color: rgb(50, 85, 150);
-  border-radius: 4px;
-}
-
-.rangeItem {
-  display: flex;
-  align-items: center;
-  background: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-
-.confirmTag {
-  display: inline-block;
-  background-color: rgb(50, 85, 150);
-  color: #fff;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-}
-
-.noSelectionMessage {
-  font-size: 0.9rem;
-  font-style: italic;
+  gap: 16px;
 }
 
 .errorArea {
@@ -228,6 +72,7 @@
   font-size: 0.9rem;
   font-weight: bold;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .footer {
@@ -331,13 +176,6 @@
   }
   .header {
     padding: 12px;
-  }
-  .textarea {
-    font-size: 1.1rem;
-    min-height: 200px;
-  }
-  .previewItem {
-    width: calc(50% - 5px);
   }
   .footer {
     padding: 12px;

@@ -1,19 +1,16 @@
-import {
-  useState,
-  useEffect,
-  useImperativeHandle,
-  type Ref,
-  memo,
-} from "react";
+import { useState, useEffect, useImperativeHandle, type Ref } from "react";
 import styles from "./postCreate.module.css";
-import { Checkbox } from "@/components/ui/checkbox/checkbox";
 import { ImFilePicture } from "react-icons/im";
-import { MdDeleteForever } from "react-icons/md";
 import { Button } from "@/components/ui/button/button";
 import { type ModalHandle } from "@/components/ui/modal/modal";
 import { IoIosClose } from "react-icons/io";
-import { usePostCreate } from "./hooks/usePostCreate";
+import { usePostCreate } from "../../hooks/usePostCreate";
 import { createPortal } from "react-dom";
+import { RangeSection } from "../range/range";
+import { type TreeType } from "@/features/management/types/group";
+import { ImagePreview } from "../imagePreview/imagePreview";
+import { UserInfo } from "../userInfo/userInfo";
+import { PostInput } from "../postInput/postInput";
 
 const currentUser = {
   user_id: "mito_denden",
@@ -21,36 +18,24 @@ const currentUser = {
   user_icon:
     "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiADU1Rn0obHEkfXEgCIKVXO8IEK9Q9MJUL8lb2QkWyHpaQ8AlJmxVF2vP00RYyyzrxaGXKOb3P8BwtC5mIFhyF31_kzKx2QVS2Hee7Skl_3DlAZ2P6sRAsSb0Ts0Alcxx1aks9f-JQkMHh/s800/cat_fish_run.png",
 };
-const items = [
-  { group_id: 1, group_name: "水戸電子専門学校" },
-  { group_id: 2, group_name: "水戸電子システム" },
-  { group_id: 3, group_name: "情報処理" },
-  { group_id: 4, group_name: "水戸" },
-  { group_id: 5, group_name: "八文字学園" },
-];
 
-const Range = memo(
-  ({
-    id,
-    title,
-    checked,
-    onChange,
-  }: {
-    id: number;
-    title: string;
-    checked: boolean;
-    onChange: (id: number) => void;
-  }) => (
-    <div className={styles.rangeItem}>
-      <Checkbox
-        labelTextAfterLink={title}
-        className={styles.checkboxCustom}
-        checked={checked}
-        onChange={() => onChange(id)}
-      />
-    </div>
-  ),
-);
+const items: TreeType[] = [
+  {
+    id: 1,
+    name: "八文字学園",
+    branch: [
+      {
+        id: 2,
+        name: "水戸電子専門学校",
+        branch: [
+          { id: 3, name: "情報処理" },
+          { id: 4, name: "水戸電子システム" },
+        ],
+      },
+      { id: 5, name: "水戸" },
+    ],
+  },
+];
 
 export const PostCreateModal = ({
   ref,
@@ -90,7 +75,7 @@ export const PostCreateModal = ({
 
   const handleOpenConfirm = () => {
     const finalContent = state.postText.trim();
-    if (!finalContent && state.images.length === 0) {
+    if (!finalContent) {
       actions.setSubmitError("投稿内容を入力してください");
       return;
     }
@@ -123,86 +108,32 @@ export const PostCreateModal = ({
         </div>
 
         <div className={styles.bodyScroll}>
-          <div className={styles.userInfo}>
-            <img
-              src={currentUser.user_icon}
-              alt="User Icon"
-              className={styles.userIcon}
-            />
-            <div>
-              <div className={styles.userName}>{currentUser.user_name}</div>
-              <div className={styles.userId}>@{currentUser.user_id}</div>
-            </div>
-          </div>
+          <UserInfo
+            userIcon={currentUser.user_icon}
+            userName={currentUser.user_name}
+            userId={currentUser.user_id}
+          />
 
-          <div className={styles.inputArea}>
-            {isInputStep ? (
-              <textarea
-                className={styles.textarea}
-                placeholder="いまどうしてる？"
-                value={state.postText}
-                onChange={(e) => actions.handleTextChange(e.target.value)}
-              />
-            ) : (
-              <div className={styles.confirmTextDisplay}>{state.postText}</div>
-            )}
-          </div>
+          <PostInput
+            isInputStep={isInputStep}
+            postText={state.postText}
+            onTextChange={actions.handleTextChange}
+          />
 
           {(state.images.length > 0 || !isInputStep) && (
-            <div className={styles.previewContainer}>
-              {state.images.map((img) => (
-                <div key={img.url} className={styles.previewItem}>
-                  <img
-                    src={img.url}
-                    className={styles.previewImage}
-                    alt="投稿画像"
-                  />
-                  {isInputStep && (
-                    <button
-                      onClick={() => actions.removeImage(img.url)}
-                      className={styles.removeButton}
-                      type="button"
-                    >
-                      <MdDeleteForever size={18} />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
+            <ImagePreview
+              images={state.images}
+              isInputStep={isInputStep}
+              onRemoveImage={actions.removeImage}
+            />
           )}
 
-          <div className={styles.rangeSection}>
-            <div className={styles.rangeLabel}>
-              {isInputStep ? "公開範囲を選択" : "公開範囲"}
-            </div>
-            <div className={styles.rangeList}>
-              {isInputStep ? (
-                items.map((item) => (
-                  <Range
-                    key={item.group_id}
-                    id={item.group_id}
-                    title={item.group_name}
-                    checked={state.selectedGroupIds.includes(item.group_id)}
-                    onChange={actions.toggleGroup}
-                  />
-                ))
-              ) : state.selectedGroupIds.length > 0 ? (
-                items
-                  .filter((item) =>
-                    state.selectedGroupIds.includes(item.group_id),
-                  )
-                  .map((item) => (
-                    <span key={item.group_id} className={styles.confirmTag}>
-                      {item.group_name}
-                    </span>
-                  ))
-              ) : (
-                <span className={styles.noSelectionMessage}>
-                  指定なし（全体公開）
-                </span>
-              )}
-            </div>
-          </div>
+          <RangeSection
+            isInputStep={isInputStep}
+            items={items}
+            selectedGroupIds={state.selectedGroupIds}
+            onToggleGroup={actions.toggleGroup}
+          />
 
           {(state.imageError || state.submitError) && (
             <div className={styles.errorArea}>
@@ -255,7 +186,7 @@ export const PostCreateModal = ({
                   type="button"
                   className={styles.primaryButton}
                   onClick={handleOpenConfirm}
-                  disabled={!state.postText && state.images.length === 0}
+                  disabled={state.postText.trim().length === 0}
                 >
                   次へ
                 </Button>
@@ -272,8 +203,10 @@ export const PostCreateModal = ({
                 <Button
                   type="button"
                   className={styles.primaryButton}
-                  onClick={() => actions.handlePost(currentUser.user_id)}
-                  disabled={state.isSubmitting}
+                  onClick={() => actions.handlePost()}
+                  disabled={
+                    state.isSubmitting || state.postText.trim().length === 0
+                  }
                 >
                   {state.isSubmitting ? "送信中..." : "投稿する"}
                 </Button>
