@@ -27,6 +27,7 @@ public class PostDetailResponse {
     @Size(min = 1, max = 255, message = "sentence は1-255文字以内である必要があります")
     @Field("sentence")
     private String sentence;
+    
 
     private List<String> imageUrl;
 
@@ -43,15 +44,18 @@ public class PostDetailResponse {
     private Integer likeCount;
 
     @NotNull
+    @Field("response_count")
     private Integer responseCount;
 
     //profileから取得
     @NotNull
     @Size(min = 1, max = 20, message = "nickname は1-20文字以内である必要があります")
+    @Field("nickname")
     private String nickname;
 
     @NotNull
     @Size(min = 1, max = 20, message = "showUserId は1-20文字以内である必要があります")
+    @Field("show_user_id")
     private String showUserId;
 
     @NotNull
