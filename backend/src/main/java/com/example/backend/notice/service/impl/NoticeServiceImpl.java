@@ -98,8 +98,8 @@ public class NoticeServiceImpl implements NoticeService {
         if(!ObjectId.isValid(noticeId)){
             throw new IllegalArgumentException("不正なお知らせIDです。");
         }
-        ObjectId noticeObjectId = new ObjectId(noticeId);
-        
+        final ObjectId noticeObjectId = new ObjectId(noticeId);
+
         if(!noticeRepository.existsById(noticeObjectId)) {
             throw new IllegalArgumentException("そのお知らせは存在しません。");
         }
