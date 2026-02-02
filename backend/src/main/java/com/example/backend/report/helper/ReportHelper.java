@@ -24,7 +24,7 @@ public class ReportHelper {
 
     private final UserRepository userRepository;
 
-    private final PostRepository postRepository;
+    //private final PostRepository postRepository;
 
     public record ReportedUserNameAndShowUserId(String name, String showUserId){} 
 

@@ -37,4 +37,13 @@ public interface GroupMemberRepository extends JpaRepository<GroupMemberEntity, 
             WHERE mem.userId = :userId
             """)
     List<Integer> findJoinedGroupIdsByUserId(@Param("userId") Integer userId);
+
+    @Query("""
+           SELECT COUNT(gm.userId) > 0
+              FROM GroupMemberEntity gm
+              INNER JOIN 
+                GroupEntity g ON gm.groupId = g.groupId
+              WHERE gm.userId = :userId AND g.school.schoolId = :schoolId
+           """)
+    boolean existsByUserId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
 }

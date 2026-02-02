@@ -51,4 +51,12 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
     long validateByReportBySchoolId(@Param("schoolId") Integer schoolId, 
                                     @Param("userId") Integer userId, 
                                     @Param("reportedUserId") Integer reportedUserId);
+
+    @Query("""
+           SELECT EXISTS(
+                SELECT u.userId FROM UserEntity u
+                WHERE u.userId = :userId AND u.school.schoolId = :schoolId
+              )
+           """)
+    boolean existsByIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
 }

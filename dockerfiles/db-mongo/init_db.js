@@ -390,23 +390,17 @@ try {
 		},
 	});
 
-	db.createCollection("notion_collection", {
+	db.createCollection("notice_collection", {
 		validator: {
 			$jsonSchema: {
 				bsonType: "object",
 				required: [
-					"notice_id",
 					"group_id",
 					"title",
 					"content",
-					"reservation_datetime",
+					"created_at",
 				],
 				properties: {
-					notice_id: {
-						bsonType: "int",
-						minimum: 1,
-						description: "一意のお知らせIDを格納する",
-					},
 					group_id: {
 						bsonType: "int",
 						minimum: 1,
@@ -424,9 +418,9 @@ try {
 						maxLength: 200,
 						description: "お知らせの内容を格納する",
 					},
-					reservation_datetime: {
+					created_at: {
 						bsonType: "date",
-						description: "予約時間を格納する 書式はyyyy-mm-dd-hh-mm-ss-ms",
+						description: "作成日時を格納する 書式はyyyy-mm-dd-hh-mm-ss-ms",
 					},
 				},
 			},

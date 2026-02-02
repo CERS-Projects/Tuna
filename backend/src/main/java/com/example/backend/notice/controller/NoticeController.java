@@ -3,14 +3,14 @@ package com.example.backend.notice.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.notice.dto.NoticeListRequest;
+import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.notice.dto.NoticeInsertRequest;
 import com.example.backend.notice.dto.NoticeListResponse;
 import com.example.backend.notice.service.NoticeService;
@@ -31,9 +31,17 @@ public class NoticeController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<NoticeListResponse>> getNoticeList(@Valid @ModelAttribute NoticeListRequest dto) {
+    @GetMapping("/teacher/list")
+    public ResponseEntity<List<NoticeListResponse>> getNoticeListFromTeacher(@AuthenticationPrincipal UserInfo userInfo) {
         // Implementation to list notices will go here
-        return ResponseEntity.ok().build();
+        List<NoticeListResponse> notices = noticeService.getNoticeListFromTeacher(userInfo.getSchoolId());
+        return ResponseEntity.ok(notices);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<NoticeListResponse>> getNoticeListFromStudent(@AuthenticationPrincipal UserInfo userInfo) {
+        // Implementation to list notices will go here
+        List<NoticeListResponse> notices = noticeService.getNoticeListFromStudent(userInfo.getUserId(), userInfo.getSchoolId());
+        return ResponseEntity.ok(notices);
     }
 }
