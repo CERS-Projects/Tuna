@@ -6,6 +6,7 @@ import { BsBookmark } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { PiHouseLight } from "react-icons/pi";
 import styles from "./menu.module.css";
+import { paths } from "@/config/paths";
 
 export const Menu = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export const Menu = () => {
         <IoSchoolOutline />
       </button>
       <button
-        onClick={() => navigate("/app/timeline/post")}
+        onClick={() => navigate(paths.app.timeline.post.path)}
         className={styles.menuButton}
       >
         <LuCirclePlus />

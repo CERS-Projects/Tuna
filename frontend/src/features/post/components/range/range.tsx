@@ -78,6 +78,8 @@ const RangeItem = memo(
   },
 );
 
+RangeItem.displayName = "RangeItem";
+
 type RangeSectionProps = {
   isInputStep: boolean;
   items: TreeType[];
