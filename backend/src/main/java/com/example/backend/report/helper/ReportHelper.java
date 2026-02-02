@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 import com.example.backend.accounts.repository.UserRepository;
+import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.report.dto.ReportInsertRequest;
 import com.example.backend.report.dto.ReportListResponse;
 import com.example.backend.report.model.ReportEntity;
@@ -26,22 +27,22 @@ public class ReportHelper {
 
     public record ReportedUserNameAndShowUserId(String name, String showUserId){} 
 
-    public ReportEntity setEntityFromDto(ReportInsertRequest dto){
+    public ReportEntity setEntityFromDto(ReportInsertRequest dto, Integer schoolId, Integer userId) {
         ReportEntity reportEntity = new ReportEntity();
         OffsetDateTime dateTimeNow = OffsetDateTime.now(ZoneOffset.UTC);
         
         /* 通報を作成しようとしたユーザが
         　・そのアカウントの存在する学校で
         　・通報対象とその通報者が存在するのか
-        　上記３つの条件を満たしているどうかを検証 */
-        long count = userRepository.validateByReportBySchoolId(dto.getSchoolId(), dto.getReportBy(), dto.getReportedUser());
+        　上記2つの条件を満たしているどうかを検証 */
+        long count = userRepository.validateByReportBySchoolId(schoolId, userId, dto.getReportedUser());
         if(count < 2){
             throw new IllegalArgumentException("そのユーザは存在しないか、報告ができません。");
         }
         
-        reportEntity.setSchoolId(dto.getSchoolId());
+        reportEntity.setSchoolId(schoolId);
         reportEntity.setReportDate(Date.from(dateTimeNow.toInstant()));
-        reportEntity.setReportBy(dto.getReportBy());
+        reportEntity.setReportBy(userId);
         reportEntity.setReportedUser(dto.getReportedUser());
         reportEntity.setReasonId(dto.getReasonId());
         if(ObjectId.isValid(dto.getReportedPostId()) == false) {
@@ -73,7 +74,7 @@ public class ReportHelper {
             response.setReportedShowUserId(object.showUserId());
             response.setReasonId(entity.getReasonId());
             response.setReportDate(entity.getReportDate());
-            response.setReportedPost(postRepository.findContentByPostId(entity.getReportedPostId()));
+            response.setReportedPost(postRepository.findById(entity.getReportedPostId()).orElseThrow(() -> new IllegalArgumentException("その投稿は存在しないか、報告が存在しません。")));
             response.setReportDetail(entity.getDetail());
             return response;
         }).toList();

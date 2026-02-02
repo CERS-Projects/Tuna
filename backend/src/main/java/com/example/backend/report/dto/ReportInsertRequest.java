@@ -10,12 +10,6 @@ import lombok.Setter;
 public class ReportInsertRequest {
 
     @NotNull
-    private Integer schoolId;
-
-    @NotNull
-    private Integer reportBy;
-
-    @NotNull
     private Integer reportedUser;
 
     @NotNull
