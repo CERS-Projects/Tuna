@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { createPost } from "../api/createPost";
 import { type CreatePostRequest } from "../types/post";
+import { paths } from "@/config/paths";
 
 type UseCreatePostOptions = {
   onSuccess?: () => void;
@@ -19,10 +20,9 @@ export const useCreatePost = (options?: UseCreatePostOptions) => {
       queryClient.invalidateQueries({ queryKey: ["timeline"] });
 
       options?.onSuccess?.();
-      navigate("/timeline");
+      navigate(paths.app.timeline.path);
     },
     onError: (error: Error) => {
-      console.error("Post creation failed:", error);
       options?.onError?.(error);
     },
   });

@@ -34,8 +34,7 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
       resetForm();
       setIsOpen(false);
     },
-    onError: (error: Error) => {
-      console.error("投稿に失敗しました:", error);
+    onError: () => {
       setValidationError("投稿に失敗しました");
     },
   });
