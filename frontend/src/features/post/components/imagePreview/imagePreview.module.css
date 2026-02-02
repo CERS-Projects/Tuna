@@ -1,14 +1,13 @@
 .previewContainer {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  margin-bottom: 20px;
   flex-shrink: 0;
 }
 
 .previewItem {
   position: relative;
-  width: calc(33.33% - 7px);
+  width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 12px;
   overflow: hidden;
@@ -35,7 +34,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
 }
 
 .removeButton:hover {
@@ -43,7 +42,11 @@
 }
 
 @media (max-width: 960px) {
+  .previewContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .previewItem {
-    width: calc(50% - 5px);
+    width: 100%;
   }
 }

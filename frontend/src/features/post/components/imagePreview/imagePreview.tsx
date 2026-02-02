@@ -19,7 +19,15 @@ export const ImagePreview = ({
     <div className={styles.previewContainer}>
       {images.map((img) => (
         <div key={img.url} className={styles.previewItem}>
-          <img src={img.url} className={styles.previewImage} alt="投稿画像" />
+          <img
+            src={img.url}
+            className={styles.previewImage}
+            alt="投稿画像"
+            onError={(e) => {
+              e.currentTarget.alt = "画像を読み込めませんでした";
+              e.currentTarget.style.visibility = "hidden";
+            }}
+          />
           {isInputStep && (
             <button
               onClick={() => onRemoveImage(img.url)}
