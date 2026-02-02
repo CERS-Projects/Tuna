@@ -17,7 +17,7 @@ export const createPost = async (data: CreatePostRequest): Promise<void> => {
   }
 
   if (data.responseTo) {
-    formData.append("responseTo", data.responseTo);
+    formData.append("responseTo", data.responseTo.toString());
   }
 
   await api<void>({

@@ -19,13 +19,13 @@ export type CreatePostRequest = {
   sentence: string;
   imageFile?: File[];
   shareRange: number[];
-  responseTo?: string;
+  responseTo?: number;
 };
 
 export type PostFormData = {
   sentence: string;
   shareRange: number[];
-  responseTo?: string;
+  responseTo?: number;
 };
 
 export type ImageData = {
