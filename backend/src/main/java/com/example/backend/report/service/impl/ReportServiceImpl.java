@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.report.dto.ReportInsertRequest;
 import com.example.backend.report.dto.ReportListResponse;
 import com.example.backend.report.helper.ReportHelper;
@@ -20,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
+
+    private final UserRepository userRepository;
 
     private final ReportHelper reportHelper;
 
@@ -42,8 +45,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Transactional
-    public void deleteReport(String reportId){
-        if(ObjectId.isValid(reportId) == false) {
+    public void deleteReport(String reportId, Integer userId, Integer schoolId){
+
+        if(ObjectId.isValid(reportId) == false || userRepository.existsByUserIdAndSchoolId(userId, schoolId) == false){
             throw new IllegalArgumentException("不正なリクエストです。");
         }
         ObjectId reportIdObject = new ObjectId(reportId);

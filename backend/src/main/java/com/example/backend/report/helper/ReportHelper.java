@@ -10,7 +10,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 import com.example.backend.accounts.repository.UserRepository;
-import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.report.dto.ReportInsertRequest;
 import com.example.backend.report.dto.ReportListResponse;
 import com.example.backend.report.model.ReportEntity;
@@ -81,7 +80,6 @@ public class ReportHelper {
     }
 
     public boolean existsByUserId(Integer userId) {
-        Boolean exists = userRepository.existsById(userId);
-        return Boolean.TRUE.equals(exists);
+        return userRepository.existsById(userId);
     }
 }

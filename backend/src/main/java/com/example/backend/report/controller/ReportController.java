@@ -43,10 +43,10 @@ public class ReportController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteReport(@Valid @RequestParam String reportId,
+    public ResponseEntity<Void> deleteReport(@RequestParam String reportId,
                                              @AuthenticationPrincipal UserInfo userInfo){
 
-        reportService.deleteReport(reportId);
+        reportService.deleteReport(reportId, userInfo.getUserId(), userInfo.getSchoolId());
         return ResponseEntity.ok().build();
     }
 }
