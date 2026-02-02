@@ -3,6 +3,8 @@ package com.example.backend.posts.controller;
 import com.example.backend.posts.dto.PostInsertRequest;
 import com.example.backend.posts.dto.PostDetailResponse;
 import com.example.backend.posts.model.SearchHistoryItem;
+import com.example.backend.posts.dto.addBookmarkRequest;
+import com.example.backend.posts.dto.addlikeRequest;
 
 import com.example.backend.posts.service.PostService;
 import com.example.backend.posts.service.BookmarkService;
@@ -42,13 +44,16 @@ public class PostController {
     private final SearchHistoryService searchHistoryService;
     //投稿を作成
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> insertPost(@Valid @ModelAttribute final PostInsertRequest postRequest) { 
+    public ResponseEntity<Void> insertPost(@Valid @ModelAttribute final PostInsertRequest postRequest, @AuthenticationPrincipal final UserInfo userInfo){
+        //JWTから取得したユーザーIDをセット    
         log.info("投稿の作成を開始しました。 "+ "userId: {}, content: {}, imageCount: {}",
-            postRequest.getUserId(),
+            userInfo.getUserId(),
             postRequest.getSentence(),
+            postRequest.getResponseTo(),
+            postRequest.getShareRange(),
             postRequest.getImageFile() != null ? postRequest.getImageFile().size() : 0);
 
-        postService.insertPost(postRequest);
+        postService.insertPost(postRequest, userInfo.getUserId());
         return ResponseEntity.ok().build();
     }
 
@@ -95,10 +100,11 @@ public class PostController {
     
     //ブックマーク追加
     @PostMapping("/addbookmarks")
-    public ResponseEntity<Void> addBookmark(@Valid @RequestBody final String postId, @AuthenticationPrincipal final UserInfo userInfo) {
-        bookmarkService.addBookmark(new ObjectId(postId), userInfo.getUserId());
+    public ResponseEntity<Void> addBookmark(@Valid @RequestBody addBookmarkRequest addBookmarkRequest, @AuthenticationPrincipal final UserInfo userInfo) {
+        log.info("ブックマークの追加を開始しました userId: {} and postId: {}", userInfo.getUserId(), addBookmarkRequest.getPostId());
+        bookmarkService.addBookmark(new ObjectId(addBookmarkRequest.getPostId()), userInfo.getUserId());
         return ResponseEntity.ok().build();
-        
+
     }
 
     //ブックマーク削除
@@ -119,8 +125,8 @@ public class PostController {
 
     //いいね追加
     @PostMapping("/addlikes")
-    public ResponseEntity<Void> addLikes(@Valid @RequestBody final String postId, @AuthenticationPrincipal final UserInfo userInfo){
-        likeService.addLikes(new ObjectId(postId), userInfo.getUserId());
+    public ResponseEntity<Void> addLikes(@Valid @RequestBody addlikeRequest addlikeRequest, @AuthenticationPrincipal final UserInfo userInfo){
+        likeService.addLikes(new ObjectId(addlikeRequest.getPostId()), userInfo.getUserId());
         return ResponseEntity.ok().build();
     }
     
