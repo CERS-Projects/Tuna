@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/refresh").permitAll()
                         .requestMatchers("/accounts/teacher").hasRole("ADMIN_SCHOOL")
                         .requestMatchers("/support/help/category").hasAnyRole("TEACHER", "STUDENT")
+                        .requestMatchers("/report/list", "/report/delete").hasAnyRole("TEACHER", "ADMIN_SCHOOL")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler));
