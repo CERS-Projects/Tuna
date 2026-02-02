@@ -8,6 +8,7 @@ type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
   linkUrl?: string;
   onLinkClick?: () => void;
   labelTextAfterLink?: React.ReactNode;
+  fontSize?: string | number;
 };
 
 export const Checkbox = ({
@@ -18,6 +19,7 @@ export const Checkbox = ({
   linkUrl,
   onLinkClick,
   labelTextAfterLink,
+  fontSize,
   ...props
 }: CheckboxProps) => {
   const [isClicked, setIsClicked] = useState(false);
@@ -26,7 +28,11 @@ export const Checkbox = ({
 
   return (
     <div className={styles.checkbox}>
-      <label htmlFor={inputId} className={styles.checkboxLabel}>
+      <label
+        htmlFor={inputId}
+        className={styles.checkboxLabel}
+        style={{ fontSize }}
+      >
         <input
           id={inputId}
           type="checkbox"
@@ -35,7 +41,7 @@ export const Checkbox = ({
           aria-describedby={error ? `${inputId}-error` : undefined}
           {...props}
         />
-        <span>
+        <span style={{ fontSize }}>
           {linkUrl ? (
             <a href={linkUrl} target="_blank" rel="noopener noreferrer">
               {linkText}
@@ -45,6 +51,7 @@ export const Checkbox = ({
               className={
                 isClicked ? styles.activeTermsModal : styles.termsModal
               }
+              style={{ fontSize }}
               onClick={(e) => {
                 e.preventDefault();
                 onLinkClick?.();

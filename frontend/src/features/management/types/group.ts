@@ -1,6 +1,7 @@
 export type TreeType = {
   id: number;
   name: string;
+  upperId?: number | null;
   member?: number;
   branch?: TreeType[];
 };

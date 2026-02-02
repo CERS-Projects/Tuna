@@ -1,0 +1,51 @@
+.inputArea {
+  flex-shrink: 0;
+  min-height: 80px;
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 80px;
+  max-height: 200px;
+  border: none;
+  resize: none;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  outline: none;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.textarea::placeholder {
+  color: #999;
+}
+
+.textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.textarea::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.confirmTextDisplay {
+  font-size: 1.1rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+@media (max-width: 960px) {
+  .textarea {
+    font-size: 1.1rem;
+    max-height: 150px;
+  }
+
+  .confirmTextDisplay {
+    max-height: 150px;
+  }
+}

@@ -89,7 +89,17 @@ const createAppRouter = (queryClient: QueryClient) => {
           element: <Navigate to={paths.app.timeline.path} replace />,
         },
         route(paths.app.test.path, () => import("./routes/app/test")),
-        route(paths.app.timeline.path, () => import("./routes/app/timeline")),
+        {
+          path: paths.app.timeline.path,
+          lazy: () =>
+            import("./routes/app/timeline").then(convert(queryClient)),
+          children: [
+            route(
+              paths.app.timeline.post.path,
+              () => import("./routes/app/post"),
+            ),
+          ],
+        },
         route(
           paths.app.timeline.detail.path,
           () => import("./routes/app/detailPost"),
