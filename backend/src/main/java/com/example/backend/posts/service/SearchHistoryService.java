@@ -1,7 +1,6 @@
 package com.example.backend.posts.service;
 
 
-import com.example.backend.posts.model.SearchHistoryEntity;
 import com.example.backend.posts.model.SearchHistoryItem;
 
 import java.util.List;

@@ -11,9 +11,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 import jakarta.validation.constraints.NotNull; 
 import java.util.List;
-import java.util.Date;
 import org.bson.types.ObjectId;
-import com.example.backend.posts.model.SearchHistoryItem;
 
 @AllArgsConstructor
 @NoArgsConstructor

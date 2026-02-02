@@ -6,8 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.mongodb.core.mapping.MongoId;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.bson.types.ObjectId;
 import java.util.Date;
 
