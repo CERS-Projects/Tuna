@@ -602,7 +602,7 @@ try {
 	db.profile_collection.insertMany([
 		{
 			user_id: 1,
-			icon: "images/63b81b67-68ec-4171-a28c-3042a33b8591.png",
+			icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
 			nickname: "タロウ",
 			show_user_id: "taro_user",
 			introduction: "テストユーザー1号です。",
