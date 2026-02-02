@@ -50,12 +50,12 @@ public class BookmarkServiceImpl implements BookmarkService {
 
         if (!existsPost(bookmark.getPostId())) {
             log.info("投稿が存在しません userId: {} and postId: {}", bookmark.getUserId(), bookmark.getPostId());
-            throw new IllegalStateException("投稿が存在しません");
+            throw new RuntimeException("投稿が存在しません");
         }
 
         if (isBookmarked(bookmark.getUserId(), bookmark.getPostId())) {
             log.info("すでにブックマークされています userId: {} and postId: {}", bookmark.getUserId(), bookmark.getPostId());
-            throw new IllegalStateException("すでにブックマークされています");
+            throw new RuntimeException("すでにブックマークされています");
         }
         try{
         bookmarkRepository.save(bookmark);

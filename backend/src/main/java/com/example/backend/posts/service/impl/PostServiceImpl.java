@@ -1,37 +1,28 @@
 package com.example.backend.posts.service.impl;
 
-import com.example.backend.posts.dto.TimelinePostsRequest;
 import com.example.backend.posts.model.PostEntity;
-import com.example.backend.posts.dto.ProfilePostsRequest;
 import com.example.backend.posts.dto.PostInsertRequest;
 import com.example.backend.posts.dto.PostDetailResponse;
-import com.example.backend.posts.dto.PostsReplyRequest;
-import com.example.backend.posts.dto.SearchPostsRequest;    
-import com.example.backend.posts.model.PostEntity;
 import org.bson.types.ObjectId;
-
-
 
 import com.example.backend.posts.repository.PostRepository;
 import com.example.backend.posts.repository.LikeRepository;
 import com.example.backend.posts.repository.BookmarkRepository;
 import com.example.backend.utils.accountConfirm.AccountConfirm;
+import com.example.backend.utils.accountConfirm.GroupJoinByUserId;
 
 import com.example.backend.posts.service.PostService;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
 
 @Log4j2
 @Service
@@ -48,10 +39,12 @@ public class PostServiceImpl implements PostService {
     private final BookmarkRepository bookmarkRepository;
 
     private final AccountConfirm accountConfirm;
+
+    private final GroupJoinByUserId groupJoinByUserId;
     
     // 投稿作成
     @Override
-    public void insertPost(PostInsertRequest post) {
+    public void insertPost(PostInsertRequest post, Integer userId) {
         PostEntity postEntity = new PostEntity();
         List<String> fileObjectKeys = null;
         List<MultipartFile> imageFiles = post.getImageFile();
@@ -64,8 +57,8 @@ public class PostServiceImpl implements PostService {
                 .filter(i -> i != 0)
                 .toList();
         //除外したリストをもとに権限確認
-        if(!accountConfirm.isExistsAllGroups(post.getUserId(), userGroupIds.toArray(new Integer[0]))) {
-            throw new RuntimeException("指定されたグループに所属していません。");
+        if(!accountConfirm.isExistsAllGroups(userId, userGroupIds.toArray(new Integer[0]))) {
+            throw new IllegalArgumentException("指定されたグループに所属していません。");
         }
 
         if(imageFiles != null){
@@ -81,7 +74,7 @@ public class PostServiceImpl implements PostService {
 
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         
-        postEntity.setUserId(post.getUserId());
+        postEntity.setUserId(userId);
         postEntity.setSentence(post.getSentence());
         postEntity.setPostDate(Date.from(now.toInstant()));
         postEntity.setImageObjectKey(fileObjectKeys);
@@ -94,13 +87,13 @@ public class PostServiceImpl implements PostService {
         try {
         postRepository.save(postEntity);
         if (postEntity.getResponseTo() != null) {
-                log.info("返信元投稿のresponse_Countをインクリメントします。 投稿ID: {}", replyPost);
+                log.info("返信元投稿のresponse_countをインクリメントします。 投稿ID: {}", replyPost);
                 long result = postRepository.incrementResponseCount(replyPost);
                 if (result == 0) {
-                    log.warn("返信元投稿のresponse_Countのインクリメントに失敗しました。該当する投稿が見つかりません。 投稿ID:{} " , replyPost);
-                    throw new RuntimeException("返信元投稿のresponse_Countのインクリメントに失敗しました。該当する投稿が見つかりません。");
+                    log.warn("返信元投稿のresponse_countのインクリメントに失敗しました。該当する投稿が見つかりません。 投稿ID:{} " , replyPost);
+                    throw new RuntimeException("返信元投稿のresponse_countのインクリメントに失敗しました。該当する投稿が見つかりません。");
                 } else {
-                    log.info("返信元投稿のresponse_Countを正常にインクリメントしました。 投稿ID: {}", replyPost);
+                    log.info("返信元投稿のresponse_countを正常にインクリメントしました。 投稿ID: {}", replyPost);
                 }
             }
         } catch (Exception e) {
@@ -116,21 +109,23 @@ public class PostServiceImpl implements PostService {
 
     //タイムライン取得
     @Override
-    public List<PostDetailResponse> getTimelinePosts(TimelinePostsRequest requestDto) {
-        if(!(requestDto.getShareRange().size() == 1 && requestDto.getShareRange().get(0) == 0)){
+    public List<PostDetailResponse> getTimelinePosts(Integer shareRange, Integer currentUserId) {
+        List<Integer> shareRangeList = List.of(shareRange);
+
+        if(!(shareRangeList.size() == 1 && shareRangeList.get(0) == 0)){
 
             //publicのみ指定されている場合、全グループ参加確認は不要
-            if (!accountConfirm.isExistsAllGroups(requestDto.getUserId(), requestDto.getShareRange().toArray(new Integer[0]))) {
-                throw new RuntimeException("指定されたグループに所属していません。");
+            if (!accountConfirm.isExistsAllGroups(currentUserId, shareRangeList.toArray(new Integer[0]))) {
+                throw new IllegalArgumentException("指定されたグループに所属していません。");
             }
         }
 
         try {
             List<PostDetailResponse> postDetails =
                 postRepository.findPostsWithDetails(
-                    requestDto.getUserId(),
-                    requestDto.getShareRange(),
-                    requestDto.getMuteWords()
+                    currentUserId,
+                    shareRangeList,
+                    getmuteWordList(currentUserId)
                 );
 
             log.info("タイムライン投稿 件数={}", postDetails.size());
@@ -153,18 +148,18 @@ public class PostServiceImpl implements PostService {
 
     //ユーザー投稿取得
     @Override
-    public List<PostDetailResponse> getUserPosts(ProfilePostsRequest requestDto) {
+    public List<PostDetailResponse> getUserPosts(Integer targetUserId, Integer currentUserId) {
         List<PostDetailResponse> postDetails;
-        List<Integer> userGroupIds = requestDto.getGroupIds();
+        List<Integer> userGroupIds = groupJoinByUserId.getJoinedGroupIdsByUserId(currentUserId);
 
-        if (!accountConfirm.isExistsAllGroups(requestDto.getCurrentUserId(), userGroupIds.toArray(new Integer[0]))) {
-            throw new RuntimeException("指定されたグループに所属していません。");
+        if (!accountConfirm.isExistsAllGroups(currentUserId, userGroupIds.toArray(new Integer[0]))) {
+            throw new IllegalArgumentException("指定されたグループに所属していません。");
         }
         userGroupIds.add(0); // public権限を追加
 
         try{
-            log.info("取得を開始しました 相手targetUserId: " + requestDto.getTargetUserId() + " 取得 currentUserId: " + requestDto.getCurrentUserId() );
-            postDetails = postRepository.findUserPostsWithDetails(requestDto.getCurrentUserId(), requestDto.getTargetUserId(), userGroupIds);
+            log.info("取得を開始しました 相手targetUserId: " + targetUserId + " 取得 currentUserId: " + currentUserId );
+            postDetails = postRepository.findUserPostsWithDetails(currentUserId, targetUserId, userGroupIds);
             log.info("取得完了しました。 投稿数: " + postDetails.size());
         }catch(Exception e){
 
@@ -181,12 +176,12 @@ public class PostServiceImpl implements PostService {
     
     //返信取得
     @Override
-    public List<PostDetailResponse> getReplyPosts(PostsReplyRequest requestDto) {
+    public List<PostDetailResponse> getReplyPosts(String replyPostId,Integer currentUserId) {
         List<PostDetailResponse> postDetails;
-
+        
         try{
-            log.info("返信取得を開始しました 投稿ID: " + requestDto.getReplyPostId() + " 取得 currentUserId: " + requestDto.getCurrentUserId() );
-            postDetails = postRepository.findPostsResponseWithDetails(requestDto.getCurrentUserId(), requestDto.getReplyPostId(), requestDto.getMuteWords());
+            log.info("返信取得を開始しました 投稿ID: " + replyPostId + " 取得 currentUserId: " + currentUserId );
+            postDetails = postRepository.findPostsResponseWithDetails(currentUserId, new ObjectId(replyPostId), getmuteWordList(currentUserId));
         }catch(Exception e){
             log.error("返信投稿の取得に失敗しました。", e.getMessage(), e);
             e.printStackTrace();
@@ -202,17 +197,20 @@ public class PostServiceImpl implements PostService {
 
     //キーワード検索投稿取得
     @Override
-    public List<PostDetailResponse> getPostsByKeyword(SearchPostsRequest requestDto) {
+    public List<PostDetailResponse> getPostsByKeyword(String keyword, Integer currentUserId, List<Integer> shareRange) {
         List<PostDetailResponse> postDetails;
 
-        if(!(requestDto.getShareRange().size() == 1 && requestDto.getShareRange().get(0) == 0)){
-            if (!accountConfirm.isExistsAllGroups(requestDto.getCurrentUserId(), requestDto.getShareRange().toArray(new Integer[0]))) {
-                throw new RuntimeException("指定されたグループに所属していません。");
+        if(!(shareRange.size() == 1 && shareRange.get(0) == 0)){
+            if (!accountConfirm.isExistsAllGroups(currentUserId, shareRange.toArray(new Integer[0]))) {
+                throw new IllegalArgumentException("指定されたグループに所属していません。");
+            }else{
+                log.info("publicのみ指定されているため、グループ所属確認をスキップします。 currentUserId: " + currentUserId);
+                shareRange = List.of(0); // 条件指定がない場合publicの追加
             }
         }
         try{
-            log.info("キーワード検索投稿取得を開始しました キーワード: " + requestDto.getKeyword() + " 取得 currentUserId: " + requestDto.getCurrentUserId() );
-            postDetails = postRepository.findPostsByKeywordWithDetails(requestDto.getCurrentUserId(), requestDto.getKeyword(), requestDto.getMuteWords(), requestDto.getShareRange());
+            log.info("キーワード検索投稿取得を開始しました キーワード: " + keyword + " 取得 currentUserId: " + currentUserId);
+            postDetails = postRepository.findPostsByKeywordWithDetails(currentUserId, keyword, getmuteWordList(currentUserId),shareRange);
         }catch(Exception e){
             log.error("キーワード検索投稿の取得に失敗しました。", e.getMessage(), e);
             e.printStackTrace();
@@ -267,14 +265,30 @@ public class PostServiceImpl implements PostService {
                 fileControlHelper.deleteFile(fileObjectKeys.toArray(new String[0]));
             }
 
-            // 8) 投稿削除
+            // 8) 投稿削除と返信のデクリメント
+            if(  post.getResponseTo() != null){
+                log.info("返信元投稿のresponse_countをデクリメントします。 投稿ID: {}", post.getResponseTo());
+                long result = postRepository.decrementResponseCount(post.getResponseTo());
+                if (result == 0) {
+                    log.warn("返信元投稿のresponse_countのデクリメントに失敗しました。該当する投稿が見つかりません。 投稿ID:{} " , post.getResponseTo());
+                    throw new RuntimeException("返信元投稿のresponse_countのデクリメントに失敗しました。該当する投稿が見つかりません。");
+                } else {
+                    log.info("返信元投稿のresponse_countを正常にデクリメントしました。 投稿ID: {}", post.getResponseTo());
+                }
+            }
             postRepository.deleteByIdAndUserId(postObjectId, userId);
-
+            
             log.info("投稿の削除に成功しました。 投稿ID: {}", postId);
 
         } catch (Exception e) {
             log.error("投稿の削除に失敗しました。 投稿ID: {}", postId, e);
             throw new RuntimeException("投稿の削除に失敗しました。", e);
         }
+    }
+
+    //profileを実装のち実装
+    private List<String> getmuteWordList(Integer userId) {
+        List<String> muteWordList = List.of();
+        return muteWordList;
     }
 }
