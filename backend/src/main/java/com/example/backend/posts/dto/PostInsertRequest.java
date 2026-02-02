@@ -21,10 +21,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostInsertRequest {
-    //jwtから取得予定
-    @NotNull
-    @Min(1)
-    private Integer userId;
     
     @NotNull
     @NotBlank
