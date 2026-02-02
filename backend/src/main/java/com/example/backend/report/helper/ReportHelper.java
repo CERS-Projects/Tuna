@@ -10,6 +10,8 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 import com.example.backend.accounts.repository.UserRepository;
+import com.example.backend.posts.repository.PostRepository;
+import com.example.backend.posts.model.PostEntity;
 import com.example.backend.report.dto.ReportInsertRequest;
 import com.example.backend.report.dto.ReportListResponse;
 import com.example.backend.report.model.ReportEntity;
@@ -67,13 +69,13 @@ public class ReportHelper {
             if(existsByUserId(entity.getReportedUser()) == false) {
                 throw new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。");
             }
-
+            PostEntity post = postRepository.findById(entity.getReportedPostId()).orElseThrow(() -> new IllegalArgumentException("その投稿は存在しないか、報告が存在しません。"));
             response.setReportedName(object.name());
             response.setReportId(entity.getReportId().toHexString()); // JSON形式で返すときにそのオブジェクトが作られた時間とマシンコードで返ってしまうため、文字列に変換
             response.setReportedShowUserId(object.showUserId());
             response.setReasonId(entity.getReasonId());
             response.setReportDate(entity.getReportDate());
-            response.setReportedPost(postRepository.findById(entity.getReportedPostId()).orElseThrow(() -> new IllegalArgumentException("その投稿は存在しないか、報告が存在しません。")));
+            response.setReportedPost(post.getSentence());
             response.setReportDetail(entity.getDetail());
             return response;
         }).toList();
