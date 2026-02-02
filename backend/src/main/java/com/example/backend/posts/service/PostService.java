@@ -8,7 +8,7 @@ import com.example.backend.posts.dto.PostInsertRequest;
 
 public interface PostService {
 
-    void insertPost(PostInsertRequest post);
+    void insertPost(PostInsertRequest post, Integer userId);
 
     List<PostDetailResponse> getTimelinePosts(Integer shareRange, Integer currentUserId);
 
