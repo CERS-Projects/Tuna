@@ -11,7 +11,7 @@ import { type TreeType } from "@/features/management/types/group";
 import { ImagePreview } from "../imagePreview/imagePreview";
 import { UserInfo } from "../userInfo/userInfo";
 import { PostInput } from "../postInput/postInput";
-import { ReplyTo } from "../replyTo/responseTo";
+import { ResponseTo } from "../replyTo/responseTo";
 import { type PostData } from "../../types/post";
 
 const currentUser = {
@@ -113,7 +113,7 @@ export const PostCreateModal = ({
         </div>
 
         <div className={styles.bodyScroll}>
-          {response && <ReplyTo replyTo={response} />}
+          {response && <ResponseTo responseTo={response} />}
 
           <UserInfo
             userIcon={currentUser.user_icon}
