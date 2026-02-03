@@ -11,44 +11,56 @@ import { useState, useRef } from "react";
 import styles from "./postBox.module.css";
 import { Modal, type ModalHandle } from "../modal/modal";
 import { type PostData } from "@/features/post/types/post";
+import { paths } from "@/config/paths";
 
 export const PostBox = (props: PostData) => {
   const {
     postId,
     showUserId,
-    userName,
-    iconUrl,
-    mainPost,
-    goodCount,
-    commentCount,
-    goodCheck,
-    bookmarkCheck,
-    userTo,
-    postImgs,
+    nickname,
+    icon,
+    sentence,
+    likeCount,
+    responseCount,
+    isLiked,
+    isBookmarked,
+    imageUrl,
     isLink = true,
   } = props;
 
-  const nameData = `${userName}@${showUserId}`;
+  const nameData = `${nickname}@${showUserId}`;
   const navigate = useNavigate();
 
-  const [goodOn, setGoodOn] = useState(goodCheck);
-  const [bookmarkOn, setBookmarkOn] = useState(bookmarkCheck);
+  const [goodOn, setGoodOn] = useState(isLiked);
+  const [bookmarkOn, setBookmarkOn] = useState(isBookmarked);
   const [selectedImg, setSelectedImg] = useState<string>("");
 
   const modalRef = useRef<ModalHandle>(null);
 
-  const handleNavigateClick = (e: React.MouseEvent, to: string) => {
+  const handleNavigateClick = (
+    e: React.MouseEvent,
+    to: string,
+    withState: boolean = false,
+  ) => {
     e.preventDefault();
-    navigate(to);
+
+    if (withState)
+      navigate(to, {
+        state: props,
+      });
+    else navigate(to);
   };
+
   const goodClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setGoodOn((prev) => !prev);
   };
+
   const bookmarkClick = (e: React.MouseEvent) => {
     e.preventDefault();
     setBookmarkOn((prev) => !prev);
   };
+
   const handleImgClick = (e: React.MouseEvent, imgurl: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -60,16 +72,16 @@ export const PostBox = (props: PostData) => {
     <>
       <div
         className={styles.postHeader}
-        onClick={(e) => handleNavigateClick(e, userTo)}
+        onClick={(e) => handleNavigateClick(e, `/@${showUserId}`)}
       >
-        {iconUrl && <img src={iconUrl} className={styles.userIcon} alt="" />}
+        {icon && <img src={icon} className={styles.userIcon} alt="" />}
         <span className={styles.userName}>{nameData}</span>
       </div>
 
-      <p className={styles.postBody}>{mainPost}</p>
+      <p className={styles.postBody}>{sentence}</p>
 
-      <div className={styles.postImgBox} data-count={postImgs?.length}>
-        {postImgs?.map((imgurl, index) => (
+      <div className={styles.postImgBox} data-count={imageUrl?.length}>
+        {imageUrl?.map((imgurl, index) => (
           <img
             className={styles.postImg}
             key={index}
@@ -84,11 +96,15 @@ export const PostBox = (props: PostData) => {
         <button onClick={goodClick}>
           {goodOn ? <FaThumbsUp /> : <FaRegThumbsUp />}
         </button>
-        <span className={styles.goodCount}>{goodCount}</span>
-        <button onClick={(e) => handleNavigateClick(e, "/login")}>
+        <span className={styles.goodCount}>{likeCount}</span>
+        <button
+          onClick={(e) =>
+            handleNavigateClick(e, paths.app.timeline.post.path, true)
+          }
+        >
           <BsChat />
         </button>
-        <span className={styles.commentCount}>{commentCount}</span>
+        <span className={styles.commentCount}>{responseCount}</span>
         <button onClick={bookmarkClick}>
           {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
         </button>
@@ -105,7 +121,7 @@ export const PostBox = (props: PostData) => {
     <>
       {isLink ? (
         <Link
-          to={`${postId}`}
+          to={paths.app.timeline.detail.getHref(Number(postId))}
           state={{ item: props }}
           relative="path"
           className={containerClass}

@@ -139,7 +139,8 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
         type: img.file.type,
         isFile: img.file instanceof File,
       })),
-      shareRange: formData.shareRange,
+      shareRange: formData.shareRange.length > 0 ? formData.shareRange : [0],
+      ...(formData.responseTo && { responseTo: formData.responseTo }),
     });
 
     const imageFiles = currentImages.map((img) => img.file);
@@ -148,7 +149,7 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
       sentence: trimmedSentence,
       imageFile: imageFiles.length > 0 ? imageFiles : undefined,
       shareRange: formData.shareRange.length > 0 ? formData.shareRange : [0],
-      responseTo: formData.responseTo,
+      ...(formData.responseTo && { responseTo: formData.responseTo }),
     });
   }, [createPostMutation, form]);
 
