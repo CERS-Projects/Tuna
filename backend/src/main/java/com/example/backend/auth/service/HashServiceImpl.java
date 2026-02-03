@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HashServiceImpl implements HashService {
+    @Override
     public String toHash(String data) {
         String hashData;
         try {
