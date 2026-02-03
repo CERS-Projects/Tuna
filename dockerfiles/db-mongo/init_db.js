@@ -741,21 +741,21 @@ try {
 	// H. report_collection
 	db.report_collection.insertMany([
 		{
-			school_id: 10,
+			school_id: 1,
 			report_date: new Date(),
-			report_by: 201,
-			reported_user: 202,
+			report_by: 2,
+			reported_user: 4,
 			reason_id: 1,
-			reported_post_id: ObjectId("669a84a2c914e6b7f329d202"),
+			reported_post_id: ObjectId("669a84a2c914e6b7f329d503"),
 			detail: "不適切な画像を投稿していました。",
 		},
 		{
-			school_id: 10,
+			school_id: 1,
 			report_date: new Date(),
-			report_by: 203,
-			reported_user: 204,
+			report_by: 2,
+			reported_user: 4,
 			reason_id: 2,
-			reported_post_id: ObjectId("669a84a2c914e6b7f329d203"),
+			reported_post_id: ObjectId("669a84a2c914e6b7f329d503"),
 			detail: "暴言と誹謗中傷を確認しました。",
 		},
 	]);

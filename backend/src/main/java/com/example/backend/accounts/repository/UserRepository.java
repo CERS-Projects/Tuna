@@ -35,7 +35,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
     Optional<UserEntity> findByShowUserId(String showUserId);
 
     @Query("""
-            SELECT new com.example.backend.report.helper.ReportHelper.ReportedUserNameAndShowUserId(u.name, u.showUserId)
+            SELECT new com.example.backend.report.helper.ReportHelper$ReportedUserNameAndShowUserId(u.name, u.showUserId)
             FROM UserEntity u
             WHERE u.userId = :userId
             """)
