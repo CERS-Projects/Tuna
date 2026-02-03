@@ -139,7 +139,7 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
         type: img.file.type,
         isFile: img.file instanceof File,
       })),
-      shareRange: formData.shareRange,
+      shareRange: formData.shareRange.length > 0 ? formData.shareRange : [0],
     });
 
     const imageFiles = currentImages.map((img) => img.file);

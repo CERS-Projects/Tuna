@@ -11,6 +11,8 @@ import { type TreeType } from "@/features/management/types/group";
 import { ImagePreview } from "../imagePreview/imagePreview";
 import { UserInfo } from "../userInfo/userInfo";
 import { PostInput } from "../postInput/postInput";
+import { ReplyTo } from "../replyTo/replyTo";
+import { type PostData } from "../../types/post";
 
 const currentUser = {
   user_id: "mito_denden",
@@ -40,9 +42,11 @@ const items: TreeType[] = [
 export const PostCreateModal = ({
   ref,
   onClose,
+  response,
 }: {
   ref: Ref<ModalHandle>;
   onClose?: () => void;
+  response?: PostData;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { state, actions, refs } = usePostCreate(setIsOpen);
@@ -109,6 +113,8 @@ export const PostCreateModal = ({
         </div>
 
         <div className={styles.bodyScroll}>
+          {response && <ReplyTo replyTo={response} />}
+
           <UserInfo
             userIcon={currentUser.user_icon}
             userName={currentUser.user_name}
@@ -129,12 +135,14 @@ export const PostCreateModal = ({
             />
           )}
 
-          <RangeSection
-            isInputStep={isInputStep}
-            items={items}
-            selectedGroupIds={state.selectedGroupIds}
-            onToggleGroup={actions.toggleGroup}
-          />
+          {!response && (
+            <RangeSection
+              isInputStep={isInputStep}
+              items={items}
+              selectedGroupIds={state.selectedGroupIds}
+              onToggleGroup={actions.toggleGroup}
+            />
+          )}
 
           {(state.imageError || state.submitError) && (
             <div className={styles.errorArea}>
