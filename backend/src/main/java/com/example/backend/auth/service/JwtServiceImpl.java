@@ -44,8 +44,6 @@ public class JwtServiceImpl implements JwtService {
                                 schoolEntity.getSchoolId());
                 String jwtRefreshToken = jwtUtils.createRefreshToken(userEntity.getUserId().toString());
                 hashJwtRefreshToken = hashService.toHash(jwtRefreshToken);
-                System.out.println("リフレッシュトークン" + jwtRefreshToken);
-                System.out.println("ハッシュ化したリフレッシュトークン" + hashJwtRefreshToken);
                 refreshTokenRepository
                                 .save(new RefreshTokenEntity(userEntity.getUserId(), hashJwtRefreshToken));
                 // リフレッシュトークンをcookieに入れる
@@ -54,9 +52,8 @@ public class JwtServiceImpl implements JwtService {
                                 .httpOnly(true)
                                 .sameSite("Lax")
                                 .maxAge(7 * 24 * 60 * 60)
-                                .path("api/refresh")
+                                .path("/api/refresh")
                                 .build();
-                System.out.println(responseCookie.getValue());
                 return new LoginTokenResponse(jwtAccessToken, responseCookie);
         }
 
@@ -98,7 +95,6 @@ public class JwtServiceImpl implements JwtService {
                                         .maxAge(7 * 24 * 60 * 60)
                                         .path("/api/refresh")
                                         .build();
-                        System.out.println("クッキーに入ったリフレッシュトークン値" + responseCookie.getValue());
                         return new LoginTokenResponse(jwtAccessToken, responseCookie);
                 } else {
                         throw new AuthException("ログインしなおしてください");
