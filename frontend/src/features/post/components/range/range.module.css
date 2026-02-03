@@ -1,0 +1,107 @@
+.rangeSection {
+  margin-top: auto;
+  padding: 12px;
+  border: 1px solid rgb(50, 85, 150);
+  border-radius: 12px;
+  background-color: rgba(50, 85, 150, 0.03);
+  flex-shrink: 0;
+}
+
+.rangeLabel {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: rgb(50, 85, 150);
+  margin-bottom: 8px;
+}
+
+.rangeList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.rangeList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.rangeList::-webkit-scrollbar-thumb {
+  background-color: rgb(50, 85, 150);
+  border-radius: 4px;
+}
+
+.rangeItemWrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.rangeItem {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  gap: 8px;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.rangeItem:hover {
+  background-color: #f8f9fa;
+}
+
+.rangeItemSelected {
+  background-color: rgba(50, 85, 150, 0.05);
+  border-color: rgb(50, 85, 150);
+}
+
+.expandButton {
+  background: none;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.expandButton:hover {
+  background-color: #e0e0e0;
+}
+
+.expandSpacer {
+  width: 18px;
+}
+
+.childCount {
+  font-size: 0.75rem;
+  color: #888;
+  margin-left: 4px;
+}
+
+.childrenContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.confirmTag {
+  display: inline-block;
+  background-color: rgb(50, 85, 150);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.noSelectionMessage {
+  font-size: 0.9rem;
+}

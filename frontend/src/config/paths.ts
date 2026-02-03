@@ -81,6 +81,10 @@ export const paths = {
     timeline: {
       path: "/app/timeline",
       getHref: () => "/app/timeline",
+      post: {
+        path: "/app/timeline/post",
+        getHref: () => "/app/timeline/post",
+      },
       detail: {
         path: "/app/timeline/:id",
         getHref: (id: number) => `/app/timeline/${id}`,
@@ -126,6 +130,18 @@ export const paths = {
       follower: {
         path: "/app/profile/follower",
         getHref: () => "/app/profile/follower",
+      },
+      settingMenu: {
+        path: "/app/profile/settingMenu",
+        getHref: () => "/app/profile/settingMenu",
+        editPassword: {
+          path: "/app/profile/settingMenu/editPassword",
+          getHref: () => "/app/profile/settingMenu/editPassword",
+        },
+        editFilter: {
+          path: "/app/profile/settingMenu/editFilter",
+          getHref: () => "/app/profile/settingMenu/editFilter",
+        },
       },
     },
     test: {

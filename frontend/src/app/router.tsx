@@ -89,7 +89,17 @@ const createAppRouter = (queryClient: QueryClient) => {
           element: <Navigate to={paths.app.timeline.path} replace />,
         },
         route(paths.app.test.path, () => import("./routes/app/test")),
-        route(paths.app.timeline.path, () => import("./routes/app/timeline")),
+        {
+          path: paths.app.timeline.path,
+          lazy: () =>
+            import("./routes/app/timeline").then(convert(queryClient)),
+          children: [
+            route(
+              paths.app.timeline.post.path,
+              () => import("./routes/app/post"),
+            ),
+          ],
+        },
         route(
           paths.app.timeline.detail.path,
           () => import("./routes/app/detailPost"),
@@ -97,6 +107,18 @@ const createAppRouter = (queryClient: QueryClient) => {
         route(
           paths.app.searchPost.path,
           () => import("./routes/app/searchPost"),
+        ),
+        route(
+          paths.app.classroom.path,
+          () => import("./routes/app/searchClassroom"),
+        ),
+        route(
+          paths.app.profile.follow.path,
+          () => import("./routes/app/profile/follow"),
+        ),
+        route(
+          paths.app.profile.follower.path,
+          () => import("./routes/app/profile/follower"),
         ),
         route(
           paths.app.classroom.path,
@@ -139,6 +161,18 @@ const createAppRouter = (queryClient: QueryClient) => {
             ),
           ],
         },
+        route(
+          paths.app.profile.settingMenu.path,
+          () => import("./routes/app/profile/setting/settingMenu"),
+        ),
+        route(
+          paths.app.profile.settingMenu.editPassword.path,
+          () => import("./routes/app/profile/edit/editPassword"),
+        ),
+        route(
+          paths.app.profile.settingMenu.editFilter.path,
+          () => import("./routes/app/profile/edit/editFilter"),
+        ),
       ],
     },
 

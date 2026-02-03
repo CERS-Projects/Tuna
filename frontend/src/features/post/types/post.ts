@@ -14,3 +14,21 @@ export type PostData = {
   responseTo?: number;
   isLink?: boolean;
 };
+
+export type CreatePostRequest = {
+  sentence: string;
+  imageFile?: File[];
+  shareRange: number[];
+  responseTo?: number;
+};
+
+export type PostFormData = {
+  sentence: string;
+  shareRange: number[];
+  responseTo?: number;
+};
+
+export type ImageData = {
+  url: string;
+  file: File;
+};

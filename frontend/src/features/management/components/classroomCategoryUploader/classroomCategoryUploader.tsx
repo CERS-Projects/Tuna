@@ -1,15 +1,27 @@
 import React, { useRef } from "react";
-import { type UseFormRegister, type FieldError } from "react-hook-form";
-import { type ClassroomCreateInput } from "@/features/management/types/classroom";
+import {
+  type UseFormRegister,
+  type FieldError,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
+import {
+  type ClassroomCategoryEdit,
+  type ClassroomCategoryDocument,
+} from "@/features/management/types/classroom";
 import { FaRegTrashAlt } from "react-icons/fa";
 import styles from "./classroomCategoryUploader.module.css";
 
-type Props = {
+type CreateModeValue = { category: string; files: File[] };
+type EditModeValue = ClassroomCategoryEdit;
+
+type Props<T extends FieldValues> = {
   index: number;
-  value: { category: string; files: File[] };
+  value: CreateModeValue | EditModeValue;
   error?: FieldError;
-  register: UseFormRegister<ClassroomCreateInput>;
-  onFilesChange: (files: File[]) => void;
+  register: UseFormRegister<T>;
+  onFilesChange?: (files: File[]) => void;
+  onUpdate?: (value: EditModeValue) => void;
   onRemove: () => void;
 };
 
@@ -24,15 +36,26 @@ const ALLOWED_EXTENSIONS = [
   ".pptx",
 ];
 
-export const ClassroomCategoryUploader = ({
+export const ClassroomCategoryUploader = <T extends FieldValues>({
   index,
   value,
   error,
   register,
   onFilesChange,
+  onUpdate,
   onRemove,
-}: Props) => {
+}: Props<T>) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const isEditMode = "existingDocuments" in value;
+
+  const currentNewFiles = isEditMode
+    ? (value as EditModeValue).newFiles
+    : (value as CreateModeValue).files;
+
+  const existingDocs = isEditMode
+    ? (value as EditModeValue).existingDocuments
+    : [];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -52,15 +75,25 @@ export const ClassroomCategoryUploader = ({
         return;
       }
 
-      const duplicate = files.find((file) =>
-        value.files.some((f) => f.name === file.name),
+      const duplicate = files.find(
+        (file) =>
+          currentNewFiles.some((f) => f.name === file.name) ||
+          existingDocs.some((doc) => doc.name === file.name),
       );
       if (duplicate) {
         alert("同じファイル名のファイルが既に追加されています");
         return;
       }
 
-      onFilesChange([...value.files, ...files]);
+      if (isEditMode && onUpdate) {
+        onUpdate({
+          ...(value as EditModeValue),
+          newFiles: [...currentNewFiles, ...files],
+        });
+      } else if (onFilesChange) {
+        onFilesChange([...currentNewFiles, ...files]);
+      }
+      e.target.value = "";
     } else {
       alert("ファイルサイズが20MB以下のファイルをアップロードしてください");
     }
@@ -85,15 +118,24 @@ export const ClassroomCategoryUploader = ({
         return;
       }
 
-      const duplicate = files.find((file) =>
-        value.files.some((f) => f.name === file.name),
+      const duplicate = files.find(
+        (file) =>
+          currentNewFiles.some((f) => f.name === file.name) ||
+          existingDocs.some((doc) => doc.name === file.name),
       );
       if (duplicate) {
         alert("同じファイル名のファイルが既に追加されています");
         return;
       }
 
-      onFilesChange([...value.files, ...files]);
+      if (isEditMode && onUpdate) {
+        onUpdate({
+          ...(value as EditModeValue),
+          newFiles: [...currentNewFiles, ...files],
+        });
+      } else if (onFilesChange) {
+        onFilesChange([...currentNewFiles, ...files]);
+      }
     } else {
       alert("ファイルサイズが20MB以下のファイルをアップロードしてください");
     }
@@ -103,9 +145,29 @@ export const ClassroomCategoryUploader = ({
     e.preventDefault();
   };
 
-  const handleRemoveFile = (idx: number) => {
-    const newFiles = value.files.filter((_, i) => i !== idx);
-    onFilesChange(newFiles);
+  const handleRemoveExisting = (doc: ClassroomCategoryDocument) => {
+    if (isEditMode && onUpdate) {
+      const v = value as EditModeValue;
+      const existingFiltered = v.existingDocuments.filter(
+        (d) => d.path !== doc.path,
+      );
+
+      onUpdate({
+        ...v,
+        existingDocuments: existingFiltered,
+        deleteDocuments: [...v.deleteDocuments, doc],
+      });
+    }
+  };
+
+  const handleRemoveNew = (fileIdx: number) => {
+    const newFiltered = currentNewFiles.filter((_, i) => i !== fileIdx);
+
+    if (isEditMode && onUpdate) {
+      onUpdate({ ...(value as EditModeValue), newFiles: newFiltered });
+    } else if (onFilesChange) {
+      onFilesChange(newFiltered);
+    }
   };
 
   return (
@@ -120,7 +182,7 @@ export const ClassroomCategoryUploader = ({
             }
             type="text"
             placeholder="カテゴリ名"
-            {...register(`categories.${index}.category` as const, {
+            {...register(`categories.${index}.category` as Path<T>, {
               required: "必須項目です",
             })}
           />
@@ -137,28 +199,48 @@ export const ClassroomCategoryUploader = ({
         onDragOver={handleDragOver}
       >
         <div className={styles.fileListArea}>
-          {value.files.length === 0 && (
+          {currentNewFiles.length === 0 && existingDocs.length === 0 && (
             <div className={styles.dropzoneHint}>
               ファイルをドラッグ＆ドロップ、またはクリックして選択
             </div>
           )}
-          {value.files.map((file, i) => (
-            <div className={styles.fileIconBox} key={i}>
+
+          {existingDocs.map((doc, i) => (
+            <div className={styles.fileIconBox} key={`exist-${i}`}>
               <div className={styles.fileIcon} />
-              <span className={styles.fileName}>{file.name}</span>
+              <span className={styles.fileName}>{doc.name}</span>
               <button
                 type="button"
                 className={styles.fileTrash}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleRemoveFile(i);
+                  handleRemoveExisting(doc);
                 }}
-                aria-label="ファイルを削除"
               >
                 <FaRegTrashAlt />
               </button>
             </div>
           ))}
+
+          {currentNewFiles.map((file, i) => (
+            <div className={styles.fileIconBox} key={`new-${i}`}>
+              <div className={styles.fileIcon} />
+              <span className={styles.fileName}>
+                {file.name} {isEditMode && "(新規)"}
+              </span>
+              <button
+                type="button"
+                className={styles.fileTrash}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveNew(i);
+                }}
+              >
+                <FaRegTrashAlt />
+              </button>
+            </div>
+          ))}
+
           <div
             className={styles.addFileBox}
             onClick={(e) => {

@@ -45,4 +45,12 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
         @Param("newParentId") Integer newParentId, 
         @Param("targetGroup") Integer targetGroup
     );
+
+    @Query("""
+            SELECT EXISTS(
+                SELECT g FROM GroupEntity g 
+                WHERE g.school.schoolId = :schoolId AND g.groupId = :groupId
+            )
+            """)
+    boolean existsGroupBySchoolIdAndGroupId(@Param("schoolId") Integer schoolId, @Param("groupId") Integer groupId);
 } 

@@ -20,6 +20,7 @@
   border-left: 1px solid rgb(50, 85, 150);
   overflow: auto;
   min-height: 100%;
+  background-color: #f1f5f9;
 }
 
 .detailTag {

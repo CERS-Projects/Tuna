@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.accounts.model.UserEntity;
+import com.example.backend.report.helper.ReportHelper.ReportedUserNameAndShowUserId;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer>{
     @Modifying
@@ -33,5 +34,21 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 
     Optional<UserEntity> findByShowUserId(String showUserId);
 
-    Boolean existsByShowUserId(String showUserId);
+    @Query("""
+            SELECT new com.example.backend.report.helper.ReportHelper$ReportedUserNameAndShowUserId(u.name, u.showUserId)
+            FROM UserEntity u
+            WHERE u.userId = :userId
+            """)
+    Optional<ReportedUserNameAndShowUserId> findUserInfo(@Param("userId") Integer userId);
+
+    boolean existsByShowUserId(String showUserId);
+
+    @Query("""
+           SELECT COUNT(u.userId) FROM UserEntity u
+           WHERE u.school.schoolId = :schoolId 
+               AND (u.userId = :userId OR u.userId = :reportedUserId)
+           """)
+    long validateByReportBySchoolId(@Param("schoolId") Integer schoolId, 
+                                    @Param("userId") Integer userId, 
+                                    @Param("reportedUserId") Integer reportedUserId);
 }

@@ -1,0 +1,13 @@
+.settingMenuHeader {
+  padding-left: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.settingMenuMain {
+  margin: 0 auto; 
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  gap: 20px;
+}

@@ -86,7 +86,7 @@ public class ExceptionCatch {
 
     // 500
     @ExceptionHandler({ InternalServerError.class, IOException.class,
-            IllegalStateException.class })
+            IllegalStateException.class, RuntimeException.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponseEntity serverError(Exception e) {
         ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.value(),

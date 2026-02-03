@@ -32,7 +32,7 @@ public class InquiryController {
     private final InquiryService inquiryService;
 
     @PostMapping
-    //問い合わせの登録(Responceで返す値がないためvoidで定義)
+    //問い合わせの登録(Responseで返す値がないためvoidで定義)
     public ResponseEntity<Void> insertInquiry(@RequestBody  InquiryInsertRequest inquiryRequest) {
 
         //DTOからEntityへの変換
