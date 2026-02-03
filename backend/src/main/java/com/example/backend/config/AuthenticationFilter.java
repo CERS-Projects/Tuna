@@ -19,7 +19,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.auth.service.LoginAttemptService;
-import com.example.backend.exception.Model.InternalSecurityException;
+import com.example.backend.exception.model.InternalSecurityException;
 import com.example.backend.utils.jwt.JwtUtils;
 import org.springframework.lang.NonNull;
 

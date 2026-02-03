@@ -6,4 +6,6 @@ public interface LoginAttemptService {
     void isStop(HttpServletRequest httpServletRequest, String userId);
 
     void loginFailed(String userId);
+
+    void otpFailed(Integer userId, String otpToken);
 }

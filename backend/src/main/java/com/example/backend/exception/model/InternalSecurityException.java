@@ -1,4 +1,4 @@
-package com.example.backend.exception.Model;
+package com.example.backend.exception.model;
 
 import org.springframework.security.core.AuthenticationException;
 

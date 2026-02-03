@@ -1,4 +1,4 @@
-package com.example.backend.exception.Advice;
+package com.example.backend.exception.advice;
 
 import java.io.IOException;
 
@@ -19,8 +19,8 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.backend.exception.AuthException;
-import com.example.backend.exception.Model.ErrorResponseEntity;
-import com.example.backend.exception.Model.SchoolNotFoundException;
+import com.example.backend.exception.model.ErrorResponseEntity;
+import com.example.backend.exception.model.SchoolNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,7 +66,8 @@ public class ExceptionCatch {
     }
 
     // 404
-    @ExceptionHandler({ NoResourceFoundException.class, EmptyResultDataAccessException.class, SchoolNotFoundException.class })
+    @ExceptionHandler({ NoResourceFoundException.class, EmptyResultDataAccessException.class,
+            SchoolNotFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponseEntity notFound(Exception e) {
         ErrorResponseEntity response = new ErrorResponseEntity(HttpStatus.NOT_FOUND.value(), e.getMessage());

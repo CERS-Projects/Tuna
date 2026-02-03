@@ -15,6 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 @EnableWebSecurity
@@ -38,7 +39,6 @@ public class SecurityConfig {
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
     }
 
-    // 認証なしで動かしたいとき
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -46,8 +46,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/refresh").permitAll()
-                        .requestMatchers("/accounts/teacher").hasRole("ADMIN_SCHOOL")
+                        .requestMatchers("/login", "/refresh", "/otp", "accounts/student").permitAll()
+                        .requestMatchers("/accounts/teacher").permitAll()
                         .requestMatchers("/support/help/category").hasAnyRole("TEACHER", "STUDENT")
                         .requestMatchers("/report/list", "/report/delete", "/notice/create", 
                                          "/notice/teacher/list"     , "/notice/modify", "/notice/delete").hasAnyRole("TEACHER", "ADMIN_SCHOOL")
@@ -83,5 +83,10 @@ public class SecurityConfig {
     @Bean
     BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    SecureRandom secureRandom() {
+        return new SecureRandom();
     }
 }
