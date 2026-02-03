@@ -490,9 +490,9 @@ try {
 		{
 			_id: ObjectId("669a84a2c914e6b7f329d201"), // 固定のObjectIdを指定
 			user_id: 1,
-			post_date: new Date(),
+			post_date: new Date(Date.now()),
 			sentence: "最初のテスト投稿です。",
-			image_objectKey: ["images/6851f5b2-7c82-44b7-bbda-71087b8af9e1.gif"],
+			image_objectKey: ["images/df7810bd-a128-487c-a389-8d836e35da22.jpg"],
 			like_count: 5,
 			response_count: 2,
 			share_range: [0, 1],
@@ -506,7 +506,7 @@ try {
 			sentence: "返信テスト投稿です。",
 			like_count: 3,
 			response_count: 0,
-			share_range: [1, 5, 6],
+			share_range: [0, 1, 5, 6],
 			response_to: ObjectId("669a84a2c914e6b7f329d201"),
 			post_flag: true,
 		},
@@ -527,10 +527,10 @@ try {
 		{
 			user_id: 2,
 			post_date: new Date(Date.now() - 2700000), // 45分前
-			sentence: "はなこさんの投稿の投稿です！",
+			sentence: "はなこさんのグループでの投稿です！",
 			like_count: 15,
 			response_count: 0,
-			share_range: [0, 1, 2, 5, 6],
+			share_range: [2],
 			response_to: null,
 			post_flag: true,
 		},
@@ -570,18 +570,28 @@ try {
 			sentence: "情報処理学科の投稿です。",
 			like_count: 0,
 			response_count: 0,
-			share_range: [0, 5],
+			share_range: [5],
 			response_to: null,
 			post_flag: true,
 		},
 		{
-			_id: ObjectId("669a84a2c914e6b7f329d203"), // 固定のObjectIdを指定
+			_id: ObjectId("669a84a2c914e6b7f329d503"), // 固定のObjectIdを指定
 			user_id: 1,
 			post_date: new Date(Date.now() - 300000), // 5分前
 			sentence: "通報される投稿です",
 			like_count: 1,
 			response_count: 0,
 			share_range: [0],
+			response_to: null,
+			post_flag: false,
+		},
+		{
+			user_id: 4,
+			post_date: new Date(Date.now() - 600000), // 10分前
+			sentence: "情報処理学科の投稿です。",
+			like_count: 0,
+			response_count: 0,
+			share_range: [0, 5],
 			response_to: null,
 			post_flag: true,
 		},
@@ -592,7 +602,7 @@ try {
 	db.profile_collection.insertMany([
 		{
 			user_id: 1,
-			icon: "images/63b81b67-68ec-4171-a28c-3042a33b8591.png",
+			icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
 			nickname: "タロウ",
 			show_user_id: "taro_user",
 			introduction: "テストユーザー1号です。",
