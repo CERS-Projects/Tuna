@@ -49,7 +49,14 @@ export const PostCreateModal = ({
   response?: PostData;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { state, actions, refs } = usePostCreate(setIsOpen);
+  const { state, actions, refs, form } = usePostCreate(setIsOpen);
+
+  useEffect(() => {
+    if (response) {
+      form.setValue("responseTo", response.postId);
+      form.setValue("shareRange", response.shareRange);
+    }
+  }, [response, form]);
 
   useEffect(() => {
     if (isOpen) {
