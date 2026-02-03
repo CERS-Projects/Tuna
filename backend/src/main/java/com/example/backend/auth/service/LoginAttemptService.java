@@ -7,5 +7,5 @@ public interface LoginAttemptService {
 
     void loginFailed(String userId);
 
-    void otpFailed(Integer userId);
+    void otpFailed(Integer userId, String otpToken);
 }

@@ -72,11 +72,14 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
     }
 
     @Override
-    public void otpFailed(Integer userId) {
+    public void otpFailed(Integer userId, String otpToken) {
+        if (otpToken == null) {
+            throw new IllegalArgumentException("サーバー内部でエラーが発生しました");
+        }
         String missOtpKey = userId + "_MissOtp";
         Integer missCount;
-        if (stringRedisTemplate.hasKey(missOtpKey) == false) {
-            stringRedisTemplate.opsForValue().set(missOtpKey, "1");
+        if (!stringRedisTemplate.hasKey(missOtpKey)) {
+            stringRedisTemplate.opsForValue().set(missOtpKey, "1", 5, TimeUnit.MINUTES);
             return;
         } else {
             missCount = Integer.valueOf(stringRedisTemplate.opsForValue().get(missOtpKey));
@@ -84,13 +87,13 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
                 throw new IllegalStateException("サーバー内部でエラーが発生しました");
             }
             missCount++;
-            stringRedisTemplate.opsForValue().set(missOtpKey, String.valueOf(missCount));
+            stringRedisTemplate.opsForValue().set(missOtpKey, String.valueOf(missCount), 5, TimeUnit.MINUTES);
         }
 
         if (missCount == 3) {
-            stringRedisTemplate.delete(userId + "_Otp");
+            stringRedisTemplate.delete(otpToken);
             stringRedisTemplate.delete(missOtpKey);
-            throw new AuthException("ワンタイムパスワードの試行回数に達成したため、ログインをしなおしてください");
+            throw new AuthException("ワンタイムパスワードの試行回数に到達したため、ログインをしなおしてください");
         }
     }
 
