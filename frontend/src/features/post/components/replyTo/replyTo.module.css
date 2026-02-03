@@ -1,0 +1,66 @@
+.replyToContainer {
+  padding: 12px;
+  border: 1px solid #e1e8ed;
+  border-radius: 12px;
+  background-color: #f7f9fa;
+  margin-bottom: 8px;
+}
+
+.replyToHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.replyToIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.replyToName {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #14171a;
+}
+
+.replyToUserId {
+  font-weight: normal;
+  color: #657786;
+  margin-left: 4px;
+}
+
+.replyToSentence {
+  font-size: 0.9rem;
+  color: #14171a;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.replyToImages {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  overflow-x: auto;
+}
+
+.replyToImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.replyingTo {
+  font-size: 0.85rem;
+  color: #657786;
+  padding-top: 8px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.replyingToUser {
+  color: rgb(50, 85, 150);
+}
