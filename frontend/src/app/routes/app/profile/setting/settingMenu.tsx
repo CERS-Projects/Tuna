@@ -9,13 +9,13 @@ import { paths } from "@/config/paths";
 const MenuItems: MenuItemType[] = [
   {
     menuName: "パスワード更新",
-    menuPath: paths.app.profile.edit.editPassword.getHref(),
+    menuPath: paths.app.profile.settingMenu.editPassword.getHref(),
     menuIcon: <RiLockPasswordFill />,
     menuLabel: "パスワードの変更を行います",
   },
   {
     menuName: "フィルタリング設定",
-    menuPath: paths.app.profile.edit.editFilter.getHref(),
+    menuPath: paths.app.profile.settingMenu.editFilter.getHref(),
     menuIcon: <IoFilterOutline />,
     menuLabel: "フィルタリングの設定を行います",
   },

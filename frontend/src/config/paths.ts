@@ -134,17 +134,13 @@ export const paths = {
       settingMenu: {
         path: "/app/profile/settingMenu",
         getHref: () => "/app/profile/settingMenu",
-      },
-      edit: {
-        path: "/app/profile/edit",
-        getHref: () => "/app/profile/edit",
         editPassword: {
-          path: "/app/profile/edit/editPassword",
-          getHref: () => "/app/profile/edit/editPassword",
+          path: "/app/profile/settingMenu/editPassword",
+          getHref: () => "/app/profile/settingMenu/editPassword",
         },
         editFilter: {
-          path: "/app/profile/edit/editFilter",
-          getHref: () => "/app/profile/edit/editFilter",
+          path: "/app/profile/settingMenu/editFilter",
+          getHref: () => "/app/profile/settingMenu/editFilter",
         },
       },
     },
