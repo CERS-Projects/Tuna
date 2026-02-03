@@ -3,8 +3,8 @@ package com.example.backend.posts.controller;
 import com.example.backend.posts.dto.PostInsertRequest;
 import com.example.backend.posts.dto.PostDetailResponse;
 import com.example.backend.posts.model.SearchHistoryItem;
-import com.example.backend.posts.dto.addBookmarkRequest;
-import com.example.backend.posts.dto.addlikeRequest;
+import com.example.backend.posts.dto.AddBookmarkRequest;
+import com.example.backend.posts.dto.AddLikeRequest;
 
 import com.example.backend.posts.service.PostService;
 import com.example.backend.posts.service.BookmarkService;
@@ -60,7 +60,7 @@ public class PostController {
 
     //タイムライン投稿を取得
     @GetMapping("/timeline")
-    public ResponseEntity<List<PostDetailResponse>> getTimelinePosts(@Valid @RequestParam final Integer shareRange, @AuthenticationPrincipal final UserInfo userInfo){
+    public ResponseEntity<List<PostDetailResponse>> getTimelinePosts(@RequestParam final Integer shareRange, @AuthenticationPrincipal final UserInfo userInfo){
         List<PostDetailResponse> timelinePosts;
         
         timelinePosts = postService.getTimelinePosts(shareRange, userInfo.getUserId());       
@@ -70,7 +70,7 @@ public class PostController {
 
     //ユーザー投稿を取得
     @GetMapping("/profile")
-    public ResponseEntity<List<PostDetailResponse>> getUserPosts(@Valid @RequestParam final Integer targetUserId, @AuthenticationPrincipal final UserInfo userInfo){
+    public ResponseEntity<List<PostDetailResponse>> getUserPosts(@RequestParam final Integer targetUserId, @AuthenticationPrincipal final UserInfo userInfo){
         List<PostDetailResponse> userPosts;
 
         userPosts = postService.getUserPosts(targetUserId, userInfo.getUserId());
@@ -80,7 +80,7 @@ public class PostController {
 
     //返信投稿を取得
     @GetMapping("/responses")
-    public ResponseEntity<List<PostDetailResponse>> getReplyPosts(@Valid @RequestParam final String replypostId, @AuthenticationPrincipal final UserInfo userInfo){
+    public ResponseEntity<List<PostDetailResponse>> getReplyPosts(@RequestParam final String replypostId, @AuthenticationPrincipal final UserInfo userInfo){
         List<PostDetailResponse> responsePosts;
         
         responsePosts = postService.getReplyPosts(replypostId, userInfo.getUserId());
@@ -89,7 +89,7 @@ public class PostController {
 
     //キーワード検索投稿を取得
     @GetMapping("/search")
-    public ResponseEntity<List<PostDetailResponse>> getPostsByKeyword(@Valid @RequestParam @Size(min = 1, max = 100,message = "キーワードは1文字以上100文字以下で入力してください") final String keyword, @AuthenticationPrincipal final UserInfo userInfo,@RequestParam final List<Integer> shareRange){
+    public ResponseEntity<List<PostDetailResponse>> getPostsByKeyword(@RequestParam @Size(min = 1, max = 100,message = "キーワードは1文字以上100文字以下で入力してください") final String keyword, @AuthenticationPrincipal final UserInfo userInfo,@RequestParam final List<Integer> shareRange){
         List<PostDetailResponse> searchedPosts;
         
         //検索履歴の追加
@@ -100,17 +100,22 @@ public class PostController {
     
     //ブックマーク追加
     @PostMapping("/addbookmarks")
-    public ResponseEntity<Void> addBookmark(@Valid @RequestBody addBookmarkRequest addBookmarkRequest, @AuthenticationPrincipal final UserInfo userInfo) {
-        log.info("ブックマークの追加を開始しました userId: {} and postId: {}", userInfo.getUserId(), addBookmarkRequest.getPostId());
-        bookmarkService.addBookmark(new ObjectId(addBookmarkRequest.getPostId()), userInfo.getUserId());
+    public ResponseEntity<Void> addBookmark(@RequestBody AddBookmarkRequest addBookmark, @AuthenticationPrincipal final UserInfo userInfo) {
+        log.info("ブックマークの追加を開始しました userId: {} and postId: {}", userInfo.getUserId(), addBookmark.getPostId());
+        bookmarkService.addBookmark(new ObjectId(addBookmark.getPostId()), userInfo.getUserId());
         return ResponseEntity.ok().build();
 
     }
 
     //ブックマーク削除
     @DeleteMapping("/removebookmarks")
-    public ResponseEntity<Void> removeBookmark(@Valid @RequestParam final String postId, @AuthenticationPrincipal final UserInfo userInfo) {
+    public ResponseEntity<Void> removeBookmark(@RequestParam final String postId, @AuthenticationPrincipal final UserInfo userInfo) {
+        try{
         bookmarkService.removeBookmark(new ObjectId(postId), userInfo.getUserId());
+        } catch(Exception e){
+            log.error("ブックマークの削除に失敗しました userId: {} and postId: {} エラー: {}" , userInfo.getUserId(), postId, e);
+            throw new RuntimeException("ブックマークの削除に失敗しました");
+        }
         log.info("ブックマークが正常に削除されました userId: {} and postId: {}", userInfo.getUserId(), postId);
         return ResponseEntity.ok().build();
     }
@@ -124,16 +129,21 @@ public class PostController {
     }
 
     //いいね追加
-    @PostMapping("/addlikes")
-    public ResponseEntity<Void> addLikes(@Valid @RequestBody addlikeRequest addlikeRequest, @AuthenticationPrincipal final UserInfo userInfo){
-        likeService.addLikes(new ObjectId(addlikeRequest.getPostId()), userInfo.getUserId());
+    @PostMapping("/addLikes")
+    public ResponseEntity<Void> addLikes(@RequestBody AddLikeRequest addLikeRequest, @AuthenticationPrincipal final UserInfo userInfo){
+        likeService.addLikes(new ObjectId(addLikeRequest.getPostId()), userInfo.getUserId());
         return ResponseEntity.ok().build();
     }
     
     //いいね削除
     @DeleteMapping("/removelikes")
-    public ResponseEntity<Void> removeLikes(@Valid @RequestParam final String postId, @AuthenticationPrincipal final UserInfo userInfo){
-        likeService.removeLikes(new ObjectId(postId), userInfo.getUserId());
+    public ResponseEntity<Void> removeLikes(@RequestParam final String postId, @AuthenticationPrincipal final UserInfo userInfo){
+        try{
+            likeService.removeLikes(new ObjectId(postId), userInfo.getUserId());
+        } catch(Exception e){
+            log.error("いいねの削除に失敗しました userId: {} and postId: {} エラー: {}" , userInfo.getUserId(), postId, e);
+            throw new RuntimeException("いいねの削除に失敗しました");
+        }
         return ResponseEntity.ok().build();
     }
     

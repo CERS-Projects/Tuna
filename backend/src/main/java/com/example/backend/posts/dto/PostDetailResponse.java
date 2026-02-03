@@ -13,13 +13,12 @@ import java.util.Date;
 @Getter
 @Setter
 public class PostDetailResponse {
-    //postから取得
+    
     @NotNull
-    @Size(min = 24, max = 24)
     @Field("_id")
     private String postId;
 
-    //Jwtから取得予定
+    
     @Field("user_id")
     private Integer userId;
 

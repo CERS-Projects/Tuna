@@ -183,8 +183,7 @@ public class PostServiceImpl implements PostService {
             log.info("返信取得を開始しました 投稿ID: " + replyPostId + " 取得 currentUserId: " + currentUserId );
             postDetails = postRepository.findPostsResponseWithDetails(currentUserId, new ObjectId(replyPostId), getmuteWordList(currentUserId));
         }catch(Exception e){
-            log.error("返信投稿の取得に失敗しました。", e.getMessage(), e);
-            e.printStackTrace();
+            log.error("返信投稿の取得に失敗しました。", e);
             throw new RuntimeException("返信投稿の取得に失敗しました。", e);
         }
         for(PostDetailResponse postDetail : postDetails){
@@ -212,8 +211,7 @@ public class PostServiceImpl implements PostService {
             log.info("キーワード検索投稿取得を開始しました キーワード: " + keyword + " 取得 currentUserId: " + currentUserId);
             postDetails = postRepository.findPostsByKeywordWithDetails(currentUserId, keyword, getmuteWordList(currentUserId),shareRange);
         }catch(Exception e){
-            log.error("キーワード検索投稿の取得に失敗しました。", e.getMessage(), e);
-            e.printStackTrace();
+            log.error("キーワード検索投稿の取得に失敗しました。", e);
             throw new RuntimeException("キーワード検索投稿の取得に失敗しました。", e);
         }
         for(PostDetailResponse postDetail : postDetails){

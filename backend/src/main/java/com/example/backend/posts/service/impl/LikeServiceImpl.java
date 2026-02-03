@@ -95,7 +95,7 @@ public class LikeServiceImpl implements LikeService {
     //いいね取得
     @Override
     public List<PostDetailResponse> getLikedPosts(Integer userId) {
-        List<PostDetailResponse> postDetails = null;
+        List<PostDetailResponse> postDetails = List.of();
 
         try{
             postDetails = likeRepository.findByLiked(userId);
