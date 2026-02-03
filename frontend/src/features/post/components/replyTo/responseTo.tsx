@@ -1,4 +1,4 @@
-import styles from "./replyTo.module.css";
+import styles from "./responseTo.module.css";
 import { type PostData } from "../../types/post";
 
 type ReplyToProps = {

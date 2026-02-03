@@ -11,7 +11,7 @@ import { type TreeType } from "@/features/management/types/group";
 import { ImagePreview } from "../imagePreview/imagePreview";
 import { UserInfo } from "../userInfo/userInfo";
 import { PostInput } from "../postInput/postInput";
-import { ReplyTo } from "../replyTo/replyTo";
+import { ReplyTo } from "../replyTo/responseTo";
 import { type PostData } from "../../types/post";
 
 const currentUser = {
