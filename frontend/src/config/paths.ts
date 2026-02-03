@@ -108,32 +108,32 @@ export const paths = {
     },
     profile: {
       root: {
-        path: "/app/profile",
-        getHref: () => "/app/profile",
+        path: "/app/profile/:userId",
+        getHref: (userId: string) => `/app/profile/${userId}`,
       },
       posts: {
-        path: "/app/profile/posts",
-        getHref: () => "/app/profile/posts",
+        path: "/app/profile/:userId/posts",
+        getHref: (userId: string) => `/app/profile/${userId}/posts`,
       },
       responses: {
-        path: "/app/profile/responses",
-        getHref: () => "/app/profile/responses",
+        path: "/app/profile/:userId/responses",
+        getHref: (userId: string) => `/app/profile/${userId}/responses`,
       },
       goods: {
-        path: "/app/profile/goods",
-        getHref: () => "/app/profile/goods",
+        path: "/app/profile/:userId/goods",
+        getHref: (userId: string) => `/app/profile/${userId}/goods`,
       },
       bookmarks: {
-        path: "/app/profile/bookmarks",
-        getHref: () => "/app/profile/bookmarks",
+        path: "/app/profile/:userId/bookmarks",
+        getHref: (userId: string) => `/app/profile/${userId}/bookmarks`,
       },
       follow: {
-        path: "/app/profile/follow",
-        getHref: () => "/app/profile/follow",
+        path: "/app/profile/:userId/follow",
+        getHref: (userId: string) => `/app/profile/${userId}/follow`,
       },
       follower: {
-        path: "/app/profile/follower",
-        getHref: () => "/app/profile/follower",
+        path: "/app/profile/:userId/follower",
+        getHref: (userId: string) => `/app/profile/${userId}/follower`,
       },
       setting: {
         path: "/app/profile/setting",

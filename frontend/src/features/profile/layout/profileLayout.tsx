@@ -2,11 +2,12 @@ import { InfoBox } from "@/components/ui/infoBox/infoBox";
 import { RiCompass3Line } from "react-icons/ri";
 import styles from "@/features/profile/layout/profileLayout.module.css";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ProfileCard } from "../components/profileCard";
+import { OtherProfileCard } from "../components/otherProfileCard";
 import { ProfileCardTab } from "../components/profileTab";
 import type { ProfileData } from "../types/profileTypes";
-import { Outlet } from "react-router";
+import { Outlet, useParams } from "react-router";
 import { NoticeInfo } from "@/features/searchClassroom/components/noticeInfo";
 import { type NoticeInfoItem } from "@/features/searchClassroom/types/SelectClassroom";
 
@@ -19,6 +20,15 @@ const dummyProfile: ProfileData = {
   follower: 999999999,
   introduction:
     "深海魚です。趣味は某動画本社を爆破すること。本職は水族館勤務。タツノオトシゴが運営しています。",
+};
+
+const dummyOtherProfile: ProfileData = {
+  showUserId: "other-user-001",
+  userName: "別のユーザー",
+  iconUrl: "",
+  follow: 50,
+  follower: 120,
+  introduction: "こちらは他のユーザーのプロフィール画面のテストです。",
 };
 
 const dummyInfo: NoticeInfoItem[] = [
@@ -71,11 +81,24 @@ const dummyInfo: NoticeInfoItem[] = [
 
 const ProfileLayout = () => {
   const modalRef = useRef<ModalHandle>(null);
+  const { userId } = useParams();
+
+  const myUserId = "user-8823-v9p";
+
+  const isMyProfile = !userId || userId === myUserId;
+
+  const [isFollowing, setIsFollowing] = useState(false);
+
   const modalButtonClick = () => {
     if (modalRef.current) {
       modalRef.current.show();
     }
   };
+
+  const handleToggleFollow = () => {
+    setIsFollowing((prev) => !prev);
+  };
+
   return (
     <div className={styles.profileLayout}>
       <div className={styles.profileContainer}>
@@ -83,8 +106,19 @@ const ProfileLayout = () => {
           <button onClick={modalButtonClick} className={styles.modalButton}>
             <RiCompass3Line />
           </button>
-          <ProfileCard {...dummyProfile} />
-          <ProfileCardTab />
+
+          {isMyProfile ? (
+            <ProfileCard {...dummyProfile} />
+          ) : (
+            <OtherProfileCard
+              {...dummyOtherProfile}
+              isFollowing={isFollowing}
+              isFollowedBy={true}
+              onToggleFollow={handleToggleFollow}
+            />
+          )}
+
+          <ProfileCardTab isMyProfile={isMyProfile} />
           <Outlet />
         </div>
         <div className={styles.profileSub}>
