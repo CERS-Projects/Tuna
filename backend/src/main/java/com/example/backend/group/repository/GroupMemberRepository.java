@@ -45,5 +45,5 @@ public interface GroupMemberRepository extends JpaRepository<GroupMemberEntity, 
                 GroupEntity g ON gm.groupId = g.groupId
               WHERE gm.userId = :userId AND g.school.schoolId = :schoolId
            """)
-    boolean existsByUserId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
+    boolean existsByUserIdAndGroupId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
 }

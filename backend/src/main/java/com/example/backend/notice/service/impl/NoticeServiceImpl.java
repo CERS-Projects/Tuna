@@ -35,9 +35,9 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional
-    public void createNotice(NoticeInsertRequest dto) {
-        if (!groupRepository.existsById(dto.getGroupId())) {
-            throw new IllegalArgumentException("そのグループは存在しません。");
+    public void createNotice(NoticeInsertRequest dto, Integer schoolId) {
+        if (!groupRepository.existsById(dto.getGroupId()) || !groupRepository.existsGroupBySchoolIdAndGroupId(schoolId, dto.getGroupId())) {
+            throw new IllegalArgumentException("そのグループは存在しないか、指定した学校に所属していません。");
         }
         noticeRepository.save(noticeHelper.toEntity(dto));
     }
@@ -45,7 +45,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     @Transactional(readOnly = true)
     public List<NoticeListResponse> getNoticeListFromStudent(Integer userId, Integer schoolId) {
-        if (!groupMemberRepository.existsByUserId(userId, schoolId)) {
+        if (!groupMemberRepository.existsByUserIdAndGroupId(userId, schoolId)) {
             throw new IllegalArgumentException("そのユーザーは存在しません。");
         }
 
@@ -77,24 +77,28 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     @Transactional
-    public void modifyNotice(NoticeModifyRequest dto) {
+    public void modifyNotice(NoticeModifyRequest dto, Integer schoolId) {
         if(!ObjectId.isValid(dto.getNoticeId())){
             throw new IllegalArgumentException("不正なお知らせIDです。");
         }
         final ObjectId noticeObjectId = new ObjectId(dto.getNoticeId());
 
+        if(!groupRepository.existsById(dto.getGroupId()) || !groupRepository.existsGroupBySchoolIdAndGroupId(schoolId, dto.getGroupId())) {
+            throw new IllegalArgumentException("そのグループは存在しないか、指定した学校に所属していません。");
+        }
         if(!noticeRepository.existsById(noticeObjectId)) {
             throw new IllegalArgumentException("そのお知らせは存在しません。");
         }
-        if(!groupRepository.existsById(dto.getGroupId())) {
-            throw new IllegalArgumentException("そのグループは存在しません。");
-        }
+
         noticeRepository.save(noticeHelper.toEntity(dto, noticeObjectId));
     }
 
     @Override
     @Transactional
-    public void deleteNotice(String noticeId) {
+    public void deleteNotice(String noticeId, Integer userId, Integer schoolId) {
+        if(!groupMemberRepository.existsByUserIdAndGroupId(userId, schoolId)) {
+            throw new IllegalArgumentException("そのグループは存在しないか、指定した学校に所属していません。");
+        }
         if(!ObjectId.isValid(noticeId)){
             throw new IllegalArgumentException("不正なお知らせIDです。");
         }

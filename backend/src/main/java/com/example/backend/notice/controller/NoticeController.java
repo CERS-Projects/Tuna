@@ -29,8 +29,8 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createNotice(@Valid @RequestBody NoticeInsertRequest dto) {
-        noticeService.createNotice(dto);
+    public ResponseEntity<Void> createNotice(@Valid @RequestBody NoticeInsertRequest dto, @AuthenticationPrincipal UserInfo userInfo){
+        noticeService.createNotice(dto, userInfo.getSchoolId());
         return ResponseEntity.ok().build();
     }
 
@@ -47,14 +47,14 @@ public class NoticeController {
     }
 
     @PostMapping("/modify")
-    public ResponseEntity<Void> modifyNotice(@Valid @RequestBody NoticeModifyRequest dto){
-        noticeService.modifyNotice(dto);
+    public ResponseEntity<Void> modifyNotice(@Valid @RequestBody NoticeModifyRequest dto, @AuthenticationPrincipal UserInfo userInfo) {
+        noticeService.modifyNotice(dto, userInfo.getSchoolId());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteNotice(@RequestParam String noticeId){
-        noticeService.deleteNotice(noticeId);
+    public ResponseEntity<Void> deleteNotice(@RequestParam String noticeId, @AuthenticationPrincipal UserInfo userInfo) {
+        noticeService.deleteNotice(noticeId, userInfo.getUserId(), userInfo.getSchoolId());
         return ResponseEntity.ok().build();
     }
 }
