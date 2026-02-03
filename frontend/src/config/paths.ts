@@ -128,6 +128,14 @@ export const paths = {
         getHref: () => "/app/profile/follower",
       },
     },
+    postReport: {
+      path: "/app/postReport",
+      getHref: () => "/app/postReport",
+    },
+    postReportConfirm: {
+      path: "/app/postReport/confirm",
+      getHref: () => "/app/postReport/confirm",
+    },
     test: {
       path: "/app/test",
       getHref: () => "/app/test",

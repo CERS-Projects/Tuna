@@ -1,0 +1,25 @@
+import { type ReportOption } from "./reportTypes";
+
+export const REPORT_LIMITS = {
+  MIN_LENGTH: 5,
+  MAX_LENGTH: 1000,
+} as const;
+
+export const REPORT_MESSAGES = {
+  TOO_SHORT: `※${REPORT_LIMITS.MIN_LENGTH}文字以上入力してください`,
+  PLACEHOLDER: "内容を記載してください",
+} as const;
+
+export const REPORT_OPTIONS: ReportOption[] = [
+  { id: "violence", label: "暴力的な発言", value: "暴力的な発言" },
+  { id: "spam", label: "スパム・悪質な宣伝", value: "スパム・悪質な宣伝" },
+  { id: "privacy", label: "個人情報の拡散", value: "個人情報の拡散" },
+  { id: "impersonation", label: "なりすまし", value: "なりすまし" },
+  {
+    id: "misinformation",
+    label: "悪質な誤情報の拡散",
+    value: "悪質な誤情報の拡散",
+  },
+];
+
+export const DEFAULT_REPORT_VALUE = REPORT_OPTIONS[0].value;
