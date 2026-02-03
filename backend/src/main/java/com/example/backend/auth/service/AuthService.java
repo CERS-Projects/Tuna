@@ -8,7 +8,7 @@ import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.auth.dto.LoginSelectRequest;
 
 public interface AuthService {
-    Integer login(LoginSelectRequest loginSelectRequest);
+    String login(LoginSelectRequest loginSelectRequest);
 
     void logout(Integer userId);
 

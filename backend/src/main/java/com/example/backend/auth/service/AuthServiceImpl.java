@@ -23,7 +23,7 @@ import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.repository.TeacherRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.auth.dto.LoginSelectRequest;
-
+import com.example.backend.auth.dto.OtpResponse;
 import com.example.backend.auth.repository.RefreshTokenRepository;
 import com.example.backend.exception.AuthException;
 
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
     private final MailService mailService;
 
     @Override
-    public Integer login(LoginSelectRequest loginSelectRequest) {
+    public String login(LoginSelectRequest loginSelectRequest) {
         String lockUserKey = loginSelectRequest.getShowUserId() + "LockUser";
         String missCountUserKey = loginSelectRequest.getShowUserId() + "MissCount";
 
@@ -86,12 +86,12 @@ public class AuthServiceImpl implements AuthService {
                     .orElseThrow(() -> new AuthException("ユーザーIDまたはパスワードが異なります"));
 
             // ワンタイムパスワード生成
-            String otpPassword = otpService.createOtp(userEntity.getUserId());
+            OtpResponse otpResponse = otpService.createOtp(userEntity.getUserId());
 
             // ワンタイムパスワードを送信
-            mailService.sendMail(userEntity, otpPassword);
+            mailService.sendMail(userEntity, otpResponse.getOtp());
 
-            return userEntity.getUserId();
+            return otpResponse.getOtpTokenKey();
         } catch (BadCredentialsException e) {
             loginAttemptService.loginFailed(loginSelectRequest.getShowUserId());
             throw new AuthException("ログインIDまたはパスワードが異なります");
