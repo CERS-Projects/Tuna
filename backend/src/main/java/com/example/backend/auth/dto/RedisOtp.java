@@ -5,14 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
-public class OtpRequest {
-
+public class RedisOtp {
     @NotNull
-    private String otpToken;
+    private Integer userId;
     @NotNull
     private String otp;
-
 }

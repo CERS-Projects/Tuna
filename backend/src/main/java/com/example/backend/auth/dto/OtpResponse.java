@@ -8,11 +8,9 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-public class OtpRequest {
-
+public class OtpResponse {
     @NotNull
-    private String otpToken;
+    private String otpTokenKey;
     @NotNull
     private String otp;
-
 }
