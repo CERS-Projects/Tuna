@@ -35,8 +35,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> loginUser(@Valid @RequestBody LoginSelectRequest loginSelectRequest) {
-        Integer userId = authService.login(loginSelectRequest);
-        LoginResponse loginResponse = new LoginResponse(userId);
+        String otpToken = authService.login(loginSelectRequest);
+        LoginResponse loginResponse = new LoginResponse(otpToken);
         return ResponseEntity.ok(loginResponse);
     }
 
@@ -51,9 +51,8 @@ public class AuthController {
     }
 
     @PostMapping("/otp")
-    public ResponseEntity<AccessTokenResponse> optPassword(@RequestBody OtpRequest otpRequest) {
+    public ResponseEntity<AccessTokenResponse> otpPassword(@Valid @RequestBody OtpRequest otpRequest) {
         Integer userId = otpService.confirmOtp(otpRequest);
-
         LoginTokenResponse loginTokenResponse = jwtService.jwtCreate(userId);
         AccessTokenResponse accessTokenResponse = new AccessTokenResponse(loginTokenResponse.getAccessToken());
         return ResponseEntity.ok().header("Set-Cookie", loginTokenResponse.getRefreshToken().toString())
