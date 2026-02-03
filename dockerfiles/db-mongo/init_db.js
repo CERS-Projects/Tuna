@@ -390,23 +390,17 @@ try {
 		},
 	});
 
-	db.createCollection("notion_collection", {
+	db.createCollection("notice_collection", {
 		validator: {
 			$jsonSchema: {
 				bsonType: "object",
 				required: [
-					"notice_id",
 					"group_id",
 					"title",
 					"content",
-					"reservation_datetime",
+					"created_at",
 				],
 				properties: {
-					notice_id: {
-						bsonType: "int",
-						minimum: 1,
-						description: "一意のお知らせIDを格納する",
-					},
 					group_id: {
 						bsonType: "int",
 						minimum: 1,
@@ -424,9 +418,9 @@ try {
 						maxLength: 200,
 						description: "お知らせの内容を格納する",
 					},
-					reservation_datetime: {
+					created_at: {
 						bsonType: "date",
-						description: "予約時間を格納する 書式はyyyy-mm-dd-hh-mm-ss-ms",
+						description: "作成日時を格納する 書式はyyyy-mm-dd-hh-mm-ss-ms",
 					},
 				},
 			},
@@ -784,24 +778,22 @@ try {
 	]);
 	print("✅ reason_collectionに2件挿入しました。");
 
-	// J. notion_collection (お知らせ)
-	db.notion_collection.insertMany([
+	// J. notice_collection (お知らせ)
+	db.notice_collection.insertMany([
 		{
-			notice_id: 501,
 			group_id: 1,
 			title: "サービスメンテナンスのお知らせ",
 			content: "サーバーメンテナンスを下記の日程で行います。",
-			reservation_datetime: new Date(Date.now() + 86400000), // 明日
+			created_at: new Date(Date.now() + 86400000), // 明日
 		},
 		{
-			notice_id: 502,
 			group_id: 2,
 			title: "新機能リリース",
 			content: "検索機能が強化されました。",
-			reservation_datetime: new Date(),
+			created_at: new Date(),
 		},
 	]);
-	print("✅ notion_collectionに2件挿入しました。");
+	print("✅ notice_collectionに2件挿入しました。");
 
 	// K. inquiry_collection (問い合わせ)
 	db.inquiry_collection.insertMany([
