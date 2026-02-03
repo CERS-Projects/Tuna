@@ -121,7 +121,7 @@ export const PostBox = (props: PostData) => {
     <>
       {isLink ? (
         <Link
-          to={`${postId}`}
+          to={paths.app.timeline.detail.getHref(Number(postId))}
           state={{ item: props }}
           relative="path"
           className={containerClass}
