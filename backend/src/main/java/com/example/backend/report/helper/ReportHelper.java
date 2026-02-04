@@ -65,9 +65,6 @@ public class ReportHelper {
             GetUserName object = userRepository.findUserInfo(entity.getReportedUser())
                 .orElseThrow(() -> new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。"));
 
-            if(existsByUserId(entity.getReportedUser()) == false) {
-                throw new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。");
-            }
             PostEntity post = postRepository.findById(entity.getReportedPostId()).orElseThrow(() -> new IllegalArgumentException("その投稿は存在しないか、報告が存在しません。"));
             response.setReportedName(object.getName());
             response.setReportId(entity.getReportId().toHexString()); // JSON形式で返すときにそのオブジェクトが作られた時間とマシンコードで返ってしまうため、文字列に変換
