@@ -13,13 +13,7 @@ import { UserInfo } from "../userInfo/userInfo";
 import { PostInput } from "../postInput/postInput";
 import { ResponseTo } from "../replyTo/responseTo";
 import { type PostData } from "../../types/post";
-
-const currentUser = {
-  user_id: "mito_denden",
-  user_name: "水戸 太郎",
-  user_icon:
-    "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiADU1Rn0obHEkfXEgCIKVXO8IEK9Q9MJUL8lb2QkWyHpaQ8AlJmxVF2vP00RYyyzrxaGXKOb3P8BwtC5mIFhyF31_kzKx2QVS2Hee7Skl_3DlAZ2P6sRAsSb0Ts0Alcxx1aks9f-JQkMHh/s800/cat_fish_run.png",
-};
+import { type User } from "@/types/user";
 
 const items: TreeType[] = [
   {
@@ -41,10 +35,12 @@ const items: TreeType[] = [
 
 export const PostCreateModal = ({
   ref,
+  user,
   onClose,
   response,
 }: {
   ref: Ref<ModalHandle>;
+  user: User | undefined;
   onClose?: () => void;
   response?: PostData;
 }) => {
@@ -122,11 +118,13 @@ export const PostCreateModal = ({
         <div className={styles.bodyScroll}>
           {response && <ResponseTo responseTo={response} />}
 
-          <UserInfo
-            userIcon={currentUser.user_icon}
-            userName={currentUser.user_name}
-            userId={currentUser.user_id}
-          />
+          {user && (
+            <UserInfo
+              userIcon={user.iconUrl ?? ""}
+              userName={user.userName ?? <span>ニックネームがありません</span>}
+              userId={user.showUserId}
+            />
+          )}
 
           <PostInput
             isInputStep={isInputStep}
