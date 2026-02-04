@@ -1,6 +1,5 @@
-package com.example.backend.dto;
+package com.example.backend.profile.dto;
 
-import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,13 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProfileUpdateRequest {
+    
+    private MultipartFile iconFile;  
 
-  
-  MultipartFile icon;
+    private String nickname;
 
-  String introduction;
-
-  String showUserId;
-
-
+    private String introduction;
+    
+    private String showUserId;
 }
