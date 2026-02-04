@@ -8,8 +8,8 @@ type Props = {
 };
 
 export const ReportRadio = ({ options, selectedValue, onChange }: Props) => (
-  <>
-    <div className={styles.title}>通報を行う項目を選択してください</div>
+  <fieldset className={styles.reportFieldSet}>
+    <legend className={styles.title}>通報を行う項目を選択してください</legend>
     <div className={styles.reportRadioContainer}>
       {options.map((option) => (
         <div key={option.value} className={styles.reportRadio}>
@@ -28,5 +28,5 @@ export const ReportRadio = ({ options, selectedValue, onChange }: Props) => (
         </div>
       ))}
     </div>
-  </>
+  </fieldset>
 );

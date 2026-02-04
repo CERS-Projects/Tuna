@@ -1,23 +1,18 @@
 import { PostReportConfirm } from "@/features/userReport/components/postReportConfirm/postReportConfirm";
+import { paths } from "@/config/paths";
 import { useLocation, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-
-type LocationState = {
-  reportRadioValue: string;
-  reportTextValue: string;
-  userID: string;
-  postContent: string;
-};
+import { type ReportLocationState } from "@/features/userReport/reportTypes";
 
 const ReportConfirm = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state as LocationState | null;
+  const state = location.state as ReportLocationState;
   const [isCompleted, setIsCompleted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (!state) {
-      navigate("/app/postReport", { replace: true });
+      navigate(paths.app.postReport.root.getHref(), { replace: true });
     }
   }, [state, navigate]);
   if (!state) {
@@ -37,7 +32,7 @@ const ReportConfirm = () => {
     }
   };
   const handleBack = () => {
-    navigate("/app/postReport", {
+    navigate(paths.app.postReport.root.getHref(), {
       state: {
         reportRadioValue: state.reportRadioValue,
         reportTextValue: state.reportTextValue,
@@ -48,7 +43,7 @@ const ReportConfirm = () => {
     });
   };
   const handleReturnToTimeline = () => {
-    navigate("/app/timeline", { replace: true });
+    navigate(paths.app.timeline.getHref(), { replace: true });
   };
   return (
     <div>

@@ -12,6 +12,7 @@ import {
   DEFAULT_REPORT_VALUE,
 } from "@/features/userReport/reportConstants";
 import { type ReportLocationState } from "@/features/userReport/reportTypes";
+import { paths } from "@/config/paths";
 
 const PostReportForm = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const PostReportForm = () => {
     event.preventDefault();
     if (isTooShort) return;
     window.history.replaceState(null, "");
-    navigate("/app/postReport/confirm", {
+    navigate(paths.app.postReport.confirm.getHref(), {
       state: {
         reportRadioValue,
         reportTextValue,
@@ -57,10 +58,15 @@ const PostReportForm = () => {
           <ReportText
             textValue={reportTextValue}
             onChange={setReportTextValue}
+            isError={isTooShort}
           />
           <div className={styles.textCountArea}>
             {isTooShort && (
-              <span className={styles.errorMessage}>
+              <span
+                className={styles.errorMessage}
+                id="reportTextError"
+                role="alert"
+              >
                 {REPORT_MESSAGES.TOO_SHORT}
               </span>
             )}

@@ -36,16 +36,18 @@ export const PostReportConfirm = ({
   return (
     <div className={styles.container}>
       <div className={styles.title}>通報内容の確認</div>
-      <div className={styles.reportContainer}>
-        <div className={styles.label}>ユーザー</div>
-        <div className={styles.valueText}>{userID}</div>
-        <div className={styles.label}>投稿内容</div>
-        <div className={styles.valueText}>{postContent}</div>
-        <div className={styles.label}>選択項目</div>
-        <div className={styles.valueText}>{reportRadioValue}</div>
-        <div className={styles.label}>詳細</div>
-        <div className={styles.reportText}>{reportTextValue}</div>
-      </div>
+      <dl className={styles.reportContainer}>
+        <dt>ユーザー</dt>
+        <dd>{userID}</dd>
+        <dt>投稿内容</dt>
+        <dd>{postContent}</dd>
+        <dt>選択項目</dt>
+        <dd>{reportRadioValue}</dd>
+        <dt>詳細</dt>
+        <dd>
+          <div className={styles.reportText}>{reportTextValue}</div>
+        </dd>
+      </dl>
       <div className={styles.buttonContainer}>
         <Button
           onClick={onBack}
@@ -68,7 +70,7 @@ export const PostReportConfirm = ({
       </div>
       <Modal
         width={"90%"}
-        height={"40%"}
+        height={"45%"}
         containerStyle={{
           backgroundColor: "#fff",
           maxHeight: "200px",
@@ -76,8 +78,8 @@ export const PostReportConfirm = ({
           maxWidth: "500px",
           minWidth: "250px",
         }}
-        onClose={onReturnToTimeline}
         ref={modalRef}
+        onClick={onReturnToTimeline}
       >
         <div className={styles.modalContent}>
           <div className={styles.modalTitle}>通報が完了しました</div>
