@@ -47,12 +47,9 @@ public class SecurityConfig {
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/refresh", "/otp", "/support/**").permitAll()
-                        .requestMatchers("/accounts/teacher/**").hasRole("ADMIN_SCHOOL")
-                        .requestMatchers("/accounts/student/**").hasRole("TEACHER")
-                        .requestMatchers("/group/**").hasAnyRole("TEACHER","ADMIN_SCHOOL")
-                        .requestMatchers("/notice/create","/notice/modify","/notice/delete").hasAnyRole("TEACHER","ADMIN_SCHOOL")
-                        .requestMatchers("/report/list/","/report/delete").hasAnyRole("TEACHER","ADMIN_SCHOOL")
-                        .requestMatchers("/create/**").hasRole("ADMIN_SCHOOL")
+                        .requestMatchers("/create/**","/accounts/teacher/**").hasRole("ADMIN_SCHOOL")
+                        .requestMatchers("/accounts/student/**").hasRole("TEACHER","ADMIN_SCHOOL")
+                        .requestMatchers("/group/**","/notice/create","/notice/modify","/notice/delete","/report/list/","/report/delete").hasAnyRole("TEACHER","ADMIN_SCHOOL")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler));
