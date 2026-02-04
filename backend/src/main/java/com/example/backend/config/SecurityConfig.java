@@ -46,11 +46,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/refresh", "/otp", "accounts/student").permitAll()
-                        .requestMatchers("/accounts/teacher").permitAll()
-                        .requestMatchers("/support/help/category").hasAnyRole("TEACHER", "STUDENT")
-                        .requestMatchers("/report/list", "/report/delete", "/notice/create", 
-                                         "/notice/teacher/list"     , "/notice/modify", "/notice/delete").hasAnyRole("TEACHER", "ADMIN_SCHOOL")
+                        .requestMatchers("/login", "/refresh", "/otp", "/support/**").permitAll()
+                        .requestMatchers("/accounts/teacher/**").hasRole("ADMIN_SCHOOL")
+                        .requestMatchers("/accounts/student/**").hasRole("TEACHER")
+                        .requestMatchers("/group/**").hasAnyRole("TEACHER","ADMIN_SCHOOL")
+                        .requestMatchers("/notice/create","/notice/modify","/notice/delete").hasAnyRole("TEACHER","ADMIN_SCHOOL")
+                        .requestMatchers("/report/list/","/report/delete").hasAnyRole("TEACHER","ADMIN_SCHOOL")
+                        .requestMatchers("/create/**").hasRole("ADMIN_SCHOOL")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler));
