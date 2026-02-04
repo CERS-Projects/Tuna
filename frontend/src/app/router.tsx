@@ -64,10 +64,6 @@ const createAppRouter = (queryClient: QueryClient) => {
       () => import("./routes/auth/passwordChange"),
     ),
     route(
-      paths.auth.twoFactorAuth.path,
-      () => import("./routes/auth/twoFactorAuth"),
-    ),
-    route(
       paths.auth.passReset.confirm.path,
       () => import("./routes/auth/emailSentConfirm"),
     ),
@@ -75,15 +71,19 @@ const createAppRouter = (queryClient: QueryClient) => {
       paths.auth.passChange.confirm.path,
       () => import("./routes/auth/completePasswordChange"),
     ),
-    route(
-      paths.auth.accountLock.path,
-      () => import("./routes/auth/accountLock"),
-    ),
 
     {
       element: <AuthWrapper />,
       children: [
         route(paths.auth.login.path, () => import("./routes/auth/login")),
+        route(
+          paths.auth.twoFactorAuth.path,
+          () => import("./routes/auth/twoFactorAuth"),
+        ),
+        route(
+          paths.auth.accountLock.path,
+          () => import("./routes/auth/accountLock"),
+        ),
 
         // アプリ内ルート (ログイン必要)
         {

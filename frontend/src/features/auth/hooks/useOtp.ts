@@ -1,16 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api-client";
-import { type OtpTokenResponse } from "../types/auth";
+import { type OtpInfo, type OtpTokenResponse } from "../types/auth";
 
-export const useRefreshToken = () => {
+export const useOtp = () => {
   return useMutation({
-    mutationFn: () =>
+    mutationFn: (info: OtpInfo) =>
       api<OtpTokenResponse>({
-        url: "/refresh",
+        url: "/otp",
         options: {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(info),
         },
       }),
   });

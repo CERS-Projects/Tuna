@@ -6,6 +6,15 @@ export type LoginInfo = {
 };
 
 export type LoginResponse = {
+  otpToken: string;
+};
+
+export type OtpInfo = {
+  otpToken: string;
+  otp: string;
+};
+
+export type OtpTokenResponse = {
   token: string;
 };
 
