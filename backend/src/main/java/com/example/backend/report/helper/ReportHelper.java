@@ -10,6 +10,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 import com.example.backend.accounts.repository.UserRepository;
+import com.example.backend.accounts.dto.GetUserName;
 import com.example.backend.posts.repository.PostRepository;
 import com.example.backend.posts.model.PostEntity;
 import com.example.backend.report.dto.ReportInsertRequest;
@@ -25,8 +26,6 @@ public class ReportHelper {
     private final UserRepository userRepository;
 
     private final PostRepository postRepository;
-
-    public record ReportedUserNameAndShowUserId(String name, String showUserId){} 
 
     public ReportEntity setEntityFromDto(ReportInsertRequest dto, Integer schoolId, Integer userId) {
         ReportEntity reportEntity = new ReportEntity();
@@ -63,16 +62,13 @@ public class ReportHelper {
 
         return reportEntities.stream().map(entity -> {
             ReportListResponse response = new ReportListResponse();
-            ReportedUserNameAndShowUserId object = userRepository.findUserInfo(entity.getReportedUser())
+            GetUserName object = userRepository.findUserInfo(entity.getReportedUser())
                 .orElseThrow(() -> new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。"));
 
-            if(existsByUserId(entity.getReportedUser()) == false) {
-                throw new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。");
-            }
             PostEntity post = postRepository.findById(entity.getReportedPostId()).orElseThrow(() -> new IllegalArgumentException("その投稿は存在しないか、報告が存在しません。"));
-            response.setReportedName(object.name());
+            response.setReportedName(object.getName());
             response.setReportId(entity.getReportId().toHexString()); // JSON形式で返すときにそのオブジェクトが作られた時間とマシンコードで返ってしまうため、文字列に変換
-            response.setReportedShowUserId(object.showUserId());
+            response.setReportedShowUserId(object.getShowUserId());
             response.setReasonId(entity.getReasonId());
             response.setReportDate(entity.getReportDate());
             response.setReportedPost(post.getSentence());

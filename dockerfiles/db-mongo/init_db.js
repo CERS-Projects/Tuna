@@ -394,12 +394,7 @@ try {
 		validator: {
 			$jsonSchema: {
 				bsonType: "object",
-				required: [
-					"group_id",
-					"title",
-					"content",
-					"created_at",
-				],
+				required: ["group_id", "title", "content", "created_at"],
 				properties: {
 					group_id: {
 						bsonType: "int",
@@ -631,8 +626,17 @@ try {
 			follow: 0,
 			follower: 1,
 		},
+		{
+			user_id: 7,
+			nickname: "センセイ",
+			icon: "images/df7810bd-a128-487c-a389-8d836e35da22.jpg",
+			show_user_id: "t003_teacher_w",
+			introduction: "数学を教えています。よろしくお願いします。",
+			follow: 2,
+			follower: 2,
+		},
 	]);
-	print("✅ profile_collectionに4件挿入しました。");
+	print("✅ profile_collectionに5件挿入しました。");
 
 	// C. search_history_collection
 	db.search_history_collection.insertMany([
@@ -663,7 +667,7 @@ try {
 			bookmarked_at: new Date(),
 		},
 		{
-			user_id: 205,
+			user_id: 7,
 			post_id: ObjectId("669a84a2c914e6b7f329d201"),
 			bookmarked_at: new Date(),
 		},
@@ -682,8 +686,28 @@ try {
 			following_id: 1, //フォローされている人
 			created_at: new Date(Date.now() - 86400000), // 1日前
 		},
+		{
+			follower_id: 7, //フォローしてる人
+			following_id: 2, //フォローされている人
+			created_at: new Date(),
+		},
+		{
+			follower_id: 2, //フォローしてる人
+			following_id: 7, //フォローされている人
+			created_at: new Date(),
+		},
+		{
+			follower_id: 1, //フォローしてる人
+			following_id: 7, //フォローされている人
+			created_at: new Date(),
+		},
+		{
+			follower_id: 7, //フォローしてる人
+			following_id: 1, //フォローされている人
+			created_at: new Date(),
+		},
 	]);
-	print("✅ follow_and_follower_collectionに2件挿入しました。");
+	print("✅ follow_and_follower_collectionに6件挿入しました。");
 
 	//F like_collection
 	db.like_collection.insertMany([
@@ -698,7 +722,7 @@ try {
 			liked_at: new Date(),
 		},
 		{
-			user_id: 205,
+			user_id: 7,
 			post_id: ObjectId("669a84a2c914e6b7f329d201"),
 			liked_at: new Date(),
 		},
@@ -713,8 +737,8 @@ try {
 	// G. classroom_collection
 	db.classroom_collection.insertMany([
 		{
-			school_id: 10,
-			teacher_id: 100,
+			school_id: 3,
+			teacher_id: 7,
 			room_name: "高校数学I",
 			description: "基礎から学ぶ数学Iのクラス",
 			latest_update: new Date(),
@@ -732,8 +756,8 @@ try {
 			],
 		},
 		{
-			school_id: 10,
-			teacher_id: 1,
+			school_id: 3,
+			teacher_id: 7,
 			room_name: "化学基礎",
 			description: "化学の基礎を学びます。",
 			latest_update: new Date(),
@@ -745,7 +769,7 @@ try {
 	// H. report_collection
 	db.report_collection.insertMany([
 		{
-			school_id: 1,
+			school_id: 3,
 			report_date: new Date(),
 			report_by: 2,
 			reported_user: 4,
@@ -754,7 +778,7 @@ try {
 			detail: "不適切な画像を投稿していました。",
 		},
 		{
-			school_id: 1,
+			school_id: 3,
 			report_date: new Date(),
 			report_by: 2,
 			reported_user: 4,
