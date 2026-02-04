@@ -56,6 +56,13 @@ public class FollowQueryServiceImpl implements FollowQueryService {
                         .map(FollowRelationEntity::getFollowingId)
                         .collect(Collectors.toSet());
 
+                // 4) isFollowed を まとめて判定 (相手が自分をフォローしているか)
+                Set<Integer> followingBackIds = followRelationRepository
+                        .findByFollowerIdInAndFollowingId(followingIds, userId)
+                        .stream()
+                        .map(FollowRelationEntity::getFollowerId)
+                        .collect(Collectors.toSet());
+
                 List<FollowingProfileResponse> result = new ArrayList<>();
                 for (Integer fid : followingIds) {
                     UserprofileEntity p = profileMap.get(fid);
@@ -67,7 +74,7 @@ public class FollowQueryServiceImpl implements FollowQueryService {
                             p.getNickname(),
                             p.getShowUserId(),
                             actuallyFollowing.contains(fid),
-                            followRelationRepository.existsByFollowerIdAndFollowingId(fid, userId),
+                            followingBackIds.contains(fid),
                             fileControlHelper.getFileUrl(p.getIconObjectKey())
                     ));
                 }
@@ -107,6 +114,13 @@ public class FollowQueryServiceImpl implements FollowQueryService {
                         .map(FollowRelationEntity::getFollowingId)
                         .collect(Collectors.toSet());
 
+                // 4) isFollowed を まとめて判定 (相手が自分をフォローしているか)
+                Set<Integer> followingBackIds = followRelationRepository
+                        .findByFollowerIdInAndFollowingId(followerIds, userId)
+                        .stream()
+                        .map(FollowRelationEntity::getFollowerId)
+                        .collect(Collectors.toSet());
+
                 List<FollowingProfileResponse> result = new ArrayList<>();
                 for (Integer fid : followerIds) {
                     UserprofileEntity p = profileMap.get(fid);
@@ -118,7 +132,7 @@ public class FollowQueryServiceImpl implements FollowQueryService {
                             p.getShowUserId(),
                             p.getNickname(),
                             actuallyFollowing.contains(fid),
-                            followRelationRepository.existsByFollowerIdAndFollowingId(fid, userId),
+                            followingBackIds.contains(fid),
                             fileControlHelper.getFileUrl(p.getIconObjectKey())
                     ));
                 }

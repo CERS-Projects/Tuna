@@ -20,6 +20,8 @@ public interface FollowRelationRepository extends MongoRepository<FollowRelation
     // 自分がフォローしている相手の中で、指定されたIDリストに含まれるものを取得
     List<FollowRelationEntity> findByFollowerIdAndFollowingIdIn(Integer followerId, Collection<Integer> followingIds);
 
+    // 指定されたIDリストの中で、特定のユーザーをフォローしている関係を取得
+    List<FollowRelationEntity> findByFollowerIdInAndFollowingId(Collection<Integer> followerIds, Integer followingId);
 
     // フォロー関係をidで削除
     void deleteByFollowerIdAndFollowingId(Integer followerId, Integer followingId);
