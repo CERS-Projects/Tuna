@@ -2,6 +2,7 @@ package com.example.backend.profile.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,6 +66,10 @@ public class ProfileController {
                 log.warn("プロフィールが見つかりません userId: {}", userInfo.getUserId());
                 return ResponseEntity.notFound().build();
             }
+        } catch(EmptyResultDataAccessException e) {
+            log.error("プロフィールの取得に失敗しました userId: {}", userInfo.getUserId(), e);
+            return ResponseEntity.notFound().build();
+        
         } catch(Exception e) {
             log.error("プロフィールの取得に失敗しました userId: {}", userInfo.getUserId(), e);
             return ResponseEntity.status(500).build();
