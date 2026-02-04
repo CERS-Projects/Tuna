@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Document(collection = "profile_collection")
-public class UserprofileEntity {
+public class UserProfileEntity {
 
     @Id
     private ObjectId id;
