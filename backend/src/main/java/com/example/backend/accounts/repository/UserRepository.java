@@ -1,6 +1,8 @@
 package com.example.backend.accounts.repository;
 
+
 import java.util.Optional;
+
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,8 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.backend.accounts.dto.GetUserName;
 import com.example.backend.accounts.model.UserEntity;
-import com.example.backend.report.helper.ReportHelper.ReportedUserNameAndShowUserId;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer>{
     @Modifying
@@ -35,11 +37,12 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
     Optional<UserEntity> findByShowUserId(String showUserId);
 
     @Query("""
-            SELECT new com.example.backend.report.helper.ReportHelper$ReportedUserNameAndShowUserId(u.name, u.showUserId)
-            FROM UserEntity u
-            WHERE u.userId = :userId
-            """)
-    Optional<ReportedUserNameAndShowUserId> findUserInfo(@Param("userId") Integer userId);
+    SELECT u.name as name, u.showUserId as showUserId
+    FROM UserEntity u
+    WHERE u.userId = :userId
+    """)
+Optional<GetUserName> findUserInfo(@Param("userId") Integer userId);
+
 
     boolean existsByShowUserId(String showUserId);
 
@@ -51,4 +54,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
     long validateByReportBySchoolId(@Param("schoolId") Integer schoolId, 
                                     @Param("userId") Integer userId, 
                                     @Param("reportedUserId") Integer reportedUserId);
+
+    //ユーザーのshowUserIdと名前を取得する
+    @Query("SELECT u.showUserId as showUserId, u.name as name " +
+       "FROM UserEntity u WHERE u.userId = :userId")
+    GetUserName findUserName(@Param("userId") Integer userId);
+
 }
