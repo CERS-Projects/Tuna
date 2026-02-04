@@ -72,8 +72,6 @@ export const useApiWithRefresh = () => {
       ) {
         try {
           if (!sharedRefreshPromise) {
-            console.log("リフレッシュトークン再発行処理を開始します...");
-
             sharedRefreshPromise = mutateAsync()
               .then((res) => {
                 setAuthToken(res.token);

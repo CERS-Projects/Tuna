@@ -113,8 +113,6 @@ export const AuthProvider = ({ children }: Props) => {
   const login = (info: LoginInfo) => {
     loginMutate(info, {
       onSuccess: (data: LoginResponse) => {
-        console.log(data);
-
         const expiresAt = Date.now() + 5 * 60 * 1000;
         sessionStorage.setItem(
           "otpTempToken",
@@ -144,8 +142,6 @@ export const AuthProvider = ({ children }: Props) => {
   const otpLogin = (info: OtpInfo) => {
     otpMutate(info, {
       onSuccess: (data: OtpTokenResponse) => {
-        console.log(data);
-
         sessionStorage.removeItem("otpTempToken");
         sessionStorage.removeItem("otpFailedCount");
 
