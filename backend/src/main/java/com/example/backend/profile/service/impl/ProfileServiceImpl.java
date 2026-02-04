@@ -1,12 +1,13 @@
 package com.example.backend.profile.service.impl;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import com.example.backend.profile.service.ProfileService;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;  
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.dto.GetUserName;
 import java.util.List;
-import com.example.backend.profile.model.UserprofileEntity;
+import com.example.backend.profile.model.UserProfileEntity;
 import com.example.backend.profile.repository.ProfileRepository;
 import com.example.backend.profile.dto.ProfileUpdateRequest;  
 import com.example.backend.profile.repository.FollowRelationRepository;
@@ -27,7 +28,7 @@ public class ProfileServiceImpl implements ProfileService {
     // プロフィール作成
     @Override
     public void createProfile(Integer userId) {
-        UserprofileEntity profile = new UserprofileEntity();
+        UserProfileEntity profile = new UserProfileEntity();
         GetUserName userInfo = userRepository.findUserName(userId);
 
         log.info("ユーザー情報取得 userInfo: {}", userInfo);
@@ -45,7 +46,7 @@ public class ProfileServiceImpl implements ProfileService {
     // プロフィール更新
     @Override
     public void updateProfile(ProfileUpdateRequest profile, Integer userId) {
-        UserprofileEntity existingProfile = profileRepository.findByUserId(userId)
+        UserProfileEntity existingProfile = profileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("プロフィールが見つかりません"));
         
         if (profile.getIntroduction() != null) {
@@ -76,6 +77,7 @@ public class ProfileServiceImpl implements ProfileService {
             profileRepository.updateFilterWords(userId, filterWords);
         } catch (Exception e) {
             log.error("フィルターワードの更新に失敗しました: ", e);
+            throw new RuntimeException("フィルターワードの更新に失敗しました");
         }
     }
     
@@ -84,8 +86,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public List<String> getFilterWords(Integer userId) {
         try {
-            UserprofileEntity profile = profileRepository.findByUserId(userId)
-                    .orElseThrow(() -> new RuntimeException("プロフィールが見つかりません userId: " + userId));
+            UserProfileEntity profile = profileRepository.findByUserId(userId)
+                    .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
             
             if(profile.getFilterWords() != null) {
                 return profile.getFilterWords();
@@ -103,18 +105,20 @@ public class ProfileServiceImpl implements ProfileService {
     // プロフィール削除
     @Override
     public void deleteProfile(Integer userId) {
-        UserprofileEntity existingProfile = profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("プロフィールが見つかりません userId: " + userId));
+        UserProfileEntity existingProfile = profileRepository.findByUserId(userId)
+                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
         
         try {
             fileControlHelper.deleteFile(existingProfile.getIconObjectKey());
         } catch (Exception e) {
             log.error("iconファイルの削除に失敗しました: ", e);
+            throw new RuntimeException("iconファイルの削除に失敗しました");
         }
         try {
             profileRepository.deleteByUserId(userId);
         } catch (Exception e) {
             log.error("プロフィールの削除に失敗しました: ", e);
+            throw new RuntimeException("プロフィールの削除に失敗しました");
         }
     }
 
@@ -123,8 +127,8 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponse getProfilesByUserId(Integer targetUserId, Integer currentUserId) {
         ProfileResponse profile = new ProfileResponse();
         
-        UserprofileEntity profileEntity = profileRepository.findByUserId(targetUserId)
-                .orElseThrow(() -> new RuntimeException("プロフィールが見つかりません userId: " + targetUserId));
+        UserProfileEntity profileEntity = profileRepository.findByUserId(targetUserId)
+                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
 
         profile.setUserId(profileEntity.getUserId());
         profile.setShowUserId(profileEntity.getShowUserId());
