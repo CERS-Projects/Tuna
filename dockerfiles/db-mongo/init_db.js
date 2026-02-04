@@ -632,8 +632,8 @@ try {
 			icon: "images/df7810bd-a128-487c-a389-8d836e35da22.jpg",
 			show_user_id: "t003_teacher_w",
 			introduction: "数学を教えています。よろしくお願いします。",
-			follow: 3,
-			follower: 15,
+			follow: 2,
+			follower: 2,
 		},
 	]);
 	print("✅ profile_collectionに5件挿入しました。");
