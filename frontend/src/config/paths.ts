@@ -87,7 +87,7 @@ export const paths = {
       },
       detail: {
         path: "/app/timeline/:id",
-        getHref: (id: number) => `/app/timeline/${id}`,
+        getHref: (id: string) => `/app/timeline/${id}`,
       },
     },
     searchPost: {
