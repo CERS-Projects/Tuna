@@ -38,6 +38,35 @@
   display: none;
 }
 
+.spinnerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  width: 100%;
+  min-height: 200px;
+}
+
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #dc2626;
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  margin: 16px;
+}
+
+.emptyContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
 @media (max-width: 960px) {
   .timelineContainer {
     display: flex;

@@ -26,7 +26,9 @@ const Timeline = () => {
             <RiCompass3Line />
           </button>
           {isFetching ? (
-            <Spinner />
+            <div className={styles.spinnerContainer}>
+              <Spinner />
+            </div>
           ) : posts ? (
             posts.map((item) => <PostBox key={item.postId} {...item} />)
           ) : (
