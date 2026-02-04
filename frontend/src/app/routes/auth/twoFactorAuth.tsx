@@ -37,6 +37,7 @@ const TwoFactorAuth = () => {
           <Input
             width="100%"
             placeholder="ワンタイムパスワードを入力"
+            type="number"
             error={errors["onetimepassword"]?.message ?? ""}
             {...register("onetimepassword", {
               required: "ワンタイムパスワードを入力してください",
