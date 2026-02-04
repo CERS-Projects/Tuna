@@ -1,4 +1,7 @@
-import { REPORT_LIMITS, REPORT_MESSAGES } from "../../reportConstants";
+import {
+  REPORT_LIMITS,
+  REPORT_MESSAGES,
+} from "@/features/userReport/reportConstants";
 import styles from "./reportText.module.css";
 
 type Props = {

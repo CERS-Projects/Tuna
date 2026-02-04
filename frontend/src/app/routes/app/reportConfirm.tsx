@@ -2,7 +2,7 @@ import { PostReportConfirm } from "@/features/userReport/components/postReportCo
 import { paths } from "@/config/paths";
 import { useLocation, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import { type ReportLocationState } from "@/features/userReport/reportTypes";
+import { type ReportLocationState } from "@/features/userReport/types/report";
 
 const ReportConfirm = () => {
   const location = useLocation();
@@ -12,7 +12,7 @@ const ReportConfirm = () => {
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (!state) {
-      navigate(paths.app.postReport.root.getHref(), { replace: true });
+      navigate(paths.app.report.root.getHref(), { replace: true });
     }
   }, [state, navigate]);
   if (!state) {
@@ -21,7 +21,24 @@ const ReportConfirm = () => {
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
-      console.log("API送信:", state);
+      const now = new Date();
+      const formattedDate = `${now.getFullYear()}-${String(
+        now.getMonth() + 1,
+      ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}-${String(
+        now.getHours(),
+      ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+      const payload = {
+        report_id: state.report_id,
+        school_id: state.school_id,
+        report_date: formattedDate,
+        report_by: state.report_by,
+        reported_user: state.reported_user,
+        reason: state.reason,
+        detail: state.detail,
+      };
+
+      console.log("API送信:", payload);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsCompleted(true);
     } catch (error) {
@@ -32,13 +49,15 @@ const ReportConfirm = () => {
     }
   };
   const handleBack = () => {
-    navigate(paths.app.postReport.root.getHref(), {
+    navigate(paths.app.report.root.getHref(), {
       state: {
-        reportRadioValue: state.reportRadioValue,
-        reportTextValue: state.reportTextValue,
-        userID: state.userID,
-        postContent: state.postContent,
-        isCorrection: true,
+        report_id: state.report_id,
+        school_id: state.school_id,
+        report_date: state.report_date,
+        report_by: state.report_by,
+        reported_user: state.reported_user,
+        reason: state.reason,
+        detail: state.detail,
       },
     });
   };
@@ -49,10 +68,10 @@ const ReportConfirm = () => {
     <div>
       <PostReportConfirm
         isLoading={isLoading}
-        reportRadioValue={state.reportRadioValue}
-        reportTextValue={state.reportTextValue}
-        userID={state.userID}
-        postContent={state.postContent}
+        reportRadioValue={state.reason}
+        reportTextValue={state.detail}
+        userID={state.reported_user}
+        postContent={"投稿内容仮のデータです。"}
         onConfirm={handleConfirm}
         onBack={handleBack}
         isCompleted={isCompleted}
