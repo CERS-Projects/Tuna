@@ -5,8 +5,9 @@ import com.example.backend.profile.model.FollowRelationEntity;
 
 import java.util.Collection;
 import java.util.List;
+import org.bson.types.ObjectId;
 
-public interface FollowRelationRepository extends MongoRepository<FollowRelationEntity, String> {
+public interface FollowRelationRepository extends MongoRepository<FollowRelationEntity, ObjectId> {
 
     // 自分がフォローしている相手一覧
     List<FollowRelationEntity> findByFollowerId(Integer followerId);
