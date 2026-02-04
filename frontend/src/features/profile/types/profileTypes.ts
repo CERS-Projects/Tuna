@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 export type ProfileData = {
   userId: number;
   showUserId: string;
-  userName: string;
+  nickname: string;
   iconUrl?: string;
   followCount: number;
   isFollowed: boolean;

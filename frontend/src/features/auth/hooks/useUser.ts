@@ -30,7 +30,7 @@ export const useUser = (
 
         return {
           showUserId: profile.showUserId,
-          userName: profile.userName,
+          userName: profile.nickname,
           iconUrl: profile.iconUrl,
           follow: profile.followCount,
           follower: profile.followerCount,
@@ -67,7 +67,7 @@ export const useUser = (
 
           return {
             showUserId: profile.showUserId,
-            userName: profile.userName,
+            userName: profile.nickname,
             iconUrl: profile.iconUrl,
             follow: profile.followCount,
             follower: profile.followerCount,
