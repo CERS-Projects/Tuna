@@ -154,12 +154,14 @@ export const paths = {
       },
     },
     postReport: {
-      path: "/app/postReport",
-      getHref: () => "/app/postReport",
-    },
-    postReportConfirm: {
-      path: "/app/postReport/confirm",
-      getHref: () => "/app/postReport/confirm",
+      root: {
+        path: "/app/postReport",
+        getHref: () => "/app/postReport",
+      },
+      confirm: {
+        path: "/app/postReport/confirm",
+        getHref: () => "/app/postReport/confirm",
+      },
     },
     test: {
       path: "/app/test",

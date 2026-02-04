@@ -4,9 +4,10 @@ import styles from "./reportText.module.css";
 type Props = {
   textValue: string;
   onChange: (value: string) => void;
+  isError: boolean;
 };
 
-export const ReportText = ({ textValue, onChange }: Props) => {
+export const ReportText = ({ textValue, onChange, isError }: Props) => {
   return (
     <>
       <div className={styles.title}>通報の内容を正確に記載してください</div>
@@ -17,9 +18,10 @@ export const ReportText = ({ textValue, onChange }: Props) => {
           className={styles.reportText}
           value={textValue}
           onChange={(e) => onChange(e.target.value)}
-          minLength={REPORT_LIMITS.MIN_LENGTH}
           maxLength={REPORT_LIMITS.MAX_LENGTH}
           required
+          aria-invalid={isError}
+          aria-describedby={isError ? "reportTextError" : undefined}
         />
       </div>
     </>
