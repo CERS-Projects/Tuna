@@ -16,7 +16,7 @@ const AppProvider = ({ children }: AppProviderProps) => {
     () =>
       new QueryClient({
         defaultOptions: queryConfig,
-      })
+      }),
   );
 
   return (

@@ -26,12 +26,15 @@
   grid-area: drawer;
   height: 100%;
   min-height: 0;
+  min-width: 0;
 }
 
 .menuWrapper {
   grid-area: menu;
   width: 60px;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .openDrawer {
@@ -42,6 +45,12 @@
   width: 20px;
   background-color: rgb(230, 240, 255);
   border: 1px solid #7e7e7e;
+  cursor: pointer;
+}
+
+.openDrawer:focus-visible {
+  outline: 2px solid rgb(50, 85, 150);
+  outline-offset: 2px;
 }
 
 .closeDrawer {

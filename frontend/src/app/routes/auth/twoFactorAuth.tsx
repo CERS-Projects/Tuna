@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input/input";
 import { Button } from "@/components/ui/button/button";
 import { Header } from "@/components/ui/header/header";
 import { useForm } from "react-hook-form";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 type OnetimePassword = {
   onetimepassword: string;
@@ -15,9 +16,12 @@ const TwoFactorAuth = () => {
     formState: { errors },
   } = useForm<OnetimePassword>();
 
+  const { otpTempToken, otpLogin, isOtpLoggingIn } = useAuth();
+
   const onSubmit = (data: OnetimePassword) => {
-    console.log("申請しました", data);
+    otpLogin({ otpToken: otpTempToken, otp: data.onetimepassword });
   };
+
   return (
     <>
       <Header />
@@ -33,13 +37,14 @@ const TwoFactorAuth = () => {
           <Input
             width="100%"
             placeholder="ワンタイムパスワードを入力"
+            type="number"
             error={errors["onetimepassword"]?.message ?? ""}
             {...register("onetimepassword", {
               required: "ワンタイムパスワードを入力してください",
             })}
           />
           <Button type="submit" width="190px" fontSize="1.2rem">
-            認証
+            {isOtpLoggingIn ? "..." : "ログイン"}
           </Button>
         </div>
       </form>

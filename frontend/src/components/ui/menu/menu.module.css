@@ -5,41 +5,57 @@
   width: 100%;
   height: 100%;
   background-color: rgb(100, 130, 215);
-  gap: 20px;
-  justify-content: center;
+  gap: 12px;
+  padding: 12px 0;
+  justify-content: flex-start;
   align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .menuContainer button {
   background: none;
   border: none;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  font-size: 3.5rem;
+  width: 56px;
+  height: 56px;
+  font-size: 2.4rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
   color: rgba(255, 255, 255, 0.904);
-  transition: transform 0.3s;
-  margin: 3px;
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+  flex-shrink: 0;
 }
 
 .menuContainer button:hover {
   cursor: pointer;
-  transform: translateY(-5px);
+  transform: translateY(-2px);
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .menuContainer button:active {
-  border-width: 3px;
-  transform: translateY(-3px);
+  transform: translateY(-1px);
+  background-color: rgba(255, 255, 255, 0.18);
 }
 
 @media (max-width: 960px) {
   .menuContainer {
     height: 100%;
     flex-direction: row;
-    gap: 10px;
-    padding-top: 8px;
+    flex-wrap: nowrap;
+    gap: 12px;
+    padding: 8px 10px;
+    justify-content: center;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
   .menuContainer button {
-    font-size: 2.5rem;
+    width: 44px;
+    height: 44px;
+    font-size: 2rem;
   }
 }
