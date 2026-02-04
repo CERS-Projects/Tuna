@@ -3,14 +3,16 @@ import { useApiWithRefresh } from "@/lib/api-client";
 import { type ProfileData } from "@/features/profile/types/profileTypes";
 import { type User } from "@/types/user";
 import { decodeUserParams } from "../utils/jwt";
+import { type JWTPayload } from "../types/auth";
 
 export const useUser = (
   authToken: string,
   options?: Partial<UseQueryOptions<User>>,
 ) => {
+  const user = decodeUserParams(authToken) as JWTPayload;
   const apiWithRefresh = useApiWithRefresh();
   return useQuery({
-    queryKey: ["user"],
+    queryKey: ["user", user.sub],
     queryFn: async () => {
       const profile = await apiWithRefresh<ProfileData>({
         url: "/profile",
