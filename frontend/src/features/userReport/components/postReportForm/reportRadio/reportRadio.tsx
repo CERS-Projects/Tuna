@@ -1,4 +1,4 @@
-import { type ReportOption } from "../../reportTypes";
+import { type ReportOption } from "@/features/userReport/types/report";
 import styles from "./reportRadio.module.css";
 
 type Props = {
@@ -8,8 +8,14 @@ type Props = {
 };
 
 export const ReportRadio = ({ options, selectedValue, onChange }: Props) => (
-  <fieldset className={styles.reportFieldSet}>
-    <legend className={styles.title}>通報を行う項目を選択してください</legend>
+  <fieldset
+    className={styles.reportFieldSet}
+    role="radiogroup"
+    aria-labelledby="report-radio-legend"
+  >
+    <legend id="report-radio-legend" className={styles.title}>
+      通報を行う項目を選択してください
+    </legend>
     <div className={styles.reportRadioContainer}>
       {options.map((option) => (
         <div key={option.value} className={styles.reportRadio}>

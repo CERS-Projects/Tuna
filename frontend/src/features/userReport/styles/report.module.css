@@ -31,7 +31,7 @@
   justify-content: flex-end;
 }
 .nextButtonContainer button:disabled {
-  background-color: #ccc !important;
+  background-color: #ccc;
   cursor: not-allowed;
   opacity: 0.6;
 }

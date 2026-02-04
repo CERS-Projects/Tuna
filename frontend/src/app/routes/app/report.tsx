@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { Button } from "@/components/ui/button/button";
-import { ReportRadio } from "@/features/userReport/components/postReportForm/reportRadio";
-import { ReportText } from "@/features/userReport/components/postReportForm/reportText";
+import { ReportRadio } from "@/features/userReport/components/postReportForm/reportRadio/reportRadio";
+import { ReportText } from "@/features/userReport/components/postReportForm/reportText/reportText";
 import styles from "@/features/userReport/styles/report.module.css";
 
 import {
@@ -11,34 +11,37 @@ import {
   REPORT_OPTIONS,
   DEFAULT_REPORT_VALUE,
 } from "@/features/userReport/reportConstants";
-import { type ReportLocationState } from "@/features/userReport/reportTypes";
+import { type ReportLocationState } from "@/features/userReport/types/report";
 import { paths } from "@/config/paths";
 
-const PostReportForm = () => {
+const Report = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const savedState = location.state as ReportLocationState | null;
 
   const [reportRadioValue, setReportRadioValue] = useState(
-    savedState?.reportRadioValue ?? DEFAULT_REPORT_VALUE,
+    savedState?.reason ?? DEFAULT_REPORT_VALUE,
   );
   const [reportTextValue, setReportTextValue] = useState(
-    savedState?.reportTextValue ?? "",
+    savedState?.detail ?? "",
   );
   const isTooShort = reportTextValue.length < REPORT_LIMITS.MIN_LENGTH;
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isTooShort) return;
-    window.history.replaceState(null, "");
-    navigate(paths.app.postReport.confirm.getHref(), {
+    navigate(paths.app.report.confirm.getHref(), {
+      replace: true,
       state: {
-        reportRadioValue,
-        reportTextValue,
-        userID: savedState?.userID || "@test_user_id",
-        postContent:
-          savedState?.postContent || " これはテスト用の投稿です。あいうえお",
+        report_id: savedState?.report_id || 1,
+        school_id: savedState?.school_id || 1,
+        report_date: undefined,
+        report_by: savedState?.report_by || "testabc123",
+        reported_user: savedState?.reported_user || "testdef456",
+        reason: reportRadioValue,
+        detail: reportTextValue,
+        post_content: "投稿内容仮のデータです。",
       },
     });
   };
@@ -91,4 +94,4 @@ const PostReportForm = () => {
     </div>
   );
 };
-export default PostReportForm;
+export default Report;

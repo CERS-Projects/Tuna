@@ -1,4 +1,4 @@
-import { type ReportOption } from "./reportTypes";
+import { type ReportOption } from "./types/report";
 
 export const REPORT_LIMITS = {
   MIN_LENGTH: 5,
