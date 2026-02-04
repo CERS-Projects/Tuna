@@ -109,7 +109,8 @@ export const paths = {
     profile: {
       root: {
         path: "/app/profile/:userId",
-        getHref: (userId: string) => `/app/profile/${userId}`,
+        getHref: (userId: string) =>
+          userId ? `/app/profile/${userId}` : "/app/profile",
       },
       posts: {
         path: "/app/profile/:userId/posts",

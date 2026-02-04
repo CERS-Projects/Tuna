@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink, useParams } from "react-router";
 import styles from "./profileTab.module.css";
 import { paths } from "@/config/paths";
 
@@ -6,13 +6,32 @@ type ProfileCardTabProps = {
   isMyProfile: boolean;
 };
 
+const generatePath = (pathTemplate: string, userId: string) => {
+  return pathTemplate.replace(":userId", userId);
+};
+
 export const ProfileCardTab = ({ isMyProfile }: ProfileCardTabProps) => {
+  const { userId } = useParams();
+
+  if (!userId) return null;
   const navItems = [
-    { path: paths.app.profile.posts.path, label: "投稿", isPrivate: false },
-    { path: paths.app.profile.responses.path, label: "返信", isPrivate: false },
-    { path: paths.app.profile.goods.path, label: "いいね", isPrivate: false },
     {
-      path: paths.app.profile.bookmarks.path,
+      path: generatePath(paths.app.profile.posts.path, userId),
+      label: "投稿",
+      isPrivate: false,
+    },
+    {
+      path: generatePath(paths.app.profile.responses.path, userId),
+      label: "返信",
+      isPrivate: false,
+    },
+    {
+      path: generatePath(paths.app.profile.goods.path, userId),
+      label: "いいね",
+      isPrivate: false,
+    },
+    {
+      path: generatePath(paths.app.profile.bookmarks.path, userId),
       label: "ブックマーク",
       isPrivate: true,
     },
@@ -27,7 +46,7 @@ export const ProfileCardTab = ({ isMyProfile }: ProfileCardTabProps) => {
     <nav className={styles.profileTabContainer}>
       {visibleNavItems.map((item) => (
         <NavLink
-          key={item.label}
+          key={item.path}
           to={item.path}
           className={({ isActive }) =>
             `${styles.navItem} ${isActive ? styles.active : ""}`

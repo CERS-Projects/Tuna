@@ -83,9 +83,7 @@ const ProfileLayout = () => {
   const modalRef = useRef<ModalHandle>(null);
   const { userId } = useParams();
 
-  const myUserId = "user-8823-v9p";
-
-  const isMyProfile = !userId || userId === myUserId;
+  const isMyProfile = !userId;
 
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -112,6 +110,7 @@ const ProfileLayout = () => {
           ) : (
             <OtherProfileCard
               {...dummyOtherProfile}
+              showUserId={userId ?? ""}
               isFollowing={isFollowing}
               isFollowedBy={true}
               onToggleFollow={handleToggleFollow}
