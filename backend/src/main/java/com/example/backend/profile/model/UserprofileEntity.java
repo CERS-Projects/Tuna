@@ -5,43 +5,38 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.List;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Document(collection = "profile_collection")
-public class Userprofile {
+public class UserprofileEntity {
 
-    @NotNull
-    @id
+    @Id
     private ObjectId id;
 
-    @NotNull
     @Field("user_id")
-    private String userId;
+    private Integer userId;
 
-    @NotNull
+    @Field("nickname")
+    private String nickname;
+
     @Field("icon")
     private String iconObjectKey;
 
-    @NotNull
     @Field("show_user_id")
-    private boolean showUserId;
-
+    private String showUserId;
 
     @Field("introduction")
     private String introduction;
 
-    @NotNull
-    @Field("follow_count")
+    @Field("follow")
     private Integer followCount;
 
-    @NotNull
-    @Field("follower_count")
+    @Field("follower")
     private Integer followerCount;
 
-    @Field("filter_words")
+    @Field("filtering")
     private List<String> filterWords;
 }
