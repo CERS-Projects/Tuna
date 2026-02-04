@@ -1,5 +1,19 @@
 package com.example.backend.profile.service;
 
-public class ProfileService {
+import java.util.List;
+import com.example.backend.profile.dto.ProfileResponse;
+import com.example.backend.profile.dto.ProfileUpdateRequest;
 
+public interface ProfileService {
+    void createProfile(Integer userId);
+
+    void updateProfile(ProfileUpdateRequest profile, Integer userId);
+
+    void updateFilterWords(Integer userId, List<String> filterWords);
+
+    void deleteProfile(Integer userId);
+
+    ProfileResponse getProfilesByUserId(Integer currentUserId, Integer targetUserId);
+    
+    List<String> getFilterWords(Integer userId);
 }
