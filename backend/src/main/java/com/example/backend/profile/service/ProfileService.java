@@ -13,7 +13,7 @@ public interface ProfileService {
 
     void deleteProfile(Integer userId);
 
-    ProfileResponse getProfilesByUserId(Integer currentUserId, Integer targetUserId);
+    ProfileResponse getProfilesByUserId(Integer targetUserId, Integer currentUserId);
     
     List<String> getFilterWords(Integer userId);
 }
