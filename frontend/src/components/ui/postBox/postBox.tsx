@@ -46,7 +46,10 @@ export const PostBox = (props: PostData) => {
 
     if (withState)
       navigate(to, {
-        state: props,
+        state: {
+          ...props,
+          from: `${location.pathname}${location.search}${location.hash}`,
+        },
       });
     else navigate(to);
   };

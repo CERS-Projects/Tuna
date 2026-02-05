@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useCreatePost } from "@/features/post/hooks/useCreatePost";
 import { type PostFormData } from "@/features/post/types/post";
 import { type ImageData } from "@/features/post/types/post";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { paths } from "@/config/paths";
 
 const MAX_IMAGES = 4;
@@ -12,6 +12,8 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [step, setStep] = useState<"input" | "confirm">("input");
   const [images, setImages] = useState<ImageData[]>([]);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -35,8 +37,26 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
 
   const createPostMutation = useCreatePost({
     onSuccess: () => {
+      const responseTo = form.getValues("responseTo");
       resetForm();
       setIsOpen(false);
+
+      if (responseTo) {
+        const from = (location.state as { from?: string } | null)?.from;
+        const to = `${paths.app.timeline.detail.getHref(responseTo)}#latest-response`;
+        if (from === to) {
+          navigate(-1);
+          return;
+        } else {
+          navigate(to, {
+            replace: true,
+            state: {
+              scrollToLatestResponse: true,
+            },
+          });
+          return;
+        }
+      }
       navigate(paths.app.timeline.path, { replace: true });
     },
     onError: () => {
