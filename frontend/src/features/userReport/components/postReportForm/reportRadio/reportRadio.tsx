@@ -1,13 +1,13 @@
 import { type ReportOption } from "@/features/userReport/types/report";
 import styles from "./reportRadio.module.css";
+import { type UseFormRegisterReturn } from "react-hook-form";
 
 type Props = {
   options: ReportOption[];
-  selectedValue: string;
-  onChange: (value: string) => void;
+  register: UseFormRegisterReturn;
 };
 
-export const ReportRadio = ({ options, selectedValue, onChange }: Props) => (
+export const ReportRadio = ({ options, register }: Props) => (
   <fieldset
     className={styles.reportFieldSet}
     role="radiogroup"
@@ -20,12 +20,10 @@ export const ReportRadio = ({ options, selectedValue, onChange }: Props) => (
       {options.map((option) => (
         <div key={option.value} className={styles.reportRadio}>
           <input
-            name="reportType"
             id={option.id}
             type="radio"
             value={option.value}
-            checked={selectedValue === option.value}
-            onChange={(e) => onChange(e.target.value)}
+            {...register}
             className={styles.radioButton}
           />
           <label htmlFor={option.id}>

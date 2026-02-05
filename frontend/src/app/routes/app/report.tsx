@@ -1,5 +1,6 @@
-import { useState, type FormEvent } from "react";
+import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button/button";
 import { ReportRadio } from "@/features/userReport/components/postReportForm/reportRadio/reportRadio";
 import { ReportText } from "@/features/userReport/components/postReportForm/reportText/reportText";
@@ -14,23 +15,38 @@ import {
 import { type ReportLocationState } from "@/features/userReport/types/report";
 import { paths } from "@/config/paths";
 
+type ReportFormData = {
+  reason: string;
+  detail: string;
+};
+
 const Report = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const savedState = location.state as ReportLocationState | null;
 
-  const [reportRadioValue, setReportRadioValue] = useState(
-    savedState?.reason ?? DEFAULT_REPORT_VALUE,
-  );
-  const [reportTextValue, setReportTextValue] = useState(
-    savedState?.detail ?? "",
-  );
-  const isTooShort = reportTextValue.length < REPORT_LIMITS.MIN_LENGTH;
+  const {
+    register,
+    handleSubmit,
+    watch,
+    trigger,
+    formState: { errors, isValid },
+  } = useForm<ReportFormData>({
+    defaultValues: {
+      reason: savedState?.reason ?? DEFAULT_REPORT_VALUE,
+      detail: savedState?.detail ?? "",
+    },
+    mode: "onChange",
+  });
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isTooShort) return;
+  useEffect(() => {
+    trigger("detail");
+  }, [trigger]);
+
+  const detailValue = watch("detail");
+
+  const onSubmit = (data: ReportFormData) => {
     navigate(paths.app.report.confirm.getHref(), {
       replace: true,
       state: {
@@ -39,42 +55,49 @@ const Report = () => {
         report_date: undefined,
         report_by: savedState?.report_by || "testabc123",
         reported_user: savedState?.reported_user || "testdef456",
-        reason: reportRadioValue,
-        detail: reportTextValue,
-        post_content: "投稿内容仮のデータです。",
+        reason: data.reason,
+        detail: data.detail,
+        post_content: savedState?.post_content || "投稿内容仮のデータです。",
       },
     });
   };
 
   return (
     <div className={styles.container}>
-      <form onSubmit={handleSubmit} id="reportForm">
+      <form onSubmit={handleSubmit(onSubmit)} id="reportForm">
         <section>
           <ReportRadio
             options={REPORT_OPTIONS}
-            selectedValue={reportRadioValue}
-            onChange={setReportRadioValue}
+            register={register("reason", {
+              required: true,
+            })}
           />
         </section>
 
         <section>
           <ReportText
-            textValue={reportTextValue}
-            onChange={setReportTextValue}
-            isError={isTooShort}
+            register={register("detail", {
+              required: REPORT_MESSAGES.REQUIRED,
+              minLength: {
+                value: REPORT_LIMITS.MIN_LENGTH,
+                message: REPORT_MESSAGES.TOO_SHORT,
+              },
+              maxLength: REPORT_LIMITS.MAX_LENGTH,
+            })}
+            error={errors.detail}
           />
           <div className={styles.textCountArea}>
-            {isTooShort && (
+            {errors.detail?.message && (
               <span
                 className={styles.errorMessage}
                 id="reportTextError"
                 role="alert"
               >
-                {REPORT_MESSAGES.TOO_SHORT}
+                {errors.detail.message}
               </span>
             )}
             <span className={styles.countNumber}>
-              {reportTextValue.length}/{REPORT_LIMITS.MAX_LENGTH}
+              {detailValue.length}/{REPORT_LIMITS.MAX_LENGTH}
             </span>
           </div>
         </section>
@@ -85,7 +108,7 @@ const Report = () => {
             width="80px"
             height="35px"
             fontSize="1rem"
-            disabled={isTooShort}
+            disabled={!isValid}
           >
             次へ
           </Button>

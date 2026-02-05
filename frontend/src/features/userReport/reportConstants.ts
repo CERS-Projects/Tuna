@@ -6,6 +6,7 @@ export const REPORT_LIMITS = {
 } as const;
 
 export const REPORT_MESSAGES = {
+  REQUIRED: "※内容を入力してください",
   TOO_SHORT: `※${REPORT_LIMITS.MIN_LENGTH}文字以上入力してください`,
   PLACEHOLDER: "内容を記載してください",
 } as const;
