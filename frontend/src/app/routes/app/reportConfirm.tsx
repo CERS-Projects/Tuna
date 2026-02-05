@@ -1,8 +1,8 @@
-import { PostReportConfirm } from "@/features/userReport/components/postReportConfirm/postReportConfirm";
+import { PostReportConfirm } from "@/features/report/components/postReportConfirm/postReportConfirm";
 import { paths } from "@/config/paths";
 import { useLocation, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
-import { type ReportLocationState } from "@/features/userReport/types/report";
+import { type ReportLocationState } from "@/features/report/types/report";
 
 const ReportConfirm = () => {
   const location = useLocation();

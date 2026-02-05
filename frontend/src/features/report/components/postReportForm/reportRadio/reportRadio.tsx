@@ -1,4 +1,4 @@
-import { type ReportOption } from "@/features/userReport/types/report";
+import { type ReportOption } from "@/features/report/types/report";
 import styles from "./reportRadio.module.css";
 import { type UseFormRegisterReturn } from "react-hook-form";
 
