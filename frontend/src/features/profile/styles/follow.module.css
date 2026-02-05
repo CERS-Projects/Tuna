@@ -19,7 +19,8 @@
 .followSub {
   border-left: 1px solid rgb(50, 85, 150);
   overflow: auto;
-  min-height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .followHeader {

@@ -1,16 +1,16 @@
 import { type EditProfileData } from "@/features/profile/types/profileTypes";
+import { type ProfileData } from "../types/profileTypes"; // 遷移元と同じ型をインポート
 import { useState, useRef } from "react";
+import { useLocation } from "react-router"; // 遷移データ取得用
 import styles from "@/features/profile/styles/editProfile.module.css";
 
-// ダミーデータ（本来はAPIから取得したもの）
+// フォールバック用のダミーデータ
 const dummyEditProfileData: EditProfileData = {
   userId: 1,
-  showUserId: "user-8823-v9p",
-  userName: "サカバンバスピス",
-  iconUrl:
-    "https://www.sankei.com/resizer/v2/3P43OGHLUFBDNO6BED37J2RTPM.jpg?auth=54f463fd643ce84582d10a89b4392500c8ac357e9ac79bb92d50980d2225080a&quality=40&focal=593%2C440&width=1200",
-  introduction:
-    "深海魚です。趣味は某動画本社を爆破すること。本職は水族館勤務。タツノオトシゴが運営しています。",
+  showUserId: "user-default",
+  userName: "ゲストユーザー",
+  iconUrl: "https://via.placeholder.com/150",
+  introduction: "自己紹介が設定されていません。",
 };
 
 type EditState = Omit<EditProfileData, "userId">;
@@ -25,17 +25,18 @@ const fileTypes = [
 ];
 
 const EditProfile = () => {
+  const location = useLocation();
+  const receivedData = location.state as ProfileData | null;
+
   const [editData, setEditData] = useState<EditState>({
-    showUserId: dummyEditProfileData.showUserId,
-    userName: dummyEditProfileData.userName,
-    iconUrl: dummyEditProfileData.iconUrl,
-    introduction: dummyEditProfileData.introduction,
+    showUserId: receivedData?.showUserId ?? dummyEditProfileData.showUserId,
+    userName: receivedData?.userName ?? dummyEditProfileData.userName,
+    iconUrl: receivedData?.iconUrl ?? dummyEditProfileData.iconUrl,
+    introduction:
+      receivedData?.introduction ?? dummyEditProfileData.introduction,
   });
 
-  const [previewUrl, setPreviewUrl] = useState<string>(
-    dummyEditProfileData.iconUrl ?? "",
-  );
-
+  const [previewUrl, setPreviewUrl] = useState<string>(editData.iconUrl ?? "");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -49,19 +50,13 @@ const EditProfile = () => {
         return;
       }
       if (file.size > maxFileSize) {
-        setImageError(
-          "サイズが大きすぎます。画像ファイルのサイズは5MB以下にしてください",
-        );
+        setImageError("画像ファイルのサイズは5MB以下にしてください");
         return;
       }
       setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result as string);
-      };
-      reader.onerror = () => {
-        console.error("画像の読み込みに失敗しました", reader.error);
-        window.alert("画像の読み込みに失敗しました");
       };
       reader.readAsDataURL(file);
     }
@@ -79,7 +74,6 @@ const EditProfile = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("userName", editData.userName ?? "");
     formData.append("showUserId", editData.showUserId ?? "");
@@ -88,8 +82,7 @@ const EditProfile = () => {
     if (imageFile) {
       formData.append("icon", imageFile);
     }
-    console.log("送信データ(FormData):", Object.fromEntries(formData));
-    console.log("現在のState:", editData);
+    console.log("送信データ:", Object.fromEntries(formData));
   };
 
   return (
@@ -110,6 +103,7 @@ const EditProfile = () => {
               ref={fileInputRef}
               onChange={handleImageEdit}
               className={styles.hiddenInput}
+              style={{ display: "none" }} // 非表示
             />
             <button
               type="button"
@@ -130,6 +124,7 @@ const EditProfile = () => {
             <label htmlFor="userName">名前</label>
             <input
               id="userName"
+              name="userName"
               value={editData.userName}
               maxLength={50}
               onChange={handleChange}
@@ -140,6 +135,7 @@ const EditProfile = () => {
             <label htmlFor="showUserId">ユーザーID</label>
             <input
               id="showUserId"
+              name="showUserId"
               value={editData.showUserId}
               maxLength={20}
               onChange={handleChange}
@@ -150,6 +146,7 @@ const EditProfile = () => {
             <label htmlFor="introduction">自己紹介</label>
             <textarea
               id="introduction"
+              name="introduction"
               value={editData.introduction ?? ""}
               maxLength={200}
               onChange={handleChange}
