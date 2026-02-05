@@ -307,46 +307,49 @@ public class PostServiceImpl implements PostService {
             );
             
             if(postDetail == null){
+                log.error("指定された投稿が存在しません。 投稿ID: " + postId );
                 throw new RuntimeException("指定された投稿が存在しません。");
             }
             //投稿閲覧権限確認
             if(!canViewPost(currentUserId, postDetail.getShareRange())){
+                log.error("投稿の閲覧権限がありません。 投稿ID: " + postId );
                 throw new IllegalArgumentException("投稿の閲覧権限がありません。");
             }
             log.info("取得完了しました。 投稿ID: " + postId );
 
+            postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
+            postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+            return postDetail;
+
         }catch(Exception e){
-            log.error("投稿の取得に失敗しました。", e);
+            log.error("投稿の取得に失敗しました。 投稿ID: " + postId, e);
             throw new RuntimeException("投稿の取得に失敗しました。", e);
         }
-
-        postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
-        postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
-        return postDetail;
     }
 
-        //profileを実装のち実装
-        private List<String> getmuteWordList(Integer userId) {
-            List<String> muteWordList;
-            UserProfileEntity profile = profileRepository.getFilterWordsByUserId(userId)
-                .orElse(null);
-            
-            if (profile == null || profile.getFilterWords() == null) {
-                muteWordList = List.of();
-            } else {
-                muteWordList = profile.getFilterWords();
-            }
+    //ミュートワードリスト取得
+    private List<String> getmuteWordList(Integer userId) {
+        List<String> muteWordList;
+        UserProfileEntity profile = profileRepository.getFilterWordsByUserId(userId)
+            .orElse(null);
+        
+        if (profile == null || profile.getFilterWords() == null) {
+            muteWordList = List.of();
+        } else {
+            muteWordList = profile.getFilterWords();
+        }
+        log.info("取得したミュートワードリスト: " + muteWordList);
 
-            return muteWordList;
+        return muteWordList;
         }
 
-        //投稿閲覧権限確認
-        private boolean canViewPost(Integer userId, List<Integer> postShareRange) {
-        Set<Integer> userGroups = new HashSet<>(
-            groupJoinByUserId.getJoinedGroupIdsByUserId(userId)
-        );
-        userGroups.add(0);
+    //投稿閲覧権限確認
+    private boolean canViewPost(Integer userId, List<Integer> postShareRange) {
+    Set<Integer> userGroups = new HashSet<>(
+        groupJoinByUserId.getJoinedGroupIdsByUserId(userId)
+    );
+    userGroups.add(0);
 
-        return postShareRange.stream().anyMatch(userGroups::contains);
+    return postShareRange.stream().anyMatch(userGroups::contains);
     }
 }

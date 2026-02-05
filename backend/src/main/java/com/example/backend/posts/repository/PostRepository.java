@@ -449,7 +449,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         //2 post_flagがfalseのものを除外
         "{ $match: { post_flag: { $ne: false } } }",
         
-        // 4. profile_collectionとuser_idで結合
+        // 3. profile_collectionとuser_idで結合
         "{ $lookup: { " +
         "  from: 'profile_collection', " +
         "  localField: 'user_id', " +
@@ -457,10 +457,10 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  as: 'profile' " +
         "} }",
         
-        // 5. profileを展開（preserveNullAndEmptyArraysをtrueに）
+        // 4. profileを展開（preserveNullAndEmptyArraysをtrueに）
         "{ $unwind: { path: '$profile', preserveNullAndEmptyArrays: true } }",
         
-        // 6. like_collectionから検索
+        // 5. like_collectionから検索
         "{ $lookup: { " +
         "  from: 'like_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -477,7 +477,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  as: 'likes' " +
         "} }",
         
-        // 7. bookmark_collectionから検索
+        // 6. bookmark_collectionから検索
         "{ $lookup: { " +
         "  from: 'bookmark_collection', " +
         "  let: { postId: '$_id' }, " +
@@ -494,7 +494,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         "  as: 'bookmarks' " +
         "} }",
         
-        // 8. 最終的なフィールドを整形
+        // 7. 最終的なフィールドを整形
         "{ $project: { " +
         "  _id: 1, " +
         "  postId: { $toString: '$_id' }, " +
