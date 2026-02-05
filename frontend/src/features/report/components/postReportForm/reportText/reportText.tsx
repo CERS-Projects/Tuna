@@ -1,7 +1,7 @@
 import {
   REPORT_LIMITS,
   REPORT_MESSAGES,
-} from "@/features/userReport/reportConstants";
+} from "@/features/report/reportConstants";
 import styles from "./reportText.module.css";
 import { type UseFormRegisterReturn, type FieldError } from "react-hook-form";
 

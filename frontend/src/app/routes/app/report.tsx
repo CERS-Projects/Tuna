@@ -2,17 +2,17 @@ import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button/button";
-import { ReportRadio } from "@/features/userReport/components/postReportForm/reportRadio/reportRadio";
-import { ReportText } from "@/features/userReport/components/postReportForm/reportText/reportText";
-import styles from "@/features/userReport/styles/report.module.css";
+import { ReportRadio } from "@/features/report/components/postReportForm/reportRadio/reportRadio";
+import { ReportText } from "@/features/report/components/postReportForm/reportText/reportText";
+import styles from "@/features/report/styles/report.module.css";
 
 import {
   REPORT_LIMITS,
   REPORT_MESSAGES,
   REPORT_OPTIONS,
   DEFAULT_REPORT_VALUE,
-} from "@/features/userReport/reportConstants";
-import { type ReportLocationState } from "@/features/userReport/types/report";
+} from "@/features/report/reportConstants";
+import { type ReportLocationState } from "@/features/report/types/report";
 import { paths } from "@/config/paths";
 
 type ReportFormData = {
