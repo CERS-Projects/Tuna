@@ -10,6 +10,8 @@ public interface PostService {
 
     void insertPost(PostInsertRequest post, Integer userId);
 
+    PostDetailResponse getPostById(String postId, Integer userId);
+
     List<PostDetailResponse> getTimelinePosts(Integer shareRange, Integer currentUserId);
 
     List<PostDetailResponse> getUserPosts(Integer targetUserId, Integer currentUserId);

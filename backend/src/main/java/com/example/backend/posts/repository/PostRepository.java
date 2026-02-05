@@ -440,4 +440,82 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
         List<Integer> shareRange
     );
 
+        //投稿単体取得
+        @Aggregation(pipeline = {
+        // 1. postIdでフィルタ
+        "{ $match: { _id:  ?0 }  }",
+
+
+        //2 post_flagがfalseのものを除外
+        "{ $match: { post_flag: { $ne: false } } }",
+        
+        // 4. profile_collectionとuser_idで結合
+        "{ $lookup: { " +
+        "  from: 'profile_collection', " +
+        "  localField: 'user_id', " +
+        "  foreignField: 'user_id', " +
+        "  as: 'profile' " +
+        "} }",
+        
+        // 5. profileを展開（preserveNullAndEmptyArraysをtrueに）
+        "{ $unwind: { path: '$profile', preserveNullAndEmptyArrays: true } }",
+        
+        // 6. like_collectionから検索
+        "{ $lookup: { " +
+        "  from: 'like_collection', " +
+        "  let: { postId: '$_id' }, " +
+        "  pipeline: [ " +
+        "    { $match: { " +
+        "      $expr: { " +
+        "        $and: [ " +
+        "          { $eq: ['$user_id', ?1] }, " +
+        "          { $eq: ['$post_id', '$$postId'] } " +
+        "        ] " +
+        "      } " +
+        "    } } " +
+        "  ], " +
+        "  as: 'likes' " +
+        "} }",
+        
+        // 7. bookmark_collectionから検索
+        "{ $lookup: { " +
+        "  from: 'bookmark_collection', " +
+        "  let: { postId: '$_id' }, " +
+        "  pipeline: [ " +
+        "    { $match: { " +
+        "      $expr: { " +
+        "        $and: [ " +
+        "          { $eq: ['$user_id', ?1] }, " +
+        "          { $eq: ['$post_id', '$$postId'] } " +
+        "        ] " +
+        "      } " +
+        "    } } " +
+        "  ], " +
+        "  as: 'bookmarks' " +
+        "} }",
+        
+        // 8. 最終的なフィールドを整形
+        "{ $project: { " +
+        "  _id: 1, " +
+        "  postId: { $toString: '$_id' }, " +
+        "  userId: '$user_id', " +
+        "  sentence: '$sentence', " +
+        "  imageUrl: '$image_objectKey', " +
+        "  shareRange: '$share_range', " +
+        "  postDate: '$post_date', " +
+        "  likeCount: '$like_count', " +
+        "  nickname: '$profile.nickname', " +
+        "  show_user_id: '$profile.show_user_id', " +
+        "  icon: '$profile.icon', " +
+        "  responseCount: '$response_count', " +
+        "  isLiked: { $gt: [{ $size: '$likes' }, 0] }, " +
+        "  isBookmarked: { $gt: [{ $size: '$bookmarks' }, 0] } " +
+        "} }",
+    })
+    PostDetailResponse findPostsWithDetail(
+        ObjectId postId,
+        Integer currentUserId
+    );
+
+
 }
