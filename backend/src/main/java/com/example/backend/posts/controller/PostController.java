@@ -57,6 +57,14 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
+    //投稿の単体取得
+    @GetMapping
+    public ResponseEntity<PostDetailResponse> findPostById(@RequestParam final String postId, @AuthenticationPrincipal final UserInfo userInfo){
+        PostDetailResponse postDetail;
+        postDetail = postService.getPostById(postId, userInfo.getUserId());
+        return ResponseEntity.ok(postDetail);
+    }
+
 
     //タイムライン投稿を取得
     @GetMapping("/timeline")

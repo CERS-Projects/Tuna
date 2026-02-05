@@ -1,6 +1,7 @@
 package com.example.backend.posts.service.impl;
 
 import com.example.backend.posts.model.PostEntity;
+import com.example.backend.profile.model.UserProfileEntity;
 import com.example.backend.posts.dto.PostInsertRequest;
 import com.example.backend.posts.dto.PostDetailResponse;
 import org.bson.types.ObjectId;
@@ -12,6 +13,7 @@ import com.example.backend.utils.accountConfirm.AccountConfirm;
 import com.example.backend.utils.accountConfirm.GroupJoinByUserId;
 
 import com.example.backend.posts.service.PostService;
+import com.example.backend.profile.repository.ProfileRepository;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,10 @@ import lombok.RequiredArgsConstructor;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +46,8 @@ public class PostServiceImpl implements PostService {
     private final AccountConfirm accountConfirm;
 
     private final GroupJoinByUserId groupJoinByUserId;
+
+    private final ProfileRepository profileRepository;
     
     // 投稿作成
     @Override
@@ -284,9 +291,65 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    //profileを実装のち実装
+    //投稿の単体取得
+    @Override
+    public PostDetailResponse getPostById(String postId, Integer currentUserId) {
+        PostDetailResponse postDetail;
+        Set<Integer> postShareRangeList;
+
+        try{
+            log.info("投稿単体取得を開始しました 投稿ID: " + postId + " 取得 currentUserId: " + currentUserId );
+            
+
+            postDetail = postRepository.findPostsWithDetail(
+                new ObjectId(postId),
+                currentUserId
+            );
+            
+            if(postDetail == null){
+                log.error("指定された投稿が存在しません。 投稿ID: " + postId );
+                throw new RuntimeException("指定された投稿が存在しません。");
+            }
+            //投稿閲覧権限確認
+            if(!canViewPost(currentUserId, postDetail.getShareRange())){
+                log.error("投稿の閲覧権限がありません。 投稿ID: " + postId );
+                throw new IllegalArgumentException("投稿の閲覧権限がありません。");
+            }
+            log.info("取得完了しました。 投稿ID: " + postId );
+
+            postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
+            postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+            return postDetail;
+
+        }catch(Exception e){
+            log.error("投稿の取得に失敗しました。 投稿ID: " + postId, e);
+            throw new RuntimeException("投稿の取得に失敗しました。", e);
+        }
+    }
+
+    //ミュートワードリスト取得
     private List<String> getmuteWordList(Integer userId) {
-        List<String> muteWordList = List.of();
+        List<String> muteWordList;
+        UserProfileEntity profile = profileRepository.getFilterWordsByUserId(userId)
+            .orElse(null);
+        
+        if (profile == null || profile.getFilterWords() == null) {
+            muteWordList = List.of();
+        } else {
+            muteWordList = profile.getFilterWords();
+        }
+        log.info("取得したミュートワードリスト: " + muteWordList);
+
         return muteWordList;
+        }
+
+    //投稿閲覧権限確認
+    private boolean canViewPost(Integer userId, List<Integer> postShareRange) {
+    Set<Integer> userGroups = new HashSet<>(
+        groupJoinByUserId.getJoinedGroupIdsByUserId(userId)
+    );
+    userGroups.add(0);
+
+    return postShareRange.stream().anyMatch(userGroups::contains);
     }
 }
