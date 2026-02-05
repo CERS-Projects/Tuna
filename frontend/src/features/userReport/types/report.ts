@@ -6,6 +6,7 @@ export type ReportLocationState = {
   reported_user: string;
   reason: string;
   detail: string;
+  post_content: string;
 };
 export type ReportOption = {
   id: string;

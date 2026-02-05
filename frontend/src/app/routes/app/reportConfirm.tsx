@@ -51,13 +51,7 @@ const ReportConfirm = () => {
   const handleBack = () => {
     navigate(paths.app.report.root.getHref(), {
       state: {
-        report_id: state.report_id,
-        school_id: state.school_id,
-        report_date: state.report_date,
-        report_by: state.report_by,
-        reported_user: state.reported_user,
-        reason: state.reason,
-        detail: state.detail,
+        ...state,
       },
     });
   };
@@ -71,7 +65,7 @@ const ReportConfirm = () => {
         reportRadioValue={state.reason}
         reportTextValue={state.detail}
         userID={state.reported_user}
-        postContent={"投稿内容仮のデータです。"}
+        postContent={state.post_content}
         onConfirm={handleConfirm}
         onBack={handleBack}
         isCompleted={isCompleted}

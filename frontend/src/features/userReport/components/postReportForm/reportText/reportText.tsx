@@ -3,14 +3,15 @@ import {
   REPORT_MESSAGES,
 } from "@/features/userReport/reportConstants";
 import styles from "./reportText.module.css";
+import { type UseFormRegisterReturn, type FieldError } from "react-hook-form";
 
 type Props = {
-  textValue: string;
-  onChange: (value: string) => void;
-  isError: boolean;
+  register: UseFormRegisterReturn;
+  error?: FieldError;
 };
 
-export const ReportText = ({ textValue, onChange, isError }: Props) => {
+export const ReportText = ({ register, error }: Props) => {
+  const isError = !!error;
   return (
     <>
       <div className={styles.title}>通報の内容を正確に記載してください</div>
@@ -19,10 +20,8 @@ export const ReportText = ({ textValue, onChange, isError }: Props) => {
           placeholder={REPORT_MESSAGES.PLACEHOLDER}
           id="reportText"
           className={styles.reportText}
-          value={textValue}
-          onChange={(e) => onChange(e.target.value)}
+          {...register}
           maxLength={REPORT_LIMITS.MAX_LENGTH}
-          required
           aria-invalid={isError}
           aria-describedby={isError ? "reportTextError" : undefined}
         />
