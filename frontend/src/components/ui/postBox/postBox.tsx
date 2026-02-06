@@ -13,6 +13,7 @@ import { Modal, type ModalHandle } from "../modal/modal";
 import { type PostData } from "@/features/post/types/post";
 import { paths } from "@/config/paths";
 import { useDebouncedLike } from "@/features/post/hooks/useGood";
+import { useDebouncedBookmark } from "@/features/post/hooks/useBookmark";
 
 export const PostBox = (props: PostData) => {
   const {
@@ -39,7 +40,15 @@ export const PostBox = (props: PostData) => {
   const [bookmarkOn, setBookmarkOn] = useState(isBookmarked);
   const [selectedImg, setSelectedImg] = useState<string>("");
 
-  const { debouncedToggle } = useDebouncedLike(postId, shareRange);
+  const { debouncedToggle: debouncedLikeToggle } = useDebouncedLike(
+    postId,
+    shareRange,
+  );
+
+  const { debouncedToggle: debouncedBookmarkToggle } = useDebouncedBookmark(
+    postId,
+    shareRange,
+  );
 
   const modalRef = useRef<ModalHandle>(null);
 
@@ -63,16 +72,20 @@ export const PostBox = (props: PostData) => {
   const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
 
-    const newGoodState = !goodOn;
-    setGoodOn(newGoodState);
-    setTempLikeCount((prev) => (newGoodState ? prev + 1 : prev - 1));
+    const newGood = !goodOn;
+    setGoodOn(newGood);
+    setTempLikeCount((prev) => (newGood ? prev + 1 : prev - 1));
 
-    debouncedToggle(newGoodState);
+    debouncedLikeToggle(newGood);
   };
 
-  const bookmarkClick = (e: React.MouseEvent) => {
+  const handleBookmark = (e: React.MouseEvent) => {
     e.preventDefault();
-    setBookmarkOn((prev) => !prev);
+
+    const newBookmark = !bookmarkOn;
+    setBookmarkOn(newBookmark);
+
+    debouncedBookmarkToggle(newBookmark);
   };
 
   const handleImgClick = (e: React.MouseEvent, imgurl: string) => {
@@ -119,7 +132,7 @@ export const PostBox = (props: PostData) => {
           <BsChat />
         </button>
         <span className={styles.commentCount}>{responseCount}</span>
-        <button onClick={bookmarkClick}>
+        <button onClick={handleBookmark}>
           {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
         </button>
         <button onClick={(e) => handleNavigateClick(e, "")}>

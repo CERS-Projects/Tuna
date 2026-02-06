@@ -3,15 +3,15 @@ import { useApiWithRefresh } from "@/lib/api-client";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useDebouncedCallback } from "use-debounce";
 
-type UseGoodOptions = {
+type UseBookmarkOptions = {
   onSuccess?: () => void;
   onError?: (error: Error) => void;
 };
 
-export const useGood = (
+export const useBookmark = (
   postId: string | undefined,
   shareRange: number[] = [0],
-  options?: UseGoodOptions,
+  options?: UseBookmarkOptions,
 ) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
@@ -22,7 +22,7 @@ export const useGood = (
       if (!postId) return;
 
       return await apiWithRefresh<void>({
-        url: "/posts/addLikes",
+        url: "/posts/addbookmarks",
         options: {
           method: "POST",
           body: JSON.stringify({ postId }),
@@ -43,10 +43,10 @@ export const useGood = (
   });
 };
 
-export const useUnGood = (
+export const useUnBookmarkPost = (
   postId: string | undefined,
   shareRange: number[] = [0],
-  options?: UseGoodOptions,
+  options?: UseBookmarkOptions,
 ) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
@@ -57,7 +57,7 @@ export const useUnGood = (
       if (!postId) return;
 
       return await apiWithRefresh<void>({
-        url: `/posts/removelikes?postId=${postId}`,
+        url: `/posts/removebookmarks?postId=${postId}`,
         options: {
           method: "DELETE",
           headers: {
@@ -76,18 +76,18 @@ export const useUnGood = (
   });
 };
 
-export const useDebouncedLike = (
+export const useDebouncedBookmark = (
   postId: string | undefined,
   shareRange: number[] = [0],
 ) => {
-  const { mutate: goodMutate } = useGood(postId, shareRange);
-  const { mutate: unGoodMutate } = useUnGood(postId, shareRange);
+  const { mutate: bookmarkMutate } = useBookmark(postId, shareRange);
+  const { mutate: unBookmarkMutate } = useUnBookmarkPost(postId, shareRange);
 
-  const debouncedToggle = useDebouncedCallback((isLiked: boolean) => {
-    if (isLiked) {
-      goodMutate(undefined);
+  const debouncedToggle = useDebouncedCallback((isBookmarked: boolean) => {
+    if (isBookmarked) {
+      bookmarkMutate(undefined);
     } else {
-      unGoodMutate(undefined);
+      unBookmarkMutate(undefined);
     }
   }, 1500);
 
