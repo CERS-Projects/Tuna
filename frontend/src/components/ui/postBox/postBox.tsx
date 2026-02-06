@@ -12,6 +12,7 @@ import styles from "./postBox.module.css";
 import { Modal, type ModalHandle } from "../modal/modal";
 import { type PostData } from "@/features/post/types/post";
 import { paths } from "@/config/paths";
+import { useDebouncedLike } from "@/features/post/hooks/useGood";
 
 export const PostBox = (props: PostData) => {
   const {
@@ -20,6 +21,7 @@ export const PostBox = (props: PostData) => {
     nickname,
     icon,
     sentence,
+    shareRange,
     likeCount,
     responseCount,
     isLiked,
@@ -32,8 +34,12 @@ export const PostBox = (props: PostData) => {
   const navigate = useNavigate();
 
   const [goodOn, setGoodOn] = useState(isLiked);
+  const [tempLikeCount, setTempLikeCount] = useState<number>(likeCount);
+
   const [bookmarkOn, setBookmarkOn] = useState(isBookmarked);
   const [selectedImg, setSelectedImg] = useState<string>("");
+
+  const { debouncedToggle } = useDebouncedLike(postId, shareRange);
 
   const modalRef = useRef<ModalHandle>(null);
 
@@ -54,9 +60,14 @@ export const PostBox = (props: PostData) => {
     else navigate(to);
   };
 
-  const goodClick = (e: React.MouseEvent) => {
+  const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
-    setGoodOn((prev) => !prev);
+
+    const newGoodState = !goodOn;
+    setGoodOn(newGoodState);
+    setTempLikeCount((prev) => (newGoodState ? prev + 1 : prev - 1));
+
+    debouncedToggle(newGoodState);
   };
 
   const bookmarkClick = (e: React.MouseEvent) => {
@@ -96,10 +107,10 @@ export const PostBox = (props: PostData) => {
       </div>
 
       <div className={styles.postFooter}>
-        <button onClick={goodClick}>
+        <button onClick={handleLike}>
           {goodOn ? <FaThumbsUp /> : <FaRegThumbsUp />}
         </button>
-        <span className={styles.goodCount}>{likeCount}</span>
+        <span className={styles.goodCount}>{tempLikeCount}</span>
         <button
           onClick={(e) =>
             handleNavigateClick(e, paths.app.timeline.post.path, true)
