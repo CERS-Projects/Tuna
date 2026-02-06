@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 
 import com.example.backend.school.service.SchoolService;
 import com.example.backend.exception.model.SchoolNotFoundException;
-import com.example.backend.school.dto.GetSchoolInformationRequest;
 import com.example.backend.school.dto.GetSchoolInformationResponse;
 import com.example.backend.school.dto.ModifySchoolInformationRequest;
 import com.example.backend.school.dto.ModifySchoolInformationResponse;
@@ -45,8 +44,8 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     @Transactional(readOnly = true)
-    public GetSchoolInformationResponse getSchoolInformation(GetSchoolInformationRequest dto) {
-        SchoolEntity schoolEntity = schoolRepository.findById(dto.getSchoolId())
+    public GetSchoolInformationResponse getSchoolInformation(Integer schoolId) {
+        SchoolEntity schoolEntity = schoolRepository.findById(schoolId)
                 .orElseThrow(() -> new SchoolNotFoundException("学校が見つかりません"));
 
         GetSchoolInformationResponse response = new GetSchoolInformationResponse();
@@ -59,8 +58,9 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     @Transactional
-    public ModifySchoolInformationResponse modifySchoolInformation(ModifySchoolInformationRequest dto) {
-        SchoolEntity schoolEntity = schoolRepository.findById(dto.getSchoolId())
+    public ModifySchoolInformationResponse modifySchoolInformation(ModifySchoolInformationRequest dto, Integer schoolId) {
+
+        SchoolEntity schoolEntity = schoolRepository.findById(schoolId)
                 .orElseThrow(() -> new SchoolNotFoundException("学校が見つかりません"));
 
         schoolEntity.setSchoolName(dto.getSchoolName());
@@ -69,13 +69,9 @@ public class SchoolServiceImpl implements SchoolService {
 
         SchoolEntity updatedSchool = schoolRepository.save(schoolEntity);
 
-        ModifySchoolInformationResponse response = new ModifySchoolInformationResponse();
-        response.setSchoolId(updatedSchool.getSchoolId());
-        response.setSchoolName(updatedSchool.getSchoolName());
-        response.setSchoolAddress(updatedSchool.getSchoolAddress());
-        response.setSchoolMailAddress(updatedSchool.getSchoolMailAddress());
-
-        return response;
+        return new ModifySchoolInformationResponse(updatedSchool.getSchoolName(),
+                                                   updatedSchool.getSchoolAddress(),
+                                                   updatedSchool.getSchoolMailAddress());
     }
 
 }
