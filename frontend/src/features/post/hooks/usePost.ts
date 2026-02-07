@@ -21,7 +21,6 @@ export const usePost = (postId: string | undefined) => {
           },
         },
       });
-
       return post;
     },
     refetchOnMount: true,
