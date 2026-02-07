@@ -59,6 +59,7 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
         }
       }
 
+      if (!(shareRange.length > 0)) shareRange.push(0);
       const minGroupId = Math.min(...shareRange);
       navigate(paths.app.timeline.getHref(minGroupId), { replace: true });
     },
