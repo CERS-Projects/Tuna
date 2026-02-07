@@ -23,10 +23,10 @@ export const useGroupNavigation = (groups: TreeType[]) => {
           next.set("groupId", String(id));
           return next;
         },
-        { replace: true }
+        { replace: true },
       );
     },
-    [setSearchParams]
+    [setSearchParams],
   );
 
   const { breadcrumbs, currentGroup, selectedGroupId } = useMemo(() => {
@@ -38,7 +38,7 @@ export const useGroupNavigation = (groups: TreeType[]) => {
       };
     }
 
-    const fallbackId = groups[0].id;
+    const fallbackId = groups[0].groupId;
     const targetId = requestedGroupId ?? fallbackId;
 
     const path =

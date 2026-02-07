@@ -2,21 +2,24 @@ import { useQuery } from "@tanstack/react-query";
 import { type PostData } from "../types/post";
 import { useApiWithRefresh } from "@/lib/api-client";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useSearchParams } from "react-router";
 
-export const usePosts = (shareRange: number[] = []) => {
+export const usePosts = () => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
+  const [searchParams] = useSearchParams();
+  const groupId = searchParams.get("groupId");
 
   const { data, isFetching, isError, refetch } = useQuery<PostData[]>({
-    queryKey: ["posts", shareRange],
+    queryKey: ["posts", groupId],
     enabled: !!authToken,
     queryFn: async (): Promise<PostData[]> => {
-      const range = shareRange.length > 0 ? shareRange : [0];
-
       const params = new URLSearchParams();
-      range.forEach((value) => {
-        params.append("shareRange", value.toString());
-      });
+      if (groupId) {
+        params.append("shareRange", groupId);
+      } else {
+        params.append("shareRange", "0");
+      }
 
       const posts = await apiWithRefresh<PostData[]>({
         url: `/posts/timeline?${params.toString()}`,

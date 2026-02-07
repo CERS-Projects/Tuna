@@ -5,7 +5,7 @@ import {
   BsChat,
   BsExclamationCircle,
 } from "react-icons/bs";
-import { useNavigate, Link } from "react-router";
+import { useNavigate, Link, useSearchParams } from "react-router";
 import type React from "react";
 import { useState, useRef } from "react";
 import styles from "./postBox.module.css";
@@ -16,6 +16,11 @@ import { useDebouncedLike } from "@/features/post/hooks/useGood";
 import { useDebouncedBookmark } from "@/features/post/hooks/useBookmark";
 
 export const PostBox = (props: PostData) => {
+  const [searchParams] = useSearchParams();
+  const currentGroupId = searchParams.get("groupId")
+    ? Number(searchParams.get("groupId"))
+    : undefined;
+
   const {
     postId,
     showUserId,
@@ -148,7 +153,7 @@ export const PostBox = (props: PostData) => {
     <>
       {isLink ? (
         <Link
-          to={paths.app.timeline.detail.getHref(postId)}
+          to={paths.app.timeline.detail.getHref(postId, currentGroupId)}
           state={{ item: props }}
           relative="path"
           className={containerClass}

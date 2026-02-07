@@ -1,15 +1,18 @@
 import styles from "./timelineInfo.module.css";
+import { type TreeType } from "@/features/management/types/group";
 
-type GroupInfo = {
-  groupName: string;
-  groupInfo: string;
+type Props = {
+  group: TreeType;
+  handleSelect: (id: number) => void;
 };
 
-export const TimelineInfo = ({ groupName, groupInfo }: GroupInfo) => {
+export const TimelineInfo = ({ group, handleSelect }: Props) => {
   return (
-    <div className={styles.timelineInfo}>
-      <h3>{groupName}</h3>
-      <p>{groupInfo}</p>
-    </div>
+    <button
+      className={styles.timelineInfo}
+      onClick={() => handleSelect(group.groupId)}
+    >
+      <h3>{group.groupName}</h3>
+    </button>
   );
 };

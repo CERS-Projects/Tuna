@@ -43,6 +43,7 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
 
       if (responseTo) {
         const from = (location.state as { from?: string } | null)?.from;
+
         const to = `${paths.app.timeline.detail.getHref(responseTo)}#latest-response`;
         if (from === to) {
           navigate(-1);
@@ -57,7 +58,9 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
           return;
         }
       }
-      navigate(paths.app.timeline.path, { replace: true });
+
+      const minGroupId = Math.min(...shareRange);
+      navigate(paths.app.timeline.getHref(minGroupId), { replace: true });
     },
     onError: () => {
       setValidationError("投稿に失敗しました");

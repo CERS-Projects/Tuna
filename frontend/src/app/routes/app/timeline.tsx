@@ -8,9 +8,12 @@ import { useRef } from "react";
 import { Outlet } from "react-router";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import { usePosts } from "@/features/post/hooks/usePosts";
+import { useGroups } from "@/features/management/hooks/useGroups";
 
 const Timeline = () => {
   const { data: posts, isFetching } = usePosts();
+  const { groups } = useGroups();
+
   const modalRef = useRef<ModalHandle>(null);
   const modalButtonClick = () => {
     if (modalRef.current) {
@@ -37,13 +40,13 @@ const Timeline = () => {
         </div>
         <div className={styles.timelineSub}>
           <InfoBox>
-            <TimelineFilter />
+            <TimelineFilter groups={groups} />
           </InfoBox>
         </div>
       </div>
       <Modal ref={modalRef} height={"fit-content"} width={"fit-content"}>
         <InfoBox>
-          <TimelineFilter />
+          <TimelineFilter groups={groups} />
         </InfoBox>
       </Modal>
       <Outlet />

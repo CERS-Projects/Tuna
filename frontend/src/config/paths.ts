@@ -80,14 +80,18 @@ export const paths = {
     },
     timeline: {
       path: "/app/timeline",
-      getHref: () => "/app/timeline",
+      getHref: (groupId?: number) =>
+        groupId != null ? `/app/timeline?groupId=${groupId}` : "/app/timeline",
       post: {
         path: "/app/timeline/post",
         getHref: () => "/app/timeline/post",
       },
       detail: {
         path: "/app/timeline/:id",
-        getHref: (id: string) => `/app/timeline/${id}`,
+        getHref: (id: string, groupId?: number) =>
+          groupId != null
+            ? `/app/timeline/${id}?groupId=${groupId}`
+            : `/app/timeline/${id}`,
       },
     },
     searchPost: {

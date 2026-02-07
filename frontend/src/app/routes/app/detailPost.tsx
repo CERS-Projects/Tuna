@@ -9,14 +9,18 @@ import { useLocation, useParams } from "react-router";
 import { useResponses } from "@/features/post/hooks/useResponses";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import { usePost } from "@/features/post/hooks/usePost";
+import { useGroups } from "@/features/management/hooks/useGroups";
 
 const DetailPost = () => {
   const { id } = useParams();
+  const { groups } = useGroups();
+
   const {
     data: post,
     isFetching: isPostFetching,
     isError: isPostError,
   } = usePost(id);
+
   const {
     data: responses,
     isFetching: isResponsesFetching,
@@ -135,13 +139,13 @@ const DetailPost = () => {
         </div>
         <div className={styles.timelineSub}>
           <InfoBox>
-            <TimelineFilter />
+            <TimelineFilter groups={groups} />
           </InfoBox>
         </div>
       </div>
       <Modal ref={modalRef} height={"fit-content"} width={"fit-content"}>
         <InfoBox>
-          <TimelineFilter />
+          <TimelineFilter groups={groups} />
         </InfoBox>
       </Modal>
     </div>
