@@ -38,7 +38,7 @@
 
 .filterCardContainer {
   display: grid;
-  place-items: center;
+  align-items: stretch;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   height: auto;
