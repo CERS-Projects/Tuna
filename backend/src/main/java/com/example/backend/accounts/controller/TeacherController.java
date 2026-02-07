@@ -1,11 +1,7 @@
 package com.example.backend.accounts.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,13 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.example.backend.accounts.dto.GetFindAllTeacherAccountRequest;
 import com.example.backend.accounts.dto.ModifyTeacherAccountRequest;
 import com.example.backend.accounts.dto.TeacherCreateRequestInApp;
-import com.example.backend.accounts.dto.TeacherInformationResponse;
 import com.example.backend.accounts.model.UserEntity;
 import com.example.backend.accounts.service.AdminUserService;
 import com.example.backend.accounts.service.TeacherService;
+import com.example.backend.auth.dto.UserInfo;
 
 @RequestMapping("/accounts")
 @RestController
@@ -32,23 +27,12 @@ public class TeacherController {
     /* AdminUserServiceの依存注入 */
     private final AdminUserService adminUserService;
 
-    @GetMapping("/teacher/all/information")
-    public ResponseEntity<List<TeacherInformationResponse>> getTeacherInformation(@Valid @ModelAttribute GetFindAllTeacherAccountRequest dto){
-        List<TeacherInformationResponse> responses = teacherService.findTeacherInformationResponses(dto);
-        return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/teacher/{teacherId}/information")
-    public ResponseEntity<TeacherInformationResponse> getOneTeacherInformation(@ModelAttribute @PathVariable final Integer teacherId){
-        TeacherInformationResponse response = teacherService.findOneTeacherInformationResponse(teacherId);
-        return ResponseEntity.ok(response);
-    }
-
     @PostMapping("/teacher")
-    public ResponseEntity<Void> createTeacher(@RequestBody @Valid TeacherCreateRequestInApp dto){
+    public ResponseEntity<Void> createTeacher(@AuthenticationPrincipal UserInfo userInfo,
+            @RequestBody @Valid TeacherCreateRequestInApp dto) {
         /* 教師アカウントの作成 */
-       UserEntity newTeacherAccount = teacherService.createTeacher(dto);
-        
+        UserEntity newTeacherAccount = teacherService.createTeacher(userInfo.getSchoolId(), dto);
+
         /* 権限の設定(権限無し) */
         adminUserService.authorityNotGrant(newTeacherAccount);
 
@@ -56,7 +40,7 @@ public class TeacherController {
     }
 
     @PostMapping("/teacher/modify")
-    public ResponseEntity<Void> modifyTeacherAccount(@RequestBody @Valid ModifyTeacherAccountRequest dto){
+    public ResponseEntity<Void> modifyTeacherAccount(@RequestBody @Valid ModifyTeacherAccountRequest dto) {
         teacherService.modifyTeacherAccountByUserId(dto);
         return ResponseEntity.ok().build();
     }
