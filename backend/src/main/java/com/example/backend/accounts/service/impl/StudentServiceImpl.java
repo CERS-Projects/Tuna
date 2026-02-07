@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.example.backend.accounts.dto.GetFindAllStudentAccountRequest;
 import com.example.backend.accounts.dto.ModifyStudentAccountRequest;
 import com.example.backend.accounts.dto.ReadCSVFileStudentCreateRequest;
 import com.example.backend.accounts.dto.StudentCreateRequest;
@@ -88,9 +87,9 @@ public class StudentServiceImpl implements StudentService {
     /* ユーザデータの基本情報を登録（生徒） */
     @Override
     @Transactional
-    public List<UserEntity> createStudent(List<StudentCreateRequest> dto) {
+    public List<UserEntity> createStudent(List<StudentCreateRequest> dto, Integer schoolId) {
 
-        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.get(0).getSchoolId());
+        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(schoolId);
 
         List<UserEntity> newStudentAccounts = dto
                 .stream()
@@ -204,8 +203,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<StudentInformationResponse> findStudentInformationResponses(GetFindAllStudentAccountRequest dto) {
-        List<StudentInformationResponse> responses = studentRepository.findAllStudentInformation(dto.getSchoolId());
+    public List<StudentInformationResponse> findStudentInformationResponses(Integer schoolId) {
+        List<StudentInformationResponse> responses = studentRepository.findAllStudentInformation(schoolId);
         return responses;
     }
 
