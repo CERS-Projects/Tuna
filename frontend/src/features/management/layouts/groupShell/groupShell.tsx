@@ -28,7 +28,7 @@ export type GroupsOutletContext = ReturnType<typeof useGroups> & {
 };
 
 const GroupShell = () => {
-  const { groups, isFetching, isError } = useGroups(1);
+  const { groups, isFetching, isError } = useGroups();
   const { breadcrumbs, currentGroup, selectedGroupId, selectGroup } =
     useGroupNavigation(groups);
 
@@ -70,13 +70,13 @@ const GroupShell = () => {
       selectedGroupId,
       selectGroup,
       setActions,
-    ]
+    ],
   );
 
   const handleGoEdit = useCallback(() => {
-    if (!currentGroup?.id) return;
+    if (!currentGroup?.groupId) return;
     navigate({ pathname: "edit", search: location.search });
-  }, [currentGroup?.id, navigate, location.search]);
+  }, [currentGroup?.groupId, navigate, location.search]);
 
   const handleGoNew = useCallback(() => {
     navigate({ pathname: "new", search: location.search });
@@ -87,18 +87,18 @@ const GroupShell = () => {
       left: {
         label: "グループ編集",
         onClick: handleGoEdit,
-        disabled: !currentGroup?.id,
+        disabled: !currentGroup?.groupId,
       },
       right: {
         label: "グループ作成",
         onClick: handleGoNew,
       },
     }),
-    [handleGoEdit, handleGoNew, currentGroup?.id]
+    [handleGoEdit, handleGoNew, currentGroup?.groupId],
   );
 
   const effectiveActions = useMemo<GroupsShellActions | null>(() => {
-    return mode === "group" ? actions ?? defaultIndexActions : actions;
+    return mode === "group" ? (actions ?? defaultIndexActions) : actions;
   }, [mode, actions, defaultIndexActions]);
 
   return (
@@ -150,7 +150,7 @@ const GroupShell = () => {
           <Tree
             items={groups}
             level={0}
-            currentId={currentGroup?.id}
+            currentId={currentGroup?.groupId}
             handleBranchClick={selectGroup}
           />
         </aside>

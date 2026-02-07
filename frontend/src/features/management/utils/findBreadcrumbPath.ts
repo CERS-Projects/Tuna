@@ -3,22 +3,22 @@ import { type Breadcrumb } from "../types/breadcrumb";
 
 export const findBreadcrumbPath = (
   nodes: TreeType[],
-  targetId: number
+  targetId: number,
 ): Breadcrumb[] | null => {
   for (const node of nodes) {
-    if (node.id === targetId) {
+    if (node.groupId === targetId) {
       return [
         {
-          id: node.id,
-          crumb: node.name,
+          id: node.groupId,
+          crumb: node.groupName,
         },
       ];
     }
 
-    if (node.branch) {
-      const childPath = findBreadcrumbPath(node.branch, targetId);
+    if (node.branchGroups) {
+      const childPath = findBreadcrumbPath(node.branchGroups, targetId);
       if (childPath) {
-        return [{ id: node.id, crumb: node.name }, ...childPath];
+        return [{ id: node.groupId, crumb: node.groupName }, ...childPath];
       }
     }
   }

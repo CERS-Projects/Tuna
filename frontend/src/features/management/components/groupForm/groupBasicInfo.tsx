@@ -25,8 +25,8 @@ export const GroupBasicInfo = ({ parentOptions }: Props) => {
         >
           <option value={0}>（選択なし）</option>
           {parentOptions.map((group) => (
-            <option key={group.id} value={group.id}>
-              {group.name}
+            <option key={group.groupId} value={group.groupId}>
+              {group.groupName}
             </option>
           ))}
         </select>
