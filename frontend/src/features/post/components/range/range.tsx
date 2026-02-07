@@ -107,7 +107,7 @@ export const RangeSection = ({
   return (
     <div className={styles.rangeSection}>
       <div className={styles.rangeLabel}>
-        {isInputStep ? "公開範囲を選択" : "公開範囲"}
+        {isInputStep ? "公開範囲を選択 (選択無しで全体公開)" : "公開範囲"}
       </div>
       <div className={styles.rangeList}>
         {isInputStep ? (
