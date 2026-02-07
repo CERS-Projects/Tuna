@@ -26,11 +26,15 @@ export const TimelineFilter = ({ groups }: { groups: TreeType[] }) => {
 
   return (
     <div className={styles.timelineFilter}>
-      <Breadcrumbs breadcrumbs={breadcrumbs} handleSelect={handleSelect} />
-      <h2>{currentGroup ? currentGroup.groupName : "グローバル"}</h2>
+      <div className={styles.navigateWrapper}>
+        <Breadcrumbs breadcrumbs={breadcrumbs} handleSelect={handleSelect} />
+
+        <h2>{currentGroup ? currentGroup.groupName : "グローバル"}</h2>
+      </div>
 
       <hr />
-      <div className={styles.filterCard}>
+
+      <div className={styles.filterCardContainer}>
         {currentGroup?.branchGroups &&
           currentGroup.branchGroups.map((item) => (
             <TimelineInfo

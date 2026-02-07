@@ -1,6 +1,6 @@
 .breadcrumbsContainer {
   height: auto;
-  width: 75%;
+  width: 100%;
   min-width: 0;
 }
 
@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  margin: 0;
   overflow-x: auto;
   font-size: 1.6rem;
   font-weight: 500;

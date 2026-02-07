@@ -106,7 +106,9 @@ const GroupShell = () => {
       <h2 className={styles.sectionName}>{title}</h2>
 
       <header className={styles.menuContainer}>
-        <Breadcrumbs breadcrumbs={breadcrumbs} handleSelect={selectGroup} />
+        <div className={styles.breadcrumbsContainer}>
+          <Breadcrumbs breadcrumbs={breadcrumbs} handleSelect={selectGroup} />
+        </div>
         <div className={styles.actions}>
           {effectiveActions?.left && (
             <button
