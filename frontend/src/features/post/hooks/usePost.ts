@@ -12,7 +12,7 @@ export const usePost = (postId: string | undefined) => {
     enabled: !!authToken && !!postId,
     queryFn: async (): Promise<PostData> => {
       const post = await apiWithRefresh<PostData>({
-        url: `/posts?postId=${postId}`,
+        url: `/posts/${postId}`,
         options: {
           method: "GET",
           headers: {
