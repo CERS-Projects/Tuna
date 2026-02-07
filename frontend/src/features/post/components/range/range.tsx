@@ -15,8 +15,8 @@ type RangeItemProps = {
 const RangeItem = memo(
   ({ node, selectedGroupIds, onToggle, depth = 0 }: RangeItemProps) => {
     const [isExpanded, setIsExpanded] = useState(true);
-    const isChecked = selectedGroupIds.includes(node.id);
-    const hasChildren = node.branch && node.branch.length > 0;
+    const isChecked = selectedGroupIds.includes(node.groupId);
+    const hasChildren = node.branchGroups && node.branchGroups.length > 0;
 
     const handleToggleExpand = (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -50,10 +50,10 @@ const RangeItem = memo(
             onChange={handleToggleSelect}
             labelTextAfterLink={
               <>
-                {node.name}
+                {node.groupName}
                 {hasChildren && (
                   <span className={styles.childCount}>
-                    ({node.branch!.length})
+                    ({node.branchGroups!.length})
                   </span>
                 )}
               </>
@@ -62,9 +62,9 @@ const RangeItem = memo(
         </div>
         {hasChildren && isExpanded && (
           <div className={styles.childrenContainer}>
-            {node.branch!.map((child) => (
+            {node.branchGroups!.map((child) => (
               <RangeItem
-                key={child.id}
+                key={child.groupId}
                 node={child}
                 selectedGroupIds={selectedGroupIds}
                 onToggle={onToggle}
@@ -96,7 +96,7 @@ export const RangeSection = ({
   const handleToggle = useCallback(
     (node: TreeType) => {
       const allIds = getAllIds(node);
-      const isCurrentlySelected = selectedGroupIds.includes(node.id);
+      const isCurrentlySelected = selectedGroupIds.includes(node.groupId);
       onToggleGroup(allIds, !isCurrentlySelected);
     },
     [selectedGroupIds, onToggleGroup],
@@ -113,7 +113,7 @@ export const RangeSection = ({
         {isInputStep ? (
           items.map((item) => (
             <RangeItem
-              key={item.id}
+              key={item.groupId}
               node={item}
               selectedGroupIds={selectedGroupIds}
               onToggle={handleToggle}
@@ -121,10 +121,10 @@ export const RangeSection = ({
           ))
         ) : selectedGroupIds.length > 0 ? (
           flatItems
-            .filter((item) => selectedGroupIds.includes(item.id))
+            .filter((item) => selectedGroupIds.includes(item.groupId))
             .map((item) => (
-              <span key={item.id} className={styles.confirmTag}>
-                {item.name}
+              <span key={item.groupId} className={styles.confirmTag}>
+                {item.groupName}
               </span>
             ))
         ) : (

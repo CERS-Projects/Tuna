@@ -129,7 +129,7 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
 
   const toggleGroup = useCallback(
     (ids: number[], isSelect: boolean) => {
-      const currentIds = shareRange;
+      const currentIds = form.getValues("shareRange");
       if (isSelect) {
         const newIds = new Set([...currentIds, ...ids]);
         setValue("shareRange", Array.from(newIds));
@@ -140,7 +140,7 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
         );
       }
     },
-    [shareRange, setValue],
+    [setValue, form],
   );
 
   const handlePost = useCallback(() => {

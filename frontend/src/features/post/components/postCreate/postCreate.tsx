@@ -15,32 +15,16 @@ import { ResponseTo } from "../replyTo/responseTo";
 import { type PostData } from "../../types/post";
 import { type User } from "@/types/user";
 
-const items: TreeType[] = [
-  {
-    id: 1,
-    name: "八文字学園",
-    branch: [
-      {
-        id: 2,
-        name: "水戸電子専門学校",
-        branch: [
-          { id: 3, name: "情報処理" },
-          { id: 4, name: "水戸電子システム" },
-        ],
-      },
-      { id: 5, name: "水戸" },
-    ],
-  },
-];
-
 export const PostCreateModal = ({
   ref,
   user,
+  groups,
   onClose,
   response,
 }: {
   ref: Ref<ModalHandle>;
   user: User | undefined;
+  groups: TreeType[];
   onClose?: () => void;
   response?: PostData;
 }) => {
@@ -143,7 +127,7 @@ export const PostCreateModal = ({
           {!response && (
             <RangeSection
               isInputStep={isInputStep}
-              items={items}
+              items={groups}
               selectedGroupIds={state.selectedGroupIds}
               onToggleGroup={actions.toggleGroup}
             />
