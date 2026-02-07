@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.accounts.helper.AccountsHelper;
+import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.group.dto.DelGroupRequest;
-import com.example.backend.group.dto.GetGroupRequest;
 import com.example.backend.group.dto.GetGroupResponse;
 import com.example.backend.group.dto.GroupCreateRequest;
 import com.example.backend.group.dto.ModifyUpperGroupRequest;
@@ -35,19 +35,25 @@ public class GroupServiceImpl implements GroupService {
     /* グループ作成 */
     @Transactional
     @Override
-    public void createGroup(GroupCreateRequest dto){
+    public void createGroup(GroupCreateRequest dto) {
         toGroupEntity(dto);
     }
 
     @Transactional
     @Override
-    public List<GetGroupResponse> getAllGroups(GetGroupRequest dto){
-        return groupHelper.getTree(dto.getSchoolId());
+    public List<GetGroupResponse> getAllGroups(UserInfo userInfo) {
+        return groupHelper.getTree(userInfo.getSchoolId());
     }
 
     @Transactional
     @Override
-    public void deleteGroup(DelGroupRequest dto){
+    public List<GetGroupResponse> getMyGroups(UserInfo userInfo) {
+        return groupHelper.getMyTree(userInfo);
+    }
+
+    @Transactional
+    @Override
+    public void deleteGroup(DelGroupRequest dto) {
 
         final Integer newParentId = dto.getParentId();
         final Integer myId = dto.getGroupId();
@@ -60,12 +66,12 @@ public class GroupServiceImpl implements GroupService {
 
     @Transactional
     @Override
-    public void modifyUpperGroup(final ModifyUpperGroupRequest dto){
+    public void modifyUpperGroup(final ModifyUpperGroupRequest dto) {
         groupHelper.updateParentGroup(dto.getNewParentGroupId(), dto.getGroupId());
     }
-    
+
     /* GroupCreateRequest DTOをGroupEntityに変換 */
-    private GroupEntity toGroupEntity(GroupCreateRequest dto){
+    private GroupEntity toGroupEntity(GroupCreateRequest dto) {
         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
         GroupEntity groupEntity = new GroupEntity();
         GroupEntity parentGroup = groupHelper.findGroupEntityById(dto.getParentGroupId());

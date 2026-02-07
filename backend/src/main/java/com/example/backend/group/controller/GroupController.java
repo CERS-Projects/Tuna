@@ -3,14 +3,16 @@ package com.example.backend.group.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.accounts.service.StudentService;
+import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.group.dto.DelGroupRequest;
-import com.example.backend.group.dto.GetGroupRequest;
 import com.example.backend.group.dto.GetGroupResponse;
 import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
@@ -25,10 +27,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/group")
+@RequestMapping("/groups")
 public class GroupController {
 
     private final GroupService groupService;
@@ -37,38 +38,44 @@ public class GroupController {
 
     private final StudentService studentService;
 
-    @GetMapping("/get-user")
-    public ResponseEntity<List<GetUserResponse>> getUsersList(@Valid @ModelAttribute GetUserBySchoolIdRequest dto){
-        List<GetUserResponse> usersList = studentService.findAllGroups(dto);
-        return ResponseEntity.ok().body(usersList);
-    }
-
-    @GetMapping("/get-all-groups")
-    public ResponseEntity<List<GetGroupResponse>> getAllGroups(@Valid @ModelAttribute GetGroupRequest dto){
-        List<GetGroupResponse> groupList = groupService.getAllGroups(dto);
+    @GetMapping
+    public ResponseEntity<List<GetGroupResponse>> getAllGroups(@AuthenticationPrincipal UserInfo userInfo) {
+        List<GetGroupResponse> groupList = groupService.getAllGroups(userInfo);
         return ResponseEntity.ok().body(groupList);
     }
 
-    @PostMapping("/create-group")
-    public ResponseEntity<Void> createGroup(@Valid @RequestBody GroupCreateRequest dto){
-        groupService.createGroup(dto);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/modify-group-members")
-    public ResponseEntity<Void> modifyGroupMembers(@Valid @RequestBody ModifyGroupMembersRequest dto){
-        groupMemberService.modifyGroupMembers(dto);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/delete-group")
-    public ResponseEntity<Void> deleteGroup(@Valid @RequestBody DelGroupRequest dto){
+    @DeleteMapping
+    public ResponseEntity<Void> deleteGroup(@Valid @RequestBody DelGroupRequest dto) {
         groupService.deleteGroup(dto);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/modify-upper-group")
-    public ResponseEntity<Void> modifyUpperGroup(@Valid @RequestBody ModifyUpperGroupRequest dto){
+    @GetMapping("/me")
+    public ResponseEntity<List<GetGroupResponse>> getMyGroups(@AuthenticationPrincipal UserInfo userInfo) {
+        List<GetGroupResponse> groupList = groupService.getMyGroups(userInfo);
+        return ResponseEntity.ok().body(groupList);
+    }
+
+    @GetMapping("/users") // （{groupId}/usersにする予定 @PathVariable）
+    public ResponseEntity<List<GetUserResponse>> getUsersList(@Valid @ModelAttribute GetUserBySchoolIdRequest dto) {
+        List<GetUserResponse> usersList = studentService.findAllGroups(dto);
+        return ResponseEntity.ok().body(usersList);
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<Void> createGroup(@Valid @RequestBody GroupCreateRequest dto) {
+        groupService.createGroup(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/modify/member") // （{groupId}/membersにする予定 @PathVariable）
+    public ResponseEntity<Void> modifyGroupMembers(@Valid @RequestBody ModifyGroupMembersRequest dto) {
+        groupMemberService.modifyGroupMembers(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/modify/upper-group") // （{groupId}/upper-groupsにする予定 @PathVariable）
+    public ResponseEntity<Void> modifyUpperGroup(@Valid @RequestBody ModifyUpperGroupRequest dto) {
         groupService.modifyUpperGroup(dto);
         return ResponseEntity.ok().build();
     }
