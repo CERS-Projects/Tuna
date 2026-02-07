@@ -102,6 +102,12 @@ export const RangeSection = ({
     [selectedGroupIds, onToggleGroup],
   );
 
+  const isGlobalSelected = selectedGroupIds.includes(0);
+
+  const handleToggleGlobal = useCallback(() => {
+    onToggleGroup([0], !isGlobalSelected);
+  }, [isGlobalSelected, onToggleGroup]);
+
   const flatItems = flattenTree(items);
 
   return (
@@ -111,22 +117,44 @@ export const RangeSection = ({
       </div>
       <div className={styles.rangeList}>
         {isInputStep ? (
-          items.map((item) => (
-            <RangeItem
-              key={item.groupId}
-              node={item}
-              selectedGroupIds={selectedGroupIds}
-              onToggle={handleToggle}
-            />
-          ))
+          <>
+            <div className={styles.rangeItemWrapper}>
+              <div
+                className={`${styles.rangeItem} ${isGlobalSelected ? styles.rangeItemSelected : ""}`}
+              >
+                <span className={styles.expandSpacer} />
+                <Checkbox
+                  checked={isGlobalSelected}
+                  onChange={handleToggleGlobal}
+                  labelTextAfterLink={<>全体公開</>}
+                />
+              </div>
+            </div>
+            {items.map((item) => (
+              <RangeItem
+                key={item.groupId}
+                node={item}
+                selectedGroupIds={selectedGroupIds}
+                onToggle={handleToggle}
+              />
+            ))}
+          </>
         ) : selectedGroupIds.length > 0 ? (
-          flatItems
-            .filter((item) => selectedGroupIds.includes(item.groupId))
-            .map((item) => (
-              <span key={item.groupId} className={styles.confirmTag}>
-                {item.groupName}
-              </span>
-            ))
+          <>
+            {isGlobalSelected && (
+              <span className={styles.confirmTag}>全体公開</span>
+            )}
+            {flatItems
+              .filter(
+                (item) =>
+                  item.groupId !== 0 && selectedGroupIds.includes(item.groupId),
+              )
+              .map((item) => (
+                <span key={item.groupId} className={styles.confirmTag}>
+                  {item.groupName}
+                </span>
+              ))}
+          </>
         ) : (
           <span className={styles.noSelectionMessage}>
             指定なし（全体公開）
