@@ -2,9 +2,11 @@ package com.example.backend.posts.service;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+
+import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.posts.dto.PostDetailResponse;
 import com.example.backend.posts.dto.PostInsertRequest;
-
 
 public interface PostService {
 
@@ -12,14 +14,14 @@ public interface PostService {
 
     PostDetailResponse getPostById(String postId, Integer userId);
 
-    List<PostDetailResponse> getTimelinePosts(Integer shareRange, Integer currentUserId);
+    List<PostDetailResponse> getTimelinePosts(Integer shareRange, Authentication authentication, UserInfo userInfo);
 
     List<PostDetailResponse> getUserPosts(Integer targetUserId, Integer currentUserId);
 
     List<PostDetailResponse> getReplyPosts(String replypostId, Integer currentUserId);
-    
+
     List<PostDetailResponse> getPostsByKeyword(String keyword, Integer currentUserId, List<Integer> shareRange);
 
-    void deletePost(String postId, Integer userId); 
+    void deletePost(String postId, Integer userId);
 
 }

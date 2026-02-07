@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.MediaType;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,10 +73,12 @@ public class PostController {
     // タイムライン投稿を取得
     @GetMapping("/timeline")
     public ResponseEntity<List<PostDetailResponse>> getTimelinePosts(@RequestParam final Integer shareRange,
+            Authentication authentication,
             @AuthenticationPrincipal final UserInfo userInfo) {
+
         List<PostDetailResponse> timelinePosts;
 
-        timelinePosts = postService.getTimelinePosts(shareRange, userInfo.getUserId());
+        timelinePosts = postService.getTimelinePosts(shareRange, authentication, userInfo);
         return ResponseEntity.ok(timelinePosts);
     }
 

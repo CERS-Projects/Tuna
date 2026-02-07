@@ -3,6 +3,7 @@ package com.example.backend.posts.service.impl;
 import com.example.backend.posts.model.PostEntity;
 import com.example.backend.profile.model.UserProfileEntity;
 import com.example.backend.posts.dto.PostInsertRequest;
+import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.posts.dto.PostDetailResponse;
 import org.bson.types.ObjectId;
 
@@ -15,6 +16,8 @@ import com.example.backend.utils.accountConfirm.GroupJoinByUserId;
 import com.example.backend.posts.service.PostService;
 import com.example.backend.profile.repository.ProfileRepository;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -116,22 +119,28 @@ public class PostServiceImpl implements PostService {
 
     // タイムライン取得
     @Override
-    public List<PostDetailResponse> getTimelinePosts(Integer shareRange, Integer currentUserId) {
-        List<Integer> shareRangeList = List.of(shareRange);
+    public List<PostDetailResponse> getTimelinePosts(Integer shareRange, Authentication authentication,
+            UserInfo userInfo) {
 
-        if (!(shareRangeList.size() == 1 && shareRangeList.get(0) == 0)) {
+        List<Integer> shareRangeList = new java.util.ArrayList<>(List.of(shareRange));
+
+        boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
+
+        if (!isTeacherOrAdmin && !(shareRangeList.size() == 1 && shareRangeList.get(0) == 0)) {
 
             // publicのみ指定されている場合、全グループ参加確認は不要
-            if (!accountConfirm.isExistsAllGroups(currentUserId, shareRangeList.toArray(new Integer[0]))) {
+            if (!accountConfirm.isExistsAllGroups(userInfo.getUserId(), shareRangeList.toArray(new Integer[0]))) {
                 throw new IllegalArgumentException("指定されたグループに所属していません。");
             }
+
         }
 
         try {
             List<PostDetailResponse> postDetails = postRepository.findPostsWithDetails(
-                    currentUserId,
+                    userInfo.getUserId(),
                     shareRangeList,
-                    getmuteWordList(currentUserId));
+                    getmuteWordList(userInfo.getUserId()));
 
             log.info("タイムライン投稿 件数={}", postDetails.size());
             if (!postDetails.isEmpty()) {
