@@ -1,6 +1,7 @@
 package com.example.backend.accounts.repository;
 
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -59,5 +60,10 @@ Optional<GetUserName> findUserInfo(@Param("userId") Integer userId);
     @Query("SELECT u.showUserId as showUserId, u.name as name " +
        "FROM UserEntity u WHERE u.userId = :userId")
     GetUserName findUserName(@Param("userId") Integer userId);
+    
+    //複数ユーザーのUserIdとshowUserIdと名前を取得する
+    @Query("SELECT u.userId as userId, u.showUserId as showUserId, u.name as name " +
+       "FROM UserEntity u WHERE u.userId IN :userIds")
+    List<GetUserName> findByUserIdIn(@Param("userIds") List<Integer> userIds);
 
 }
