@@ -1,0 +1,20 @@
+package com.example.backend.classroom.dto;
+
+import lombok.Getter;
+import lombok.Setter;
+import java.util.List;
+import java.util.Date;
+import com.example.backend.classroom.dto.DocumentsResponse;
+
+@Getter
+@Setter
+public class CategoriesResponse {
+
+    private String categoryName;
+
+    private List<DocumentsResponse> documents;
+
+    
+    private Date createdAt;
+
+}
