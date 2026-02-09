@@ -22,7 +22,6 @@ import com.example.backend.school.service.SchoolService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-
 /* 学校登録に係る処理 */
 @RestController
 @RequestMapping("/school")
@@ -34,9 +33,9 @@ public class SchoolController {
     private final SchoolService schoolService;
     private final AdminUserService adminUserService;
     private final TeacherService createUserService;
-    
+
     @PostMapping("/create")
-    public ResponseEntity<Void> createSchool(@RequestBody @Valid SchoolIntegrationCreate requestDto){
+    public ResponseEntity<Void> createSchool(@RequestBody @Valid SchoolIntegrationCreate requestDto) {
         final Integer schoolId;
         final UserEntity newTeacherAccount;
 
@@ -54,15 +53,17 @@ public class SchoolController {
     }
 
     @GetMapping("/information")
-    public ResponseEntity<GetSchoolInformationResponse> getSchoolInformation(@Valid @ModelAttribute GetSchoolInformationRequest dto){
+    public ResponseEntity<GetSchoolInformationResponse> getSchoolInformation(
+            @Valid @ModelAttribute GetSchoolInformationRequest dto) {
         GetSchoolInformationResponse response = schoolService.getSchoolInformation(dto);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/modify")
-    public ResponseEntity<ModifySchoolInformationResponse> modifySchoolInformation(@Valid @RequestBody ModifySchoolInformationRequest dto){
+    public ResponseEntity<ModifySchoolInformationResponse> modifySchoolInformation(
+            @Valid @RequestBody ModifySchoolInformationRequest dto) {
         ModifySchoolInformationResponse response = schoolService.modifySchoolInformation(dto);
         return ResponseEntity.ok(response);
     }
 
-} 
+}
