@@ -1,11 +1,12 @@
 export type ReportLocationState = {
-  report_id: number;
   school_id: number;
-  report_date?: Date;
-  report_by: string;
-  reported_user: string;
-  reason: string;
+  report_date: Date;
+  report_by: number;
+  reported_user: number;
+  reason_id: string;
+  reported_post_id: number;
   detail: string;
+
   post_content: string;
 };
 export type ReportOption = {

@@ -6,7 +6,7 @@ import { useRef, useEffect } from "react";
 type Props = {
   reportRadioValue: string;
   reportTextValue: string;
-  userID: string;
+  userId: number;
   postContent: string;
   onConfirm: () => void;
   onBack: () => void;
@@ -18,7 +18,7 @@ type Props = {
 export const PostReportConfirm = ({
   reportRadioValue,
   reportTextValue,
-  userID,
+  userId,
   postContent,
   onConfirm,
   onBack,
@@ -38,7 +38,7 @@ export const PostReportConfirm = ({
       <div className={styles.title}>通報内容の確認</div>
       <dl className={styles.reportContainer}>
         <dt>ユーザー</dt>
-        <dd>{userID}</dd>
+        <dd>{userId}</dd>
         <dt>投稿内容</dt>
         <dd>{postContent}</dd>
         <dt>選択項目</dt>
