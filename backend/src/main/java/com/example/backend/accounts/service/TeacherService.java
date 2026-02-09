@@ -21,6 +21,4 @@ public interface TeacherService {
 
     void modifyTeacherAccountByUserId(ModifyTeacherAccountRequest dto);
 
-    // TeacherInformationResponse findOneTeacherInformationResponse(String
-    // searchString);
 }

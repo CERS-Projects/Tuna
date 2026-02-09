@@ -94,7 +94,6 @@ public class AuthServiceImpl implements AuthService {
 
             return otpResponse.getOtpTokenKey();
         } catch (BadCredentialsException e) {
-            System.out.println("むとう");
             loginAttemptService.loginFailed(loginSelectRequest.getShowUserId());
             throw new AuthException("ログインIDまたはパスワードが異なります");
         }
