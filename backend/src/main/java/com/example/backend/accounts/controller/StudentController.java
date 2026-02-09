@@ -48,7 +48,7 @@ public class StudentController {
      */
     @PostMapping("/student/csv-file")
     public ResponseEntity<String> createStudentByFile(@RequestPart("file") MultipartFile uploadCsvFile,
-            @RequestParam("refId") @AuthenticationPrincipal UserInfo userInfo) throws IOException {
+            @AuthenticationPrincipal UserInfo userInfo) throws IOException {
         final boolean validationResult = documentFileValidation.isValidDocumentFile(uploadCsvFile);
         final boolean isCsv = documentFileValidation.isCSV(uploadCsvFile);
 
