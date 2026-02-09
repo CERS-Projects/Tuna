@@ -7,6 +7,7 @@ import com.example.backend.auth.dto.LoginResponse;
 import com.example.backend.auth.dto.LoginSelectRequest;
 import com.example.backend.auth.dto.LoginTokenResponse;
 import com.example.backend.auth.dto.OtpRequest;
+import com.example.backend.auth.dto.PasswordChangeRequest;
 import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.auth.service.AuthService;
 import com.example.backend.auth.service.JwtService;
@@ -63,4 +64,12 @@ public class AuthController {
     public void logout(@AuthenticationPrincipal UserInfo userInfo) {
         authService.logout(userInfo.getUserId());
     }
+
+    @PostMapping("/change/password")
+    public void changePassword(@AuthenticationPrincipal UserInfo userInfo,
+            @Valid @RequestBody PasswordChangeRequest passwordChangeRequest) {
+        authService.changePassword(userInfo.getUserId(), passwordChangeRequest);
+        ResponseEntity.ok();
+    }
+
 }

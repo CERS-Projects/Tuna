@@ -6,10 +6,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +26,7 @@ import com.example.backend.accounts.repository.TeacherRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.auth.dto.LoginSelectRequest;
 import com.example.backend.auth.dto.OtpResponse;
+import com.example.backend.auth.dto.PasswordChangeRequest;
 import com.example.backend.auth.repository.RefreshTokenRepository;
 import com.example.backend.exception.AuthException;
 
@@ -45,6 +48,8 @@ public class AuthServiceImpl implements AuthService {
     private final StringRedisTemplate stringRedisTemplate;
     private final OtpService otpService;
     private final MailService mailService;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public String login(LoginSelectRequest loginSelectRequest) {
@@ -123,5 +128,30 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout(@NonNull Integer userId) {
         refreshTokenRepository.deleteById(userId);
+    }
+
+    @Override
+    public void changePassword(Integer userId, PasswordChangeRequest passwordChangeRequest) {
+
+        if (userId == null || passwordChangeRequest.getPassword() == null
+                || passwordChangeRequest.getNewPassword() == null
+                || passwordChangeRequest.getConfirmPassword() == null) {
+            throw new IllegalArgumentException("リクエストにnullがあります");
+        }
+
+        if (!passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getConfirmPassword())) {
+            throw new IllegalArgumentException("新しいパスワードと確認用パスワードが一致しません");
+        }
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EmptyResultDataAccessException("指定ユーザーが見つかりません", 0));
+
+        if (!bCryptPasswordEncoder.matches(passwordChangeRequest.getPassword(), userEntity.getPassword())) {
+            throw new AuthException("現在のパスワードが異なります");
+        }
+
+        userEntity.setPassword(bCryptPasswordEncoder.encode(passwordChangeRequest.getNewPassword()));
+        userRepository.save(userEntity);
+
     }
 }
