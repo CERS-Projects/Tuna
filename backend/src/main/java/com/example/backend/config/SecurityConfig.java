@@ -47,7 +47,8 @@ public class SecurityConfig {
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/refresh", "/otp", "/support/**").permitAll()
-                        .requestMatchers("/school/create/", "/accounts/all").hasAnyRole("TEACHER", "ADMIN_SCHOOL")
+                        .requestMatchers("/school/create", "/accounts/all", "/accounts/teacher/**")
+                        .hasRole("ADMIN_SCHOOL")
                         .requestMatchers("/group/**", "/accounts/student/**", "/notice/create", "/notice/modify",
                                 "/notice/teacher/list", "/notice/delete", "/report/list", "/report/delete")
                         .hasAnyRole("TEACHER", "ADMIN_SCHOOL")
