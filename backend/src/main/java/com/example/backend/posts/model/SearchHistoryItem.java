@@ -7,14 +7,14 @@ import lombok.Setter;
 import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    @Setter
-    public  class SearchHistoryItem {
-        @NotNull
-        private String query;
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class SearchHistoryItem {
+    @NotNull
+    private String query;
 
-        @NotNull
-        private Date searched_at;
-    }
+    @NotNull
+    private Date searched_at;
+}

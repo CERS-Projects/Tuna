@@ -64,9 +64,9 @@ public class PostController {
     // 投稿の単体取得
     @GetMapping("/{postId}")
     public ResponseEntity<PostDetailResponse> findPostById(@PathVariable final String postId,
-            @AuthenticationPrincipal final UserInfo userInfo) {
+            Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         PostDetailResponse postDetail;
-        postDetail = postService.getPostById(postId, userInfo.getUserId());
+        postDetail = postService.getPostById(authentication, postId, userInfo.getUserId());
         return ResponseEntity.ok(postDetail);
     }
 
@@ -106,12 +106,13 @@ public class PostController {
     @GetMapping("/search")
     public ResponseEntity<List<PostDetailResponse>> getPostsByKeyword(
             @RequestParam @Size(min = 1, max = 100, message = "キーワードは1文字以上100文字以下で入力してください") final String keyword,
+            Authentication authentication,
             @AuthenticationPrincipal final UserInfo userInfo, @RequestParam final List<Integer> shareRange) {
         List<PostDetailResponse> searchedPosts;
 
         // 検索履歴の追加
         searchHistoryService.addSearchHistory(userInfo.getUserId(), keyword);
-        searchedPosts = postService.getPostsByKeyword(keyword, userInfo.getUserId(), shareRange);
+        searchedPosts = postService.getPostsByKeyword(authentication, keyword, userInfo.getUserId(), shareRange);
         return ResponseEntity.ok(searchedPosts);
     }
 
