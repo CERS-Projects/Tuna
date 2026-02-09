@@ -56,6 +56,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if (userRepository.existsByShowUserId(loginSelectRequest.getShowUserId()) == false) {
+            loginAttemptService.loginFailed(loginSelectRequest.getShowUserId());
             throw new AuthException("ログインIDまたはパスワードが異なります");
         }
 

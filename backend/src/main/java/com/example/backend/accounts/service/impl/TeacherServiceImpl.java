@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import com.example.backend.accounts.dto.GetFindAllTeacherAccountRequest;
 import com.example.backend.accounts.dto.ModifyTeacherAccountRequest;
 import com.example.backend.accounts.dto.TeacherCreateRequestInApp;
 import com.example.backend.accounts.dto.TeacherInformationResponse;
@@ -43,20 +42,9 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService {
     /* schoolIdに紐づく教師情報を全件取得する */
     @Override
     @Transactional(readOnly = true)
-    public List<TeacherInformationResponse> findTeacherInformationResponses(GetFindAllTeacherAccountRequest dto) {
-        final Integer SCHOOL_ID = dto.getSchoolId();
+    public List<TeacherInformationResponse> findTeacherInformationResponses(Integer schoolId) {
+        final Integer SCHOOL_ID = schoolId;
         return teacherRepository.findAllTeacherInformation(SCHOOL_ID);
-    }
-
-    /* 特定のuserIdに紐づく教師情報を1件取得する */
-    @Override
-    @Transactional(readOnly = true)
-    public TeacherInformationResponse findOneTeacherInformationResponse(final Integer teacherId) {
-        TeacherInformationResponse response = teacherRepository.findOneTeacherInformation(teacherId);
-        if (response == null) {
-            throw new SchoolNotFoundException("指定した学校が見つかりません");
-        }
-        return response;
     }
 
     /* 学校登録に付随する、アカウント登録に係る基本情報をMySQLに登録する機能 */
@@ -79,9 +67,9 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService {
     /* ウェブアプリ内からの教師アカウント作成機能を提供する */
     @Override
     @Transactional
-    public UserEntity createTeacher(TeacherCreateRequestInApp dto) {
+    public UserEntity createTeacher(TeacherCreateRequestInApp dto, Integer schoolId) {
 
-        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
+        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(schoolId);
         UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity,
                 dto.getShowUserId(),
                 dto.getPassword(),

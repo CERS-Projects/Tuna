@@ -1,10 +1,7 @@
 package com.example.backend.accounts.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TeacherCreateRequestInApp {
-   @NotBlank
+    @NotBlank
     @Size(min = 1, max = 20)
     private String showUserId;
 
@@ -24,12 +21,8 @@ public class TeacherCreateRequestInApp {
     @Email
     @Size(min = 1, max = 254)
     private String mailAddress;
-    
+
     @NotBlank
     private String password;
 
-    @NotNull
-    @Min(value = 1)
-    @Max(value = 99999)
-    private Integer schoolId;
 }
