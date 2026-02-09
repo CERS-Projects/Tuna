@@ -31,7 +31,7 @@ public class TeacherController {
     public ResponseEntity<Void> createTeacher(@AuthenticationPrincipal UserInfo userInfo,
             @RequestBody @Valid TeacherCreateRequestInApp dto) {
         /* 教師アカウントの作成 */
-        UserEntity newTeacherAccount = teacherService.createTeacher(userInfo.getSchoolId(), dto);
+        UserEntity newTeacherAccount = teacherService.createTeacher(dto, userInfo.getSchoolId());
 
         /* 権限の設定(権限無し) */
         adminUserService.authorityNotGrant(newTeacherAccount);

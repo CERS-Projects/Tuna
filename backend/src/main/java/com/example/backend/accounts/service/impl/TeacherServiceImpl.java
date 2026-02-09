@@ -50,7 +50,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService {
     /* 学校登録に付随する、アカウント登録に係る基本情報をMySQLに登録する機能 */
     @Override
     @Transactional
-    public UserEntity createTeacher(Integer schoolId, TeacherCreateRequestOutSideApp dto) {
+    public UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId) {
 
         SchoolEntity schoolEntity = schoolRepository.findById(schoolId)
                 .orElseThrow(() -> new SchoolNotFoundException("学校が見つかりません"));
@@ -67,7 +67,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService {
     /* ウェブアプリ内からの教師アカウント作成機能を提供する */
     @Override
     @Transactional
-    public UserEntity createTeacher(Integer schoolId, TeacherCreateRequestInApp dto) {
+    public UserEntity createTeacher(TeacherCreateRequestInApp dto, Integer schoolId) {
 
         SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(schoolId);
         UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity,

@@ -13,9 +13,9 @@ import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
  * ・アカウント作成（教師、生徒関わらず）
  */
 public interface TeacherService {
-    UserEntity createTeacher(Integer schoolId, TeacherCreateRequestOutSideApp dto);
+    UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId);
 
-    UserEntity createTeacher(Integer schoolId, TeacherCreateRequestInApp dto);
+    UserEntity createTeacher(TeacherCreateRequestInApp dto, Integer schoolId);
 
     List<TeacherInformationResponse> findTeacherInformationResponses(Integer schoolId);
 
