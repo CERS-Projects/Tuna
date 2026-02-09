@@ -65,7 +65,7 @@ public class PostServiceImpl implements PostService {
                 .filter(i -> i != 0)
                 .toList();
         // 除外したリストをもとに権限確認（userGroupIdsが空でない場合のみ）
-        if (userGroupIds.size() == 0) {
+        if (userGroupIds.size() != 0) {
             if (!accountConfirm.isExistsAllGroups(userId, userGroupIds.toArray(new Integer[0]))) {
                 throw new IllegalArgumentException("指定されたグループに所属していません。");
             }
@@ -134,6 +134,13 @@ public class PostServiceImpl implements PostService {
                 throw new IllegalArgumentException("指定されたグループに所属していません。");
             }
 
+        }
+
+        // 教師/管理者でも指定グループが自校のものか検証
+        if (isTeacherOrAdmin && !(shareRangeList.size() == 1 && shareRangeList.get(0) == 0)) {
+            if (!accountConfirm.isAllGroupsBelongToSchool(userInfo.getSchoolId(), shareRangeList)) {
+                throw new IllegalArgumentException("指定されたグループは自校に属していません。");
+            }
         }
 
         try {
@@ -211,15 +218,27 @@ public class PostServiceImpl implements PostService {
 
     // キーワード検索投稿取得
     @Override
-    public List<PostDetailResponse> getPostsByKeyword(String keyword, Integer currentUserId, List<Integer> shareRange) {
+    public List<PostDetailResponse> getPostsByKeyword(Authentication authentication, String keyword,
+            UserInfo userInfo, List<Integer> shareRange) {
         List<PostDetailResponse> postDetails;
+        Integer currentUserId = userInfo.getUserId();
 
-        if (!(shareRange.size() == 1 && shareRange.get(0) == 0)) {
+        boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
+
+        if (!isTeacherOrAdmin && !(shareRange.size() == 1 && shareRange.get(0) == 0)) {
             if (!accountConfirm.isExistsAllGroups(currentUserId, shareRange.toArray(new Integer[0]))) {
                 throw new IllegalArgumentException("指定されたグループに所属していません。");
             } else {
                 log.info("publicのみ指定されているため、グループ所属確認をスキップします。 currentUserId: " + currentUserId);
                 shareRange = List.of(0); // 条件指定がない場合publicの追加
+            }
+        }
+
+        // 教師/管理者でも指定グループが自校のものか検証
+        if (isTeacherOrAdmin && !(shareRange.size() == 1 && shareRange.get(0) == 0)) {
+            if (!accountConfirm.isAllGroupsBelongToSchool(userInfo.getSchoolId(), shareRange)) {
+                throw new IllegalArgumentException("指定されたグループは自校に属していません。");
             }
         }
         try {
@@ -302,8 +321,12 @@ public class PostServiceImpl implements PostService {
 
     // 投稿の単体取得
     @Override
-    public PostDetailResponse getPostById(String postId, Integer currentUserId) {
+    public PostDetailResponse getPostById(Authentication authentication, String postId, UserInfo userInfo) {
         PostDetailResponse postDetail;
+        Integer currentUserId = userInfo.getUserId();
+
+        boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
 
         try {
             log.info("投稿単体取得を開始しました 投稿ID: " + postId + " 取得 currentUserId: " + currentUserId);
@@ -317,7 +340,13 @@ public class PostServiceImpl implements PostService {
                 throw new RuntimeException("指定された投稿が存在しません。");
             }
             // 投稿閲覧権限確認
-            if (!canViewPost(currentUserId, postDetail.getShareRange())) {
+            if (isTeacherOrAdmin) {
+                // 教師/管理者は自校のグループの投稿のみ閲覧可能
+                if (!accountConfirm.isAllGroupsBelongToSchool(userInfo.getSchoolId(), postDetail.getShareRange())) {
+                    log.error("投稿の閲覧権限がありません（他校の投稿）。 投稿ID: " + postId);
+                    throw new IllegalArgumentException("投稿の閲覧権限がありません。");
+                }
+            } else if (!canViewPost(currentUserId, postDetail.getShareRange())) {
                 log.error("投稿の閲覧権限がありません。 投稿ID: " + postId);
                 throw new IllegalArgumentException("投稿の閲覧権限がありません。");
             }

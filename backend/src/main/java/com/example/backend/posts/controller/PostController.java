@@ -66,7 +66,7 @@ public class PostController {
     public ResponseEntity<PostDetailResponse> findPostById(@PathVariable final String postId,
             Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         PostDetailResponse postDetail;
-        postDetail = postService.getPostById(authentication, postId, userInfo.getUserId());
+        postDetail = postService.getPostById(authentication, postId, userInfo);
         return ResponseEntity.ok(postDetail);
     }
 
@@ -112,7 +112,7 @@ public class PostController {
 
         // 検索履歴の追加
         searchHistoryService.addSearchHistory(userInfo.getUserId(), keyword);
-        searchedPosts = postService.getPostsByKeyword(authentication, keyword, userInfo.getUserId(), shareRange);
+        searchedPosts = postService.getPostsByKeyword(authentication, keyword, userInfo, shareRange);
         return ResponseEntity.ok(searchedPosts);
     }
 

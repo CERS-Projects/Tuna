@@ -53,6 +53,13 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
         boolean existsGroupBySchoolIdAndGroupId(@Param("schoolId") Integer schoolId, @Param("groupId") Integer groupId);
 
         @Query("""
+                        SELECT COUNT(DISTINCT g.groupId)
+                        FROM GroupEntity g
+                        WHERE g.school.schoolId = :schoolId AND g.groupId IN :groupIds
+                        """)
+        long countGroupsBySchoolIdAndGroupIds(@Param("schoolId") Integer schoolId, @Param("groupIds") List<Integer> groupIds);
+
+        @Query("""
                         SELECT g FROM GroupMemberEntity gm
                             INNER JOIN
                                 GroupEntity g ON gm.groupId = g.groupId
