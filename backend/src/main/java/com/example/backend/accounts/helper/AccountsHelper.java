@@ -53,7 +53,7 @@ public class AccountsHelper {
     public List<AllAccountInformationResponse> join(List<StudentInformationResponse> listStudent,
             List<TeacherInformationResponse> listTeacher) {
         List<AllAccountInformationResponse> allAccountInformationResponseList = new ArrayList<>();
-        for (Integer i = 0; i < listStudent.size(); i++) {
+        for (int i = 0; i < listStudent.size(); i++) {
             StudentInformationResponse studentInformationResponse = listStudent.get(i);
             AllAccountInformationResponse allAccountInformationResponse = new AllAccountInformationResponse(
                     studentInformationResponse.getUserId(), studentInformationResponse.getShowUserId(),
@@ -62,7 +62,7 @@ public class AccountsHelper {
                     studentInformationResponse.getIsAccountStopFlag());
             allAccountInformationResponseList.add(allAccountInformationResponse);
         }
-        for (Integer i = 0; i < listTeacher.size(); i++) {
+        for (int i = 0; i < listTeacher.size(); i++) {
             TeacherInformationResponse teacherInformationResponse = listTeacher.get(i);
             AllAccountInformationResponse allAccountInformationResponse = new AllAccountInformationResponse(
                     teacherInformationResponse.getUserId(), teacherInformationResponse.getShowUserId(),
@@ -76,7 +76,7 @@ public class AccountsHelper {
 
     public List<AllAccountInformationResponse> join(List<StudentInformationResponse> listStudent) {
         List<AllAccountInformationResponse> allAccountInformationResponseList = new ArrayList<>();
-        for (Integer i = 0; i < listStudent.size(); i++) {
+        for (int i = 0; i < listStudent.size(); i++) {
             StudentInformationResponse studentInformationResponse = listStudent.get(i);
             AllAccountInformationResponse allAccountInformationResponse = new AllAccountInformationResponse(
                     studentInformationResponse.getUserId(), studentInformationResponse.getShowUserId(),
