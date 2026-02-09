@@ -15,9 +15,6 @@ const ReportConfirm = () => {
       navigate(paths.app.report.root.getHref(), { replace: true });
     }
   }, [state, navigate]);
-  if (!state) {
-    return null;
-  }
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
@@ -29,13 +26,14 @@ const ReportConfirm = () => {
       ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
 
       const payload = {
-        report_id: state.report_id,
         school_id: state.school_id,
         report_date: formattedDate,
         report_by: state.report_by,
         reported_user: state.reported_user,
-        reason: state.reason,
+        reason_id: state.reason_id,
+        reported_post_id: state.reported_post_id,
         detail: state.detail,
+        post_content: state.post_content,
       };
 
       console.log("API送信:", payload);
@@ -62,9 +60,9 @@ const ReportConfirm = () => {
     <div>
       <PostReportConfirm
         isLoading={isLoading}
-        reportRadioValue={state.reason}
+        reportRadioValue={state.reason_id}
         reportTextValue={state.detail}
-        userID={state.reported_user}
+        userId={state.reported_user}
         postContent={state.post_content}
         onConfirm={handleConfirm}
         onBack={handleBack}
