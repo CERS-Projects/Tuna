@@ -3,7 +3,6 @@ import { useApiWithRefresh } from "@/lib/api-client";
 import { type ProfileData } from "@/features/profile/types/profileTypes";
 import { type User } from "@/types/user";
 import { decodeUserParams } from "../utils/jwt";
-import { type JWTPayload } from "../types/auth";
 import { ApiRequestError } from "@/types/apiRequestError";
 
 export const useUser = (
@@ -11,10 +10,11 @@ export const useUser = (
   options?: Partial<UseQueryOptions<User>>,
 ) => {
   const apiWithRefresh = useApiWithRefresh();
-  const jwtPayload = decodeUserParams(authToken) as JWTPayload;
+  const jwtPayload = authToken ? decodeUserParams(authToken) : null;
 
   return useQuery({
     queryKey: ["user", jwtPayload?.sub],
+    enabled: !!authToken && !!jwtPayload,
     queryFn: async (): Promise<User> => {
       try {
         const profile = await apiWithRefresh<ProfileData>({
@@ -79,7 +79,6 @@ export const useUser = (
         throw error;
       }
     },
-    enabled: !!authToken,
     staleTime: 1000 * 60 * 10,
     retry: false,
     throwOnError: false,
