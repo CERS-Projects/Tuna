@@ -16,7 +16,7 @@ public class AllAccountInformationResponse {
 
     private Integer grade;
 
-    private Boolean isAdmin;
+    private Boolean authority;
 
     private Boolean isAccountStopFlag;
 }
