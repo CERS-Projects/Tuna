@@ -79,3 +79,51 @@
   border-radius: 50%;
   object-fit: cover;
 }
+
+.headerGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.followsYouBadge {
+  background-color: #f0f0f0;
+  color: #555;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.followButton,
+.followingButton {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  width: fit-content;
+  margin-top: 5px;
+}
+
+.followButton {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid transparent;
+}
+.followButton:hover {
+  opacity: 0.8;
+}
+
+.followingButton {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+.followingButton:hover {
+  background-color: #ffebeb;
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+}

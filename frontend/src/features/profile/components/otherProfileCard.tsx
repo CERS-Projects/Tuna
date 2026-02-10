@@ -1,20 +1,25 @@
-import { CiEdit } from "react-icons/ci";
 import styles from "./profileCard.module.css";
 import { type ProfileData } from "../types/profileTypes";
 import { Link } from "react-router";
 import { paths } from "@/config/paths";
 
-type ProfileCardProps = ProfileData;
+type OtherProfileCardProps = ProfileData & {
+  isFollowing: boolean;
+  isFollowedBy: boolean;
+  onToggleFollow: () => void;
+};
 
-export const ProfileCard = (props: ProfileCardProps) => {
-  const {
-    showUserId,
-    nickname,
-    iconUrl,
-    followCount,
-    followerCount,
-    introduction,
-  } = props;
+export const OtherProfileCard = ({
+  showUserId,
+  nickname,
+  iconUrl,
+  followCount,
+  followerCount,
+  introduction,
+  isFollowing,
+  isFollowedBy,
+  onToggleFollow,
+}: OtherProfileCardProps) => {
   return (
     <div className={styles.profileCard}>
       <div className={styles.profileCardLeft}>
@@ -26,21 +31,21 @@ export const ProfileCard = (props: ProfileCardProps) => {
           />
         )}
       </div>
+
       <div className={styles.profileCardRight}>
-        <Link
-          to={paths.app.profile.edit.getHref(showUserId)}
-          state={props}
-          className={styles.profileNameLink}
-          title="プロフィール編集"
-        >
-          {nickname}
-          <CiEdit className={styles.editIcon} />
-        </Link>
+        <div className={styles.headerGroup}>
+          <h3>{nickname}</h3>
+          {isFollowedBy && (
+            <span className={styles.followsYouBadge}>フォローされています</span>
+          )}
+        </div>
+
         <small>@{showUserId}</small>
+
         <p>{introduction}</p>
+
         <div className={styles.followWrapper}>
           <Link
-            title="フォロー"
             to={paths.app.profile.follow.getHref(showUserId)}
             className={styles.followLink}
           >
@@ -53,12 +58,18 @@ export const ProfileCard = (props: ProfileCardProps) => {
           <Link
             to={paths.app.profile.follower.getHref(showUserId)}
             className={styles.followLink}
-            title="フォロワー"
           >
             <small>フォロワー</small>
             <span>{followerCount}</span>
           </Link>
         </div>
+
+        <button
+          className={isFollowing ? styles.followingButton : styles.followButton}
+          onClick={onToggleFollow}
+        >
+          {isFollowing ? "フォロー中" : "フォローする"}
+        </button>
       </div>
     </div>
   );

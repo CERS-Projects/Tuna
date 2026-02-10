@@ -2,23 +2,39 @@ import { InfoBox } from "@/components/ui/infoBox/infoBox";
 import { RiCompass3Line } from "react-icons/ri";
 import styles from "@/features/profile/layout/profileLayout.module.css";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ProfileCard } from "../components/profileCard";
+import { OtherProfileCard } from "../components/otherProfileCard";
 import { ProfileCardTab } from "../components/profileTab";
 import type { ProfileData } from "../types/profileTypes";
-import { Outlet } from "react-router";
+import { Outlet, useParams } from "react-router";
 import { NoticeInfo } from "@/features/searchClassroom/components/noticeInfo";
 import { type NoticeInfoItem } from "@/features/searchClassroom/types/SelectClassroom";
 
 const dummyProfile: ProfileData = {
+  userId: 1,
   showUserId: "user-8823-v9p",
-  userName: "サカバンバスピス",
+  nickname: "サカバンバスピス",
   iconUrl:
     "https://www.sankei.com/resizer/v2/3P43OGHLUFBDNO6BED37J2RTPM.jpg?auth=54f463fd643ce84582d10a89b4392500c8ac357e9ac79bb92d50980d2225080a&quality=40&focal=593%2C440&width=1200",
-  follow: 10,
-  follower: 999999999,
+  followCount: 10,
+  isFollowed: false,
+  followerCount: 999999999,
+  isFollowing: false,
   introduction:
     "深海魚です。趣味は某動画本社を爆破すること。本職は水族館勤務。タツノオトシゴが運営しています。",
+};
+
+const dummyOtherProfile: ProfileData = {
+  userId: 2,
+  showUserId: "other-user-001",
+  nickname: "別のユーザー",
+  iconUrl: "",
+  followCount: 50,
+  isFollowed: true,
+  followerCount: 120,
+  isFollowing: true,
+  introduction: "こちらは他のユーザーのプロフィール画面のテストです。",
 };
 
 const dummyInfo: NoticeInfoItem[] = [
@@ -71,11 +87,22 @@ const dummyInfo: NoticeInfoItem[] = [
 
 const ProfileLayout = () => {
   const modalRef = useRef<ModalHandle>(null);
+  const { userId } = useParams();
+
+  const isMyProfile = !userId;
+
+  const [isFollowing, setIsFollowing] = useState(false);
+
   const modalButtonClick = () => {
     if (modalRef.current) {
       modalRef.current.show();
     }
   };
+
+  const handleToggleFollow = () => {
+    setIsFollowing((prev) => !prev);
+  };
+
   return (
     <div className={styles.profileLayout}>
       <div className={styles.profileContainer}>
@@ -83,8 +110,20 @@ const ProfileLayout = () => {
           <button onClick={modalButtonClick} className={styles.modalButton}>
             <RiCompass3Line />
           </button>
-          <ProfileCard {...dummyProfile} />
-          <ProfileCardTab />
+
+          {isMyProfile ? (
+            <ProfileCard {...dummyProfile} />
+          ) : (
+            <OtherProfileCard
+              {...dummyOtherProfile}
+              showUserId={userId ?? ""}
+              isFollowing={isFollowing}
+              isFollowedBy={true}
+              onToggleFollow={handleToggleFollow}
+            />
+          )}
+
+          <ProfileCardTab isMyProfile={isMyProfile} />
           <Outlet />
         </div>
         <div className={styles.profileSub}>
