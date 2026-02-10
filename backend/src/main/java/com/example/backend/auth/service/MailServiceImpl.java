@@ -17,8 +17,10 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendMail(UserEntity userEntity, String otpPassword) {
+
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
+            System.out.println(userEntity.getMailAddress());
             mailMessage.setFrom(userEntity.getMailAddress());
             mailMessage.setTo(userEntity.getMailAddress());
             mailMessage.setSubject("ワンタイムパスワード発行");
