@@ -105,7 +105,7 @@ export const PostCreateModal = ({
           {user && (
             <UserInfo
               userIcon={user.iconUrl ?? ""}
-              userName={user.userName ?? <span>ニックネームがありません</span>}
+              userName={user.userName}
               userId={user.showUserId}
             />
           )}
