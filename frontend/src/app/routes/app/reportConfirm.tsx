@@ -3,6 +3,7 @@ import { paths } from "@/config/paths";
 import { useLocation, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
 import { type ReportLocationState } from "@/features/report/types/report";
+import { REPORT_OPTIONS } from "@/features/report/reportConstants";
 
 const ReportConfirm = () => {
   const location = useLocation();
@@ -18,22 +19,11 @@ const ReportConfirm = () => {
   const handleConfirm = async () => {
     setIsLoading(true);
     try {
-      const now = new Date();
-      const formattedDate = `${now.getFullYear()}-${String(
-        now.getMonth() + 1,
-      ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}-${String(
-        now.getHours(),
-      ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-
       const payload = {
-        school_id: state.school_id,
-        report_date: formattedDate,
-        report_by: state.report_by,
-        reported_user: state.reported_user,
-        reason_id: state.reason_id,
-        reported_post_id: state.reported_post_id,
+        reportedUser: state.reportedUser,
+        reasonId: state.reasonId,
         detail: state.detail,
-        post_content: state.post_content,
+        reportedPostId: state.reportedPostId,
       };
 
       console.log("API送信:", payload);
@@ -56,14 +46,17 @@ const ReportConfirm = () => {
   const handleReturnToTimeline = () => {
     navigate(paths.app.timeline.getHref(), { replace: true });
   };
+  const selectedOptionLabel =
+    REPORT_OPTIONS.find((option) => option.value === state.reasonId)?.label ||
+    String(state.reasonId);
   return (
     <div>
       <PostReportConfirm
         isLoading={isLoading}
-        reportRadioValue={state.reason_id}
+        reportRadioValue={selectedOptionLabel}
         reportTextValue={state.detail}
-        userId={state.reported_user}
-        postContent={state.post_content}
+        userId={state.reportedUser}
+        postContent={state.postContent}
         onConfirm={handleConfirm}
         onBack={handleBack}
         isCompleted={isCompleted}

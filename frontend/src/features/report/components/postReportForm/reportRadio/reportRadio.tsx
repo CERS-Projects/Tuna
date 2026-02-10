@@ -22,7 +22,7 @@ export const ReportRadio = ({ options, register }: Props) => (
           <input
             id={option.id}
             type="radio"
-            value={option.value}
+            value={String(option.value)}
             {...register}
             className={styles.radioButton}
           />

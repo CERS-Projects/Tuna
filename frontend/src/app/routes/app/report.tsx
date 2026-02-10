@@ -16,7 +16,7 @@ import { type ReportLocationState } from "@/features/report/types/report";
 import { paths } from "@/config/paths";
 
 type ReportFormData = {
-  reason_id: string;
+  reasonId: string;
   detail: string;
 };
 
@@ -40,7 +40,7 @@ const Report = () => {
     formState: { errors, isValid },
   } = useForm<ReportFormData>({
     defaultValues: {
-      reason_id: savedState?.reason_id ?? DEFAULT_REPORT_VALUE,
+      reasonId: String(savedState?.reasonId ?? DEFAULT_REPORT_VALUE),
       detail: savedState?.detail ?? "",
     },
     mode: "onChange",
@@ -56,15 +56,11 @@ const Report = () => {
     navigate(paths.app.report.confirm.getHref(), {
       replace: true,
       state: {
-        school_id: savedState?.school_id || 1,
-        report_date: undefined,
-        report_by: savedState?.report_by || 123,
-        reported_user: savedState?.reported_user || 456,
-        reason_id: data.reason_id,
-        reported_post_id: savedState?.reported_post_id || 1,
+        reportedUser: savedState?.reportedUser || 1111,
+        reasonId: Number(data.reasonId),
+        reportedPostId: String(savedState?.reportedPostId) || "1",
         detail: data.detail,
-
-        post_content: savedState?.post_content || "投稿内容仮のデータです。",
+        postContent: savedState?.postContent || "投稿内容仮のデータです。",
       },
     });
   };
@@ -75,7 +71,7 @@ const Report = () => {
         <section>
           <ReportRadio
             options={REPORT_OPTIONS}
-            register={register("reason_id", {
+            register={register("reasonId", {
               required: true,
             })}
           />
