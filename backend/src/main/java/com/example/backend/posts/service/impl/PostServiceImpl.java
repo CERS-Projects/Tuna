@@ -226,18 +226,21 @@ public class PostServiceImpl implements PostService {
         boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
 
-        if (!isTeacherOrAdmin && !(shareRange.size() == 1 && shareRange.get(0) == 0)) {
-            if (!accountConfirm.isExistsAllGroups(currentUserId, shareRange.toArray(new Integer[0]))) {
+        // publicの0を除外
+        List<Integer> nonPublicGroupIds = shareRange.stream()
+                .filter(i -> i != 0)
+                .toList();
+
+        // 除外したリストをもとに権限確認（nonPublicGroupIdsが空でない場合のみ）
+        if (!isTeacherOrAdmin && !nonPublicGroupIds.isEmpty()) {
+            if (!accountConfirm.isExistsAllGroups(currentUserId, nonPublicGroupIds.toArray(new Integer[0]))) {
                 throw new IllegalArgumentException("指定されたグループに所属していません。");
-            } else {
-                log.info("publicのみ指定されているため、グループ所属確認をスキップします。 currentUserId: " + currentUserId);
-                shareRange = List.of(0); // 条件指定がない場合publicの追加
             }
         }
 
         // 教師/管理者でも指定グループが自校のものか検証
-        if (isTeacherOrAdmin && !(shareRange.size() == 1 && shareRange.get(0) == 0)) {
-            if (!accountConfirm.isAllGroupsBelongToSchool(userInfo.getSchoolId(), shareRange)) {
+        if (isTeacherOrAdmin && !nonPublicGroupIds.isEmpty()) {
+            if (!accountConfirm.isAllGroupsBelongToSchool(userInfo.getSchoolId(), nonPublicGroupIds)) {
                 throw new IllegalArgumentException("指定されたグループは自校に属していません。");
             }
         }
