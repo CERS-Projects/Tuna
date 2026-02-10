@@ -17,12 +17,29 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public void sendMail(UserEntity userEntity, String otpPassword) {
+
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
             mailMessage.setFrom(userEntity.getMailAddress());
             mailMessage.setTo(userEntity.getMailAddress());
             mailMessage.setSubject("ワンタイムパスワード発行");
             mailMessage.setText("ワンタイムパスワードの期限は5分です\n" + otpPassword);
+            mailSender.send(mailMessage);
+        } catch (MailException e) {
+            throw new IllegalStateException("メール送信で内部エラーが発生しました、もう一度初めからやり直してください");
+        }
+
+    }
+
+    @Override
+    public void sendMail(String mailAddress, String url) {
+
+        try {
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setFrom(mailAddress);
+            mailMessage.setTo(mailAddress);
+            mailMessage.setSubject("パスワードリセットご案内");
+            mailMessage.setText("下記のURLをクリックしてください。URLの期限は10分です\n" + url);
             mailSender.send(mailMessage);
         } catch (MailException e) {
             throw new IllegalStateException("メール送信で内部エラーが発生しました、もう一度初めからやり直してください");
