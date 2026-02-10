@@ -1,13 +1,15 @@
 .searchClassroomLayout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
+  background-color: #f1f5f9;
 }
 
 .searchClassroomContainer {
   flex: 1;
   min-height: 0;
+  height: auto;
   display: grid;
   grid-template-columns: 1fr 40%;
 }
@@ -15,11 +17,14 @@
 .searchClassroomMain {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .mainTop {
-  padding-bottom: 5px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   height: auto;
   display: flex;
   align-items: center;
@@ -31,7 +36,7 @@
 .mainBottom {
   padding-top: 20px;
   flex: 1;
-  overflow-y: auto;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,6 +47,8 @@
   border-left: 1px solid rgb(50, 85, 150);
   overflow: auto;
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .modalButton {

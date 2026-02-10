@@ -1,8 +1,8 @@
 .timelineLayout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
   overflow: hidden;
+  height: 100%;
 }
 
 .timelineContainer {
@@ -14,6 +14,13 @@
 
 .timelineMain {
   overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.timelineMain::-webkit-scrollbar {
+  display: none;
 }
 
 .timelineSub {
@@ -21,13 +28,16 @@
   overflow: auto;
   min-height: 100%;
   background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
 }
 
 .detailTag {
   color: inherit;
   display: block;
-  background-color: rgba(255, 255, 255, 0.904);
-  border: 1px solid rgb(50, 85, 150);
+  background-color: #f1f5f9;
+  border-top: 1px solid rgb(50, 85, 150);
+  border-bottom: 1px solid rgb(50, 85, 150);
   margin-top: -1px;
   margin-bottom: -1px;
   text-align: center;
@@ -72,6 +82,7 @@
     display: flex;
     flex-direction: column;
   }
+
   .timelineMain {
     order: 2;
     width: 100%;
@@ -79,9 +90,11 @@
     flex-direction: column;
     flex: 1;
   }
+
   .timelineSub {
     display: none;
   }
+
   .modalButton {
     position: fixed;
     display: block;
@@ -92,6 +105,7 @@
     right: 3%;
     color: rgb(50, 85, 150);
   }
+
   .modalButton:hover {
     color: #007bff;
   }
