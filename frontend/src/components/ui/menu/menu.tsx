@@ -14,27 +14,27 @@ export const Menu = () => {
   return (
     <div className={styles.menuContainer}>
       <button
-        onClick={() => navigate(paths.app.timeline.getHref())}
+        onClick={() => navigate(paths.app.timeline.path)}
         title="タイムライン"
       >
         <PiHouseLight />
       </button>
       <button
-        onClick={() => navigate(paths.app.searchPost.getHref())}
+        onClick={() => navigate(paths.app.searchPost.path)}
         className={styles.menuButton}
         title="検索"
       >
         <HiOutlineMagnifyingGlass />
       </button>
       <button
-        onClick={() => navigate(paths.app.classroom.getHref())}
+        onClick={() => navigate(paths.app.classroom.path)}
         className={styles.menuButton}
         title="授業ルーム"
       >
         <IoSchoolOutline />
       </button>
       <button
-        onClick={() => navigate(paths.app.timeline.post.getHref())}
+        onClick={() => navigate(paths.app.timeline.post.path)}
         className={styles.menuButton}
         title="投稿"
       >
