@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./followCard.module.css";
 import { type FollowData } from "../types/profileTypes";
 import { Link } from "react-router";
+import { paths } from "@/config/paths";
 
 type ProfileCardProps = FollowData;
 
@@ -23,7 +24,10 @@ export const FollowCard = ({
 
   return (
     <div className={styles.cardContainer}>
-      <Link to={""} className={styles.userInfoLink}>
+      <Link
+        to={paths.app.profile.root.getHref(showUserId)}
+        className={styles.userInfoLink}
+      >
         <div className={styles.iconWrapper}>
           {iconUrl && (
             <img

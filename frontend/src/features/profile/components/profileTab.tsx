@@ -6,32 +6,28 @@ type ProfileCardTabProps = {
   isMyProfile: boolean;
 };
 
-const generatePath = (pathTemplate: string, userId: string) => {
-  return pathTemplate.replace(":userId", userId);
-};
-
 export const ProfileCardTab = ({ isMyProfile }: ProfileCardTabProps) => {
   const { userId } = useParams();
 
   if (!userId) return null;
   const navItems = [
     {
-      path: generatePath(paths.app.profile.posts.path, userId),
+      path: paths.app.profile.posts.getHref(userId),
       label: "投稿",
       isPrivate: false,
     },
     {
-      path: generatePath(paths.app.profile.responses.path, userId),
+      path: paths.app.profile.responses.getHref(userId),
       label: "返信",
       isPrivate: false,
     },
     {
-      path: generatePath(paths.app.profile.goods.path, userId),
+      path: paths.app.profile.goods.getHref(userId),
       label: "いいね",
       isPrivate: false,
     },
     {
-      path: generatePath(paths.app.profile.bookmarks.path, userId),
+      path: paths.app.profile.bookmarks.getHref(userId),
       label: "ブックマーク",
       isPrivate: true,
     },

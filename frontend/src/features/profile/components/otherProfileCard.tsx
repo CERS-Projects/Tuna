@@ -1,6 +1,7 @@
 import styles from "./profileCard.module.css";
 import { type ProfileData } from "../types/profileTypes";
 import { Link } from "react-router";
+import { paths } from "@/config/paths";
 
 type OtherProfileCardProps = ProfileData & {
   isFollowing: boolean;
@@ -44,7 +45,10 @@ export const OtherProfileCard = ({
         <p>{introduction}</p>
 
         <div className={styles.followWrapper}>
-          <Link to="/app/profile/:userId/follow" className={styles.followLink}>
+          <Link
+            to={paths.app.profile.follow.getHref(showUserId)}
+            className={styles.followLink}
+          >
             <small>フォロー</small>
             <span>{follow}</span>
           </Link>
@@ -52,7 +56,7 @@ export const OtherProfileCard = ({
           <span className={styles.separator}>/</span>
 
           <Link
-            to="/app/profile/:userId/follower"
+            to={paths.app.profile.follower.getHref(showUserId)}
             className={styles.followLink}
           >
             <small>フォロワー</small>

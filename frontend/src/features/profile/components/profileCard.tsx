@@ -34,9 +34,9 @@ export const ProfileCard = (props: ProfileCardProps) => {
         <p>{introduction}</p>
         <div className={styles.followWrapper}>
           <Link
-            to={paths.app.profile.follow.getHref()}
-            className={styles.followLink}
             title="フォロー"
+            to={paths.app.profile.follow.getHref(showUserId)}
+            className={styles.followLink}
           >
             <small>フォロー</small>
             <span>{follow}</span>
@@ -45,7 +45,7 @@ export const ProfileCard = (props: ProfileCardProps) => {
           <span className={styles.separator}>/</span>
 
           <Link
-            to={paths.app.profile.follower.getHref()}
+            to={paths.app.profile.follower.getHref(showUserId)}
             className={styles.followLink}
             title="フォロワー"
           >
