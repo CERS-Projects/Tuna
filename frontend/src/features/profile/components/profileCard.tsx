@@ -7,8 +7,14 @@ import { paths } from "@/config/paths";
 type ProfileCardProps = ProfileData;
 
 export const ProfileCard = (props: ProfileCardProps) => {
-  const { showUserId, userName, iconUrl, follow, follower, introduction } =
-    props;
+  const {
+    showUserId,
+    nickname,
+    iconUrl,
+    followCount,
+    followerCount,
+    introduction,
+  } = props;
   return (
     <div className={styles.profileCard}>
       <div className={styles.profileCardLeft}>
@@ -16,18 +22,18 @@ export const ProfileCard = (props: ProfileCardProps) => {
           <img
             src={iconUrl}
             className={styles.profileIcon}
-            alt={`${userName}のプロフィール画像`}
+            alt={`${nickname}のプロフィール画像`}
           />
         )}
       </div>
       <div className={styles.profileCardRight}>
         <Link
-          to={paths.app.profile.editProfile.getHref()}
+          to={paths.app.profile.edit.getHref(showUserId)}
           state={props}
           className={styles.profileNameLink}
           title="プロフィール編集"
         >
-          {userName}
+          {nickname}
           <CiEdit className={styles.editIcon} />
         </Link>
         <small>@{showUserId}</small>
@@ -39,7 +45,7 @@ export const ProfileCard = (props: ProfileCardProps) => {
             className={styles.followLink}
           >
             <small>フォロー</small>
-            <span>{follow}</span>
+            <span>{followCount}</span>
           </Link>
 
           <span className={styles.separator}>/</span>
@@ -50,7 +56,7 @@ export const ProfileCard = (props: ProfileCardProps) => {
             title="フォロワー"
           >
             <small>フォロワー</small>
-            <span>{follower}</span>
+            <span>{followerCount}</span>
           </Link>
         </div>
       </div>
