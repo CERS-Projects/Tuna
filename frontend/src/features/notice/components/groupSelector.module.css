@@ -1,0 +1,117 @@
+/* TreeSelect.module.css */
+
+/* 全体のコンテナ */
+.treeContainer {
+  background-color: #ffffff;
+  color: #333333;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 各ノードの行（クリック可能な領域） */
+.nodeItem {
+  display: flex;
+  align-items: center;
+  padding: 8px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+/* ホバー時のエフェクト */
+.nodeItem:hover {
+  background-color: rgba(50, 85, 180, 0.08); /* 指定色の薄い背景 */
+}
+
+/* 親が選択されている場合の無効化スタイル */
+.nodeItemDisabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.nodeItemDisabled:hover {
+  background-color: transparent; /* 無効時はホバー背景なし */
+}
+
+/* ラジオボタン本体 */
+.radioInput {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  cursor: inherit;
+  /* ブラウザ標準のアクセントカラーを指定色に変更 */
+  accent-color: rgb(50, 85, 180);
+}
+
+/* ラベルテキスト */
+.nodeLabel {
+  margin-left: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333333;
+  flex: 1; /* 横幅いっぱいに広げる */
+}
+
+/* 選択されている時のテキスト強調 */
+.labelSelected {
+  font-weight: bold;
+  color: rgb(50, 85, 180);
+}
+
+/* 「(親に含まれます)」などの補助テキスト */
+.subText {
+  font-size: 0.85em;
+  color: #777777;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+/* 子要素のラッパー（インデントとガイド線） */
+.childrenWrapper {
+  margin-left: 24px;
+  padding-left: 12px;
+  border-left: 1px solid #eeeeee; /* 薄いガイド線 */
+}
+
+/* レスポンシブ対応 (960px以下) */
+@media (max-width: 960px) {
+  .treeContainer {
+    padding: 12px;
+  }
+
+  /* タッチ操作しやすくするため、タップ領域を広げる */
+  .nodeItem {
+    padding: 12px 4px;
+  }
+
+  .radioInput {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nodeLabel {
+    font-size: 15px;
+    margin-left: 12px;
+  }
+
+  /* 画面幅を節約するため、インデントを少し詰める */
+  .childrenWrapper {
+    margin-left: 16px;
+    padding-left: 8px;
+  }
+
+  /* スマホ等で文字が折り返しても崩れないように調整 */
+  .subText {
+    display: block; /* 改行させる */
+    margin-left: 0;
+    margin-top: 2px;
+    font-size: 0.8em;
+  }
+}

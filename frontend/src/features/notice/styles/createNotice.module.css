@@ -1,0 +1,143 @@
+.pageContainer {
+  background-color: #f1f5f9;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.formCard {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 600px;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.formGroup {
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.requiredBadge {
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.inputField,
+.textareaField {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  color: #333;
+  background-color: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  appearance: none;
+}
+
+.textareaField {
+  min-height: 120px;
+  max-height: 300px;
+  resize: vertical;
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+.inputField:focus,
+.textareaField:focus {
+  outline: none;
+  border-color: rgb(50, 85, 150);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(50, 85, 150, 0.1);
+}
+
+.charCount {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 6px;
+  font-feature-settings: "tnum";
+}
+
+.charCountWarning {
+  color: #ef4444;
+}
+
+.buttonGroup {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 4px;
+}
+
+.submitButton {
+  background-color: rgb(50, 85, 150);
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submitButton:hover {
+  background-color: rgb(40, 70, 130);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(50, 85, 150, 0.2);
+}
+
+.submitButton:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .pageContainer {
+    padding: 16px;
+  }
+
+  .formCard {
+    padding: 24px 20px;
+  }
+
+  .submitButton {
+    width: 100%;
+  }
+}

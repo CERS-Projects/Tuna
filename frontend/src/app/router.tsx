@@ -175,6 +175,10 @@ const createAppRouter = (queryClient: QueryClient) => {
                   paths.app.profile.setting.editFilter.path,
                   () => import("./routes/app/profile/edit/editFilter"),
                 ),
+                route(
+                  paths.app.profile.edit.path,
+                  () => import("./routes/app/profile/edit/editProfile"),
+                ),
               ],
             },
           ],
@@ -298,6 +302,18 @@ const createAppRouter = (queryClient: QueryClient) => {
                 route(
                   paths.app.management.report.path,
                   () => import("./routes/app/management/report/reportList"),
+                ),
+                route(
+                  paths.app.management.notice.path,
+                  () => import("./routes/app/management/notice/notice"),
+                ),
+                route(
+                  paths.app.management.notice.create.path,
+                  () => import("./routes/app/management/notice/createNotice"),
+                ),
+                route(
+                  paths.app.management.notice.edit.path,
+                  () => import("./routes/app/management/notice/editNotice"),
                 ),
               ],
             },
