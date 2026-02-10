@@ -8,7 +8,7 @@ export const useResponses = (postId: string | undefined) => {
   const { authToken } = useAuth();
 
   const { data, isFetching, isError, refetch } = useQuery<PostData[]>({
-    queryKey: ["posts", postId],
+    queryKey: ["posts", "responses", postId],
     enabled: !!authToken && !!postId,
     queryFn: async (): Promise<PostData[]> => {
       const responses = await apiWithRefresh<PostData[]>({
