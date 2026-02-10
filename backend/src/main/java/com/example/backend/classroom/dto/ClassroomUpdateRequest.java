@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.example.backend.classroom.dto.CategoryItem;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -13,10 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class ClassroomUpdateRequest {
 
+    @NotBlank
     private String roomId;
-
+    @NotBlank
     private String roomName;
-
+    @NotBlank
     private String description;
 
     private List<CategoryEditItem> updateCategories;
@@ -26,9 +29,12 @@ public class ClassroomUpdateRequest {
     @Getter
     @Setter
     public static class CategoryEditItem {
+        @NotNull
         private String categoryId;
 
+        @NotBlank
         private String categoryName;
+
 
         private List<MultipartFile> newDocumentFiles;
 
