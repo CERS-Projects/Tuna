@@ -8,6 +8,8 @@ import com.example.backend.auth.dto.LoginSelectRequest;
 import com.example.backend.auth.dto.LoginTokenResponse;
 import com.example.backend.auth.dto.OtpRequest;
 import com.example.backend.auth.dto.PasswordChangeRequest;
+import com.example.backend.auth.dto.PasswordResetMailRequest;
+import com.example.backend.auth.dto.PasswordResetRequest;
 import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.auth.service.AuthService;
 import com.example.backend.auth.service.JwtService;
@@ -22,8 +24,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,10 +70,29 @@ public class AuthController {
     }
 
     @PostMapping("/change/password")
-    public void changePassword(@AuthenticationPrincipal UserInfo userInfo,
+    public ResponseEntity<String> changePassword(@AuthenticationPrincipal UserInfo userInfo,
             @Valid @RequestBody PasswordChangeRequest passwordChangeRequest) {
         authService.changePassword(userInfo.getUserId(), passwordChangeRequest);
-        ResponseEntity.ok();
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset/password")
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
+        authService.resetPassword(passwordResetRequest.getToken(), passwordResetRequest.getNewPassword());
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/reset/password")
+    public ResponseEntity<String> resetPasswordToken(@Valid @RequestParam String token) {
+        authService.resetPasswordTokenConfirm(token);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/reset/password/mail")
+    public ResponseEntity<String> resetPasswordMail(
+            @Valid @RequestBody PasswordResetMailRequest passwordResetMailRequest) {
+        authService.resetPasswordMail(passwordResetMailRequest.getMailAddress());
+        return ResponseEntity.ok().build();
     }
 
 }

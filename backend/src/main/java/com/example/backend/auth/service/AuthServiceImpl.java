@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -29,7 +31,6 @@ import com.example.backend.auth.dto.OtpResponse;
 import com.example.backend.auth.dto.PasswordChangeRequest;
 import com.example.backend.auth.repository.RefreshTokenRepository;
 import com.example.backend.exception.AuthException;
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -154,4 +155,67 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(userEntity);
 
     }
+
+    @Override
+    public void resetPassword(String token, String newPassword) {
+
+        if (token == null) {
+            throw new IllegalArgumentException("tokenがnullです");
+        }
+
+        if (!stringRedisTemplate.hasKey(token)) {
+            throw new EmptyResultDataAccessException("パスワードを変更できる期限が切れました", 0);
+        }
+
+        Integer userId = Integer.valueOf(stringRedisTemplate.opsForValue().get(token));
+
+        if (userId == null) {
+            throw new IllegalArgumentException("userIdの値がnullです");
+        }
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EmptyResultDataAccessException("ユーザーが見つかりません", 0));
+
+        userEntity.setPassword(bCryptPasswordEncoder.encode(newPassword));
+
+        userRepository.save(userEntity);
+
+        stringRedisTemplate.delete(token);
+
+    }
+
+    @Override
+    public void resetPasswordTokenConfirm(String token) {
+
+        if (token == null) {
+            throw new IllegalArgumentException("tokenがnullです");
+        }
+
+        if (!stringRedisTemplate.hasKey(token)) {
+            throw new EmptyResultDataAccessException("無効なURLです", 0);
+        }
+
+    }
+
+    @Override
+    public void resetPasswordMail(String mailAddress) {
+        UserEntity userEntity = userRepository.findByMailAddress(mailAddress);
+
+        if (userEntity != null) {
+            String userId = userEntity.getUserId().toString();
+            String token = UUID.randomUUID().toString();
+
+            if (token == null || userId == null) {
+                throw new IllegalArgumentException("nullの値があります");
+            }
+
+            stringRedisTemplate.opsForValue().set(token, userId, 10, TimeUnit.MINUTES);
+
+            String url = "http://localhost:8080/api/reset/password" + ("?token=" + token);
+
+            mailService.sendMail(mailAddress, url);
+        }
+
+    }
+
 }
