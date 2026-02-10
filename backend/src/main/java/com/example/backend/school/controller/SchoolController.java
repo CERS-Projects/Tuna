@@ -22,7 +22,6 @@ import com.example.backend.school.service.SchoolService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-
 /* 学校登録に係る処理 */
 @RestController
 @RequestMapping("/school")
@@ -34,7 +33,7 @@ public class SchoolController {
     private final SchoolService schoolService;
     private final AdminUserService adminUserService;
     private final TeacherService createUserService;
-    
+
     @PostMapping("/create")
     public ResponseEntity<Void> createSchool(@RequestBody @Valid SchoolIntegrationCreate dto){
         final Integer schoolId;
@@ -68,4 +67,4 @@ public class SchoolController {
         return ResponseEntity.ok(response);
     }
 
-} 
+}
