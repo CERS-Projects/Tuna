@@ -11,7 +11,7 @@ export const usePosts = () => {
   const groupId = searchParams.get("groupId");
 
   const { data, isFetching, isError, refetch } = useQuery<PostData[]>({
-    queryKey: ["posts", groupId],
+    queryKey: ["posts", groupId ? groupId : "0"],
     enabled: !!authToken,
     queryFn: async (): Promise<PostData[]> => {
       const params = new URLSearchParams();

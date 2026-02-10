@@ -44,9 +44,10 @@ export const useCreatePost = (options?: UseCreatePostOptions) => {
         },
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({ queryKey: ["timeline"] });
+    onSuccess: (_, variables) => {
+      variables.shareRange.forEach((id) => {
+        queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
+      });
 
       options?.onSuccess?.();
     },

@@ -34,7 +34,9 @@ export const useGood = (
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts", shareRange] });
+      shareRange.forEach((id) => {
+        queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
+      });
       options?.onSuccess?.();
     },
     onError: (error: Error) => {
@@ -67,7 +69,9 @@ export const useUnGood = (
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts", shareRange] });
+      shareRange.forEach((id) => {
+        queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
+      });
       options?.onSuccess?.();
     },
     onError: (error: Error) => {
