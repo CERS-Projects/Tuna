@@ -1,7 +1,9 @@
-import { type EditProfileData } from "@/features/profile/types/profileTypes";
-import { type ProfileData } from "../types/profileTypes"; // 遷移元と同じ型をインポート
+import {
+  type EditProfileData,
+  type ProfileData,
+} from "@/features/profile/types/profileTypes";
 import { useState, useRef } from "react";
-import { useLocation } from "react-router"; // 遷移データ取得用
+import { useLocation } from "react-router";
 import styles from "@/features/profile/styles/editProfile.module.css";
 
 // フォールバック用のダミーデータ
@@ -103,7 +105,6 @@ const EditProfile = () => {
               ref={fileInputRef}
               onChange={handleImageEdit}
               className={styles.hiddenInput}
-              style={{ display: "none" }} // 非表示
             />
             <button
               type="button"
