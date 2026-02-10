@@ -34,13 +34,10 @@ const CheckBoxRow = ({
     [node],
   );
 
-  const allChildrenChecked =
-    childrenIds.length > 0 && childrenIds.every((id) => selectedIds.has(id));
-
   const someChildChecked = childrenIds.some((id) => selectedIds.has(id));
 
-  const visualChecked = isChecked || allChildrenChecked;
-  const visualUncertain = !visualChecked && someChildChecked;
+  const visualChecked = isChecked;
+  const visualUncertain = !isChecked && someChildChecked;
 
   useEffect(() => {
     if (checkBoxRef.current) {
