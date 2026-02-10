@@ -11,10 +11,10 @@ type OtherProfileCardProps = ProfileData & {
 
 export const OtherProfileCard = ({
   showUserId,
-  userName,
+  nickname,
   iconUrl,
-  follow,
-  follower,
+  followCount,
+  followerCount,
   introduction,
   isFollowing,
   isFollowedBy,
@@ -27,14 +27,14 @@ export const OtherProfileCard = ({
           <img
             src={iconUrl}
             className={styles.profileIcon}
-            alt={`${userName}のプロフィール画像`}
+            alt={`${nickname}のプロフィール画像`}
           />
         )}
       </div>
 
       <div className={styles.profileCardRight}>
         <div className={styles.headerGroup}>
-          <h3>{userName}</h3>
+          <h3>{nickname}</h3>
           {isFollowedBy && (
             <span className={styles.followsYouBadge}>フォローされています</span>
           )}
@@ -50,7 +50,7 @@ export const OtherProfileCard = ({
             className={styles.followLink}
           >
             <small>フォロー</small>
-            <span>{follow}</span>
+            <span>{followCount}</span>
           </Link>
 
           <span className={styles.separator}>/</span>
@@ -60,7 +60,7 @@ export const OtherProfileCard = ({
             className={styles.followLink}
           >
             <small>フォロワー</small>
-            <span>{follower}</span>
+            <span>{followerCount}</span>
           </Link>
         </div>
 

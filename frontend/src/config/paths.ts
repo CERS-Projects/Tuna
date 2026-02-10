@@ -149,8 +149,8 @@ export const paths = {
         },
       },
       edit: {
-        path: "/app/profile/edit",
-        getHref: () => "/app/profile/edit",
+        path: "/app/profile/edit/:userId",
+        getHref: (userId: string) => `/app/profile/edit/${userId}`,
       },
     },
     test: {
