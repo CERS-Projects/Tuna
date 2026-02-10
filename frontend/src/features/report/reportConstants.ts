@@ -12,14 +12,14 @@ export const REPORT_MESSAGES = {
 } as const;
 
 export const REPORT_OPTIONS: ReportOption[] = [
-  { id: "violence", label: "暴力的な発言", value: "暴力的な発言" },
-  { id: "spam", label: "スパム・悪質な宣伝", value: "スパム・悪質な宣伝" },
-  { id: "privacy", label: "個人情報の拡散", value: "個人情報の拡散" },
-  { id: "impersonation", label: "なりすまし", value: "なりすまし" },
+  { id: "violence", label: "暴力的な発言", value: 1 },
+  { id: "spam", label: "スパム・悪質な宣伝", value: 2 },
+  { id: "privacy", label: "個人情報の拡散", value: 3 },
+  { id: "impersonation", label: "なりすまし", value: 4 },
   {
     id: "misinformation",
     label: "悪質な誤情報の拡散",
-    value: "悪質な誤情報の拡散",
+    value: 5,
   },
 ];
 
