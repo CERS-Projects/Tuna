@@ -26,7 +26,8 @@ const CheckBoxRow = ({
 
   const isChecked = selectedIds.has(node.groupId);
   const isExpanded = expandedIds.has(node.groupId);
-  const hasChildren = node?.branchGroups ? true : false;
+  const hasChildren =
+    node?.branchGroups && node.branchGroups.length > 0 ? true : false;
 
   const childrenIds = useMemo(
     () => getAllIds(node).filter((id) => id !== node.groupId),
@@ -58,7 +59,7 @@ const CheckBoxRow = ({
     >
       <span
         onClick={() => onExpand(node.groupId)}
-        className={`styles.clickContainer ${!hasChildren ? "is-hidden" : ""}`}
+        className={`styles.clickContainer ${!hasChildren ? styles.isHidden : ""}`}
       >
         {isExpanded ? <GoChevronDown /> : <GoChevronRight />}
       </span>
