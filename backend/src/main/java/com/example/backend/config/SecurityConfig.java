@@ -46,8 +46,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/refresh", "/otp", "/support/**").permitAll()
-                        .requestMatchers("/school/create", "/accounts/all", "/accounts/teacher/**")
+                        .requestMatchers("/login", "/refresh", "/otp", "/support/**", "/school/create",
+                                "/reset/password/mail", "/reset/password")
+                        .permitAll()
+                        .requestMatchers("/accounts/all", "/accounts/teacher/**")
                         .hasRole("ADMIN_SCHOOL")
                         .requestMatchers("/group/**", "/accounts/student/**", "/notice/create", "/notice/modify",
                                 "/notice/teacher/list", "/notice/delete", "/report/list", "/report/delete")
