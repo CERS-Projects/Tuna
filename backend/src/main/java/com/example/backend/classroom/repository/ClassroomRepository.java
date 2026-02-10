@@ -33,21 +33,21 @@ public interface ClassroomRepository extends MongoRepository<ClassroomEntity, Ob
             "path: '$categories', " +
             "preserveNullAndEmptyArrays: true " +
         "} }",
-        "filter: { 'categories': { $ne: null } }",
+        "{ $match: { categories: { $ne: null } } }",
         
         // 各カテゴリーにドキュメントを結合
         "{ $lookup: { " +
             "from: 'classroom_document_collection', " +
             "localField: 'categories._id', " +
             "foreignField: 'classroom_category_id', " +
-            "as: 'categories.documents' " +
+            "as: 'documents' " +
         "} }",
         
         // ドキュメントのフィールド名をDTOに合わせる
         "{ $addFields: { " +
             "'categories.documents': { " +
                 "$map: { " +
-                    "input: '$categories.documents', " +
+                    "input: '$documents', " +
                     "as: 'doc', " +
                     "in: { " +
                         "documentName: '$$doc.document_name', " +
