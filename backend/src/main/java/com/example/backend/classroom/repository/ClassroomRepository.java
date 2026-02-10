@@ -33,6 +33,7 @@ public interface ClassroomRepository extends MongoRepository<ClassroomEntity, Ob
             "path: '$categories', " +
             "preserveNullAndEmptyArrays: true " +
         "} }",
+        "filter: { 'categories': { $ne: null } }",
         
         // 各カテゴリーにドキュメントを結合
         "{ $lookup: { " +

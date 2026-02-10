@@ -11,12 +11,12 @@ public class FileNameSanitizer {
 
     public String sanitizeOriginalName(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("file is empty");
+            throw new IllegalArgumentException("ファイル名が空です");
         }
 
         String original = file.getOriginalFilename();
         if (original == null || original.isBlank()) {
-            throw new IllegalArgumentException("original filename is blank");
+            throw new IllegalArgumentException("元のファイル名が空です");
         }
 
         // 1) パス成分を除去（"../../a.txt" → "a.txt", "C:\a.txt" → "a.txt"）
@@ -44,7 +44,7 @@ public class FileNameSanitizer {
 
         // 6) 最終チェック（空になったら弾く）
         if (base.isBlank()) {
-            throw new IllegalArgumentException("sanitized filename is blank");
+            throw new IllegalArgumentException("正規化後のファイル名が空です");
         }
 
         return base;

@@ -14,10 +14,7 @@ import com.example.backend.classroom.model.ClassroomEntity;
 import com.example.backend.classroom.model.CategoryEntity;
 import com.example.backend.classroom.model.DocumentEntity;
 import com.example.backend.classroom.dto.ClassroomDetailResponse;
-import com.example.backend.accounts.dto.GetUserName;
 import com.example.backend.classroom.dto.CategoriesResponse;
-import com.example.backend.classroom.dto.DocumentsResponse;
-import com.example.backend.classroom.dto.CategoryItem;
 
 
 import com.example.backend.classroom.repository.ClassroomRepository;
@@ -27,7 +24,7 @@ import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.utils.fileUtil.validation.FileNameSanitizer;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.bson.types.ObjectId;
 import java.time.OffsetDateTime;
@@ -77,32 +74,40 @@ public class ClassroomServiceImpl implements ClassroomService {
             classroomRepository.save(classroomEntity);
 
             // カテゴリーの情報を設定
-            List<CategoryItem> categoryItems = classroomInsertRequest.getCategories();
-            for (CategoryItem categoryItem : categoryItems) {
-                CategoryEntity categoryEntity = new CategoryEntity();
-                categoryEntity.setId(new ObjectId());
-                categoryEntity.setClassroomId(classroomEntity.getId());
-                categoryEntity.setCategoryName(categoryItem.getCategoryName());
-                categoryEntity.setCreatedDate(Date.from(OffsetDateTime.now().toInstant()));
-                categoryRepository.save(categoryEntity);
+            // カテゴリーが存在しない場合はスキップ
+            if(classroomInsertRequest.getCategories() != null && !classroomInsertRequest.getCategories().isEmpty()) {
+                
+                List<CategoryItem> categoryItems = classroomInsertRequest.getCategories();
+                for (CategoryItem categoryItem : categoryItems) {
+                    CategoryEntity categoryEntity = new CategoryEntity();
+                    categoryEntity.setId(new ObjectId());
+                    categoryEntity.setClassroomId(classroomEntity.getId());
+                    categoryEntity.setCategoryName(categoryItem.getCategoryName());
+                    categoryEntity.setCreatedDate(Date.from(OffsetDateTime.now().toInstant()));
+                    categoryRepository.save(categoryEntity);
 
-                // ドキュメントの情報を設定
-                List<DocumentItem> documentsItems = categoryItem.getDocuments();
-                for (DocumentItem documentsItem : documentsItems) {
-                    DocumentEntity documentsEntity = new DocumentEntity();
-                    documentsEntity.setId(new ObjectId());
-                    documentsEntity.setClassroomCategoryId(categoryEntity.getId()); 
-                    documentsEntity.setDocumentName(fileNameSanitizer.sanitizeOriginalName(documentsItem.getDocumentFile()));
-                    
-                    List<String> uploadedKeys = fileControlHelper.uploadFile(DOCUMENT_DIRECTORY, documentsItem.getDocumentFile());
-                    allUploadedKeys.add(uploadedKeys.get(0));
-                    
-                    documentsEntity.setDocumentObjectKey(uploadedKeys.get(0));
-                    
-                    documentsEntity.setUploadDate(Date.from(OffsetDateTime.now().toInstant()));
-                    documentRepository.save(documentsEntity);
+                    // ドキュメントの情報を設定
+                    // ドキュメントが存在しない場合はスキップ
+                    if(categoryItem.getDocuments() == null || categoryItem.getDocuments().isEmpty()) {
+                        continue;
+                    }
+                    List<DocumentItem> documentsItems = categoryItem.getDocuments();
+                    for (DocumentItem documentsItem : documentsItems) {
+                        DocumentEntity documentsEntity = new DocumentEntity();
+                        documentsEntity.setId(new ObjectId());
+                        documentsEntity.setClassroomCategoryId(categoryEntity.getId()); 
+                        documentsEntity.setDocumentName(fileNameSanitizer.sanitizeOriginalName(documentsItem.getDocumentFile()));
+                        
+                        List<String> uploadedKeys = fileControlHelper.uploadFile(DOCUMENT_DIRECTORY, documentsItem.getDocumentFile());
+                        allUploadedKeys.add(uploadedKeys.get(0));
+                        
+                        documentsEntity.setDocumentObjectKey(uploadedKeys.get(0));
+                        
+                        documentsEntity.setUploadDate(Date.from(OffsetDateTime.now().toInstant()));
+                        documentRepository.save(documentsEntity);
                 }
             }
+        }
             log.info("クラスルームの作成に成功しました: classroomId={}", classroomEntity.getId());
         } catch (Exception e) {
             log.error("クラスルームの作成に失敗しました", e);
@@ -254,7 +259,10 @@ public class ClassroomServiceImpl implements ClassroomService {
                             documentRepository.save(documentEntity);
                             log.info("新しいドキュメントの追加に成功しました: documentId={}", documentEntity.getId());
                         }
+                    }else {
+                        log.info("追加するドキュメントはありません: categoryId={}", categoryEditItem.getCategoryId());
                     }
+                    
 
                     // ドキュメントの削除
                     if(categoryEditItem.getDeleteDocumentIds() != null && !categoryEditItem.getDeleteDocumentIds().isEmpty()) {

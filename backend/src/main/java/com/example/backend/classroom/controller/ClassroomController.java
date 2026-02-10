@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
@@ -31,7 +32,7 @@ public class ClassroomController {
     private final ClassroomService classroomService;
 
     //クラスルーム作成
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createClassroom(@ModelAttribute @Valid ClassroomInsertRequest requestDto, @AuthenticationPrincipal UserInfo userInfo) {
         classroomService.createClassroomWithCategoriesAndDocuments(requestDto, userInfo.getSchoolId(), userInfo.getUserId());
         return ResponseEntity.ok().build();
@@ -47,7 +48,7 @@ public class ClassroomController {
 
     //クラスルーム詳細取得
     @GetMapping("/detail")
-    public ResponseEntity<ClassroomDetailResponse> getClassroomDetails(@AuthenticationPrincipal UserInfo userInfo, String roomId) {
+    public ResponseEntity<ClassroomDetailResponse> getClassroomDetails(@RequestParam String roomId, @AuthenticationPrincipal UserInfo userInfo) {
         ClassroomDetailResponse classroomDetail = classroomService.getClassroomDetails(roomId, userInfo.getSchoolId());
         return ResponseEntity.ok().body(classroomDetail);
     }
@@ -61,7 +62,7 @@ public class ClassroomController {
 
     //クラスルームの削除
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteClassroom(@AuthenticationPrincipal UserInfo userInfo, String roomId) {
+    public ResponseEntity<Void> deleteClassroom(@AuthenticationPrincipal UserInfo userInfo, @RequestParam String roomId) {
         classroomService.deleteClassroom(roomId, userInfo.getSchoolId());
         return ResponseEntity.ok().build();
     }
