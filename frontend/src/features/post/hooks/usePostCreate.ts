@@ -3,12 +3,17 @@ import { useForm } from "react-hook-form";
 import { useCreatePost } from "@/features/post/hooks/useCreatePost";
 import { type PostFormData } from "@/features/post/types/post";
 import { type ImageData } from "@/features/post/types/post";
+import { useLocation, useNavigate } from "react-router";
+import { paths } from "@/config/paths";
 
 const MAX_IMAGES = 4;
 const MAX_LENGTH = 255;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [step, setStep] = useState<"input" | "confirm">("input");
   const [images, setImages] = useState<ImageData[]>([]);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -32,8 +37,31 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
 
   const createPostMutation = useCreatePost({
     onSuccess: () => {
+      const responseTo = form.getValues("responseTo");
       resetForm();
       setIsOpen(false);
+
+      if (responseTo) {
+        const from = (location.state as { from?: string } | null)?.from;
+
+        const to = `${paths.app.timeline.detail.getHref(responseTo)}#latest-response`;
+        if (from === to) {
+          navigate(-1);
+          return;
+        } else {
+          navigate(to, {
+            replace: true,
+            state: {
+              scrollToLatestResponse: true,
+            },
+          });
+          return;
+        }
+      }
+
+      const ranges = shareRange.length > 0 ? shareRange : [0];
+      const minGroupId = Math.min(...ranges);
+      navigate(paths.app.timeline.getHref(minGroupId), { replace: true });
     },
     onError: () => {
       setValidationError("投稿に失敗しました");
@@ -105,7 +133,7 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
 
   const toggleGroup = useCallback(
     (ids: number[], isSelect: boolean) => {
-      const currentIds = shareRange;
+      const currentIds = form.getValues("shareRange");
       if (isSelect) {
         const newIds = new Set([...currentIds, ...ids]);
         setValue("shareRange", Array.from(newIds));
@@ -116,7 +144,7 @@ export const usePostCreate = (setIsOpen: (val: boolean) => void) => {
         );
       }
     },
-    [shareRange, setValue],
+    [setValue, form],
   );
 
   const handlePost = useCallback(() => {

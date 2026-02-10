@@ -15,7 +15,7 @@ const ClassroomNew = () => {
       defaultValues: {
         roomName: "",
         description: "",
-        categories: [{ category: "", files: [] }],
+        categories: [{ categoryName: "", files: [] }],
       },
     });
 
@@ -56,15 +56,15 @@ const ClassroomNew = () => {
                 key={field.id}
                 index={idx}
                 value={field}
-                error={formState.errors.categories?.[idx]?.category}
+                error={formState.errors.categories?.[idx]?.categoryName}
                 register={register}
                 onFilesChange={(files) => {
                   const currentCategory = getValues(
-                    `categories.${idx}.category`,
+                    `categories.${idx}.categoryName`,
                   );
 
                   update(idx, {
-                    category: currentCategory,
+                    categoryName: currentCategory,
                     files: files,
                   });
                 }}
@@ -74,7 +74,7 @@ const ClassroomNew = () => {
             <button
               type="button"
               className={styles.addCategoryButton}
-              onClick={() => append({ category: "", files: [] })}
+              onClick={() => append({ categoryName: "", files: [] })}
             >
               ＋ 新しいカテゴリを追加
             </button>

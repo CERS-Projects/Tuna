@@ -5,21 +5,29 @@ import {
   BsChat,
   BsExclamationCircle,
 } from "react-icons/bs";
-import { useNavigate, Link } from "react-router";
+import { useNavigate, Link, useSearchParams } from "react-router";
 import type React from "react";
 import { useState, useRef } from "react";
 import styles from "./postBox.module.css";
 import { Modal, type ModalHandle } from "../modal/modal";
 import { type PostData } from "@/features/post/types/post";
 import { paths } from "@/config/paths";
+import { useDebouncedLike } from "@/features/post/hooks/useGood";
+import { useDebouncedBookmark } from "@/features/post/hooks/useBookmark";
 
 export const PostBox = (props: PostData) => {
+  const [searchParams] = useSearchParams();
+  const currentGroupId = searchParams.get("groupId")
+    ? Number(searchParams.get("groupId"))
+    : undefined;
+
   const {
     postId,
     showUserId,
     nickname,
     icon,
     sentence,
+    shareRange,
     likeCount,
     responseCount,
     isLiked,
@@ -32,8 +40,20 @@ export const PostBox = (props: PostData) => {
   const navigate = useNavigate();
 
   const [goodOn, setGoodOn] = useState(isLiked);
+  const [tempLikeCount, setTempLikeCount] = useState<number>(likeCount);
+
   const [bookmarkOn, setBookmarkOn] = useState(isBookmarked);
   const [selectedImg, setSelectedImg] = useState<string>("");
+
+  const { debouncedToggle: debouncedLikeToggle } = useDebouncedLike(
+    postId,
+    shareRange,
+  );
+
+  const { debouncedToggle: debouncedBookmarkToggle } = useDebouncedBookmark(
+    postId,
+    shareRange,
+  );
 
   const modalRef = useRef<ModalHandle>(null);
 
@@ -46,19 +66,31 @@ export const PostBox = (props: PostData) => {
 
     if (withState)
       navigate(to, {
-        state: props,
+        state: {
+          ...props,
+          from: `${location.pathname}${location.search}${location.hash}`,
+        },
       });
     else navigate(to);
   };
 
-  const goodClick = (e: React.MouseEvent) => {
+  const handleLike = (e: React.MouseEvent) => {
     e.preventDefault();
-    setGoodOn((prev) => !prev);
+
+    const newGood = !goodOn;
+    setGoodOn(newGood);
+    setTempLikeCount((prev) => (newGood ? prev + 1 : prev - 1));
+
+    debouncedLikeToggle(newGood);
   };
 
-  const bookmarkClick = (e: React.MouseEvent) => {
+  const handleBookmark = (e: React.MouseEvent) => {
     e.preventDefault();
-    setBookmarkOn((prev) => !prev);
+
+    const newBookmark = !bookmarkOn;
+    setBookmarkOn(newBookmark);
+
+    debouncedBookmarkToggle(newBookmark);
   };
 
   const handleImgClick = (e: React.MouseEvent, imgurl: string) => {
@@ -93,10 +125,10 @@ export const PostBox = (props: PostData) => {
       </div>
 
       <div className={styles.postFooter}>
-        <button onClick={goodClick}>
+        <button onClick={handleLike}>
           {goodOn ? <FaThumbsUp /> : <FaRegThumbsUp />}
         </button>
-        <span className={styles.goodCount}>{likeCount}</span>
+        <span className={styles.goodCount}>{tempLikeCount}</span>
         <button
           onClick={(e) =>
             handleNavigateClick(e, paths.app.timeline.post.path, true)
@@ -105,7 +137,7 @@ export const PostBox = (props: PostData) => {
           <BsChat />
         </button>
         <span className={styles.commentCount}>{responseCount}</span>
-        <button onClick={bookmarkClick}>
+        <button onClick={handleBookmark}>
           {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
         </button>
         <button onClick={(e) => handleNavigateClick(e, "")}>
@@ -121,7 +153,7 @@ export const PostBox = (props: PostData) => {
     <>
       {isLink ? (
         <Link
-          to={paths.app.timeline.detail.getHref(Number(postId))}
+          to={paths.app.timeline.detail.getHref(postId, currentGroupId)}
           state={{ item: props }}
           relative="path"
           className={containerClass}

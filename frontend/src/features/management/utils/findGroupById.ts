@@ -2,12 +2,12 @@ import { type TreeType } from "../types/group";
 
 export const findGroupById = (
   groups: TreeType[],
-  targetId: number
+  targetId: number,
 ): TreeType | undefined => {
   for (const group of groups) {
-    if (group.id === targetId) return group;
-    const targetGroup: TreeType | undefined = group.branch
-      ? findGroupById(group.branch, targetId)
+    if (group.groupId === targetId) return group;
+    const targetGroup: TreeType | undefined = group.branchGroups
+      ? findGroupById(group.branchGroups, targetId)
       : undefined;
     if (targetGroup) return targetGroup;
   }

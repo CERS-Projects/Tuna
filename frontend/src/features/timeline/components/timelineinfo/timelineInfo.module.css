@@ -1,11 +1,17 @@
 .timelineInfo {
+  display: grid;
+  grid-row: span 1;
+  grid-template-rows: subgrid;
+  gap: 12px;
   border: 3px solid rgb(50, 85, 150);
   border-radius: 20px;
   text-align: center;
-  width: 90%;
-  height: auto;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
   margin-top: 5px;
   word-break: break-all;
 }

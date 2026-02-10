@@ -42,7 +42,7 @@ const ClassroomEdit = () => {
         roomName: classroom.roomName,
         description: classroom.description,
         categories: classroom.categories.map((c) => ({
-          category: c.category,
+          category: c.categoryName,
           existingDocuments: c.documents,
           deleteDocuments: [],
           newFiles: [],
@@ -65,8 +65,8 @@ const ClassroomEdit = () => {
     const formData: ClassroomEditPost = {
       ...data,
       categories: data.categories.map(
-        ({ category, deleteDocuments, newFiles }) => ({
-          category,
+        ({ categoryName, deleteDocuments, newFiles }) => ({
+          categoryName,
           deleteDocuments,
           newFiles,
         }),
@@ -104,15 +104,15 @@ const ClassroomEdit = () => {
                 key={field.id}
                 index={idx}
                 value={field}
-                error={formState.errors.categories?.[idx]?.category}
+                error={formState.errors.categories?.[idx]?.categoryName}
                 register={register}
                 onUpdate={(newValue) => {
                   const currentCategory = getValues(
-                    `categories.${idx}.category`,
+                    `categories.${idx}.categoryName`,
                   );
                   update(idx, {
                     ...newValue,
-                    category: currentCategory,
+                    categoryName: currentCategory,
                   });
                 }}
                 onRemove={() => remove(idx)}
@@ -123,7 +123,7 @@ const ClassroomEdit = () => {
               className={styles.addCategoryButton}
               onClick={() =>
                 append({
-                  category: "",
+                  categoryName: "",
                   existingDocuments: [],
                   deleteDocuments: [],
                   newFiles: [],
