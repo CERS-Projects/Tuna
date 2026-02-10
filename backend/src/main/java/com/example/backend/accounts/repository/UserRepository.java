@@ -1,8 +1,6 @@
 package com.example.backend.accounts.repository;
 
-
 import java.util.Optional;
-
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,8 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.accounts.dto.GetUserName;
 import com.example.backend.accounts.model.UserEntity;
+import java.util.List;
 
-public interface UserRepository extends JpaRepository<UserEntity, Integer>{
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     @Modifying
     @Transactional
     @Query("""
@@ -24,7 +23,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
             WHERE userId = :userId
             """)
     void modifyBasicInformationByUserId(@Param("userId") Integer userId, @Param("name") String name,
-                                        @Param("mailAddress") String mailAddress, @Param("accountStopFlag") Boolean accountStopFlag);
+            @Param("mailAddress") String mailAddress, @Param("accountStopFlag") Boolean accountStopFlag);
 
     @Query("""
             SELECT EXISTS(
@@ -37,27 +36,28 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
     Optional<UserEntity> findByShowUserId(String showUserId);
 
     @Query("""
-    SELECT u.name as name, u.showUserId as showUserId
-    FROM UserEntity u
-    WHERE u.userId = :userId
-    """)
-Optional<GetUserName> findUserInfo(@Param("userId") Integer userId);
-
+            SELECT u.name as name, u.showUserId as showUserId
+            FROM UserEntity u
+            WHERE u.userId = :userId
+            """)
+    Optional<GetUserName> findUserInfo(@Param("userId") Integer userId);
 
     boolean existsByShowUserId(String showUserId);
 
     @Query("""
-           SELECT COUNT(u.userId) FROM UserEntity u
-           WHERE u.school.schoolId = :schoolId 
-               AND (u.userId = :userId OR u.userId = :reportedUserId)
-           """)
-    long validateByReportBySchoolId(@Param("schoolId") Integer schoolId, 
-                                    @Param("userId") Integer userId, 
-                                    @Param("reportedUserId") Integer reportedUserId);
+            SELECT COUNT(u.userId) FROM UserEntity u
+            WHERE u.school.schoolId = :schoolId
+                AND (u.userId = :userId OR u.userId = :reportedUserId)
+            """)
+    long validateByReportBySchoolId(@Param("schoolId") Integer schoolId,
+            @Param("userId") Integer userId,
+            @Param("reportedUserId") Integer reportedUserId);
 
-    //ユーザーのshowUserIdと名前を取得する
+    // ユーザーのshowUserIdと名前を取得する
     @Query("SELECT u.showUserId as showUserId, u.name as name " +
-       "FROM UserEntity u WHERE u.userId = :userId")
+            "FROM UserEntity u WHERE u.userId = :userId")
     GetUserName findUserName(@Param("userId") Integer userId);
+
+    UserEntity findByMailAddress(String mailAddress);
 
 }
