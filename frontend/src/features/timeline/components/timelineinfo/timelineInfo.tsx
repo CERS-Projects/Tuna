@@ -9,6 +9,7 @@ type Props = {
 export const TimelineInfo = ({ group, handleSelect }: Props) => {
   return (
     <button
+      type="button"
       className={styles.timelineInfo}
       onClick={() => handleSelect(group.groupId)}
     >

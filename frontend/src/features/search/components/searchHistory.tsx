@@ -78,7 +78,7 @@ export const SearchHistory = ({ selectedIds }: Props) => {
                 clearTimeout(blurTimeoutRef.current);
                 blurTimeoutRef.current = null;
               }
-              setIsFocused((prev) => !prev);
+              setIsFocused(true);
             }}
             onBlur={() => {
               blurTimeoutRef.current = setTimeout(() => {
