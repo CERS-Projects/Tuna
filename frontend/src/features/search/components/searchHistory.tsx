@@ -58,6 +58,7 @@ export const SearchHistory = ({ selectedIds }: Props) => {
     setQuery(newQuery);
     updateSearchParams(newQuery);
     setIsFocused(false);
+    (document.activeElement as HTMLElement)?.blur();
   };
 
   const handleDeleteHistory = (query: string, searchedAt: string) => {
@@ -94,10 +95,10 @@ export const SearchHistory = ({ selectedIds }: Props) => {
               className={styles.searchHistoryList}
               onMouseDown={(e) => e.preventDefault()}
             >
-              <div className={styles.searchHistoryListInner}>
+              <li className={styles.searchHistoryListInner}>
                 {history.length > 0 ? (
                   history.map((item) => (
-                    <li
+                    <div
                       key={item.searched_at}
                       className={styles.searchHistoryItem}
                     >
@@ -119,14 +120,14 @@ export const SearchHistory = ({ selectedIds }: Props) => {
                       >
                         <FaRegTrashAlt />
                       </button>
-                    </li>
+                    </div>
                   ))
                 ) : (
                   <li className={styles.searchHistoryEmpty}>
                     検索履歴がありません
                   </li>
                 )}
-              </div>
+              </li>
             </ul>
           )}
         </div>
