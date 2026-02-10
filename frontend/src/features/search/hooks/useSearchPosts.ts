@@ -46,6 +46,7 @@ export const useSearchPosts = (keyword: string, selectedIds: Set<number>) => {
       return result;
     },
     throwOnError: false,
+    staleTime: 0,
     retry: false,
   });
 };
