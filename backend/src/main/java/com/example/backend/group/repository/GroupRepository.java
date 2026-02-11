@@ -1,7 +1,6 @@
 package com.example.backend.group.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.group.model.GroupEntity;
+import com.example.backend.notice.dto.GetGroupIdAndGroupNameRecord;
 
 public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
 
@@ -70,9 +70,10 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
                         @Param("userId") Integer userId,
                         @Param("schoolId") Integer schoolId);
         
-         @Query("""
-            SELECT g.groupName FROM GroupEntity g
-            WHERE g.groupId = :groupId
+        @Query("""
+            SELECT new com.example.backend.notice.dto.GetGroupIdAndGroupNameRecord(g.groupId, g.groupName) 
+            FROM GroupEntity g
+            WHERE g.groupId IN :groupId
             """)
-        Optional<String> findGroupNameByGroupId(@Param("groupId") Integer groupId);
+        List<GetGroupIdAndGroupNameRecord> findGroupNameByGroupIdIn(@Param("groupId") List<Integer> groupId);
 }

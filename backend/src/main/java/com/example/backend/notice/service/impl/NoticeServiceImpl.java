@@ -1,6 +1,8 @@
 package com.example.backend.notice.service.impl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.group.model.GroupEntity;
 import com.example.backend.group.repository.GroupMemberRepository;
 import com.example.backend.group.repository.GroupRepository;
+import com.example.backend.notice.dto.GetGroupIdAndGroupNameRecord;
 import com.example.backend.notice.dto.NoticeInsertRequest;
 import com.example.backend.notice.dto.NoticeListResponse;
 import com.example.backend.notice.dto.NoticeModifyRequest;
@@ -49,13 +52,17 @@ public class NoticeServiceImpl implements NoticeService {
             throw new IllegalArgumentException("そのユーザーは存在しません。");
         }
 
-        List<Integer> joinedGroupIds = groupMemberRepository.findJoinedGroupIdsByUserId(userId);
-        if (joinedGroupIds.isEmpty()) {
+        List<Integer> targetGroupIds = groupMemberRepository.findJoinedGroupIdsByUserId(userId);
+        if (targetGroupIds.isEmpty()) {
             return List.of();
         }
 
-        List<NoticeEntity> notices = noticeRepository.findAllByGroupIdIn(joinedGroupIds);
-        return notices.stream().map(noticeHelper::toNoticeListResponse).toList();
+        List<NoticeEntity> notices = noticeRepository.findAllByGroupIdIn(targetGroupIds);
+        List<GetGroupIdAndGroupNameRecord> records = groupRepository.findGroupNameByGroupIdIn(notices.stream().map(NoticeEntity::getGroupId).distinct().toList());
+        Map<Integer, String> groupIdToNameMap = records.stream()
+            .collect(Collectors.toMap(record -> record.groupId(), record -> record.groupName()));
+
+        return notices.stream().map(notice -> noticeHelper.toNoticeListResponse(notice, groupIdToNameMap)).toList();
     }
 
     @Override
@@ -67,12 +74,16 @@ public class NoticeServiceImpl implements NoticeService {
 
         List<GroupEntity> groups = groupRepository.findBySchool_SchoolId(schoolId);
         if (groups.isEmpty()) {
-            throw new IllegalArgumentException("その学校にはグループが存在しません。");
+            throw new IllegalArgumentException("その学校には指定されたグループが存在しません。");
         }
 
-        List<Integer> groupIds = groups.stream().map(GroupEntity::getGroupId).toList();
+        List<Integer> groupIds = groups.stream().map(GroupEntity::getGroupId).distinct().toList();
         List<NoticeEntity> notices = noticeRepository.findAllByGroupIdIn(groupIds);
-        return notices.stream().map(noticeHelper::toNoticeListResponse).toList();
+        List<GetGroupIdAndGroupNameRecord> records = groupRepository.findGroupNameByGroupIdIn(notices.stream().map(NoticeEntity::getGroupId).distinct().toList());
+        Map<Integer, String> groupIdToNameMap = records.stream()
+            .collect(Collectors.toMap(record -> record.groupId(), record -> record.groupName()));
+
+        return notices.stream().map(notice -> noticeHelper.toNoticeListResponse(notice, groupIdToNameMap)).toList();
     }
 
     @Override
