@@ -139,8 +139,8 @@ public class ClassroomServiceImpl implements ClassroomService {
         Map<Integer, String> teacherNameMap = userRepository.findByUserIdIn(teacherIds)
                 .stream()
                 .collect(Collectors.toMap(
-                        user -> user.getUserId(),
-                        user -> user.getName()
+                        user -> user.userId(),
+                        user -> user.name()
                 ));
 
         return classroomEntities.stream().map(classroomEntity -> {

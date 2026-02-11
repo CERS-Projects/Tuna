@@ -66,9 +66,9 @@ public class ReportHelper {
                 .orElseThrow(() -> new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。"));
 
             PostEntity post = postRepository.findById(entity.getReportedPostId()).orElseThrow(() -> new IllegalArgumentException("その投稿は存在しないか、報告が存在しません。"));
-            response.setReportedName(object.getName());
+            response.setReportedName(object.name());
             response.setReportId(entity.getReportId().toHexString()); // JSON形式で返すときにそのオブジェクトが作られた時間とマシンコードで返ってしまうため、文字列に変換
-            response.setReportedShowUserId(object.getShowUserId());
+            response.setReportedShowUserId(object.showUserId());
             response.setReasonId(entity.getReasonId());
             response.setReportDate(entity.getReportDate());
             response.setReportedPost(post.getSentence());
