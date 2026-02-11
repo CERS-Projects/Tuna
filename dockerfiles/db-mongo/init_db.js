@@ -243,75 +243,95 @@ try {
 					"school_id",
 					"teacher_id",
 					"room_name",
+					"description",
 					"latest_update",
-					"categorys",
 				],
 				properties: {
 					school_id: {
 						bsonType: "int",
 						minimum: 1,
-						description: "MySQLに格納されている一意のschool_idを格納",
+						description: "MySQLで定義されている一意の学校IDを格納する",
 					},
 					teacher_id: {
 						bsonType: "int",
 						minimum: 1,
-						description: "MySQLに格納されている一意のteacher_idを格納",
+						description: "MySQLで定義されている一意の教師IDを格納する",
 					},
 					room_name: {
 						bsonType: "string",
 						minLength: 1,
 						maxLength: 50,
-						description: "授業ルーム名を格納",
+						description: "教室名を格納する",
 					},
 					description: {
 						bsonType: "string",
 						minLength: 1,
 						maxLength: 200,
-						description: "授業ルームの概要を格納",
+						description: "教室の説明を格納する",
 					},
 					latest_update: {
 						bsonType: "date",
-						description: "最終更新日を格納 書式はyyyy-mm-dd-hh-mm-ss-ms",
+						description:
+							"最新の更新日時を格納する 書式はyyyy-mm-dd-hh-mm-ss-ms",
 					},
-					categorys: {
-						bsonType: "array",
-						description: "カテゴリ一覧 要素数は0以上",
-						minItems: 0,
-						items: {
-							bsonType: "object",
-							required: ["documents"],
-							properties: {
-								category: {
-									bsonType: "string",
-									minLength: 1,
-									maxLength: 50,
-									description: "カテゴリー名を格納",
-								},
-								documents: {
-									bsonType: "array",
-									items: {
-										bsonType: "object",
-										required: ["name", "document_objectKey", "upload_date"],
-										properties: {
-											name: {
-												bsonType: "string",
-												minLength: 1,
-												maxLength: 50,
-												description: "過去に行った授業資料の題名を格納する",
-											},
-											document_objectKey: {
-												bsonType: "string",
-												description: "授業資料が格納されるPathを格納",
-											},
-											upload_date: {
-												bsonType: "date",
-												description: "授業資料のアップロード日を格納する",
-											},
-										},
-									},
-								},
-							},
-						},
+				},
+			},
+		},
+	});
+	db.createCollection("classroom_category_collection", {
+		validator: {
+			$jsonSchema: {
+				bsonType: "object",
+				required: ["classroom_id", "categoryname", "created_date"],
+				properties: {
+					classroom_id: {
+						bsonType: "objectId",
+						description: "classroom_collectionのオブジェクトIDを格納する",
+					},
+					categoryname: {
+						bsonType: "string",
+						minLength: 1,
+						maxLength: 30,
+						description: "カテゴリー名を格納する",
+					},
+					created_date: {
+						bsonType: "date",
+						description: "作成日時を格納する 書式はyyyy-mm-dd-hh-mm-ss-ms",
+					},
+				},
+			},
+		},
+	});
+	db.createCollection("classroom_document_collection", {
+		validator: {
+			$jsonSchema: {
+				bsonType: "object",
+				required: [
+					"classroom_category_id",
+					"document_name",
+					"document_objectKey",
+					"upload_date",
+				],
+				properties: {
+					classroom_category_id: {
+						bsonType: "objectId",
+						description:
+							"classroom_category_collectionのオブジェクトIDを格納する",
+					},
+					document_name: {
+						bsonType: "string",
+						minLength: 1,
+						maxLength: 50,
+						description: "ドキュメント名を格納する",
+					},
+					document_objectKey: {
+						bsonType: "string",
+						description: "ドキュメントの保存場所のPathを格納する",
+					},
+					upload_date: {
+						bsonType: "date",
+						description:
+							"ドキュメントのアップロード日時を格納する 書式はyyyy-mm-dd-hh-mm-ss-ms",
 					},
 				},
 			},
@@ -734,37 +754,129 @@ try {
 	]);
 	print("✅ like_collectionに4件挿入しました。");
 
-	// G. classroom_collection
+	// G.1 classroom_collection
+	const c1 = ObjectId();
+	const c2 = ObjectId();
+	const c3 = ObjectId();
+
 	db.classroom_collection.insertMany([
 		{
+			_id: c1,
 			school_id: 3,
 			teacher_id: 7,
-			room_name: "高校数学I",
-			description: "基礎から学ぶ数学Iのクラス",
+			room_name: "Java基礎クラス",
+			description: "Javaの文法とOOPを学ぶクラス",
 			latest_update: new Date(),
-			categorys: [
-				{
-					category: "図形",
-					documents: [
-						{
-							name: "三角関数資料",
-							document_objectKey: "path/fig/doc1.pdf",
-							upload_date: new Date(),
-						},
-					],
-				},
-			],
 		},
 		{
+			_id: c2,
 			school_id: 3,
 			teacher_id: 7,
-			room_name: "化学基礎",
-			description: "化学の基礎を学びます。",
+			room_name: "Webアプリ開発クラス",
+			description: "SpringBootとReactでWebアプリを作るクラス",
 			latest_update: new Date(),
-			categorys: [], // minItems: 0を満たす
+		},
+		{
+			_id: c3,
+			school_id: 3,
+			teacher_id: 7,
+			room_name: "データベース設計クラス",
+			description: "MySQLとMongoDBの設計を学ぶクラス",
+			latest_update: new Date(),
 		},
 	]);
-	print("✅ classroom_collectionに2件挿入しました。");
+	print("✅ classroom_collectionに3件挿入しました。");
+
+	//G.2 classroom_category_collection
+	const cat1 = ObjectId();
+	const cat2 = ObjectId();
+	const cat3 = ObjectId();
+	const cat4 = ObjectId();
+	const cat5 = ObjectId();
+	const cat6 = ObjectId();
+
+	db.classroom_category_collection.insertMany([
+		{
+			_id: cat1,
+			classroom_id: c1,
+			categoryname: "基本文法",
+			created_date: new Date(),
+		},
+		{
+			_id: cat2,
+			classroom_id: c1,
+			categoryname: "オブジェクト指向",
+			created_date: new Date(),
+		},
+
+		{
+			_id: cat3,
+			classroom_id: c2,
+			categoryname: "SpringBoot",
+			created_date: new Date(),
+		},
+		{
+			_id: cat4,
+			classroom_id: c2,
+			categoryname: "React",
+			created_date: new Date(),
+		},
+
+		{
+			_id: cat5,
+			classroom_id: c3,
+			categoryname: "正規化",
+			created_date: new Date(),
+		},
+		{
+			_id: cat6,
+			classroom_id: c3,
+			categoryname: "インデックス設計",
+			created_date: new Date(),
+		},
+	]);
+	print("✅ classroom_category_collectionに6件挿入しました。");
+
+	//G.3 classroom_document_collection
+	db.classroom_document_collection.insertMany([
+		{
+			classroom_category_id: cat1,
+			document_name: "Java変数と型.pdf",
+			document_objectKey: "documents/acd6c4e1-c834-483a-ac41-e78b821ad10d.pdf",
+			upload_date: new Date(),
+		},
+		{
+			classroom_category_id: cat1,
+			document_name: "Java制御構文.pdf",
+			document_objectKey: "documents/77ff706c-0697-4a55-b366-130433db3f51.xls",
+			upload_date: new Date(),
+		},
+		{
+			classroom_category_id: cat3,
+			document_name: "SpringBoot初期構築.pdf",
+			document_objectKey: "docs/springboot/setup.pdf",
+			upload_date: new Date(),
+		},
+		{
+			classroom_category_id: cat4,
+			document_name: "Reactコンポーネント設計.pdf",
+			document_objectKey: "docs/react/components.pdf",
+			upload_date: new Date(),
+		},
+		{
+			classroom_category_id: cat5,
+			document_name: "正規化の基本.pdf",
+			document_objectKey: "docs/db/normalize.pdf",
+			upload_date: new Date(),
+		},
+		{
+			classroom_category_id: cat6,
+			document_name: "インデックス戦略.pdf",
+			document_objectKey: "docs/db/index.pdf",
+			upload_date: new Date(),
+		},
+	]);
+	print("✅ classroom_document_collectionに6件挿入しました。");
 
 	// H. report_collection
 	db.report_collection.insertMany([

@@ -51,7 +51,8 @@ public class SecurityConfig {
                         .requestMatchers("/accounts/teacher/**", "/school/information", "/school/modify")
                         .hasRole("ADMIN_SCHOOL")
                         .requestMatchers("/groups/**", "/accounts/student/**", "/notice/create", "/notice/modify",
-                                "/notice/teacher/list", "/notice/delete", "/report/list", "/report/delete")
+                                "/notice/teacher/list", "/notice/delete", "/report/list", "/report/delete","/classroom/create",
+                                "/classroom/update", "/classroom/delete")
                         .hasAnyRole("TEACHER", "ADMIN_SCHOOL")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)
