@@ -124,23 +124,27 @@ INSERT INTO tuna_db.user_tb (user_id, school_id, show_user_id, password, mailadd
 (3, 1, 's001_student_y', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'student.y@maguro1.jp', '小林 健太 (生)', 0), -- 生徒
 (4, 2, 't002_teacher_b', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'teacher.b@katsuo2.jp', '山田 次郎 (教)', 0), -- 教師
 (5, 2, 's002_student_z', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'student.z@katsuo2.jp', '佐々木 一郎 (生)', 0), -- 生徒
-(6, 3, 't003_teacher_c', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'mitocollege@mito.ac.jp', '上野 淳 (教)', 0), -- 教師
-(7, 3, 's003_student_w', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'daigo_uchida@ygcollege.jp', '内田 大悟 (生)', 0), -- 生徒
-(8, 3, 's004_student_v', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'sou_matumoto@ygcollege.jp', '松本 爽 (生)', 0), -- 生徒
-(9, 3, 's005_student_u', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'yuuki_kikuti@ygcollege.jp', '菊池 優希 (生)', 0); -- 生徒
+(6, 3, 't003_teacher_c', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'mitocollege@mito.ac.jp', '上野 俊 (教)', 0), -- 教師
+(7, 3, 't003_teacher_w', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'daigo_uchida@ygcollege.jp', '内田 大吾 (教)', 0), -- 教師
+(8, 3, 's004_student_v', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'sou_matumoto@ygcollege.jp', '松本 層 (生)', 0), -- 生徒
+(9, 3, 's005_student_u', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'yuuki_kikuti@ygcollege.jp', '菊池 優希 (生)', 0), -- 生徒
+(10, 3, 't003_teacher_t','$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'chihiro_iizuka@ygcollege.jp', '飯塚 千尋',0); -- 生徒
+
 -- user_id = 1, 4 を教師として登録
 INSERT INTO tuna_db.teacher_tb (user_id, authority_flag) VALUES
 (1, 1), -- 佐藤太郎 (管理者権限あり)
 (4, 0), -- 山田次郎 (管理者権限なし)
-(7, 1); -- 上野淳 (管理者権限あり)
+(6, 1), -- 上野 (管理者権限あり)
+(7, 1), -- 内田  (管理者権限なし)
+(10, 1);  -- 飯塚 
+
 -- user_id = 2, 3 を生徒として登録
 INSERT INTO tuna_db.student_tb (user_id, grade, admission_date, graduate_date) VALUES
 (2, 3, '2023-04-01', NULL), -- 田中花子: 3年生
 (3, 1, '2025-04-01', NULL), -- 小林健太: 1年生
 (5, 2, '2024-04-01', NULL), -- 佐々木一郎: 2年生
-(7, 2, '2024-04-01', NULL), -- 内田大悟: 2年生
-(8, 1, '2025-04-01', NULL), -- 松本爽: 1年生
-(9, 1, '2025-04-01', NULL); -- 菊池優希: 1年生
+(8, 1, '2025-04-01', NULL), -- 松本: 1年生
+(9, 1, '2025-04-01', NULL); -- 菊池: 1年生
 
 INSERT INTO tuna_db.help_category_tb (help_category_name) VALUES
 ('アカウント'),
