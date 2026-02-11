@@ -1,6 +1,7 @@
 package com.example.backend.group.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -68,4 +69,10 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
         List<GroupEntity> findBySchoolAndUserId(
                         @Param("userId") Integer userId,
                         @Param("schoolId") Integer schoolId);
+        
+         @Query("""
+            SELECT g.groupName FROM GroupEntity g
+            WHERE g.groupId = :groupId
+            """)
+        Optional<String> findGroupNameByGroupId(@Param("groupId") Integer groupId);
 }

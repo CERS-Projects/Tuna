@@ -7,6 +7,7 @@ import java.util.Date;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
+import com.example.backend.group.repository.GroupRepository;
 import com.example.backend.notice.dto.NoticeInsertRequest;
 import com.example.backend.notice.dto.NoticeListResponse;
 import com.example.backend.notice.dto.NoticeModifyRequest;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class NoticeHelper {
+
+    private final GroupRepository groupRepository;
 
     public NoticeEntity toEntity(NoticeInsertRequest dto) {
         NoticeEntity entity = new NoticeEntity();
@@ -43,6 +46,7 @@ public class NoticeHelper {
         NoticeListResponse response = new NoticeListResponse();
         response.setNoticeId(entity.getNoticeId().toHexString());
         response.setGroupId(entity.getGroupId());
+        response.setGroupName(groupRepository.findGroupNameByGroupId(entity.getGroupId()).orElse("グループが存在しません。"));
         response.setTitle(entity.getTitle());
         response.setContent(entity.getContent());
         response.setCreatedAt(entity.getCreatedAt());    
