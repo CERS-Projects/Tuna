@@ -14,7 +14,6 @@ public class CategoriesResponse {
 
     private List<DocumentsResponse> documents;
 
-    
     private Date createdAt;
 
 }
