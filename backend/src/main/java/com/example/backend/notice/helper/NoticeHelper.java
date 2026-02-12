@@ -3,6 +3,7 @@ package com.example.backend.notice.helper;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.Map;
 
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
@@ -39,10 +40,11 @@ public class NoticeHelper {
         return entity;
     }
 
-    public NoticeListResponse toNoticeListResponse(NoticeEntity entity) {
+    public NoticeListResponse toNoticeListResponse(NoticeEntity entity, Map<Integer, String> groupIdToNameMap) {
         NoticeListResponse response = new NoticeListResponse();
         response.setNoticeId(entity.getNoticeId().toHexString());
         response.setGroupId(entity.getGroupId());
+        response.setGroupName(groupIdToNameMap.getOrDefault(entity.getGroupId(), "グループが存在しません。"));
         response.setTitle(entity.getTitle());
         response.setContent(entity.getContent());
         response.setCreatedAt(entity.getCreatedAt());    

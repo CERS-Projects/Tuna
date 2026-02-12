@@ -21,13 +21,13 @@ const GroupEdit = () => {
 
   const parentGroup = useMemo(() => {
     if (!currentGroup) return null;
-    return findParentGroup(groups, currentGroup.id);
+    return findParentGroup(groups, currentGroup.groupId);
   }, [groups, currentGroup]);
 
   const methods = useForm<GroupFormType>({
     defaultValues: {
-      parentGroupId: parentGroup?.id ?? 0,
-      groupName: currentGroup?.name ?? "",
+      parentGroupId: parentGroup?.groupId ?? 0,
+      groupName: currentGroup?.groupName ?? "",
       members: [],
     },
   });
@@ -36,7 +36,7 @@ const GroupEdit = () => {
 
   const parentOptions = useMemo(
     () => flattenGroups(groups, selectedGroupId, { excludeDescendants: true }),
-    [groups, selectedGroupId]
+    [groups, selectedGroupId],
   );
 
   const [selectedGrade, setSelectedGrade] = useState<number[]>([]);
@@ -47,9 +47,9 @@ const GroupEdit = () => {
   useEffect(() => {
     if (members && currentGroup) {
       reset({
-        parentGroupId: parentGroup?.id ?? 0,
+        parentGroupId: parentGroup?.groupId ?? 0,
 
-        groupName: currentGroup.name ?? "",
+        groupName: currentGroup.groupName ?? "",
 
         members: members.map((member) => ({
           ...member,
@@ -72,7 +72,7 @@ const GroupEdit = () => {
         onClick: () =>
           navigate(
             { pathname: "..", search: location.search },
-            { relative: "path" }
+            { relative: "path" },
           ),
       },
       right: {
@@ -108,7 +108,7 @@ const GroupEdit = () => {
           onClick={() =>
             navigate(
               { pathname: "..", search: location.search },
-              { relative: "path" }
+              { relative: "path" },
             )
           }
         >

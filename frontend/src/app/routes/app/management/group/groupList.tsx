@@ -10,27 +10,27 @@ const GroupList = () => {
   return (
     <>
       <div className={styles.currentGroup}>
-        <h3 className={styles.groupName}>{currentGroup?.name}</h3>
+        <h3 className={styles.groupName}>{currentGroup?.groupName}</h3>
 
         <hr />
 
         <ul className={styles.groupDetail}>
           <li>{`${currentGroup?.member ?? 0} members`}</li>
           <li>{`${countDescendantsGroups(
-            currentGroup?.branch
+            currentGroup?.branchGroups,
           )} sub-groups`}</li>
         </ul>
       </div>
       <div className={styles.subGroupsContainer}>
         <h3>サブグループ</h3>
         <div className={styles.subGroups}>
-          {currentGroup?.branch?.map((item) => (
+          {currentGroup?.branchGroups?.map((item) => (
             <GroupCard
-              key={item.id}
-              name={item.name}
+              key={item.groupId}
+              name={item.groupName}
               member={item.member}
-              subGroups={countDescendantsGroups(item.branch)}
-              handleSelectGroup={() => selectGroup(item.id)}
+              subGroups={countDescendantsGroups(item.branchGroups)}
+              handleSelectGroup={() => selectGroup(item.groupId)}
             />
           ))}
         </div>

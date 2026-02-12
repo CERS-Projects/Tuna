@@ -10,6 +10,7 @@ import lombok.Setter;
 public class NoticeListResponse {
     private String noticeId;
     private Integer groupId;
+    private String groupName;
     private String title;
     private String content;
     private Date createdAt;

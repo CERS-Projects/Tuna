@@ -1,12 +1,9 @@
 package com.example.backend.accounts.dto;
 
 
-public  interface GetUserName {
+public  record GetUserName(
+    Integer userId,
+    String name,
+    String showUserId
+) {}
 
-    
-    String getName();
-
-    
-    String getShowUserId();
-}
-    

@@ -10,7 +10,7 @@ export const UserInfo = ({ userIcon, userName, userId }: UserInfoProps) => {
   return (
     <div className={styles.userInfo}>
       <img
-        src={userIcon}
+        src={userIcon || undefined}
         alt={`${userName}のアイコン`}
         className={styles.userIcon}
       />

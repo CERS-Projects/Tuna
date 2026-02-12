@@ -80,14 +80,18 @@ export const paths = {
     },
     timeline: {
       path: "/app/timeline",
-      getHref: () => "/app/timeline",
+      getHref: (groupId?: number) =>
+        groupId != null ? `/app/timeline?groupId=${groupId}` : "/app/timeline",
       post: {
         path: "/app/timeline/post",
         getHref: () => "/app/timeline/post",
       },
       detail: {
         path: "/app/timeline/:id",
-        getHref: (id: number) => `/app/timeline/${id}`,
+        getHref: (id: string, groupId?: number) =>
+          groupId != null
+            ? `/app/timeline/${id}?groupId=${groupId}`
+            : `/app/timeline/${id}`,
       },
     },
     searchPost: {
@@ -104,44 +108,49 @@ export const paths = {
     },
     profile: {
       root: {
-        path: "/app/profile",
-        getHref: () => "/app/profile",
+        path: "/app/profile/:userId",
+        getHref: (userId: string) =>
+          userId ? `/app/profile/${userId}` : "/app/profile",
       },
       posts: {
-        path: "/app/profile/posts",
-        getHref: () => "/app/profile/posts",
+        path: "/app/profile/:userId/posts",
+        getHref: (userId: string) => `/app/profile/${userId}/posts`,
       },
       responses: {
-        path: "/app/profile/responses",
-        getHref: () => "/app/profile/responses",
+        path: "/app/profile/:userId/responses",
+        getHref: (userId: string) => `/app/profile/${userId}/responses`,
       },
       goods: {
-        path: "/app/profile/goods",
-        getHref: () => "/app/profile/goods",
+        path: "/app/profile/:userId/goods",
+        getHref: (userId: string) => `/app/profile/${userId}/goods`,
       },
       bookmarks: {
-        path: "/app/profile/bookmarks",
-        getHref: () => "/app/profile/bookmarks",
+        path: "/app/profile/:userId/bookmarks",
+        getHref: (userId: string) => `/app/profile/${userId}/bookmarks`,
       },
       follow: {
-        path: "/app/profile/follow",
-        getHref: () => "/app/profile/follow",
+        path: "/app/profile/:userId/follow",
+        getHref: (userId: string) => `/app/profile/${userId}/follow`,
       },
       follower: {
-        path: "/app/profile/follower",
-        getHref: () => "/app/profile/follower",
+        path: "/app/profile/:userId/follower",
+        getHref: (userId: string) => `/app/profile/${userId}/follower`,
       },
-      settingMenu: {
-        path: "/app/profile/settingMenu",
-        getHref: () => "/app/profile/settingMenu",
+      setting: {
+        path: "/app/profile/setting",
+        getHref: () => "/app/profile/setting",
         editPassword: {
-          path: "/app/profile/settingMenu/editPassword",
-          getHref: () => "/app/profile/settingMenu/editPassword",
+          path: "/app/profile/setting/editPassword",
+          getHref: () => "/app/profile/setting/editPassword",
         },
         editFilter: {
-          path: "/app/profile/settingMenu/editFilter",
-          getHref: () => "/app/profile/settingMenu/editFilter",
+          path: "/app/profile/setting/editFilter",
+          getHref: () => "/app/profile/setting/editFilter",
         },
+      },
+      edit: {
+        path: "/app/profile/edit/:userId",
+        getHref: (userId: string) => `/app/profile/edit/${userId}`,
       },
     },
     test: {

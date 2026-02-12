@@ -2,73 +2,15 @@ import { useState, useEffect, useRef, useMemo, type ChangeEvent } from "react";
 import styles from "./searchFilter.module.css";
 import { GoChevronDown } from "react-icons/go";
 import { GoChevronRight } from "react-icons/go";
+import { type TreeType } from "@/features/management/types/group";
+import { getAllIds } from "@/features/post/utils/tree";
 
-//受け取るデータの型
-export type NodeItem = {
-  id: number;
-  name: string;
-  classid: number;
-};
-
-//ツリー構造
-type TreeNode = {
-  id: string;
-  label: string;
-  children: TreeNode[];
-};
-
-//ツリー構造への変換
-const buildTree = (items: NodeItem[]): TreeNode[] => {
-  const idMapping: { [key: string]: TreeNode } = {};
-  const roots: TreeNode[] = [];
-
-  //マッピングの作成
-  items.forEach((item) => {
-    const strId = String(item.id);
-    idMapping[strId] = {
-      id: strId,
-      label: item.name,
-      children: [],
-    };
-  });
-
-  //階層構造
-  items.forEach((item) => {
-    const strId = String(item.id);
-    const node = idMapping[strId];
-
-    if (item.classid === 0) {
-      roots.push(node);
-    } else {
-      const parentId = String(item.classid);
-      const parent = idMapping[parentId];
-      if (parent) {
-        parent.children.push(node);
-      } else {
-        //親が見つからなかったときはルートになる
-        roots.push(node);
-      }
-    }
-  });
-
-  return roots;
-};
-
-//指定したノード以下の全IDを取得する再帰
-const getAllTreeId = (node: TreeNode): string[] => {
-  let ids = [node.id];
-  node.children.forEach((child) => {
-    ids = ids.concat(getAllTreeId(child));
-  });
-  return ids;
-};
-//チェックボックスの行
 type CheckBoxProps = {
-  node: TreeNode;
-  selectedIds: Set<string>;
-  expandedIds: Set<string>;
-  onToggle: (node: TreeNode, isChecked: boolean) => void;
-  onExpand: (id: string) => void;
+  node: TreeType;
+  selectedIds: Set<number>;
+  expandedIds: Set<number>;
+  onToggle: (node: TreeType, isChecked: boolean) => void;
+  onExpand: (id: number) => void;
   level?: number;
 };
 
@@ -82,27 +24,21 @@ const CheckBoxRow = ({
 }: CheckBoxProps) => {
   const checkBoxRef = useRef<HTMLInputElement>(null);
 
-  //自身の状態
-  const isChecked = selectedIds.has(node.id);
-  const isExpanded = expandedIds.has(node.id);
-  const hasChildren = node.children.length > 0;
+  const isChecked = selectedIds.has(node.groupId);
+  const isExpanded = expandedIds.has(node.groupId);
+  const hasChildren =
+    node?.branchGroups && node.branchGroups.length > 0 ? true : false;
 
-  //子の状態
   const childrenIds = useMemo(
-    () => getAllTreeId(node).filter((id) => id !== node.id),
-    [node]
+    () => getAllIds(node).filter((id) => id !== node.groupId),
+    [node],
   );
-
-  const allChildrenChecked =
-    childrenIds.length > 0 && childrenIds.every((id) => selectedIds.has(id));
 
   const someChildChecked = childrenIds.some((id) => selectedIds.has(id));
 
-  //表示用フラグ
-  const visualChecked = isChecked || allChildrenChecked;
-  const visualUncertain = !visualChecked && someChildChecked;
+  const visualChecked = isChecked;
+  const visualUncertain = !isChecked && someChildChecked;
 
-  //Uncertain（不確定）状態のDOM操作
   useEffect(() => {
     if (checkBoxRef.current) {
       checkBoxRef.current.indeterminate = visualUncertain;
@@ -119,8 +55,8 @@ const CheckBoxRow = ({
       className={styles.searchFilterContainer}
     >
       <span
-        onClick={() => onExpand(node.id)}
-        className={`styles.clickContainer ${!hasChildren ? "is-hidden" : ""}`}
+        onClick={() => onExpand(node.groupId)}
+        className={`styles.clickContainer ${!hasChildren ? styles.isHidden : ""}`}
       >
         {isExpanded ? <GoChevronDown /> : <GoChevronRight />}
       </span>
@@ -132,16 +68,15 @@ const CheckBoxRow = ({
           onChange={handleChange}
           className={styles.checkIcon}
         />
-        {node.label}
+        {node.groupName}
       </label>
 
-      {/*再起呼び出し*/}
-      {hasChildren && isExpanded && (
+      {hasChildren && isExpanded && node.branchGroups && (
         <div>
-          {node.children.map((child) => (
+          {node.branchGroups.map((n) => (
             <CheckBoxRow
-              key={child.id}
-              node={child}
+              key={n.groupId}
+              node={n}
               selectedIds={selectedIds}
               expandedIds={expandedIds}
               onToggle={onToggle}
@@ -155,20 +90,20 @@ const CheckBoxRow = ({
   );
 };
 
-//メイン処理
-type TreeCheckBoxProps = {
-  flatData: NodeItem[];
+type Props = {
+  groups: TreeType[];
+  selectedIds: Set<number>;
+  setSelectedIds: (ids: Set<number>) => void;
 };
 
-export const SearchFilter = ({ flatData }: TreeCheckBoxProps) => {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+export const SearchFilter = ({
+  groups,
+  selectedIds,
+  setSelectedIds,
+}: Props) => {
+  const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
 
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
-
-  //フラットなデータをツリーに変換（メモ化）
-  const treeData = useMemo(() => buildTree(flatData), [flatData]);
-
-  const handleExpandToggle = (id: string) => {
+  const handleExpandToggle = (id: number) => {
     setExpandedIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
@@ -180,33 +115,47 @@ export const SearchFilter = ({ flatData }: TreeCheckBoxProps) => {
     });
   };
 
-  const handleToggle = (node: TreeNode, isChecked: boolean) => {
-    const childrenIds = getAllTreeId(node);
+  const handleToggle = (node: TreeType, isChecked: boolean) => {
+    const childrenIds = getAllIds(node);
 
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (isChecked) {
-        childrenIds.forEach((id) => next.add(id));
-      } else {
-        childrenIds.forEach((id) => next.delete(id));
-      }
-      return next;
-    });
+    const next = new Set(selectedIds);
+    if (isChecked) {
+      childrenIds.forEach((id) => next.add(id));
+    } else {
+      childrenIds.forEach((id) => next.delete(id));
+    }
+    setSelectedIds(next);
+
+    if (isChecked && node.branchGroups && node.branchGroups.length > 0) {
+      setExpandedIds((prev) => {
+        const next = new Set(prev);
+        next.add(node.groupId);
+        return next;
+      });
+    }
   };
 
   return (
     <div>
       <div>
-        <strong>aaa</strong>
+        <strong>検索グループ</strong>
         <div>
           {Array.from(selectedIds)
             .sort((a, b) => Number(a) - Number(b))
-            .join(",") || "Global"}
+            .join(",")}
         </div>
       </div>
-      {treeData.map((node) => (
+      <CheckBoxRow
+        key={0}
+        node={{ groupId: 0, groupName: "全体公開" }}
+        selectedIds={selectedIds}
+        expandedIds={expandedIds}
+        onExpand={handleExpandToggle}
+        onToggle={handleToggle}
+      />
+      {groups.map((node) => (
         <CheckBoxRow
-          key={node.id}
+          key={node.groupId}
           node={node}
           selectedIds={selectedIds}
           expandedIds={expandedIds}

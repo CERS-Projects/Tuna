@@ -13,38 +13,18 @@ import { UserInfo } from "../userInfo/userInfo";
 import { PostInput } from "../postInput/postInput";
 import { ResponseTo } from "../replyTo/responseTo";
 import { type PostData } from "../../types/post";
-
-const currentUser = {
-  user_id: "mito_denden",
-  user_name: "水戸 太郎",
-  user_icon:
-    "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiADU1Rn0obHEkfXEgCIKVXO8IEK9Q9MJUL8lb2QkWyHpaQ8AlJmxVF2vP00RYyyzrxaGXKOb3P8BwtC5mIFhyF31_kzKx2QVS2Hee7Skl_3DlAZ2P6sRAsSb0Ts0Alcxx1aks9f-JQkMHh/s800/cat_fish_run.png",
-};
-
-const items: TreeType[] = [
-  {
-    id: 1,
-    name: "八文字学園",
-    branch: [
-      {
-        id: 2,
-        name: "水戸電子専門学校",
-        branch: [
-          { id: 3, name: "情報処理" },
-          { id: 4, name: "水戸電子システム" },
-        ],
-      },
-      { id: 5, name: "水戸" },
-    ],
-  },
-];
+import { type User } from "@/types/user";
 
 export const PostCreateModal = ({
   ref,
+  user,
+  groups,
   onClose,
   response,
 }: {
   ref: Ref<ModalHandle>;
+  user: User | undefined;
+  groups: TreeType[];
   onClose?: () => void;
   response?: PostData;
 }) => {
@@ -122,11 +102,13 @@ export const PostCreateModal = ({
         <div className={styles.bodyScroll}>
           {response && <ResponseTo responseTo={response} />}
 
-          <UserInfo
-            userIcon={currentUser.user_icon}
-            userName={currentUser.user_name}
-            userId={currentUser.user_id}
-          />
+          {user && (
+            <UserInfo
+              userIcon={user.iconUrl ?? ""}
+              userName={user.userName}
+              userId={user.showUserId}
+            />
+          )}
 
           <PostInput
             isInputStep={isInputStep}
@@ -145,7 +127,7 @@ export const PostCreateModal = ({
           {!response && (
             <RangeSection
               isInputStep={isInputStep}
-              items={items}
+              items={groups}
               selectedGroupIds={state.selectedGroupIds}
               onToggleGroup={actions.toggleGroup}
             />

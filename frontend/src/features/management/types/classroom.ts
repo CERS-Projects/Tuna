@@ -12,19 +12,19 @@ export type ClassroomCategoryDocument = {
 };
 
 export type ClassroomCategory = {
-  category: string;
+  categoryName: string;
   documents: ClassroomCategoryDocument[];
 };
 
 export type ClassroomCategoryEdit = {
-  category: string;
+  categoryName: string;
   existingDocuments: ClassroomCategoryDocument[];
   deleteDocuments: ClassroomCategoryDocument[];
   newFiles: File[];
 };
 
 export type ClassroomCategoryEditPost = {
-  category: string;
+  categoryName: string;
   deleteDocuments: ClassroomCategoryDocument[];
   newFiles: File[];
 };
@@ -40,7 +40,7 @@ export type ClassroomCreateInput = {
   roomName: string;
   description: string;
   categories: {
-    category: string;
+    categoryName: string;
     files: File[];
   }[];
 };

@@ -1,6 +1,6 @@
 package com.example.backend.auth.service;
 
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

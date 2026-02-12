@@ -1,5 +1,7 @@
 package com.example.backend.accounts.repository;
 
+
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,11 +54,16 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
                         @Param("userId") Integer userId,
                         @Param("reportedUserId") Integer reportedUserId);
 
-        // ユーザーのshowUserIdと名前を取得する
+
+        //ユーザーのshowUserIdと名前を取得する
         @Query("SELECT u.showUserId as showUserId, u.name as name " +
-                        "FROM UserEntity u WHERE u.userId = :userId")
+            "FROM UserEntity u WHERE u.userId = :userId")
         GetUserName findUserName(@Param("userId") Integer userId);
-
+    
+        //複数ユーザーのUserIdとshowUserIdと名前を取得する
+        @Query("SELECT u.userId as userId, u.showUserId as showUserId, u.name as name " +
+            "FROM UserEntity u WHERE u.userId IN :userIds")
+        List<GetUserName> findByUserIdIn(@Param("userIds") List<Integer> userIds);
+        
         UserEntity findByMailAddress(String mailAddress);
-
 }

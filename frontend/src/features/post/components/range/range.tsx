@@ -15,8 +15,8 @@ type RangeItemProps = {
 const RangeItem = memo(
   ({ node, selectedGroupIds, onToggle, depth = 0 }: RangeItemProps) => {
     const [isExpanded, setIsExpanded] = useState(true);
-    const isChecked = selectedGroupIds.includes(node.id);
-    const hasChildren = node.branch && node.branch.length > 0;
+    const isChecked = selectedGroupIds.includes(node.groupId);
+    const hasChildren = node.branchGroups && node.branchGroups.length > 0;
 
     const handleToggleExpand = (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -50,10 +50,10 @@ const RangeItem = memo(
             onChange={handleToggleSelect}
             labelTextAfterLink={
               <>
-                {node.name}
+                {node.groupName}
                 {hasChildren && (
                   <span className={styles.childCount}>
-                    ({node.branch!.length})
+                    ({node.branchGroups!.length})
                   </span>
                 )}
               </>
@@ -62,9 +62,9 @@ const RangeItem = memo(
         </div>
         {hasChildren && isExpanded && (
           <div className={styles.childrenContainer}>
-            {node.branch!.map((child) => (
+            {node.branchGroups!.map((child) => (
               <RangeItem
-                key={child.id}
+                key={child.groupId}
                 node={child}
                 selectedGroupIds={selectedGroupIds}
                 onToggle={onToggle}
@@ -96,37 +96,65 @@ export const RangeSection = ({
   const handleToggle = useCallback(
     (node: TreeType) => {
       const allIds = getAllIds(node);
-      const isCurrentlySelected = selectedGroupIds.includes(node.id);
+      const isCurrentlySelected = selectedGroupIds.includes(node.groupId);
       onToggleGroup(allIds, !isCurrentlySelected);
     },
     [selectedGroupIds, onToggleGroup],
   );
+
+  const isGlobalSelected = selectedGroupIds.includes(0);
+
+  const handleToggleGlobal = useCallback(() => {
+    onToggleGroup([0], !isGlobalSelected);
+  }, [isGlobalSelected, onToggleGroup]);
 
   const flatItems = flattenTree(items);
 
   return (
     <div className={styles.rangeSection}>
       <div className={styles.rangeLabel}>
-        {isInputStep ? "公開範囲を選択" : "公開範囲"}
+        {isInputStep ? "公開範囲を選択 (選択無しで全体公開)" : "公開範囲"}
       </div>
       <div className={styles.rangeList}>
         {isInputStep ? (
-          items.map((item) => (
-            <RangeItem
-              key={item.id}
-              node={item}
-              selectedGroupIds={selectedGroupIds}
-              onToggle={handleToggle}
-            />
-          ))
+          <>
+            <div className={styles.rangeItemWrapper}>
+              <div
+                className={`${styles.rangeItem} ${isGlobalSelected ? styles.rangeItemSelected : ""}`}
+              >
+                <span className={styles.expandSpacer} />
+                <Checkbox
+                  checked={isGlobalSelected}
+                  onChange={handleToggleGlobal}
+                  labelTextAfterLink={<>全体公開</>}
+                />
+              </div>
+            </div>
+            {items.map((item) => (
+              <RangeItem
+                key={item.groupId}
+                node={item}
+                selectedGroupIds={selectedGroupIds}
+                onToggle={handleToggle}
+              />
+            ))}
+          </>
         ) : selectedGroupIds.length > 0 ? (
-          flatItems
-            .filter((item) => selectedGroupIds.includes(item.id))
-            .map((item) => (
-              <span key={item.id} className={styles.confirmTag}>
-                {item.name}
-              </span>
-            ))
+          <>
+            {isGlobalSelected && (
+              <span className={styles.confirmTag}>全体公開</span>
+            )}
+            {flatItems
+              .filter(
+                (item) =>
+                  item.groupId !== 0 && selectedGroupIds.includes(item.groupId),
+              )
+              .map((item) => (
+                <span key={item.groupId} className={styles.confirmTag}>
+                  {item.groupName}
+                </span>
+              ))}
+          </>
         ) : (
           <span className={styles.noSelectionMessage}>
             指定なし（全体公開）

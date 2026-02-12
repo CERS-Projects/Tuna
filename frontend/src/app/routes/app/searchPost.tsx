@@ -1,28 +1,28 @@
 import { InfoBox } from "@/components/ui/infoBox/infoBox";
-import {
-  SearchFilter,
-  type NodeItem,
-} from "@/features/search/components/searchFilter";
+import { SearchFilter } from "@/features/search/components/searchFilter";
 import styles from "@/features/search/styles/searchPost.module.css";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { useSearchParams } from "react-router";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
 import { RiCompass3Line } from "react-icons/ri";
 import { SearchHistory } from "@/features/search/components/searchHistory";
-
-const exampleFlatData: NodeItem[] = [
-  { id: 1, name: "a", classid: 0 },
-  { id: 2, name: "b", classid: 1 },
-  { id: 3, name: "c", classid: 1 },
-  { id: 4, name: "d", classid: 2 },
-  { id: 5, name: "e", classid: 2 },
-  { id: 6, name: "a", classid: 3 },
-  { id: 7, name: "b", classid: 5 },
-  { id: 8, name: "c", classid: 6 },
-  { id: 9, name: "d", classid: 1 },
-  { id: 10, name: "e", classid: 9 },
-];
+import { useGroups } from "@/features/management/hooks/useGroups";
 
 const SearchPost = () => {
+  const { groups } = useGroups();
+  const [searchParams] = useSearchParams();
+
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(() => {
+    const shareRange = searchParams.get("shareRange");
+    if (!shareRange || shareRange === "0") return new Set<number>();
+    return new Set(
+      shareRange
+        .split(",")
+        .map(Number)
+        .filter((n) => !Number.isNaN(n)),
+    );
+  });
+
   const modalRef = useRef<ModalHandle>(null);
   const modalButtonClick = () => {
     if (modalRef.current) {
@@ -37,18 +37,26 @@ const SearchPost = () => {
             <RiCompass3Line />
           </button>
           <div className={styles.searchBarContainer}>
-            <SearchHistory />
+            <SearchHistory selectedIds={selectedIds} />
           </div>
         </div>
         <div className={styles.searchPostSub}>
           <InfoBox>
-            <SearchFilter flatData={exampleFlatData} />
+            <SearchFilter
+              groups={groups}
+              selectedIds={selectedIds}
+              setSelectedIds={setSelectedIds}
+            />
           </InfoBox>
         </div>
       </div>
       <Modal ref={modalRef} height={"90%"} width={"90%"}>
         <InfoBox>
-          <SearchFilter flatData={exampleFlatData} />
+          <SearchFilter
+            groups={groups}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
+          />
         </InfoBox>
       </Modal>
     </div>

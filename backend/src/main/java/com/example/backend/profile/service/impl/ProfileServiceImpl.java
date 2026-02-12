@@ -33,8 +33,8 @@ public class ProfileServiceImpl implements ProfileService {
 
         log.info("ユーザー情報取得 userInfo: {}", userInfo);
         profile.setUserId(userId);
-        profile.setShowUserId(userInfo.getShowUserId());
-        profile.setNickname(userInfo.getName());
+        profile.setShowUserId(userInfo.showUserId());
+        profile.setNickname(userInfo.name());
         profile.setIconObjectKey("images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png");
         profile.setFollowCount(0);
         profile.setFollowerCount(0);

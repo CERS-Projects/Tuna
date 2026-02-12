@@ -2,13 +2,15 @@ import { useForm } from "react-hook-form";
 import { Header } from "@/components/ui/header/header.tsx";
 import { Button } from "@/components/ui/button/button.tsx";
 import { Input } from "@/components/ui/input/input.tsx";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import styles from "@/features/auth/styles/login.module.css";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { type LoginInfo } from "@/features/auth/types/auth";
 
 export const Login = () => {
   const { login, isLoggingIn } = useAuth();
+  const location = useLocation();
+  const errorMessage = location.state?.errorMessage;
 
   const { register, handleSubmit, formState } = useForm<LoginInfo>();
 
@@ -20,6 +22,9 @@ export const Login = () => {
     <>
       <Header />
       <form className={styles.loginContainer} onSubmit={handleSubmit(onSubmit)}>
+        {errorMessage && (
+          <div className={styles.errorMessage}>{errorMessage}</div>
+        )}
         <Input
           label="ユーザーID"
           type="text"

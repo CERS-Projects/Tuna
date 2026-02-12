@@ -1,8 +1,6 @@
 package com.example.backend.utils.fileUtil.helper;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;

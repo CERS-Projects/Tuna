@@ -1,52 +1,48 @@
+import { type TreeType } from "@/features/management/types/group";
 import { TimelineInfo } from "../timelineinfo/timelineInfo";
 import styles from "./timelineFilter.module.css";
+import { useGroupNavigation } from "@/features/management/hooks/useGroupNavigation";
+import { Breadcrumbs } from "@/features/management/components/breadcrumbs/breadcrumbs";
+import { useNavigate } from "react-router";
+import { paths } from "@/config/paths";
 
-type TimelineGroup = {
-  parentId: number;
-  groupId: number;
-  groupName: string;
-  groupInfo: string;
-};
+export const TimelineFilter = ({ groups }: { groups: TreeType[] }) => {
+  const { breadcrumbs, currentGroup } = useGroupNavigation([
+    {
+      groupId: 0,
+      groupName: "グローバル",
+      branchGroups: groups,
+    },
+  ]);
 
-const infoDummy: TimelineGroup[] = [
-  {
-    parentId: 1,
-    groupId: 1,
-    groupName: "グループ1",
-    groupInfo: "これはグループ1の情報です。",
-  },
-  {
-    parentId: 1,
-    groupId: 2,
-    groupName: "グループ2",
-    groupInfo: "これはグループ2の情報です。",
-  },
-  {
-    parentId: 1,
-    groupId: 3,
-    groupName: "グループ3",
-    groupInfo: "これはグループ3の情報です。",
-  },
-  {
-    parentId: 1,
-    groupId: 4,
-    groupName: "グループ4",
-    groupInfo: "これはグループ4の情報です。",
-  },
-];
+  const navigate = useNavigate();
+  const handleSelect = (id: number) => {
+    if (id === 0) {
+      navigate(paths.app.timeline.getHref());
+    } else {
+      navigate(paths.app.timeline.getHref(id));
+    }
+  };
 
-export const TimelineFilter = () => {
   return (
     <div className={styles.timelineFilter}>
-      {/*divとh2はデータをのちに追加する*/}
-      <div>aaaaaaaa</div>
-      <h2>aaaaaaa</h2>
+      <div className={styles.navigateWrapper}>
+        <Breadcrumbs breadcrumbs={breadcrumbs} handleSelect={handleSelect} />
+
+        <h2>{currentGroup ? currentGroup.groupName : "グローバル"}</h2>
+      </div>
 
       <hr />
-      <div className={styles.filterCard}>
-        {infoDummy.map((item) => (
-          <TimelineInfo key={item.groupId} {...item} />
-        ))}
+
+      <div className={styles.filterCardContainer}>
+        {currentGroup?.branchGroups &&
+          currentGroup.branchGroups.map((item) => (
+            <TimelineInfo
+              key={item.groupId}
+              group={item}
+              handleSelect={handleSelect}
+            />
+          ))}
       </div>
     </div>
   );

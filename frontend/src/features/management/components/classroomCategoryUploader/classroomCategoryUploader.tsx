@@ -12,7 +12,7 @@ import {
 import { FaRegTrashAlt } from "react-icons/fa";
 import styles from "./classroomCategoryUploader.module.css";
 
-type CreateModeValue = { category: string; files: File[] };
+type CreateModeValue = { categoryName: string; files: File[] };
 type EditModeValue = ClassroomCategoryEdit;
 
 type Props<T extends FieldValues> = {
