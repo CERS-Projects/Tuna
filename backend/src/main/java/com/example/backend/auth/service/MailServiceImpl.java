@@ -1,5 +1,6 @@
 package com.example.backend.auth.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,12 +16,14 @@ public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
 
+    private String fromMailAddress = System.getenv("MAIL_ADDRESS");
+
     @Override
     public void sendMail(UserEntity userEntity, String otpPassword) {
 
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setFrom(userEntity.getMailAddress());
+            mailMessage.setFrom(fromMailAddress);
             mailMessage.setTo(userEntity.getMailAddress());
             mailMessage.setSubject("ワンタイムパスワード発行");
             mailMessage.setText("ワンタイムパスワードの期限は5分です\n" + otpPassword);
@@ -36,7 +39,7 @@ public class MailServiceImpl implements MailService {
 
         try {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setFrom(mailAddress);
+            mailMessage.setFrom(fromMailAddress);
             mailMessage.setTo(mailAddress);
             mailMessage.setSubject("パスワードリセットご案内");
             mailMessage.setText("下記のURLをクリックしてください。URLの期限は10分です\n" + url);

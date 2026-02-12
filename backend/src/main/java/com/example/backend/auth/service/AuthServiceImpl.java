@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.AccessDeniedException;
@@ -31,6 +32,7 @@ import com.example.backend.auth.dto.OtpResponse;
 import com.example.backend.auth.dto.PasswordChangeRequest;
 import com.example.backend.auth.repository.RefreshTokenRepository;
 import com.example.backend.exception.AuthException;
+
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -51,6 +53,9 @@ public class AuthServiceImpl implements AuthService {
     private final MailService mailService;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Value("${app.frontend.url}")
+    private String frontURL;
 
     @Override
     public String login(LoginSelectRequest loginSelectRequest) {
@@ -154,6 +159,8 @@ public class AuthServiceImpl implements AuthService {
         userEntity.setPassword(bCryptPasswordEncoder.encode(passwordChangeRequest.getNewPassword()));
         userRepository.save(userEntity);
 
+        refreshTokenRepository.deleteById(userId);
+
     }
 
     @Override
@@ -167,7 +174,13 @@ public class AuthServiceImpl implements AuthService {
             throw new EmptyResultDataAccessException("パスワードを変更できる期限が切れました", 0);
         }
 
-        Integer userId = Integer.valueOf(stringRedisTemplate.opsForValue().get(token));
+        String userIdStr = stringRedisTemplate.opsForValue().get(token);
+
+        if (userIdStr == null) {
+            throw new EmptyResultDataAccessException("パスワードを変更できる期限が切れました", 0);
+        }
+
+        Integer userId = Integer.valueOf(userIdStr);
 
         if (userId == null) {
             throw new IllegalArgumentException("userIdの値がnullです");
@@ -181,6 +194,8 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(userEntity);
 
         stringRedisTemplate.delete(token);
+
+        refreshTokenRepository.deleteById(userId);
 
     }
 
@@ -203,7 +218,7 @@ public class AuthServiceImpl implements AuthService {
 
         if (userEntity != null) {
             String userId = userEntity.getUserId().toString();
-            String token = UUID.randomUUID().toString();
+            String token = "resetPassword" + UUID.randomUUID().toString();
 
             if (token == null || userId == null) {
                 throw new IllegalArgumentException("nullの値があります");
@@ -211,7 +226,7 @@ public class AuthServiceImpl implements AuthService {
 
             stringRedisTemplate.opsForValue().set(token, userId, 10, TimeUnit.MINUTES);
 
-            String url = "http://localhost:8080/api/reset/password" + ("?token=" + token);
+            String url = frontURL + "/reset/password" + ("?token=" + token);
 
             mailService.sendMail(mailAddress, url);
         }
