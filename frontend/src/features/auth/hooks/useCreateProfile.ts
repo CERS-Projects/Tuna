@@ -24,5 +24,6 @@ export const useCreateProfile = (authToken: string) => {
       queryClient.invalidateQueries({ queryKey: ["user", jwtPayload?.sub] });
       alert("プロフィールが作成されていなかったため、作成しました");
     },
+    throwOnError: false,
   });
 };
