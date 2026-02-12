@@ -43,13 +43,14 @@ public interface ClassroomRepository extends MongoRepository<ClassroomEntity, Ob
             "as: 'documents' " +
         "} }",
         
-        // ドキュメントのフィールド名をDTOに合わせる
+        // ドキュメントのフィールド名をDTOに合わせる（documentId追加）
         "{ $addFields: { " +
             "'categories.documents': { " +
                 "$map: { " +
                     "input: '$documents', " +
                     "as: 'doc', " +
                     "in: { " +
+                        "documentId: { $toString: '$$doc._id' }, " +
                         "documentName: '$$doc.document_name', " +
                         "documentUrl: '$$doc.document_objectKey', " +
                         "uploadedAt: '$$doc.upload_date' " +
@@ -63,7 +64,12 @@ public interface ClassroomRepository extends MongoRepository<ClassroomEntity, Ob
             "_id: '$_id', " +
             "room_name: { $first: '$room_name' }, " +
             "description: { $first: '$description' }, " +
-            "categories: { $push: '$categories' } " +
+            "categories: { $push: { " +
+                "categoryId: { $toString: '$categories._id' }, " +
+                "categoryName: '$categories.categoryname', " +
+                "documents: '$categories.documents', " +
+                "createdAt: '$categories.created_date' " +
+            "} } " +
         "} }",
         
         // DTOのフィールド名に合わせて整形
@@ -71,17 +77,7 @@ public interface ClassroomRepository extends MongoRepository<ClassroomEntity, Ob
             "_id: 0, " +
             "roomName: '$room_name', " +
             "description: 1, " +
-            "categories: { " +
-                "$map: { " +
-                    "input: '$categories', " +
-                    "as: 'cat', " +
-                    "in: { " +
-                        "categoryName: '$$cat.categoryname', " +
-                        "documents: '$$cat.documents', " +
-                        "createdAt: '$$cat.created_date' " +
-                    "} " +
-                "} " +
-            "} " +
+            "categories: 1 " +
         "} }"
     })
     ClassroomDetailResponse findClassroomWithCategoriesAndDocumentsById(ObjectId classroomId);

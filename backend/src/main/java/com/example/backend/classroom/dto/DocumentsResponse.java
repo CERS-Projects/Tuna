@@ -8,6 +8,8 @@ import java.util.Date;
 @Setter
 public class DocumentsResponse {
 
+    private String documentId;
+
     private String documentName;
 
     private String documentUrl;
