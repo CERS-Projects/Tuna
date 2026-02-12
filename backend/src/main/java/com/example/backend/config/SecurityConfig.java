@@ -46,14 +46,15 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/refresh", "/otp", "/support/**", "/school/create").permitAll()
-                        .requestMatchers("/groups/me").hasAnyRole("STUDENT")
-                        .requestMatchers("/accounts/teacher/**", "/school/information", "/school/modify")
+                        .requestMatchers("/login", "/refresh", "/otp", "/support/**", "/school/create",
+                                "/reset/password/mail", "/reset/password").permitAll()
+                        .requestMatchers("/accounts/all","/accounts/teacher/**", "/school/information", "/school/modify")
                         .hasRole("ADMIN_SCHOOL")
                         .requestMatchers("/groups/**", "/accounts/student/**", "/notice/create", "/notice/modify",
                                 "/notice/teacher/list", "/notice/delete", "/report/list", "/report/delete","/classroom/create",
                                 "/classroom/update", "/classroom/delete")
                         .hasAnyRole("TEACHER", "ADMIN_SCHOOL")
+                        .requestMatchers("/groups/me").hasRole("STUDENT")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler));
