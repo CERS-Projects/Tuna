@@ -142,6 +142,7 @@ public class ClassroomServiceImpl implements ClassroomService {
                         user -> user.userId(),
                         user -> user.name()
                 ));
+        log.info("教師情報の取得に成功しました: teacherIds={}, teacherNameMap={}", teacherIds, teacherNameMap);
 
         return classroomEntities.stream().map(classroomEntity -> {
             ClassroomsResponse response = new ClassroomsResponse();
@@ -150,6 +151,7 @@ public class ClassroomServiceImpl implements ClassroomService {
             response.setTeacherName(teacherNameMap.getOrDefault(classroomEntity.getTeacherId(), "不明な教師"));
             response.setDescription(classroomEntity.getDescription());
             response.setLatestUpdate(classroomEntity.getLatestUpdate());
+            log.info("クラスルームの情報を取得しました: classroomId={}, teacherName={}", classroomEntity.getId(), response.getTeacherName());
             return response;
         }).toList();
     }
