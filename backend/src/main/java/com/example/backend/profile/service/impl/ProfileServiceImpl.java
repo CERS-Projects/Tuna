@@ -122,12 +122,12 @@ public class ProfileServiceImpl implements ProfileService {
         }
     }
 
-    // プロフィール取得
+    // 自プロフィール取得
     @Override
-    public ProfileResponse getProfilesByUserId(Integer targetUserId, Integer currentUserId) {
+    public ProfileResponse getProfilesByUserId(Integer currentUserId) {
         ProfileResponse profile = new ProfileResponse();
         
-        UserProfileEntity profileEntity = profileRepository.findByUserId(targetUserId)
+        UserProfileEntity profileEntity = profileRepository.findByUserId(currentUserId)
                 .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
 
         profile.setUserId(profileEntity.getUserId());
@@ -140,6 +140,25 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setIsFollowing(followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
         profile.setIsFollowed(followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
         return profile;
+    }
+
+    // 他ユーザープロフィール取得
+    @Override
+    public ProfileResponse getProfileByShowUserId(String showUserId, Integer currentUserId) {
+        ProfileResponse profile = new ProfileResponse();
+        UserProfileEntity profileEntity = profileRepository.findByShowUserId(showUserId)
+                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+                
+        profile.setUserId(profileEntity.getUserId());
+        profile.setShowUserId(profileEntity.getShowUserId());
+        profile.setNickname(profileEntity.getNickname());
+        profile.setIconUrl(fileControlHelper.getFileUrl(profileEntity.getIconObjectKey()));
+        profile.setIntroduction(profileEntity.getIntroduction());
+        profile.setFollowCount(profileEntity.getFollowCount());
+        profile.setFollowerCount(profileEntity.getFollowerCount());
+        profile.setIsFollowing(followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
+        profile.setIsFollowed(followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
+        return profile; 
     }
 
 }

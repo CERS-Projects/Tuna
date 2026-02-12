@@ -24,6 +24,9 @@ public interface ProfileRepository extends MongoRepository<UserProfileEntity, Ob
     // 複数ユーザーのプロフィールを一括取得
     List<UserProfileEntity> findByUserIdIn(Collection<Integer> userIds);
 
+    // showUserIdでプロフィールを取得
+    Optional<UserProfileEntity> findByShowUserId(String showUserId);
+
     
 
     // フィルターワードの更新
