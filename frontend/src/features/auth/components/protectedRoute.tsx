@@ -51,7 +51,14 @@ const ProtectedRoute = () => {
   }
 
   if (error) {
-    return <Navigate to={paths.welcome.path} replace />;
+    const isNotFound =
+      error instanceof ApiRequestError && error.statusMessage === "NOT_FOUND";
+
+    if (isNotFound) {
+      return <Spinner isDark={true} />;
+    }
+
+    return <Navigate to={paths.auth.login.path} replace />;
   }
 
   return <Outlet />;
