@@ -70,26 +70,26 @@ public class AuthController {
     }
 
     @PostMapping("/change/password")
-    public ResponseEntity<String> changePassword(@AuthenticationPrincipal UserInfo userInfo,
+    public ResponseEntity<Void> changePassword(@AuthenticationPrincipal UserInfo userInfo,
             @Valid @RequestBody PasswordChangeRequest passwordChangeRequest) {
         authService.changePassword(userInfo.getUserId(), passwordChangeRequest);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reset/password")
-    public ResponseEntity<String> resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
         authService.resetPassword(passwordResetRequest.getToken(), passwordResetRequest.getNewPassword());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/reset/password")
-    public ResponseEntity<String> resetPasswordToken(@Valid @RequestParam String token) {
+    public ResponseEntity<Void> resetPasswordToken(@Valid @RequestParam String token) {
         authService.resetPasswordTokenConfirm(token);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/reset/password/mail")
-    public ResponseEntity<String> resetPasswordMail(
+    public ResponseEntity<Void> resetPasswordMail(
             @Valid @RequestBody PasswordResetMailRequest passwordResetMailRequest) {
         authService.resetPasswordMail(passwordResetMailRequest.getMailAddress());
         return ResponseEntity.ok().build();
