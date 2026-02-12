@@ -1,8 +1,9 @@
 package com.example.backend.auth.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Setter
@@ -10,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PasswordResetMailRequest {
 
-    @NonNull
+    @NotBlank
+    @Email
     private String mailAddress;
 }

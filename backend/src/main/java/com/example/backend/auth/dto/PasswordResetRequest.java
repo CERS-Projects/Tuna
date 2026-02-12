@@ -1,6 +1,6 @@
 package com.example.backend.auth.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,9 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PasswordResetRequest {
 
-    @NotNull
+    @NotBlank
     String token;
 
-    @NotNull
+    @NotBlank
     String newPassword;
 }
