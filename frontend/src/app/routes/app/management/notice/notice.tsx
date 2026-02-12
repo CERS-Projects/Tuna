@@ -1,64 +1,25 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { NoticeCard } from "@/features/notice/components/noticeCard";
-import { type Notice } from "@/features/notice/types/notice";
 import { FiPlus, FiBell } from "react-icons/fi";
 import styles from "@/features/notice/styles/notice.module.css";
-
-export const dummyNotices: Notice[] = [
-  {
-    id: 1,
-    title: "【全体】システムメンテナンスのお知らせ",
-    content: "2026年3月1日の0時から2時までメンテナンスを行います。",
-    updatedAt: "2026-02-10",
-    // 「八文字学園(1)」を選択（配下すべてが含まれる想定）
-    targetGroups: [1, 2, 3, 4, 10, 11, 5, 6, 12, 13, 7, 14, 15],
-  },
-  {
-    id: 2,
-    title: "【特定学科】IT系学生向けの求人情報",
-    content:
-      "新しい求人票が届きました。キャリア支援センターで確認してください。",
-    updatedAt: "2026-02-11",
-    // 「水戸電子(2)」配下の学科のみを選択（親の2は入っていない状態のテスト）
-    targetGroups: [3, 4, 10],
-  },
-  {
-    id: 3,
-    title: "【医療系のみ】健康診断再検査の案内",
-    content: "対象者には別途メールを送信していますが、こちらでも周知します。",
-    updatedAt: "2026-02-12",
-    // 「水戸中央病院(101)」を選択
-    targetGroups: [101, 102, 103, 104],
-  },
-  {
-    id: 4,
-    title: "【複数箇所】事務局からのお知らせ",
-    content: "年末年始の窓口業務について。",
-    updatedAt: "2026-02-13",
-    // 「総務部(201)」と「経理部(202)」など、離れた場所を複数選択
-    targetGroups: [201, 202],
-  },
-];
+import { useNotices } from "@/features/notice/hooks/useNotices";
 
 const NoticePage = () => {
-  const [notices, setNotices] = useState<Notice[]>([]);
-
-  useEffect(() => {
-    const savedNoticesStr = localStorage.getItem("demo_notices");
-    const savedNotices = savedNoticesStr ? JSON.parse(savedNoticesStr) : [];
-
-    const allNotices = [...savedNotices, ...dummyNotices];
-
-    setNotices(allNotices);
-  }, []);
+  const { notices, isLoading, isError, deleteNotice } = useNotices();
 
   const handleDeleteNotice = (id: number) => {
-    setNotices((prevNotices) => {
-      const newNotices = prevNotices.filter((notice) => notice.id !== id);
-      return newNotices;
-    });
+    if (confirm("本当に削除しますか？")) {
+      deleteNotice(id);
+    }
   };
+
+  if (isLoading) {
+    return <div className={styles.pageContainer}>読み込み中...</div>;
+  }
+
+  if (isError) {
+    return <div className={styles.pageContainer}>エラーが発生しました。</div>;
+  }
 
   return (
     <div className={styles.pageContainer}>

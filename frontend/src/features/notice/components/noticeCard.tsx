@@ -8,8 +8,8 @@ import { type TreeType } from "@/features/management/types/group";
 
 const items: TreeType[] = [
   {
-    id: 1,
-    name: "八文字学園",
+    groupId: 1,
+    groupName: "八文字学園",
     branch: [
       {
         id: 2,

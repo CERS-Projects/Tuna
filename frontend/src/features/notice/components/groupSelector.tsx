@@ -25,13 +25,13 @@ export function TreeNode({
   onSelect,
   isAncestorSelected = false,
 }: TreeNodeProps) {
-  const isSelfSelected = selectedId === node.id;
+  const isSelfSelected = selectedId === node.groupId;
   const isActive = isSelfSelected || isAncestorSelected;
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // クリックイベントのバブリング防止
     if (!isAncestorSelected) {
-      onSelect(node.id);
+      onSelect(node.groupId);
     }
   };
 
