@@ -10,20 +10,27 @@ import { Spinner } from "@/components/ui/spinner/spinner";
 const ProtectedRoute = () => {
   const { authToken } = useAuth();
 
-  const { data: user, error, isLoading: isUserLoading } = useUser(authToken);
+  const {
+    data: user,
+    error: getUserError,
+    isLoading: isUserLoading,
+  } = useUser(authToken);
 
-  const { mutate: createProfileMutate, isPending: isCreating } =
-    useCreateProfile(authToken);
+  const {
+    mutate: createProfileMutate,
+    isPending: isCreating,
+    error: createProfileError,
+  } = useCreateProfile(authToken);
 
   const hasShownError = useRef(false);
   const hasTriggeredCreation = useRef(false);
 
   useEffect(() => {
-    if (!error) return;
+    if (!getUserError) return;
 
     if (
-      error instanceof ApiRequestError &&
-      error.statusMessage === "NOT_FOUND"
+      getUserError instanceof ApiRequestError &&
+      getUserError.statusMessage === "NOT_FOUND"
     ) {
       if (!hasTriggeredCreation.current) {
         hasTriggeredCreation.current = true;
@@ -36,7 +43,7 @@ const ProtectedRoute = () => {
       alert("ユーザ情報の取得に失敗しました。");
       hasShownError.current = true;
     }
-  }, [error, createProfileMutate]);
+  }, [getUserError, createProfileMutate]);
 
   if (!authToken) {
     return <Navigate to={paths.auth.login.path} replace />;
@@ -50,8 +57,38 @@ const ProtectedRoute = () => {
     return <Outlet />;
   }
 
-  if (error) {
-    return <Navigate to={paths.welcome.path} replace />;
+  if (getUserError) {
+    const isNotFound =
+      getUserError instanceof ApiRequestError &&
+      getUserError.statusMessage === "NOT_FOUND";
+
+    if (isNotFound && !createProfileError) {
+      return <Spinner isDark={true} />;
+    }
+
+    if (createProfileError) {
+      return (
+        <Navigate
+          to={paths.auth.login.path}
+          replace
+          state={{
+            errorMessage:
+              "プロフィールの作成に失敗しました。再度ログインしてください。",
+          }}
+        />
+      );
+    }
+
+    return (
+      <Navigate
+        to={paths.auth.login.path}
+        replace
+        state={{
+          errorMessage:
+            "ユーザー情報の取得に失敗しました。再度ログインしてください。",
+        }}
+      />
+    );
   }
 
   return <Outlet />;
