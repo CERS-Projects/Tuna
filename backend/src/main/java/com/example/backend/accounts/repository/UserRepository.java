@@ -13,66 +13,55 @@ import com.example.backend.accounts.dto.GetUserName;
 import com.example.backend.accounts.model.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
-    @Modifying
-    @Transactional
-    @Query("""
-            UPDATE UserEntity
-            SET name = :name,
-                mailAddress = :mailAddress,
-                accountsStopFlag = :accountStopFlag
-            WHERE userId = :userId
-            """)
-    void modifyBasicInformationByUserId(@Param("userId") Integer userId, @Param("name") String name,
-            @Param("mailAddress") String mailAddress, @Param("accountStopFlag") Boolean accountStopFlag);
+        @Modifying
+        @Transactional
+        @Query("""
+                        UPDATE UserEntity
+                        SET name = :name,
+                            mailAddress = :mailAddress,
+                            accountsStopFlag = :accountStopFlag
+                        WHERE userId = :userId
+                        """)
+        void modifyBasicInformationByUserId(@Param("userId") Integer userId, @Param("name") String name,
+                        @Param("mailAddress") String mailAddress, @Param("accountStopFlag") Boolean accountStopFlag);
 
-    @Query("""
-            SELECT EXISTS(
-                SELECT userId FROM UserEntity
-                WHERE school.schoolId = :schoolId AND userId = :userId
-            )
-            """)
-    Boolean existsByUserIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
+        @Query("""
+                        SELECT EXISTS(
+                            SELECT userId FROM UserEntity
+                            WHERE school.schoolId = :schoolId AND userId = :userId
+                        )
+                        """)
+        Boolean existsByUserIdAndSchoolId(@Param("userId") Integer userId, @Param("schoolId") Integer schoolId);
 
-    Optional<UserEntity> findByShowUserId(String showUserId);
+        Optional<UserEntity> findByShowUserId(String showUserId);
 
-    @Query("""
-            SELECT u.name as name, u.showUserId as showUserId
-            FROM UserEntity u
-            WHERE u.userId = :userId
-            """)
-    Optional<GetUserName> findUserInfo(@Param("userId") Integer userId);
+        @Query("""
+                        SELECT u.name as name, u.showUserId as showUserId
+                        FROM UserEntity u
+                        WHERE u.userId = :userId
+                        """)
+        Optional<GetUserName> findUserInfo(@Param("userId") Integer userId);
 
-    boolean existsByShowUserId(String showUserId);
+        boolean existsByShowUserId(String showUserId);
 
-    @Query("""
-            SELECT COUNT(u.userId) FROM UserEntity u
-            WHERE u.school.schoolId = :schoolId
-                AND (u.userId = :userId OR u.userId = :reportedUserId)
-            """)
-    long validateByReportBySchoolId(@Param("schoolId") Integer schoolId,
-            @Param("userId") Integer userId,
-            @Param("reportedUserId") Integer reportedUserId);
+        @Query("""
+                        SELECT COUNT(u.userId) FROM UserEntity u
+                        WHERE u.school.schoolId = :schoolId
+                            AND (u.userId = :userId OR u.userId = :reportedUserId)
+                        """)
+        long validateByReportBySchoolId(@Param("schoolId") Integer schoolId,
+                        @Param("userId") Integer userId,
+                        @Param("reportedUserId") Integer reportedUserId);
 
-    boolean existsByShowUserId(String showUserId);
+        // ユーザーのshowUserIdと名前を取得する
+        @Query("SELECT u.userId as userId, u.showUserId as showUserId, u.name as name " +
+                        "FROM UserEntity u WHERE u.userId = :userId")
+        GetUserName findUserName(@Param("userId") Integer userId);
 
-    @Query("""
-            SELECT COUNT(u.userId) FROM UserEntity u
-            WHERE u.school.schoolId = :schoolId
-                AND (u.userId = :userId OR u.userId = :reportedUserId)
-            """)
-    long validateByReportBySchoolId(@Param("schoolId") Integer schoolId,
-            @Param("userId") Integer userId,
-            @Param("reportedUserId") Integer reportedUserId);
+        // 複数ユーザーのUserIdとshowUserIdと名前を取得する
+        @Query("SELECT u.userId as userId, u.showUserId as showUserId, u.name as name " +
+                        "FROM UserEntity u WHERE u.userId IN :userIds")
+        List<GetUserName> findByUserIdIn(@Param("userIds") List<Integer> userIds);
 
-    // ユーザーのshowUserIdと名前を取得する
-    @Query("SELECT u.userId as userId, u.showUserId as showUserId, u.name as name " +
-            "FROM UserEntity u WHERE u.userId = :userId")
-    GetUserName findUserName(@Param("userId") Integer userId);
-
-    // 複数ユーザーのUserIdとshowUserIdと名前を取得する
-    @Query("SELECT u.userId as userId, u.showUserId as showUserId, u.name as name " +
-            "FROM UserEntity u WHERE u.userId IN :userIds")
-    List<GetUserName> findByUserIdIn(@Param("userIds") List<Integer> userIds);
-
-    UserEntity findByMailAddress(String mailAddress);
+        UserEntity findByMailAddress(String mailAddress);
 }
