@@ -1,0 +1,23 @@
+import styles from "./userInfo.module.css";
+
+type UserInfoProps = {
+  userIcon: string;
+  userName: string;
+  userId: string;
+};
+
+export const UserInfo = ({ userIcon, userName, userId }: UserInfoProps) => {
+  return (
+    <div className={styles.userInfo}>
+      <img
+        src={userIcon || undefined}
+        alt={`${userName}のアイコン`}
+        className={styles.userIcon}
+      />
+      <div>
+        <div className={styles.userName}>{userName}</div>
+        <div className={styles.userId}>@{userId}</div>
+      </div>
+    </div>
+  );
+};

@@ -1,0 +1,103 @@
+.cardWrapper {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eaeaea;
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+  margin-bottom: 16px;
+  width: 90%;
+}
+
+.cardWrapper:hover {
+  border-color: rgb(50, 85, 150);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(50, 85, 150, 0.15);
+}
+
+.linkArea {
+  display: flex;
+  align-items: center;
+  padding: 24px 32px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.iconWrapper {
+  font-size: 2.5rem;
+  color: rgb(50, 85, 150);
+  margin-right: 24px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.textWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.3;
+}
+
+.label {
+  margin: 6px 0 0 0;
+  font-size: 1rem;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actionIcon {
+  font-size: 2rem;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.cardWrapper:hover .actionIcon {
+  color: rgb(50, 85, 150);
+}
+
+@media (max-width: 960px) {
+  
+  .cardWrapper {
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .linkArea {
+    padding: 16px 20px; 
+  }
+
+  .iconWrapper {
+    font-size: 1.8rem; 
+    margin-right: 16px; 
+  }
+
+  .title {
+    font-size: 1.1rem; 
+  }
+
+  .label {
+    font-size: 0.85rem; 
+    margin-top: 4px;
+  }
+
+  .actionIcon {
+    font-size: 1.5rem; 
+    margin-left: 12px;
+  }
+}

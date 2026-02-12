@@ -14,7 +14,7 @@ public class TeacherInformationResponse {
 
     private String name;
 
-    private Boolean isAdmin;
-    
+    private Boolean authority;
+
     private Boolean isAccountStopFlag;
 }

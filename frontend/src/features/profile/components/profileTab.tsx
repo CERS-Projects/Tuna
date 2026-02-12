@@ -1,22 +1,50 @@
-import { NavLink } from "react-router";
+import { NavLink, useParams } from "react-router";
 import styles from "./profileTab.module.css";
 import { paths } from "@/config/paths";
 
-export const ProfileCardTab = () => {
+type ProfileCardTabProps = {
+  isMyProfile: boolean;
+};
+
+export const ProfileCardTab = ({ isMyProfile }: ProfileCardTabProps) => {
+  const { userId } = useParams();
+
+  if (!userId) return null;
   const navItems = [
-    { path: paths.app.profile.posts.path, label: "投稿" },
-    { path: paths.app.profile.responses.path, label: "返信" },
-    { path: paths.app.profile.goods.path, label: "いいね" },
-    { path: paths.app.profile.bookmarks.path, label: "ブックマーク" },
+    {
+      path: paths.app.profile.posts.getHref(userId),
+      label: "投稿",
+      isPrivate: false,
+    },
+    {
+      path: paths.app.profile.responses.getHref(userId),
+      label: "返信",
+      isPrivate: false,
+    },
+    {
+      path: paths.app.profile.goods.getHref(userId),
+      label: "いいね",
+      isPrivate: false,
+    },
+    {
+      path: paths.app.profile.bookmarks.getHref(userId),
+      label: "ブックマーク",
+      isPrivate: true,
+    },
   ];
+
+  const visibleNavItems = navItems.filter((item) => {
+    if (isMyProfile) return true;
+    return !item.isPrivate;
+  });
 
   return (
     <nav className={styles.profileTabContainer}>
-      {navItems.map((item) => (
+      {visibleNavItems.map((item) => (
         <NavLink
           key={item.path}
           to={item.path}
-          className={({ isActive }: { isActive: boolean }) =>
+          className={({ isActive }) =>
             `${styles.navItem} ${isActive ? styles.active : ""}`
           }
         >

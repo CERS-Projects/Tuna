@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import com.example.backend.accounts.dto.GetFindAllTeacherAccountRequest;
 import com.example.backend.accounts.dto.ModifyTeacherAccountRequest;
 import com.example.backend.accounts.dto.TeacherCreateRequestInApp;
 import com.example.backend.accounts.dto.TeacherInformationResponse;
@@ -16,19 +15,18 @@ import com.example.backend.accounts.repository.TeacherRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.AdminUserService;
 import com.example.backend.accounts.service.TeacherService;
-import com.example.backend.exception.Model.SchoolNotFoundException;
+import com.example.backend.exception.model.SchoolNotFoundException;
 import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
 import com.example.backend.school.model.SchoolEntity;
 import com.example.backend.school.repository.SchoolRepository;
 import com.example.backend.accounts.helper.AccountsHelper;
-
 
 /*
  * 教師アカウント作成をするためのサービス
  */
 @Service
 @RequiredArgsConstructor
-public class TeacherServiceImpl implements TeacherService, AdminUserService{
+public class TeacherServiceImpl implements TeacherService, AdminUserService {
 
     /* UserRepositoryの依存の注入 */
     private final UserRepository userRepository;
@@ -44,33 +42,23 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     /* schoolIdに紐づく教師情報を全件取得する */
     @Override
     @Transactional(readOnly = true)
-    public List<TeacherInformationResponse> findTeacherInformationResponses(GetFindAllTeacherAccountRequest dto){
-        final Integer SCHOOL_ID = dto.getSchoolId();
+    public List<TeacherInformationResponse> findTeacherInformationResponses(Integer schoolId) {
+        final Integer SCHOOL_ID = schoolId;
         return teacherRepository.findAllTeacherInformation(SCHOOL_ID);
     }
-
-    /* 特定のuserIdに紐づく教師情報を1件取得する */
-    @Override
-    @Transactional(readOnly = true)
-    public TeacherInformationResponse findOneTeacherInformationResponse(final Integer teacherId){
-        TeacherInformationResponse response = teacherRepository.findOneTeacherInformation(teacherId);
-        return response;
-    }
-
 
     /* 学校登録に付随する、アカウント登録に係る基本情報をMySQLに登録する機能 */
     @Override
     @Transactional
-    public UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId){
+    public UserEntity createTeacher(TeacherCreateRequestOutSideApp dto, Integer schoolId) {
 
         SchoolEntity schoolEntity = schoolRepository.findById(schoolId)
-            .orElseThrow(() -> new SchoolNotFoundException("学校が見つかりません"));
-        UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity, 
-                                                                   dto.getShowUserId(),
-                                                                   dto.getName(),
-                                                                   dto.getMailAddress(),
-                                                                   dto.getPassword()
-                                                                   );
+                .orElseThrow(() -> new SchoolNotFoundException("学校が見つかりません"));
+        UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity,
+                dto.getShowUserId(),
+                dto.getPassword(),
+                dto.getMailAddress(),
+                dto.getName());
 
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
         return savedTeacherEntity;
@@ -79,26 +67,24 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     /* ウェブアプリ内からの教師アカウント作成機能を提供する */
     @Override
     @Transactional
-    public UserEntity createTeacher(TeacherCreateRequestInApp dto){
+    public UserEntity createTeacher(TeacherCreateRequestInApp dto, Integer schoolId) {
 
-        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
-        UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity, 
-                                                                   dto.getShowUserId(),
-                                                                   dto.getName(),
-                                                                   dto.getMailAddress(),
-                                                                   dto.getPassword()
-                                                                 );
+        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(schoolId);
+        UserEntity newTeacherAccount = accountsHelper.toUserEntity(schoolEntity,
+                dto.getShowUserId(),
+                dto.getPassword(),
+                dto.getMailAddress(),
+                dto.getName());
         /* セットした値をDBに追加 */
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
         return savedTeacherEntity;
     }
 
-
     /* 管理者権限あり状態を登録する機能 */
     @Override
     @Transactional
-    public void authorityGrant(UserEntity newTeacher){
-        
+    public void authorityGrant(UserEntity newTeacher) {
+
         final Boolean AUTHORITY_FLAG = true;
 
         TeacherEntity newAdmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
@@ -110,7 +96,7 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     /* 権限フラグをなしで設定する */
     @Override
     @Transactional
-    public void authorityNotGrant(UserEntity newTeacher){
+    public void authorityNotGrant(UserEntity newTeacher) {
         final Boolean AUTHORITY_FLAG = false;
 
         TeacherEntity newAdmin = toTeacherEntity(newTeacher, AUTHORITY_FLAG);
@@ -122,25 +108,23 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService{
     /* 教師アカウント情報を更新する機能 */
     @Override
     @Transactional
-    public void modifyTeacherAccountByUserId(ModifyTeacherAccountRequest dto){
+    public void modifyTeacherAccountByUserId(ModifyTeacherAccountRequest dto) {
         userRepository.modifyBasicInformationByUserId(
-         dto.getUserId(),
-         dto.getName(),
-         dto.getMailAddress(),
-         dto.getAccountStopFlag()
-        );
+                dto.getUserId(),
+                dto.getName(),
+                dto.getMailAddress(),
+                dto.getAccountStopFlag());
         teacherRepository.modifyTeacherAccountByUserId(
-         dto.getAuthorityFlag(),
-         dto.getUserId()
-        );
+                dto.getAuthorityFlag(),
+                dto.getUserId());
     }
 
     /* TeacherEntityに変換 */
-    private TeacherEntity toTeacherEntity(UserEntity newTeacher, Boolean authorityFlag){
+    private TeacherEntity toTeacherEntity(UserEntity newTeacher, Boolean authorityFlag) {
         TeacherEntity newTeacherEntity = new TeacherEntity();
         /* エンティティに値をセット */
         newTeacherEntity.setTeacherAccountId(newTeacher);
-        /* 権限の登録*/
+        /* 権限の登録 */
         newTeacherEntity.setAuthorityFlag(authorityFlag);
 
         return newTeacherEntity;

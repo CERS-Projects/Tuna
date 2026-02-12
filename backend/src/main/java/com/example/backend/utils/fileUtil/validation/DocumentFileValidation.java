@@ -81,4 +81,18 @@ public class DocumentFileValidation {
             return false;
         }
     }
+
+    public boolean isCSV(MultipartFile file){
+        if(!isValidDocumentFile(file)){
+            return false;
+        }
+
+        try( InputStream stream = file.getInputStream()) {
+            String detectedMimeType = tika.detect(stream);
+            return detectedMimeType.equals("text/csv") || detectedMimeType.equals("text/plain");
+        } catch (IOException e) {
+            log.error("ファイルの検証中にエラーが発生しました", e);
+            return false;
+        }
+    }
 }

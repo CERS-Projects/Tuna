@@ -29,9 +29,20 @@ services:
       - ./backend:/app
       - ./backend/.gradle:/root/.gradle
       - ./backend/logs:/app/logs
+
     environment:
       - SPRING_DEVTOOLS_REMOTE_SECRET=secret
       - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+
+      - SPRING_MAIL_HOST=smtp.gmail.com
+      - SPRING_MAIL_PORT=587
+      - SPRING_MAIL_USERNAME=${MAIL_ADDRESS}
+      - SPRING_MAIL_PASSWORD=${MAIL_APP_PASSWORD}
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED=true
     depends_on:
       mysql:
         condition: service_healthy
@@ -95,13 +106,21 @@ services:
       retries: 10
       start_period: 30s
 
-  # mongo-express:
-  #   image: mongo-express
-  #   restart: no
-  #   ports:
-  #     - 8081:8081
-  #   environment:
-  #     ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/
-  #     ME_CONFIG_BASICAUTH_ENABLED: true
-  #     ME_CONFIG_BASICAUTH_USERNAME: user
-  #     ME_CONFIG_BASICAUTH_PASSWORD: pass
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+    # volumes:
+    #   - redis-data:/data
+
+# mongo-express:
+#   image: mongo-express
+#   restart: no
+#   ports:
+#     - 8081:8081
+#   environment:
+#     ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/
+#     ME_CONFIG_BASICAUTH_ENABLED: true
+#     ME_CONFIG_BASICAUTH_USERNAME: user
+#     ME_CONFIG_BASICAUTH_PASSWORD: pass

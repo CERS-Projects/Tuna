@@ -50,4 +50,6 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>
             WHERE userId = :userId
             """)
     void modifyTeacherAccountByUserId(@Param("authorityFlag") Boolean authorityFlag, @Param("userId") Integer userId);
+
+    Boolean existsByUserId(Integer userId);
 }

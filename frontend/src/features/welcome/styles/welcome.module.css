@@ -3,6 +3,9 @@
   flex-direction: column;
   height: 100vh;
   box-sizing: border-box;
+
+  /* 画面全体（body側）ではスクロールさせない */
+  overflow: hidden;
 }
 
 /* 一番外枠 */
@@ -15,6 +18,10 @@
   padding: 20px;
   min-height: 0;
   gap: 10px;
+
+  /* ヘッダー以外はここでスクロール */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* タイトルとボタンを囲った枠 */
@@ -26,6 +33,7 @@
   flex-shrink: 0;
   padding-left: 30px;
   padding-right: 30px;
+  gap: 16px;
 }
 
 /* タイトル枠 */
@@ -35,6 +43,7 @@
   padding: 0.2em;
   border-left: 5px solid #2589d0;
   width: 40%;
+  min-width: 240px;
 }
 /* タイトルの下線 */
 .underLine {
@@ -52,6 +61,13 @@
   flex-direction: row;
   gap: 20px;
   width: 60%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.welcomeButton > button {
+  flex: 1 1 240px;
+  min-height: 48px;
 }
 
 /* 下の三つの概要枠 */
@@ -60,4 +76,39 @@
   min-height: 0;
   padding-left: 50px;
   padding-right: 50px;
+}
+
+@media (max-width: 768px) {
+  .welcomeContainer {
+    padding: 12px;
+  }
+
+  .welcomeMidashi {
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .welcomeTitle {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .welcomeButton {
+    width: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .welcomeButton > button {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .welcomeGaiyou {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 }

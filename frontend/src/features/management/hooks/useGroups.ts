@@ -1,30 +1,33 @@
 import { useQuery } from "@tanstack/react-query";
 import { type TreeType } from "../types/group";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useApiWithRefresh } from "@/lib/api-client";
+import { decodeUserParams } from "@/features/auth/utils/jwt";
 
 const dummyTree: TreeType[] = [
   {
-    id: 1,
-    name: "Category A",
+    groupId: 1,
+    groupName: "Category A",
     member: 21,
-    branch: [
+    branchGroups: [
       {
-        id: 2,
-        name: "Subcategory A1",
+        groupId: 2,
+        groupName: "Subcategory A1",
         member: 22,
-        branch: [
-          { id: 21, name: "Item A1-1" },
-          { id: 22, name: "Item A1-2" },
+        branchGroups: [
+          { groupId: 21, groupName: "Item A1-1" },
+          { groupId: 22, groupName: "Item A1-2" },
           {
-            id: 23,
-            name: "Item A1-3",
-            branch: [
+            groupId: 23,
+            groupName: "Item A1-3",
+            branchGroups: [
               {
-                id: 231,
-                name: "Subcategory A1",
-                branch: [
-                  { id: 2311, name: "Item A1-1" },
-                  { id: 2312, name: "Item A1-2" },
-                  { id: 2313, name: "Item A1-3" },
+                groupId: 231,
+                groupName: "Subcategory A1",
+                branchGroups: [
+                  { groupId: 2311, groupName: "Item A1-1" },
+                  { groupId: 2312, groupName: "Item A1-2" },
+                  { groupId: 2313, groupName: "Item A1-3" },
                 ],
               },
             ],
@@ -32,57 +35,72 @@ const dummyTree: TreeType[] = [
         ],
       },
       {
-        id: 3,
-        name: "Subcategory A2",
+        groupId: 3,
+        groupName: "Subcategory A2",
         member: 23,
-        branch: [
-          { id: 31, name: "Item A2-1" },
-          { id: 32, name: "Item A2-2" },
-          { id: 33, name: "Item A2-3" },
+        branchGroups: [
+          { groupId: 31, groupName: "Item A2-1" },
+          { groupId: 32, groupName: "Item A2-2" },
+          { groupId: 33, groupName: "Item A2-3" },
         ],
       },
     ],
   },
   {
-    id: 4,
-    name: "Category B",
-    branch: [
+    groupId: 4,
+    groupName: "Category B",
+    branchGroups: [
       {
-        id: 41,
-        name: "Subcategory B1",
-        branch: [
-          { id: 411, name: "Item B1-1" },
-          { id: 412, name: "Item B1-2" },
+        groupId: 41,
+        groupName: "Subcategory B1",
+        branchGroups: [
+          { groupId: 411, groupName: "Item B1-1" },
+          { groupId: 412, groupName: "Item B1-2" },
         ],
       },
     ],
   },
   {
-    id: 5,
-    name: "Category C",
-    branch: [
-      { id: 51, name: "Item C1" },
-      { id: 52, name: "Item C2" },
+    groupId: 5,
+    groupName: "Category C",
+    branchGroups: [
+      { groupId: 51, groupName: "Item C1" },
+      { groupId: 52, groupName: "Item C2" },
     ],
   },
 ];
 
-export const useGroups = (schoolId: number) => {
+export const useGroups = () => {
+  const { authToken } = useAuth();
+  const apiWithRefresh = useApiWithRefresh();
+
+  const userInfo = decodeUserParams(authToken);
+
   const {
-    data: groups = dummyTree,
+    data: groups,
     isFetching,
     isError,
   } = useQuery<TreeType[]>({
-    queryKey: ["groups", schoolId],
-    // API ができたらここを本実装に差し替え
-    queryFn: async () => {
-      const res = await fetch(`/api/schools/${schoolId}/groups`);
-      if (!res.ok) throw new Error("Failed to fetch groups");
-      return (await res.json()) as TreeType[];
+    enabled: !!userInfo,
+    queryKey: ["groups", userInfo?.schoolId, userInfo?.sub],
+    queryFn: async (): Promise<TreeType[]> => {
+      if (!userInfo) return [];
+
+      const groups = await apiWithRefresh<TreeType[]>({
+        url: userInfo.role === "STUDENT" ? `/groups/me` : `/groups`,
+        options: {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
+      });
+      return groups;
     },
-    // テスト用デフォルトデータ
-    initialData: dummyTree,
+    placeholderData: dummyTree,
+    refetchOnMount: true,
   });
 
-  return { groups, isFetching, isError };
+  return { groups: groups ?? [], isFetching, isError };
 };

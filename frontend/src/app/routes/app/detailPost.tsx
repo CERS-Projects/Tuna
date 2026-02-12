@@ -4,83 +4,29 @@ import { PostBox } from "@/components/ui/postBox/postBox";
 import { RiCompass3Line } from "react-icons/ri";
 import styles from "@/features/timeline/styles/timeline.module.css";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
-import { useRef } from "react";
-import { useLocation } from "react-router";
-import { type PostData } from "@/features/post/types/post";
-
-const dummyReply: PostData[] = [
-  {
-    postId: 1001,
-    showUserId: "user_a1",
-    userName: "エンジニアA",
-    mainPost: "この実装方法、非常にスマートで勉強になります！",
-    goodCount: 5,
-    commentCount: 1,
-    goodCheck: true,
-    bookmarkCheck: false,
-    postTo: "2024-05-10 14:00",
-    userTo: "@original_poster",
-    responseTo: 999,
-  },
-  {
-    postId: 1002,
-    showUserId: "user_b2",
-    userName: "デザイナーB",
-    mainPost:
-      "色使いがとても綺麗ですね。補足ですが、アクセシビリティの観点からコントラスト比をもう少し上げるとさらに良くなるかもしれません。",
-    goodCount: 12,
-    commentCount: 3,
-    goodCheck: false,
-    bookmarkCheck: true,
-    postTo: "2024-05-10 14:15",
-    userTo: "@original_poster",
-    postImgs: ["https://via.placeholder.com/600x400"],
-    responseTo: 999,
-  },
-  {
-    postId: 1003,
-    showUserId: "user_c3",
-    userName: "佐藤",
-    // iconUrlなし
-    mainPost:
-      "自分も以前同じところで詰まりました。解決策を共有してくれて助かります！",
-    goodCount: 2,
-    commentCount: 0,
-    goodCheck: false,
-    bookmarkCheck: false,
-    postTo: "2024-05-10 15:30",
-    userTo: "@original_poster",
-    responseTo: 999,
-  },
-  {
-    postId: 1004,
-    showUserId: "user_d4",
-    userName: "田中",
-    mainPost: "これって、最新のライブラリでも動作しますか？",
-    goodCount: 0,
-    commentCount: 1,
-    goodCheck: false,
-    bookmarkCheck: false,
-    postTo: "2024-05-10 16:05",
-    userTo: "@original_poster",
-    responseTo: 999,
-  },
-  {
-    postId: 1005,
-    showUserId: "user_e5",
-    userName: "Tech Lover",
-    mainPost: "関連する資料のスクリーンショットを添付します。参考にどうぞ。",
-    goodCount: 8,
-    commentCount: 2,
-    goodCheck: true,
-    bookmarkCheck: true,
-    postTo: "2024-05-10 17:00",
-    userTo: "@original_poster",
-    responseTo: 999,
-  },
-];
+import { useEffect, useRef } from "react";
+import { useLocation, useParams } from "react-router";
+import { useResponses } from "@/features/post/hooks/useResponses";
+import { Spinner } from "@/components/ui/spinner/spinner";
+import { usePost } from "@/features/post/hooks/usePost";
+import { useGroups } from "@/features/management/hooks/useGroups";
 
 const DetailPost = () => {
+  const { id } = useParams();
+  const { groups } = useGroups();
+
+  const {
+    data: post,
+    isFetching: isPostFetching,
+    isError: isPostError,
+  } = usePost(id);
+
+  const {
+    data: responses,
+    isFetching: isResponsesFetching,
+    isError: isResponsesError,
+  } = useResponses(id);
+
   const modalRef = useRef<ModalHandle>(null);
   const modalButtonClick = () => {
     if (modalRef.current) {
@@ -89,9 +35,63 @@ const DetailPost = () => {
   };
 
   const location = useLocation();
-  const postData = location.state?.item;
+  const shouldScrollToLatestResponse =
+    location.hash === "#latest-response" ||
+    Boolean(
+      (location.state as { scrollToLatestResponse?: boolean } | null)
+        ?.scrollToLatestResponse,
+    );
 
-  if (!postData) {
+  const hasAutoScrolledRef = useRef(false);
+  const firstResponseRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!shouldScrollToLatestResponse) return;
+    if (hasAutoScrolledRef.current) return;
+    if (isResponsesFetching || isResponsesError) return;
+
+    if (responses && responses.length > 0) {
+      firstResponseRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+
+    hasAutoScrolledRef.current = true;
+  }, [
+    shouldScrollToLatestResponse,
+    isResponsesFetching,
+    isResponsesError,
+    responses,
+  ]);
+
+  if (isPostError) {
+    return (
+      <div className={styles.timelineLayout}>
+        <div className={styles.timelineContainer}>
+          <div className={styles.timelineMain}>
+            <p>投稿情報を取得できませんでした。</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isPostFetching) {
+    return (
+      <div className={styles.timelineLayout}>
+        <div className={styles.timelineContainer}>
+          <div className={styles.timelineMain}>
+            <div className={styles.spinnerContainer}>
+              <Spinner />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
     return (
       <div className={styles.timelineLayout}>
         <div className={styles.timelineContainer}>
@@ -110,21 +110,42 @@ const DetailPost = () => {
           <button onClick={modalButtonClick} className={styles.modalButton}>
             <RiCompass3Line />
           </button>
-          <PostBox {...postData} isLink={false} />
+          <PostBox {...post} isLink={false} />
+
           <h3 className={styles.detailTag}>返信一覧</h3>
-          {dummyReply.map((item) => (
-            <PostBox key={item.postId} {...item} />
-          ))}
+
+          {isResponsesFetching ? (
+            <div className={styles.spinnerContainer}>
+              <Spinner />
+            </div>
+          ) : isResponsesError ? (
+            <div className={styles.errorContainer}>
+              <p>返信の取得に失敗しました。</p>
+            </div>
+          ) : responses && responses.length > 0 ? (
+            responses.map((item, index) => (
+              <div
+                key={item.postId}
+                ref={index === 0 ? firstResponseRef : null}
+              >
+                <PostBox {...item} />
+              </div>
+            ))
+          ) : (
+            <div className={styles.emptyContainer}>
+              <p>まだ返信はありません。</p>
+            </div>
+          )}
         </div>
         <div className={styles.timelineSub}>
           <InfoBox>
-            <TimelineFilter />
+            <TimelineFilter groups={groups} />
           </InfoBox>
         </div>
       </div>
       <Modal ref={modalRef} height={"fit-content"} width={"fit-content"}>
         <InfoBox>
-          <TimelineFilter />
+          <TimelineFilter groups={groups} />
         </InfoBox>
       </Modal>
     </div>

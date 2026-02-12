@@ -1,8 +1,6 @@
 package com.example.backend.utils.fileUtil.helper;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
@@ -111,8 +109,8 @@ public class FileControlHelper {
 
 
     //複数の署名付きURLを一括取得する（有効期限指定）
-    public Map<String, String> getMultiFileUrl(List<String> keys) {
-        Map<String, String> urls = new HashMap<>();
+    public List<String> getMultiFileUrl(List<String> keys) {
+        List<String> urls = new ArrayList<>();
 
         if (keys == null || keys.isEmpty()) {
             return urls;
@@ -121,7 +119,7 @@ public class FileControlHelper {
         for (String key : keys) {
             String url = getFileUrl(key);
             if (url != null) {
-                urls.put(key, url);
+                urls.add(url);
             }
         }
 

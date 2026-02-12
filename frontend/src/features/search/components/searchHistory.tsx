@@ -1,120 +1,152 @@
 import { SearchBar } from "@/components/ui/search/search";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router";
 import { TiRefresh } from "react-icons/ti";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { PostBox } from "@/components/ui/postBox/postBox";
 import styles from "./searchHistory.module.css";
-import {type PostDataItem } from "@/features/search/types/searchPost";
+import { useSearchPosts } from "../hooks/useSearchPosts";
+import {
+  useSearchHistory,
+  useDeleteSearchHistory,
+} from "../hooks/useSearchHistory";
+import { Spinner } from "@/components/ui/spinner/spinner";
 
-const dummyHistory = ["e", "d", "c", "b", "a"];
+type Props = {
+  selectedIds: Set<number>;
+};
 
-const PostDummy: PostDataItem[] = [
-  {
-    postId: 1,
-    showUserId: "u001",
-    userName: "田中 太郎",
-    iconUrl: "https://placehold.co/100x100/orange/white?text=T",
-    mainPost:
-      "今日のランチは駅前の新しいカフェに行きました！パスタが絶品でした🍝 #ランチ #カフェ",
-    goodCount: 120,
-    commentCount: 5,
-    goodCheck: true,
-    bookmarkCheck: false,
-    postTo: "2024/12/08 12:30",
-    userTo: "@tanaka_taro",
-    postImgs: [
-      "https://placehold.co/600x400/skyblue/white?text=Pasta+Image",
-      "https://placehold.co/600x400/pink/white?text=Cafe+Interior",
-    ],
-  },
-  {
-    postId: 2,
-    showUserId: "u002",
-    userName: "エンジニア見習い",
-    iconUrl: "https://placehold.co/100x100/333/white?text=Dev",
-    mainPost:
-      "Reactのレンダリングの仕組みがいまいち掴めない...。誰か詳しい人教えてください！🤔",
-    goodCount: 8,
-    commentCount: 12,
-    goodCheck: false,
-    bookmarkCheck: true,
-    postTo: "2024/12/08 10:15",
-    userTo: "@dev_beginner",
-    // 画像なしパターン
-  },
-  {
-    postId: 3,
-    showUserId: "u003",
-    userName: "Traveler J",
-    // iconUrlなしパターン（デフォルトアイコン表示のテスト用）
-    mainPost:
-      "やっと週末！今から温泉旅行に行ってきます♨️ 雪景色が見られるといいな。",
-    goodCount: 342,
-    commentCount: 0,
-    goodCheck: true,
-    bookmarkCheck: true,
-    postTo: "2024/12/07 18:00",
-    userTo: "@travel_lover",
-    postImgs: ["https://placehold.co/600x400/teal/white?text=Train+View"],
-  },
-];
+export const SearchHistory = ({ selectedIds }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const keyword = searchParams.get("keyword") || "";
+  const [query, setQuery] = useState<string>(keyword);
 
-export const SearchHistory = () => {
-  const [query, setQuery] = useState<string>("");
-  const [history, setHistory] = useState<string[]>(dummyHistory);
-  const [searchData, setSearchData] = useState<typeof PostDummy | null>(null);
+  const {
+    data: searchData = [],
+    isFetching: isSearchFetching,
+    isError: isSearchError,
+  } = useSearchPosts(keyword, selectedIds);
+
+  const { data: history = [] } = useSearchHistory();
+  const { mutate: deleteHistoryMutate } = useDeleteSearchHistory();
 
   const [isFocused, setIsFocused] = useState(false);
+  const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    setQuery(keyword);
+  }, [keyword]);
+
+  const updateSearchParams = (newKeyword: string) => {
+    const shareRangeValue =
+      [...selectedIds].length === 0 ? "0" : [...selectedIds].join(",");
+    setSearchParams(
+      { shareRange: shareRangeValue, keyword: newKeyword },
+      { replace: true },
+    );
+  };
 
   const handleSearch = () => {
     if (!query.trim()) return;
-    const newHistory = [query, ...history].slice(0, 5);
-    setHistory(newHistory);
-    setSearchData(PostDummy);
+    updateSearchParams(query);
     setIsFocused(false);
+    (document.activeElement as HTMLElement)?.blur();
   };
 
-  const handleHistoryClick = (item: string) => {
-    setQuery(item);
+  const handleHistoryClick = (newQuery: string) => {
+    if (!newQuery.trim()) return;
+    setQuery(newQuery);
+    updateSearchParams(newQuery);
     setIsFocused(false);
+    (document.activeElement as HTMLElement)?.blur();
+  };
+
+  const handleDeleteHistory = (query: string, searchedAt: string) => {
+    deleteHistoryMutate({ query, searchedAt });
   };
 
   return (
     <div className={styles.searchContainer}>
       <div className={styles.searchHeader}>
-        <SearchBar
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onSearch={handleSearch}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => {
-            setTimeout(() => {
-              setIsFocused(false);
-            }, 200);
-          }}
-        />
+        <div className={styles.searchBarWrapper}>
+          <SearchBar
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onSearch={handleSearch}
+            onFocus={() => {
+              if (blurTimeoutRef.current) {
+                clearTimeout(blurTimeoutRef.current);
+                blurTimeoutRef.current = null;
+              }
+              setIsFocused(true);
+            }}
+            onBlur={() => {
+              blurTimeoutRef.current = setTimeout(() => {
+                setIsFocused(false);
+                blurTimeoutRef.current = null;
+              }, 200);
+            }}
+          />
+        </div>
 
-        {isFocused && history.length > 0 && (
-          <ul className={styles.searchHistoryList}>
-            {history.map((item, index) => (
-              <li
-                key={index}
-                onClick={() => handleHistoryClick(item)}
-                className={styles.searchHistoryItem}
-              >
-                <TiRefresh className={styles.searchHistoryIcon} />
-                <span className={styles.searchHistoryText}>{item}</span>
+        <div className={styles.searchHistoryWrapper}>
+          {isFocused && (
+            <ul
+              className={styles.searchHistoryList}
+              onMouseDown={(e) => e.preventDefault()}
+            >
+              <li className={styles.searchHistoryListInner}>
+                {history.length > 0 ? (
+                  history.map((item) => (
+                    <div
+                      key={item.searched_at}
+                      className={styles.searchHistoryItem}
+                    >
+                      <div
+                        className={styles.searchHistoryContent}
+                        onClick={() => handleHistoryClick(item.query)}
+                      >
+                        <TiRefresh className={styles.searchHistoryIcon} />
+                        <span className={styles.searchHistoryText}>
+                          {item.query}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className={styles.searchHistoryDeleteButton}
+                        onClick={() =>
+                          handleDeleteHistory(item.query, item.searched_at)
+                        }
+                      >
+                        <FaRegTrashAlt />
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <li className={styles.searchHistoryEmpty}>
+                    検索履歴がありません
+                  </li>
+                )}
               </li>
-            ))}
-          </ul>
-        )}
+            </ul>
+          )}
+        </div>
       </div>
 
-      {searchData && (
-        <div>
+      {isSearchError ? (
+        <>投稿の取得に失敗しました</>
+      ) : isSearchFetching ? (
+        <Spinner />
+      ) : searchData.length > 0 ? (
+        <div className={styles.postsContainer}>
           {searchData.map((item) => (
             <PostBox key={item.postId} {...item} />
           ))}
         </div>
+      ) : keyword ? (
+        <>該当する投稿がありません</>
+      ) : (
+        <>投稿を検索してください</>
       )}
     </div>
   );

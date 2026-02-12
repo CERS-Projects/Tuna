@@ -6,28 +6,52 @@ import { BsBookmark } from "react-icons/bs";
 import { useNavigate } from "react-router";
 import { PiHouseLight } from "react-icons/pi";
 import styles from "./menu.module.css";
+import { paths } from "@/config/paths";
 
 export const Menu = () => {
   const navigate = useNavigate();
 
   return (
     <div className={styles.menuContainer}>
-      <button onClick={() => navigate("")}>
+      <button
+        onClick={() => navigate(paths.app.timeline.path)}
+        title="タイムライン"
+      >
         <PiHouseLight />
       </button>
-      <button onClick={() => navigate("")} className={styles.menuButton}>
+      <button
+        onClick={() => navigate(paths.app.searchPost.path)}
+        className={styles.menuButton}
+        title="検索"
+      >
         <HiOutlineMagnifyingGlass />
       </button>
-      <button onClick={() => navigate("")} className={styles.menuButton}>
+      <button
+        onClick={() => navigate(paths.app.classroom.path)}
+        className={styles.menuButton}
+        title="授業ルーム"
+      >
         <IoSchoolOutline />
       </button>
-      <button onClick={() => navigate("")} className={styles.menuButton}>
+      <button
+        onClick={() => navigate(paths.app.timeline.post.path)}
+        className={styles.menuButton}
+        title="投稿"
+      >
         <LuCirclePlus />
       </button>
-      <button onClick={() => navigate("")} className={styles.menuButton}>
+      <button
+        onClick={() => navigate(paths.app.profile.posts.getHref())}
+        className={styles.menuButton}
+        title="プロフィール"
+      >
         <AiOutlineSolution />
       </button>
-      <button onClick={() => navigate("")} className={styles.menuButton}>
+      <button
+        onClick={() => navigate(paths.app.profile.bookmarks.getHref())}
+        className={styles.menuButton}
+        title="ブックマーク"
+      >
         <BsBookmark />
       </button>
     </div>

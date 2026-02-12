@@ -30,19 +30,12 @@ const Welcome = () => {
           <div className={styles.welcomeTitle}>Welcome to Tuna!!</div>
           <div className={styles.welcomeButton}>
             <Button
-              height="100%"
-              width={"50%"}
               fontSize={"1.5rem"}
               onClick={() => navigate("/school/request")}
             >
               学校法人の方はこちら
             </Button>
-            <Button
-              height={"100%"}
-              width={"50%"}
-              fontSize={"1.5rem"}
-              onClick={() => navigate("/login")}
-            >
+            <Button fontSize={"1.5rem"} onClick={() => navigate("/login")}>
               ログイン
             </Button>
           </div>

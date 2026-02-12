@@ -1,8 +1,9 @@
 export type TreeType = {
-  id: number;
-  name: string;
+  groupId: number;
+  groupName: string;
+  upperGroupId?: number | null;
   member?: number;
-  branch?: TreeType[];
+  branchGroups?: TreeType[];
 };
 
 export type GroupFormType = {

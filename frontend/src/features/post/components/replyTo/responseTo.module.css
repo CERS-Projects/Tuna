@@ -1,0 +1,66 @@
+.responseToContainer {
+  padding: 12px;
+  border: 1px solid #e1e8ed;
+  border-radius: 12px;
+  background-color: #f7f9fa;
+  margin-bottom: 8px;
+}
+
+.responseToHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.responseToIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.responseToName {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #14171a;
+}
+
+.responseToUserId {
+  font-weight: normal;
+  color: #657786;
+  margin-left: 4px;
+}
+
+.responseToSentence {
+  font-size: 0.9rem;
+  color: #14171a;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.responseToImages {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  overflow-x: auto;
+}
+
+.responseToImage {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.responseingTo {
+  font-size: 0.85rem;
+  color: #657786;
+  padding-top: 8px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.responseingToUser {
+  color: rgb(50, 85, 150);
+}
