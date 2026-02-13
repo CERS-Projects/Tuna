@@ -96,9 +96,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     public List<PostDetailResponse> getBookmarkedPosts(Authentication authentication, Integer userId, Integer schoolId) {
         List<PostDetailResponse> postDetails = null;
-        Set<Integer> getShaRengeList = new HashSet<>();
+        Set<Integer> getShaRangeList = new HashSet<>();
         boolean isAdminorTeacher = authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
         try{
             postDetails = bookmarkRepository.findByBookmarked(userId);
 
@@ -111,13 +111,13 @@ public class BookmarkServiceImpl implements BookmarkService {
                         continue;
                     }
                 }
-                getShaRengeList.addAll(postDetail.getShareRange());
+                getShaRangeList.addAll(postDetail.getShareRange());
                 postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
                 postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
             }
             if(isAdminorTeacher){
-                if(!accountConfirm.isExistsAllGroups(schoolId, getShaRengeList.toArray(new Integer[0]))){
-                    log.error("取得したブックマークに学校に所属していないグループが含まれています userId: {} and schoolId: {} groups: {}", userId, schoolId,getShaRengeList);
+                if(!accountConfirm.isExistsAllGroups(schoolId, getShaRangeList.toArray(new Integer[0]))){
+                    log.error("取得したブックマークに学校に所属していないグループが含まれています userId: {} and schoolId: {} groups: {}", userId, schoolId,getShaRangeList);
                     throw new RuntimeException("取得したブックマークに学校に所属していないグループが含まれています");
                 }
             }

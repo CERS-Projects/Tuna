@@ -89,7 +89,7 @@ public class PostController {
             Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         List<PostDetailResponse> userPosts;
 
-        userPosts = postService.getUserPosts(authentication,targetUserId, userInfo.getUserId(), userInfo.getSchoolId());
+        userPosts = postService.getUserPosts(authentication, targetUserId, userInfo.getUserId(), userInfo.getSchoolId());
         return ResponseEntity.ok(userPosts);
     }
 
@@ -176,16 +176,16 @@ public class PostController {
     public ResponseEntity<List<PostDetailResponse>> getLikedPosts(Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         List<PostDetailResponse> likedPosts;
 
-        likedPosts = likeService.getLikedPosts(authentication,userInfo.getUserId(), userInfo.getSchoolId());
+        likedPosts = likeService.getLikedPosts(authentication, userInfo.getUserId(), userInfo.getSchoolId());
         return ResponseEntity.ok(likedPosts);
     }
-    
+
     //他ユーザのいいね取得
     @GetMapping("/likes/{targetUserId}")
     public ResponseEntity<List<PostDetailResponse>> getLikedPostsOfOtherUser(@PathVariable final Integer targetUserId,
             Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         List<PostDetailResponse> likedPosts;
-        likedPosts = likeService.getLikedPosts(authentication,targetUserId, userInfo.getSchoolId());
+        likedPosts = likeService.getLikedPosts(authentication, targetUserId, userInfo.getSchoolId());
         return ResponseEntity.ok(likedPosts);
     }
 

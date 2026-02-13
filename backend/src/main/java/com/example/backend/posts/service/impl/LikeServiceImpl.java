@@ -106,9 +106,9 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public List<PostDetailResponse> getLikedPosts(Authentication authentication, Integer userId, Integer schoolId) {
         List<PostDetailResponse> postDetails = List.of();
-        Set<Integer> getShaRengeList = new HashSet<>();
+        Set<Integer> getShaRangeList = new HashSet<>();
         boolean isAdminorTeacher = authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
         
         try{
             postDetails = likeRepository.findByLiked(userId);
@@ -123,12 +123,15 @@ public class LikeServiceImpl implements LikeService {
                         continue;
                     }
                 }
-                getShaRengeList.addAll(postDetail.getShareRange());
+                getShaRangeList.addAll(postDetail.getShareRange());
                 postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
                 postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
             }
             if(isAdminorTeacher){
-                accountConfirm.isExistsAllGroups(schoolId, getShaRengeList.toArray(new Integer[0]));
+                if(!accountConfirm.isExistsAllGroups(schoolId, getShaRangeList.toArray(new Integer[0]))){
+                    log.info("いいねした投稿の取得に失敗しました userId: {} エラー: {}", userId, "権限のないグループが含まれています");
+                    throw new RuntimeException("いいねした投稿の取得に失敗しました");
+                }
             }
 
             log.info("いいねした投稿の取得に成功しました userId: {}", userId);
