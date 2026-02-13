@@ -171,12 +171,21 @@ public class PostController {
         return ResponseEntity.ok().build();
     }
 
-    // いいね取得
+    // 自身のいいね取得
     @GetMapping("/likes")
     public ResponseEntity<List<PostDetailResponse>> getLikedPosts(Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         List<PostDetailResponse> likedPosts;
 
         likedPosts = likeService.getLikedPosts(authentication,userInfo.getUserId(), userInfo.getSchoolId());
+        return ResponseEntity.ok(likedPosts);
+    }
+    
+    //他ユーザのいいね取得
+    @GetMapping("/likes/{targetUserId}")
+    public ResponseEntity<List<PostDetailResponse>> getLikedPostsOfOtherUser(@PathVariable final Integer targetUserId,
+            Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
+        List<PostDetailResponse> likedPosts;
+        likedPosts = likeService.getLikedPosts(authentication,targetUserId, userInfo.getSchoolId());
         return ResponseEntity.ok(likedPosts);
     }
 
