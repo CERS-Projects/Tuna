@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApiWithRefresh } from "@/lib/api-client";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useDebouncedCallback } from "use-debounce";
+import { useEffect } from "react";
 
 type UseGoodOptions = {
   onSuccess?: () => void;
@@ -94,6 +95,12 @@ export const useDebouncedLike = (
       unGoodMutate(undefined);
     }
   }, 1500);
+
+  useEffect(() => {
+    return () => {
+      debouncedToggle.flush();
+    };
+  }, [debouncedToggle]);
 
   return { debouncedToggle };
 };
