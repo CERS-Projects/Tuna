@@ -98,6 +98,14 @@ const createAppRouter = (queryClient: QueryClient) => {
                   index: true,
                   element: <Navigate to={paths.app.timeline.path} replace />,
                 },
+                route(
+                  paths.app.report.root.path,
+                  () => import("./routes/app/report"),
+                ),
+                route(
+                  paths.app.report.confirm.path,
+                  () => import("./routes/app/reportConfirm"),
+                ),
                 route(paths.app.test.path, () => import("./routes/app/test")),
                 {
                   path: paths.app.timeline.path,
