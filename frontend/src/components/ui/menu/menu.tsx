@@ -7,9 +7,13 @@ import { useNavigate } from "react-router";
 import { PiHouseLight } from "react-icons/pi";
 import styles from "./menu.module.css";
 import { paths } from "@/config/paths";
+import { useUser } from "@/features/auth/hooks/useUser";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export const Menu = () => {
   const navigate = useNavigate();
+  const { authToken } = useAuth();
+  const { data: user } = useUser(authToken);
 
   return (
     <div className={styles.menuContainer}>
@@ -41,14 +45,20 @@ export const Menu = () => {
         <LuCirclePlus />
       </button>
       <button
-        onClick={() => navigate(paths.app.profile.posts.getHref())}
+        onClick={() =>
+          navigate(paths.app.profile.posts.getHref(user?.showUserId as string))
+        }
         className={styles.menuButton}
         title="プロフィール"
       >
         <AiOutlineSolution />
       </button>
       <button
-        onClick={() => navigate(paths.app.profile.bookmarks.getHref())}
+        onClick={() =>
+          navigate(
+            paths.app.profile.bookmarks.getHref(user?.showUserId as string),
+          )
+        }
         className={styles.menuButton}
         title="ブックマーク"
       >

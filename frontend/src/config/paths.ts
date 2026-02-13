@@ -108,33 +108,33 @@ export const paths = {
     },
     profile: {
       root: {
-        path: "/app/profile/:userId",
-        getHref: (userId: string) =>
-          userId ? `/app/profile/${userId}` : "/app/profile",
+        path: "/app/profile/:showUserId",
+        getHref: (showUserId: string) =>
+          showUserId ? `/app/profile/${showUserId}` : "/app/profile",
       },
       posts: {
-        path: "/app/profile/:userId/posts",
-        getHref: (userId: string) => `/app/profile/${userId}/posts`,
+        path: "/app/profile/:showUserId/posts",
+        getHref: (showUserId: string) => `/app/profile/${showUserId}/posts`,
       },
       responses: {
-        path: "/app/profile/:userId/responses",
-        getHref: (userId: string) => `/app/profile/${userId}/responses`,
+        path: "/app/profile/:showUserId/responses",
+        getHref: (showUserId: string) => `/app/profile/${showUserId}/responses`,
       },
       goods: {
-        path: "/app/profile/:userId/goods",
-        getHref: (userId: string) => `/app/profile/${userId}/goods`,
+        path: "/app/profile/:showUserId/goods",
+        getHref: (showUserId: string) => `/app/profile/${showUserId}/goods`,
       },
       bookmarks: {
-        path: "/app/profile/:userId/bookmarks",
-        getHref: (userId: string) => `/app/profile/${userId}/bookmarks`,
+        path: "/app/profile/:showUserId/bookmarks",
+        getHref: (showUserId: string) => `/app/profile/${showUserId}/bookmarks`,
       },
       follow: {
-        path: "/app/profile/:userId/follow",
-        getHref: (userId: string) => `/app/profile/${userId}/follow`,
+        path: "/app/profile/:showUserId/follow",
+        getHref: (showUserId: string) => `/app/profile/${showUserId}/follow`,
       },
       follower: {
-        path: "/app/profile/:userId/follower",
-        getHref: (userId: string) => `/app/profile/${userId}/follower`,
+        path: "/app/profile/:showUserId/follower",
+        getHref: (showUserId: string) => `/app/profile/${showUserId}/follower`,
       },
       setting: {
         path: "/app/profile/setting",
@@ -149,8 +149,8 @@ export const paths = {
         },
       },
       edit: {
-        path: "/app/profile/edit/:userId",
-        getHref: (userId: string) => `/app/profile/edit/${userId}`,
+        path: "/app/profile/:showUserId/edit",
+        getHref: (showUserId: string) => `/app/profile/${showUserId}/edit`,
       },
     },
     test: {

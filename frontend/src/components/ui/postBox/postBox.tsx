@@ -104,7 +104,9 @@ export const PostBox = (props: PostData) => {
     <>
       <div
         className={styles.postHeader}
-        onClick={(e) => handleNavigateClick(e, `/@${showUserId}`)}
+        onClick={(e) =>
+          handleNavigateClick(e, paths.app.profile.posts.getHref(showUserId))
+        }
       >
         {icon && <img src={icon} className={styles.userIcon} alt="" />}
         <span className={styles.userName}>{nameData}</span>
