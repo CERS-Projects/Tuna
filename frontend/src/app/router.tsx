@@ -125,11 +125,6 @@ const createAppRouter = (queryClient: QueryClient) => {
             ),
           ],
         },
-        route(paths.app.report.root.path, () => import("./routes/app/report")),
-        route(
-          paths.app.report.confirm.path,
-          () => import("./routes/app/reportConfirm"),
-        ),
       ],
     },
 
