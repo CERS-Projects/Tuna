@@ -16,6 +16,7 @@ import com.example.backend.utils.accountConfirm.GroupJoinByUserId;
 import com.example.backend.posts.service.PostService;
 import com.example.backend.profile.repository.ProfileRepository;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
+import com.example.backend.posts.helper.PostPermissionHelper;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,11 +49,13 @@ public class PostServiceImpl implements PostService {
 
     private final GroupJoinByUserId groupJoinByUserId;
 
+    private final PostPermissionHelper postPermissionHelper;
+
     private final ProfileRepository profileRepository;
 
     // 投稿作成
     @Override
-    public void insertPost(PostInsertRequest post, Integer userId) {
+    public void insertPost(Authentication authentication, PostInsertRequest post, Integer userId, Integer schoolId) {
         PostEntity postEntity = new PostEntity();
         List<String> fileObjectKeys = null;
         List<MultipartFile> imageFiles = post.getImageFile();
@@ -64,10 +65,22 @@ public class PostServiceImpl implements PostService {
         List<Integer> userGroupIds = post.getShareRange().stream()
                 .filter(i -> i != 0)
                 .toList();
-        // 除外したリストをもとに権限確認（userGroupIdsが空でない場合のみ）
-        if (userGroupIds.size() != 0) {
-            if (!accountConfirm.isExistsAllGroups(userId, userGroupIds.toArray(new Integer[0]))) {
-                throw new IllegalArgumentException("指定されたグループに所属していません。");
+        // 除外したリストをもとに権限確認（userGroupIdsが空でない場合のみ)
+        if(!userGroupIds.isEmpty()) {
+            boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
+
+            if (!isTeacherOrAdmin) {
+                if (!accountConfirm.isExistsAllGroups(userId, userGroupIds.toArray(new Integer[0]))) {
+                    throw new IllegalArgumentException("指定されたグループに所属していません。");
+                }
+            }
+
+            // 教師/管理者でも指定グループが自校のものか検証
+            if (isTeacherOrAdmin) {
+                if (!accountConfirm.isAllGroupsBelongToSchool(schoolId, userGroupIds)) {
+                    throw new IllegalArgumentException("指定されたグループは自校に属していません。");
+                }
             }
         }
 
@@ -169,12 +182,20 @@ public class PostServiceImpl implements PostService {
 
     // ユーザー投稿取得
     @Override
-    public List<PostDetailResponse> getUserPosts(Integer targetUserId, Integer currentUserId) {
+    public List<PostDetailResponse> getUserPosts(Authentication authentication, Integer targetUserId, Integer currentUserId, Integer schoolId) {
         List<PostDetailResponse> postDetails;
         List<Integer> userGroupIds = groupJoinByUserId.getJoinedGroupIdsByUserId(currentUserId);
 
-        if (!accountConfirm.isExistsAllGroups(currentUserId, userGroupIds.toArray(new Integer[0]))) {
-            throw new IllegalArgumentException("指定されたグループに所属していません。");
+        boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
+        if (!isTeacherOrAdmin) {
+            if (!accountConfirm.isExistsAllGroups(currentUserId, userGroupIds.toArray(new Integer[0]))) {
+                throw new IllegalArgumentException("指定されたグループに所属していません。");
+            }
+        }else {
+            if (!accountConfirm.isAllGroupsBelongToSchool(schoolId, userGroupIds)) {
+                throw new IllegalArgumentException("指定されたグループは自校に属していません。");
+            }
         }
         userGroupIds.add(0); // public権限を追加
 
@@ -349,7 +370,7 @@ public class PostServiceImpl implements PostService {
                     log.error("投稿の閲覧権限がありません（他校の投稿）。 投稿ID: " + postId);
                     throw new IllegalArgumentException("投稿の閲覧権限がありません。");
                 }
-            } else if (!canViewPost(currentUserId, postDetail.getShareRange())) {
+            } else if (!postPermissionHelper.canViewPost(currentUserId, postDetail.getShareRange())) {
                 log.error("投稿の閲覧権限がありません。 投稿ID: " + postId);
                 throw new IllegalArgumentException("投稿の閲覧権限がありません。");
             }
@@ -379,14 +400,5 @@ public class PostServiceImpl implements PostService {
         log.info("取得したミュートワードリスト: " + muteWordList);
 
         return muteWordList;
-    }
-
-    // 投稿閲覧権限確認
-    private boolean canViewPost(Integer userId, List<Integer> postShareRange) {
-        Set<Integer> userGroups = new HashSet<>(
-                groupJoinByUserId.getJoinedGroupIdsByUserId(userId));
-        userGroups.add(0);
-
-        return postShareRange.stream().anyMatch(userGroups::contains);
     }
 }

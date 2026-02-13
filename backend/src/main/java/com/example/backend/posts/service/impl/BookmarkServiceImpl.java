@@ -5,14 +5,19 @@ import com.example.backend.posts.service.BookmarkService;
 import com.example.backend.posts.repository.BookmarkRepository;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import com.example.backend.posts.repository.PostRepository;
-
+import com.example.backend.posts.helper.PostPermissionHelper;
+import org.springframework.security.core.Authentication;
 import com.example.backend.posts.model.BookmarkEntity;
+import com.example.backend.utils.accountConfirm.AccountConfirm;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 import org.bson.types.ObjectId;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +34,10 @@ public class BookmarkServiceImpl implements BookmarkService {
     private final FileControlHelper fileControlHelper;
 
     private final PostRepository postRepository;
+
+    private final PostPermissionHelper postPermissionHelper;
+
+    private final AccountConfirm accountConfirm;
 
     //投稿の存在確認
     private boolean existsPost(ObjectId postId) {
@@ -66,6 +75,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         }
     }
 
+    //ブックマークの削除
     @Override
     public void removeBookmark(ObjectId postId, Integer userId) {
 
@@ -81,15 +91,35 @@ public class BookmarkServiceImpl implements BookmarkService {
             throw new RuntimeException("ブックマークの削除に失敗しました");
         }
     }
+
+    //ブックマーク投稿の取得
     @Override
-    public List<PostDetailResponse> getBookmarkedPosts(Integer userId) {
+    public List<PostDetailResponse> getBookmarkedPosts(Authentication authentication, Integer userId, Integer schoolId) {
         List<PostDetailResponse> postDetails = null;
+        Set<Integer> getShaRengeList = new HashSet<>();
+        boolean isAdminorTeacher = authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
         try{
             postDetails = bookmarkRepository.findByBookmarked(userId);
 
-            for (PostDetailResponse postDetail : postDetails) {
+            Iterator<PostDetailResponse> iterator = postDetails.iterator();
+            while (iterator.hasNext()) {
+                PostDetailResponse postDetail = iterator.next();
+                if(!isAdminorTeacher){
+                    if (!postPermissionHelper.canViewPost(userId, postDetail.getShareRange())) {
+                        iterator.remove();
+                        continue;
+                    }
+                }
+                getShaRengeList.addAll(postDetail.getShareRange());
                 postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
                 postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+            }
+            if(isAdminorTeacher){
+                if(!accountConfirm.isExistsAllGroups(schoolId, getShaRengeList.toArray(new Integer[0]))){
+                    log.error("取得したブックマークに学校に所属していないグループが含まれています userId: {} and schoolId: {} groups: {}", userId, schoolId,getShaRengeList);
+                    throw new RuntimeException("取得したブックマークに学校に所属していないグループが含まれています");
+                }
             }
 
         } catch(Exception e) {

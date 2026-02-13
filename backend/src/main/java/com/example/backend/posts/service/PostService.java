@@ -10,13 +10,13 @@ import com.example.backend.posts.dto.PostInsertRequest;
 
 public interface PostService {
 
-    void insertPost(PostInsertRequest post, Integer userId);
+    void insertPost(Authentication authentication, PostInsertRequest post, Integer userId, Integer schoolId);
 
     PostDetailResponse getPostById(Authentication authentication, String postId, UserInfo userInfo);
 
     List<PostDetailResponse> getTimelinePosts(Integer shareRange, Authentication authentication, UserInfo userInfo);
 
-    List<PostDetailResponse> getUserPosts(Integer targetUserId, Integer currentUserId);
+    List<PostDetailResponse> getUserPosts(Authentication authentication, Integer targetUserId, Integer currentUserId, Integer schoolId);
 
     List<PostDetailResponse> getReplyPosts(String replypostId, Integer currentUserId);
 

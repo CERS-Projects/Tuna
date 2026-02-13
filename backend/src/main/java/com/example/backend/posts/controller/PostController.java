@@ -47,8 +47,9 @@ public class PostController {
 
     // 投稿を作成
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> insertPost(@Valid @ModelAttribute final PostInsertRequest postRequest,
-            @AuthenticationPrincipal final UserInfo userInfo) {
+    public ResponseEntity<Void> insertPost(@Valid
+        @ModelAttribute final PostInsertRequest postRequest,
+            Authentication authentication ,@AuthenticationPrincipal final UserInfo userInfo) {
         // JWTから取得したユーザーIDをセット
         log.info("投稿の作成を開始しました。 " + "userId: {}, content: {}, imageCount: {}",
                 userInfo.getUserId(),
@@ -57,7 +58,7 @@ public class PostController {
                 postRequest.getShareRange(),
                 postRequest.getImageFile() != null ? postRequest.getImageFile().size() : 0);
 
-        postService.insertPost(postRequest, userInfo.getUserId());
+        postService.insertPost(authentication, postRequest, userInfo.getUserId(), userInfo.getSchoolId());
         return ResponseEntity.ok().build();
     }
 
@@ -85,10 +86,10 @@ public class PostController {
     // ユーザー投稿を取得
     @GetMapping("/profile")
     public ResponseEntity<List<PostDetailResponse>> getUserPosts(@RequestParam final Integer targetUserId,
-            @AuthenticationPrincipal final UserInfo userInfo) {
+            Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         List<PostDetailResponse> userPosts;
 
-        userPosts = postService.getUserPosts(targetUserId, userInfo.getUserId());
+        userPosts = postService.getUserPosts(authentication,targetUserId, userInfo.getUserId(), userInfo.getSchoolId());
         return ResponseEntity.ok(userPosts);
     }
 
@@ -143,9 +144,9 @@ public class PostController {
     // ブックマーク取得
     @GetMapping("/bookmarks")
     public ResponseEntity<List<PostDetailResponse>> getBookmarkedPosts(
-            @AuthenticationPrincipal final UserInfo userInfo) {
+            Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         List<PostDetailResponse> bookmarkedPosts;
-        bookmarkedPosts = bookmarkService.getBookmarkedPosts(userInfo.getUserId());
+        bookmarkedPosts = bookmarkService.getBookmarkedPosts(authentication, userInfo.getUserId(), userInfo.getSchoolId());
         return ResponseEntity.ok(bookmarkedPosts);
     }
 
@@ -172,10 +173,10 @@ public class PostController {
 
     // いいね取得
     @GetMapping("/likes")
-    public ResponseEntity<List<PostDetailResponse>> getLikedPosts(@AuthenticationPrincipal final UserInfo userInfo) {
+    public ResponseEntity<List<PostDetailResponse>> getLikedPosts(Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         List<PostDetailResponse> likedPosts;
 
-        likedPosts = likeService.getLikedPosts(userInfo.getUserId());
+        likedPosts = likeService.getLikedPosts(authentication,userInfo.getUserId(), userInfo.getSchoolId());
         return ResponseEntity.ok(likedPosts);
     }
 

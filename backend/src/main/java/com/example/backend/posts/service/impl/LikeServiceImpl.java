@@ -7,10 +7,16 @@ import com.example.backend.posts.repository.LikeRepository;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import com.example.backend.posts.repository.PostCounterRepository;
 import com.example.backend.posts.repository.PostRepository;
+import com.example.backend.posts.helper.PostPermissionHelper;
+import org.springframework.security.core.Authentication;
+import com.example.backend.utils.accountConfirm.AccountConfirm;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import com.example.backend.posts.dto.PostDetailResponse;
 import com.example.backend.posts.model.LikeEntity;
@@ -33,6 +39,10 @@ public class LikeServiceImpl implements LikeService {
     private final PostCounterRepository postCounterRepository;
 
     private final PostRepository postRepository;
+
+    private final PostPermissionHelper postPermissionHelper;
+
+    private final AccountConfirm accountConfirm;
 
 
     //投稿の存在確認
@@ -94,15 +104,31 @@ public class LikeServiceImpl implements LikeService {
     
     //いいね取得
     @Override
-    public List<PostDetailResponse> getLikedPosts(Integer userId) {
+    public List<PostDetailResponse> getLikedPosts(Authentication authentication, Integer userId, Integer schoolId) {
         List<PostDetailResponse> postDetails = List.of();
-
+        Set<Integer> getShaRengeList = new HashSet<>();
+        boolean isAdminorTeacher = authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
+        
         try{
             postDetails = likeRepository.findByLiked(userId);
 
-            for (PostDetailResponse postDetail : postDetails) {
+            //閲覧権限確認(なかったら除外)とURL設定
+            Iterator<PostDetailResponse> iterator = postDetails.iterator();
+            while (iterator.hasNext()) {
+                PostDetailResponse postDetail = iterator.next();
+                if(!isAdminorTeacher){
+                    if (!postPermissionHelper.canViewPost(userId, postDetail.getShareRange())) {
+                        iterator.remove();
+                        continue;
+                    }
+                }
+                getShaRengeList.addAll(postDetail.getShareRange());
                 postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
                 postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+            }
+            if(isAdminorTeacher){
+                accountConfirm.isExistsAllGroups(schoolId, getShaRengeList.toArray(new Integer[0]));
             }
 
             log.info("いいねした投稿の取得に成功しました userId: {}", userId);
