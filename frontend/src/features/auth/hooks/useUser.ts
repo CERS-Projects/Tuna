@@ -24,6 +24,7 @@ export const useUser = (authToken: string) => {
       });
 
       return {
+        userId: profile.userId,
         showUserId: profile.showUserId,
         userName: profile.nickname,
         iconUrl: profile.iconUrl,

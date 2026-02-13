@@ -1,15 +1,15 @@
 import styles from "./profileCard.module.css";
+import { FaUser } from "react-icons/fa";
 import { type ProfileData } from "../types/profileTypes";
 import { Link } from "react-router";
 import { paths } from "@/config/paths";
+import { useDebouncedFollow } from "../hooks/useFollow";
+import { useState } from "react";
 
-type OtherProfileCardProps = ProfileData & {
-  isFollowing: boolean;
-  isFollowedBy: boolean;
-  onToggleFollow: () => void;
-};
+type OtherProfileCardProps = ProfileData;
 
 export const OtherProfileCard = ({
+  userId,
   showUserId,
   nickname,
   iconUrl,
@@ -17,25 +17,36 @@ export const OtherProfileCard = ({
   followerCount,
   introduction,
   isFollowing,
-  isFollowedBy,
-  onToggleFollow,
+  isFollowed,
 }: OtherProfileCardProps) => {
+  const { debouncedToggle } = useDebouncedFollow(userId);
+  const [isTempFollowing, setIsTempFollowing] = useState<boolean>(isFollowing);
+
+  const handleToggleFollow = () => {
+    debouncedToggle(isTempFollowing);
+    setIsTempFollowing((prev) => !prev);
+  };
+
   return (
-    <div className={styles.profileCard}>
+    <div className={styles.otherProfileCard}>
       <div className={styles.profileCardLeft}>
-        {iconUrl && (
+        {iconUrl ? (
           <img
             src={iconUrl}
             className={styles.profileIcon}
             alt={`${nickname}のプロフィール画像`}
           />
+        ) : (
+          <div className={styles.profileIcon}>
+            <FaUser />
+          </div>
         )}
       </div>
 
       <div className={styles.profileCardRight}>
         <div className={styles.headerGroup}>
           <h3>{nickname}</h3>
-          {isFollowedBy && (
+          {isFollowed && (
             <span className={styles.followsYouBadge}>フォローされています</span>
           )}
         </div>
@@ -63,12 +74,16 @@ export const OtherProfileCard = ({
             <span>{followerCount}</span>
           </Link>
         </div>
+      </div>
 
+      <div className={styles.followButtonContainer}>
         <button
-          className={isFollowing ? styles.followingButton : styles.followButton}
-          onClick={onToggleFollow}
+          className={
+            isTempFollowing ? styles.followingButton : styles.followButton
+          }
+          onClick={handleToggleFollow}
         >
-          {isFollowing ? "フォロー中" : "フォローする"}
+          {isTempFollowing ? "フォロー中" : "フォローする"}
         </button>
       </div>
     </div>
