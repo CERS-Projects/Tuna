@@ -48,10 +48,10 @@ public class ProfileController {
     // 他ユーザープロフィール取得
     @GetMapping
     public ResponseEntity<ProfileResponse> getProfile(
-            @RequestParam Integer targetUserId,
+            @RequestParam String targetShowUserId,
             @AuthenticationPrincipal UserInfo userInfo) {
         
-        ProfileResponse profile = profileService.getProfilesByUserId(targetUserId, userInfo.getUserId());
+        ProfileResponse profile = profileService.getProfileByShowUserId(targetShowUserId, userInfo.getUserId());
         return ResponseEntity.ok(profile);
     }
 
@@ -61,7 +61,7 @@ public class ProfileController {
         ProfileResponse profile;
         
         try{
-            profile = profileService.getProfilesByUserId(userInfo.getUserId(), userInfo.getUserId());
+            profile = profileService.getProfilesByUserId(userInfo.getUserId());
             if(profile == null) {
                 log.warn("プロフィールが見つかりません userId: {}", userInfo.getUserId());
                 return ResponseEntity.notFound().build();

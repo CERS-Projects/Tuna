@@ -6,10 +6,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +29,7 @@ import com.example.backend.accounts.repository.TeacherRepository;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.auth.dto.LoginSelectRequest;
 import com.example.backend.auth.dto.OtpResponse;
+import com.example.backend.auth.dto.PasswordChangeRequest;
 import com.example.backend.auth.repository.RefreshTokenRepository;
 import com.example.backend.exception.AuthException;
 
@@ -45,6 +51,11 @@ public class AuthServiceImpl implements AuthService {
     private final StringRedisTemplate stringRedisTemplate;
     private final OtpService otpService;
     private final MailService mailService;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Value("${app.frontend.url}")
+    private String frontURL;
 
     @Override
     public String login(LoginSelectRequest loginSelectRequest) {
@@ -124,4 +135,102 @@ public class AuthServiceImpl implements AuthService {
     public void logout(@NonNull Integer userId) {
         refreshTokenRepository.deleteById(userId);
     }
+
+    @Override
+    public void changePassword(Integer userId, PasswordChangeRequest passwordChangeRequest) {
+
+        if (userId == null || passwordChangeRequest.getPassword() == null
+                || passwordChangeRequest.getNewPassword() == null
+                || passwordChangeRequest.getConfirmPassword() == null) {
+            throw new IllegalArgumentException("リクエストにnullがあります");
+        }
+
+        if (!passwordChangeRequest.getNewPassword().equals(passwordChangeRequest.getConfirmPassword())) {
+            throw new IllegalArgumentException("新しいパスワードと確認用パスワードが一致しません");
+        }
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EmptyResultDataAccessException("指定ユーザーが見つかりません", 0));
+
+        if (!bCryptPasswordEncoder.matches(passwordChangeRequest.getPassword(), userEntity.getPassword())) {
+            throw new AuthException("現在のパスワードが異なります");
+        }
+
+        userEntity.setPassword(bCryptPasswordEncoder.encode(passwordChangeRequest.getNewPassword()));
+        userRepository.save(userEntity);
+
+        refreshTokenRepository.deleteById(userId);
+
+    }
+
+    @Override
+    public void resetPassword(String token, String newPassword) {
+
+        if (token == null) {
+            throw new IllegalArgumentException("tokenがnullです");
+        }
+
+        if (!stringRedisTemplate.hasKey(token)) {
+            throw new EmptyResultDataAccessException("パスワードを変更できる期限が切れました", 0);
+        }
+
+        String userIdStr = stringRedisTemplate.opsForValue().get(token);
+
+        if (userIdStr == null) {
+            throw new EmptyResultDataAccessException("パスワードを変更できる期限が切れました", 0);
+        }
+
+        Integer userId = Integer.valueOf(userIdStr);
+
+        if (userId == null) {
+            throw new IllegalArgumentException("userIdの値がnullです");
+        }
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EmptyResultDataAccessException("ユーザーが見つかりません", 0));
+
+        userEntity.setPassword(bCryptPasswordEncoder.encode(newPassword));
+
+        userRepository.save(userEntity);
+
+        stringRedisTemplate.delete(token);
+
+        refreshTokenRepository.deleteById(userId);
+
+    }
+
+    @Override
+    public void resetPasswordTokenConfirm(String token) {
+
+        if (token == null) {
+            throw new IllegalArgumentException("tokenがnullです");
+        }
+
+        if (!stringRedisTemplate.hasKey(token)) {
+            throw new EmptyResultDataAccessException("無効なURLです", 0);
+        }
+
+    }
+
+    @Override
+    public void resetPasswordMail(String mailAddress) {
+        UserEntity userEntity = userRepository.findByMailAddress(mailAddress);
+
+        if (userEntity != null) {
+            String userId = userEntity.getUserId().toString();
+            String token = "resetPassword" + UUID.randomUUID().toString();
+
+            if (token == null || userId == null) {
+                throw new IllegalArgumentException("nullの値があります");
+            }
+
+            stringRedisTemplate.opsForValue().set(token, userId, 10, TimeUnit.MINUTES);
+
+            String url = frontURL + "/reset/password" + ("?token=" + token);
+
+            mailService.sendMail(mailAddress, url);
+        }
+
+    }
+
 }

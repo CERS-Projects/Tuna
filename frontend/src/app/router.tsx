@@ -223,6 +223,14 @@ const createAppRouter = (queryClient: QueryClient) => {
               paths.app.profile.setting.editFilter.path,
               () => import("./routes/app/profile/edit/editFilter"),
             ),
+            route(
+              paths.app.report.root.path,
+              () => import("./routes/app/report"),
+            ),
+            route(
+              paths.app.report.confirm.path,
+              () => import("./routes/app/reportConfirm"),
+            ),
           ],
         },
       ],
