@@ -185,7 +185,7 @@ public class PostController {
     public ResponseEntity<List<PostDetailResponse>> getLikedPostsOfOtherUser(@PathVariable final Integer targetUserId,
             Authentication authentication, @AuthenticationPrincipal final UserInfo userInfo) {
         List<PostDetailResponse> likedPosts;
-        likedPosts = likeService.getLikedPosts(authentication, targetUserId, userInfo.getSchoolId());
+        likedPosts = likeService.getOtherUserLikedPosts(authentication, userInfo.getUserId(), userInfo.getSchoolId(), targetUserId);
         return ResponseEntity.ok(likedPosts);
     }
 

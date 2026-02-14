@@ -12,6 +12,8 @@ public interface LikeService {
     void removeLikes(ObjectId postId, Integer userId);
     //いいね取得
     List<PostDetailResponse> getLikedPosts(Authentication authentication, Integer userId, Integer schoolId);
+    //他ユーザーいいね取得
+    List<PostDetailResponse> getOtherUserLikedPosts(Authentication authentication, Integer currentUserId, Integer schoolId, Integer targetUserId);
 
 
 }
