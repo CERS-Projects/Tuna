@@ -16,7 +16,7 @@ export const FollowCard = ({
   following,
   isMyself,
 }: ProfileCardProps) => {
-  const { debouncedToggle } = useDebouncedFollow(userId);
+  const { debouncedToggle } = useDebouncedFollow(userId, showUserId);
   const [isFollowing, setIsFollowing] = useState<boolean>(following);
 
   const handleFollow = () => {

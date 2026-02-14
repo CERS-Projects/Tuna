@@ -19,7 +19,7 @@ export const OtherProfileCard = ({
   isFollowing,
   isFollowed,
 }: OtherProfileCardProps) => {
-  const { debouncedToggle } = useDebouncedFollow(userId);
+  const { debouncedToggle } = useDebouncedFollow(userId, showUserId);
   const [isTempFollowing, setIsTempFollowing] = useState<boolean>(isFollowing);
 
   const handleToggleFollow = () => {

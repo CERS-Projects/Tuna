@@ -12,7 +12,7 @@ export const useFollower = () => {
   const { showUserId } = useParams();
 
   return useQuery({
-    queryKey: ["user", "profile", showUserId, "follower"],
+    queryKey: ["user", "profile", "follower", showUserId],
     enabled: !!authToken && !!showUserId && !!profile,
     queryFn: async (): Promise<FollowData[]> => {
       if (isMyProfile) {

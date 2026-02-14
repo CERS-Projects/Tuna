@@ -41,7 +41,7 @@ export const ProfileCard = (profile: ProfileCardProps) => {
             className={styles.followLink}
           >
             <small>フォロー</small>
-            <span>{profile.follow}</span>
+            <span>{profile.followCount}</span>
           </Link>
 
           <span className={styles.separator}>/</span>
@@ -52,7 +52,7 @@ export const ProfileCard = (profile: ProfileCardProps) => {
             title="フォロワー"
           >
             <small>フォロワー</small>
-            <span>{profile.follower}</span>
+            <span>{profile.followerCount}</span>
           </Link>
         </div>
       </div>

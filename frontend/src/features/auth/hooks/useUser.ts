@@ -28,8 +28,8 @@ export const useUser = (authToken: string) => {
         showUserId: profile.showUserId,
         userName: profile.nickname,
         iconUrl: profile.iconUrl,
-        follow: profile.followCount,
-        follower: profile.followerCount,
+        followCount: profile.followCount,
+        followerCount: profile.followerCount,
         introduction: profile.introduction,
         role: jwtPayload?.role ?? "STUDENT",
       };
