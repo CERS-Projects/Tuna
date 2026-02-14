@@ -58,7 +58,7 @@ const ClassroomList = () => {
 
 				<div className={styles.cardsGrid}>
 					{classrooms.map((c) => {
-						if (c.roomName.toLowerCase().includes(query)) {
+						if (c.roomName.toLowerCase().includes(query.toLocaleLowerCase())) {
 							return (
 								<ClassroomCard
 									key={c.roomId}
