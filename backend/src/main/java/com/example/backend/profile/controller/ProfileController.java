@@ -125,9 +125,10 @@ public class ProfileController {
 
     // 他ユーザーのフォロー一覧取得
     @GetMapping("/following")
-    public ResponseEntity<List<FollowingProfileResponse>> getUserFollowing(@RequestParam Integer targetUserId) {
+    public ResponseEntity<List<FollowingProfileResponse>> getUserFollowing(@RequestParam Integer targetUserId,
+            @AuthenticationPrincipal UserInfo userInfo) {
         
-        List<FollowingProfileResponse> following = followQueryService.getFollowingAccounts(targetUserId);
+        List<FollowingProfileResponse> following = followQueryService.getOtherUserFollowingAccounts(targetUserId, userInfo.getUserId());
         return ResponseEntity.ok(following);
     }
 
@@ -141,9 +142,10 @@ public class ProfileController {
 
     // 他ユーザーのフォロワー一覧取得
     @GetMapping("/followers")
-    public ResponseEntity<List<FollowingProfileResponse>> getUserFollowers(@RequestParam Integer targetUserId) {
+    public ResponseEntity<List<FollowingProfileResponse>> getUserFollowers(@RequestParam Integer targetUserId,
+            @AuthenticationPrincipal UserInfo userInfo) {
         
-        List<FollowingProfileResponse> followers = followQueryService.getFollowerAccounts(targetUserId);
+        List<FollowingProfileResponse> followers = followQueryService.getOtherUserFollowerAccounts(targetUserId, userInfo.getUserId());
         return ResponseEntity.ok(followers);
     }
 
