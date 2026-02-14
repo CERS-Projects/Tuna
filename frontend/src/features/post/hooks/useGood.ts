@@ -103,7 +103,7 @@ export const useDebouncedLike = (
     } else {
       unGoodMutate(undefined);
     }
-  }, 1500);
+  }, 5000);
 
   useEffect(() => {
     return () => {

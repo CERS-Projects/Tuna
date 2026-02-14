@@ -25,9 +25,6 @@ export const useFollow = (targetUserId: number) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["profile", user?.userId, "following"],
-      });
-      queryClient.invalidateQueries({
         queryKey: ["user", "profile", user?.showUserId],
       });
     },
@@ -54,9 +51,6 @@ export const useUnFollow = (targetUserId: number) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["profile", user?.userId, "following"],
-      });
-      queryClient.invalidateQueries({
         queryKey: ["user", "profile", user?.showUserId],
       });
     },
@@ -69,19 +63,11 @@ export const useDebouncedFollow = (targetUserId: number) => {
 
   const debouncedToggle = useDebouncedCallback((isFollowing: boolean) => {
     if (isFollowing) {
-      unFollowMutate(undefined, {
-        onError: () => {
-          alert("フォロー解除処理に失敗しました。");
-        },
-      });
+      unFollowMutate(undefined);
     } else {
-      followMutate(undefined, {
-        onError: () => {
-          alert("フォロー処理に失敗しました。");
-        },
-      });
+      followMutate(undefined);
     }
-  }, 1500);
+  }, 5000);
 
   useEffect(() => {
     return () => {
