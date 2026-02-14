@@ -53,9 +53,7 @@ export const MaterialCategory = ({ categories }: MaterialProps) => {
 											className={styles.pdfLink}>
 											<div className={styles.pdfMain}>
 												<MdOutlinePictureAsPdf className={styles.pdfIcon} />
-												<span className={styles.fileName}>
-													{item.documentName}
-												</span>
+												<span className={styles.fileName}>{item.documentName}</span>
 											</div>
 											<div className={styles.pdfSub}>
 												<span className={styles.date}>{item.uploadedAt}</span>
@@ -64,9 +62,7 @@ export const MaterialCategory = ({ categories }: MaterialProps) => {
 										</a>
 									))}
 									{category.documents.length === 0 && (
-										<p className={styles.noData}>
-											公開されている資料はありません
-										</p>
+										<p className={styles.noData}>公開されている資料はありません</p>
 									)}
 								</div>
 							</div>

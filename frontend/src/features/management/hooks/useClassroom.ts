@@ -12,43 +12,28 @@ type ClassroomDetailResponse = {
 	})[];
 };
 
-export const useClassroom = (
-	roomId: string,
-) => {
-	const apiWithRefresh =
-		useApiWithRefresh();
+export const useClassroom = (roomId: string) => {
+	const apiWithRefresh = useApiWithRefresh();
 	const { authToken } = useAuth();
 
-	const {
-		data,
-		isFetching,
-		isError,
-		refetch,
-	} = useQuery<ClassroomDetailResponse>({
-		queryKey: [
-			"classroom",
-			"edit",
-			roomId,
-		],
-		enabled: !!authToken && !!roomId,
-		queryFn:
-			async (): Promise<ClassroomDetailResponse> => {
-				return await apiWithRefresh<ClassroomDetailResponse>(
-					{
-						url: `/classroom/detail?roomId=${roomId}`,
-						options: {
-							method: "GET",
-							headers: {
-								"Content-Type":
-									"application/json",
-								Authorization: `Bearer ${authToken}`,
-							},
+	const { data, isFetching, isError, refetch } =
+		useQuery<ClassroomDetailResponse>({
+			queryKey: ["classroom", "edit", roomId],
+			enabled: !!authToken && !!roomId,
+			queryFn: async (): Promise<ClassroomDetailResponse> => {
+				return await apiWithRefresh<ClassroomDetailResponse>({
+					url: `/classroom/detail?roomId=${roomId}`,
+					options: {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${authToken}`,
 						},
 					},
-				);
+				});
 			},
-		refetchOnMount: true,
-	});
+			refetchOnMount: true,
+		});
 
 	return {
 		data,

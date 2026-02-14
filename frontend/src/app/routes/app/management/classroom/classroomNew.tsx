@@ -1,7 +1,4 @@
-import {
-	useForm,
-	useFieldArray,
-} from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { Input } from "@/components/ui/input/input";
 import { Button } from "@/components/ui/button/button";
 import { type ClassroomCreateInput } from "@/features/management/types/classroom";
@@ -14,87 +11,47 @@ import { useCreateClassroom } from "@/features/management/hooks/useClassroomEdit
 
 const ClassroomNew = () => {
 	const navigate = useNavigate();
-	const {
-		register,
-		handleSubmit,
-		control,
-		formState,
-		getValues,
-	} = useForm<ClassroomCreateInput>({
-		defaultValues: {
-			roomName: "",
-			description: "",
-			categories: [
-				{ categoryName: "", files: [] },
-			],
-		},
-	});
-
-	const createClassroomMutation =
-		useCreateClassroom({
-			onSuccess: () => {
-				alert("授業ルームを作成しました");
-				navigate(
-					paths.app.management.classroom.list
-						.path,
-				);
-			},
-			onError: (error) => {
-				alert(
-					`授業ルームの作成に失敗しました: ${error.message}`,
-				);
+	const { register, handleSubmit, control, formState, getValues } =
+		useForm<ClassroomCreateInput>({
+			defaultValues: {
+				roomName: "",
+				description: "",
+				categories: [{ categoryName: "", files: [] }],
 			},
 		});
-	const {
-		fields,
-		append,
-		remove,
-		update,
-	} = useFieldArray({
+
+	const createClassroomMutation = useCreateClassroom({
+		onSuccess: () => {
+			alert("授業ルームを作成しました");
+			navigate(paths.app.management.classroom.list.path);
+		},
+		onError: (error) => {
+			alert(`授業ルームの作成に失敗しました: ${error.message}`);
+		},
+	});
+	const { fields, append, remove, update } = useFieldArray({
 		control,
 		name: "categories",
 	});
 
-	const onSubmit = (
-		formData: ClassroomCreateInput,
-	) => {
-		if (
-			confirm(
-				"この内容で授業ルームを作成しますか？",
-			)
-		) {
+	const onSubmit = (formData: ClassroomCreateInput) => {
+		if (confirm("この内容で授業ルームを作成しますか？")) {
 			// API処理
-			createClassroomMutation.mutate(
-				formData,
-			);
+			createClassroomMutation.mutate(formData);
 		}
 	};
 
 	return (
-		<div
-			className={
-				commonStyles.contentsContainer
-			}>
-			<h2
-				className={
-					commonStyles.sectionName
-				}>
-				授業ルーム作成
-			</h2>
-			<main
-				className={commonStyles.contents}>
-				<form
-					onSubmit={handleSubmit(onSubmit)}
-					className={styles.form}>
+		<div className={commonStyles.contentsContainer}>
+			<h2 className={commonStyles.sectionName}>授業ルーム作成</h2>
+			<main className={commonStyles.contents}>
+				<form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
 					<Input
 						label="授業ルーム名"
 						{...register("roomName", {
 							required: "必須項目です",
 						})}
-						error={
-							formState.errors.roomName
-								?.message
-						}
+						error={formState.errors.roomName?.message}
 						placeholder="例：2023年度前期 数学A"
 					/>
 					<Input
@@ -103,28 +60,17 @@ const ClassroomNew = () => {
 						placeholder="授業の概要を入力してください"
 					/>
 
-					<div
-						className={styles.categoryArea}>
-						<div
-							className={styles.sectionName}>
-							カテゴリ・資料登録
-						</div>
+					<div className={styles.categoryArea}>
+						<div className={styles.sectionName}>カテゴリ・資料登録</div>
 						{fields.map((field, idx) => (
 							<ClassroomCategoryUploader
 								key={field.id}
 								index={idx}
 								value={field}
-								error={
-									formState.errors.categories?.[
-										idx
-									]?.categoryName
-								}
+								error={formState.errors.categories?.[idx]?.categoryName}
 								register={register}
 								onFilesChange={(files) => {
-									const currentCategory =
-										getValues(
-											`categories.${idx}.categoryName`,
-										);
+									const currentCategory = getValues(`categories.${idx}.categoryName`);
 
 									update(idx, {
 										categoryName: currentCategory,
@@ -136,9 +82,7 @@ const ClassroomNew = () => {
 						))}
 						<button
 							type="button"
-							className={
-								styles.addCategoryButton
-							}
+							className={styles.addCategoryButton}
 							onClick={() =>
 								append({
 									categoryName: "",
