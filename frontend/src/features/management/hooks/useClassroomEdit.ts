@@ -105,7 +105,7 @@ export const useUpdateClassroom = (options?: UseEditClassroomsOptions) => {
 			});
 
 			// カテゴリの削除
-			data.deletedCategoryIds.forEach((id, i) => {
+			data.deleteCategoryIds.forEach((id, i) => {
 				formData.append(`deleteCategoryIds[${i}]`, id);
 			});
 
