@@ -16,11 +16,11 @@ export const ProfileCardTab = ({ isMyProfile }: ProfileCardTabProps) => {
       label: "投稿",
       isPrivate: false,
     },
-    {
-      path: paths.app.profile.responses.getHref(showUserId),
-      label: "返信",
-      isPrivate: false,
-    },
+    // {
+    //   path: paths.app.profile.responses.getHref(showUserId),
+    //   label: "返信",
+    //   isPrivate: false,
+    // },
     {
       path: paths.app.profile.goods.getHref(showUserId),
       label: "いいね",
