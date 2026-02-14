@@ -25,7 +25,7 @@ export const useFollowing = () => {
             },
           },
         });
-        console.log(following);
+
         return following;
       } else {
         const following = await apiWithRefresh<FollowData[]>({
@@ -37,7 +37,7 @@ export const useFollowing = () => {
             },
           },
         });
-        console.log(following);
+
         return following;
       }
     },
