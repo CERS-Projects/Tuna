@@ -165,6 +165,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public List<PostDetailResponse> getOtherUserLikedPosts(Authentication authentication, Integer currentUserId, Integer schoolId, Integer targetUserId) {
         List<PostDetailResponse> postDetails = List.of();
+        HashSet<Integer> shareRangeList = new HashSet<>();
         boolean isAdminOrTeacher = authentication.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
         
@@ -195,19 +196,18 @@ public class LikeServiceImpl implements LikeService {
                 }
 
                 // 管理者/教師: 学校に所属しないグループの投稿を除外
-                if (isAdminOrTeacher) {
-                    List<Integer> nonGlobalIds = postDetail.getShareRange().stream()
-                            .filter(id -> id != 0)
-                            .toList();
-                    if (!nonGlobalIds.isEmpty() && !accountConfirm.isAllGroupsBelongToSchool(schoolId, new ArrayList<>(nonGlobalIds))) {
-                        log.warn("学校に所属していないグループを含む投稿を除外しました userId: {} postId: {} groups: {}", currentUserId, postDetail.getPostId(), postDetail.getShareRange());
-                        iterator.remove();
-                        continue;
-                    }
+                if (isAdminOrTeacher && postDetail.getShareRange().contains(0)) {
+                    shareRangeList.addAll(postDetail.getShareRange());
                 }
 
                 postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
                 postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+            }
+            // 管理者/教師: 学校に所属しない投稿があった場合はエラー
+            if (isAdminOrTeacher && shareRangeList != null) {
+                if(!accountConfirm.isAllGroupsBelongToSchool(schoolId, new ArrayList<>(shareRangeList))) {
+                    throw new RuntimeException("学校に所属しないグループの投稿が含まれています、他校向けの投稿は表示できません");
+                }
             }
         } catch(Exception e){
             log.error("いいねした投稿の処理中にエラーが発生しました userId: {} エラー: {}", currentUserId, e);

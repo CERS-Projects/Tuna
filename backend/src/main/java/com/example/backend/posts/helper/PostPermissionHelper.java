@@ -22,4 +22,9 @@ public class PostPermissionHelper {
 
         return postShareRange.stream().anyMatch(userGroups::contains);
     }
+
+    // ユーザーの所属グループIDを取得
+    public List<Integer> getUserGroupIds(Integer userId) {
+        return groupJoinByUserId.getJoinedGroupIdsByUserId(userId);
+    }
 }

@@ -13,6 +13,7 @@ import com.example.backend.utils.accountConfirm.AccountConfirm;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import org.bson.types.ObjectId;
 import java.util.Set;
@@ -96,45 +97,56 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     public List<PostDetailResponse> getBookmarkedPosts(Authentication authentication, Integer userId, Integer schoolId) {
         List<PostDetailResponse> postDetails = List.of();
-        Set<Integer> getShaRangeList = new HashSet<>();
-        boolean isAdminorTeacher = authentication.getAuthorities().stream()
+        HashSet<Integer> shareRangeList = new HashSet<>();
+        boolean isAdminOrTeacher = authentication.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
-            try{
-                postDetails = bookmarkRepository.findByBookmarked(userId);
-            } catch(Exception e){
-                log.error("ブックマーク投稿の取得に失敗しました userId: {} エラー: {}" , userId, e);
-                throw new RuntimeException("ブックマーク投稿の取得に失敗しました");
-            }
-            Iterator<PostDetailResponse> iterator = postDetails.iterator();
+        try{
+            postDetails = bookmarkRepository.findByBookmarked(userId);
+        } catch(Exception e){
+            log.error("ブックマーク投稿の取得に失敗しました userId: {} エラー: {}" , userId, e);
+            throw new RuntimeException("ブックマーク投稿の取得に失敗しました");
+        }
 
-            try{
-                while (iterator.hasNext()) {
-                    PostDetailResponse postDetail = iterator.next();
-                    if(!isAdminorTeacher){
-                        if (!postPermissionHelper.canViewPost(userId, postDetail.getShareRange())) {
-                            iterator.remove();
-                            continue;
-                        }
+        Set<Integer> userGroups = null;
+        if (!isAdminOrTeacher) {
+            userGroups = new HashSet<>(postPermissionHelper.getUserGroupIds(userId));
+            userGroups.add(0);
+        }
+
+        Iterator<PostDetailResponse> iterator = postDetails.iterator();
+        try{
+            while (iterator.hasNext()) {
+                PostDetailResponse postDetail = iterator.next();
+
+                // 一般ユーザー: 閲覧権限チェック
+                if (!isAdminOrTeacher && userGroups != null) {
+                    if (postDetail.getShareRange().stream().noneMatch(userGroups::contains)) {
+                        iterator.remove();
+                        continue;
                     }
-                    if(!postDetail.getShareRange().contains(0)){
-                        getShaRangeList.addAll(postDetail.getShareRange());
-                    }
-                    postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
-                    postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
-                    
                 }
-            } catch(Exception e){
-                log.error("ブックマーク投稿の処理中にエラーが発生しました userId: {} エラー: {}" , userId, e);
-                throw new RuntimeException("ブックマーク投稿の処理中にエラーが発生しました");
+                // 管理者/教師: 学校の場合 shareRangeを集約
+                if (isAdminOrTeacher && postDetail.getShareRange().contains(0)) {
+                    shareRangeList.addAll(postDetail.getShareRange());
                 }
-            
-            
-            if(isAdminorTeacher){
-                if(!accountConfirm.isExistsAllGroups(schoolId, getShaRangeList.toArray(new Integer[0]))){
-                    log.error("取得したブックマークに学校に所属していないグループが含まれています userId: {} and schoolId: {} groups: {}", userId, schoolId,getShaRangeList);
-                    throw new RuntimeException("取得したブックマークに学校に所属していないグループが含まれています");
+
+
+                postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
+                postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+            }
+
+            // 管理者/教師: 学校に所属しない投稿があった場合はエラー
+            if (isAdminOrTeacher && shareRangeList != null) {
+                if(!accountConfirm.isAllGroupsBelongToSchool(schoolId, new ArrayList<>(shareRangeList))) {
+                    throw new RuntimeException("学校に所属しないグループの投稿が含まれています、他校向けの投稿は表示できません");
                 }
             }
+        } catch(Exception e){
+            log.error("ブックマーク投稿の処理中にエラーが発生しました userId: {} エラー: {}" , userId, e);
+            throw new RuntimeException("ブックマーク投稿の処理中にエラーが発生しました");
+        }
+
+        log.info("ブックマーク投稿の取得に成功しました userId: {}", userId);
         return postDetails;
     }
 }
