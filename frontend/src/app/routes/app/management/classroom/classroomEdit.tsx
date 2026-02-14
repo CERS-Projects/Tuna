@@ -9,6 +9,7 @@ import {
 import {
 	useForm,
 	useFieldArray,
+	useWatch,
 } from "react-hook-form";
 import { Input } from "@/components/ui/input/input";
 import { Button } from "@/components/ui/button/button";
@@ -46,6 +47,7 @@ const ClassroomEdit = () => {
 		formState,
 		reset,
 		getValues,
+		setValue,
 	} = useForm<ClassroomEditInput>({
 		defaultValues: {
 			roomId: "",
@@ -55,12 +57,14 @@ const ClassroomEdit = () => {
 		},
 	});
 
-	const {
-		fields,
-		append,
-		remove,
-		update,
-	} = useFieldArray({
+	const { fields, append, remove } =
+		useFieldArray({
+			control,
+			name: "categories",
+		});
+
+	// watchで最新の値を取得（File オブジェクトも保持される）
+	const watchedCategories = useWatch({
 		control,
 		name: "categories",
 	});
@@ -103,7 +107,6 @@ const ClassroomEdit = () => {
 		const category = getValues(
 			`categories.${idx}`,
 		);
-		// 既存カテゴリ（categoryIdあり）なら削除リストに追加
 		if (category.categoryId) {
 			setDeletedCategoryIds((prev) => [
 				...prev,
@@ -118,7 +121,29 @@ const ClassroomEdit = () => {
 	) => {
 		if (
 			!formState.isDirty &&
-			deletedCategoryIds.length === 0
+			deletedCategoryIds.length === 0 &&
+			data.categories.every((c, i) => {
+				const defaultCategory =
+					classroom?.categories[i];
+				return (
+					c.categoryName ===
+						defaultCategory?.categoryName &&
+					c.existingDocuments.length ===
+						defaultCategory?.documents
+							.length &&
+					c.existingDocuments.every(
+						(doc, j) =>
+							defaultCategory?.documents.some(
+								(d) =>
+									d.documentId ===
+										doc.documentId &&
+									d.documentName ===
+										doc.documentName,
+							),
+					) &&
+					c.newFiles.length === 0
+				);
+			})
 		) {
 			alert("変更内容がありません。");
 			return;
@@ -144,10 +169,12 @@ const ClassroomEdit = () => {
 				),
 			newCategories: data.categories
 				.filter((c) => c.categoryId === "")
-				.map(({ categoryName }) => ({
-					categoryName,
-					documents: [],
-				})),
+				.map(
+					({ categoryName, newFiles }) => ({
+						categoryName,
+						files: newFiles,
+					}),
+				),
 			deletedCategoryIds,
 		};
 
@@ -229,7 +256,10 @@ const ClassroomEdit = () => {
 							<ClassroomCategoryUploader
 								key={field.id}
 								index={idx}
-								value={field}
+								value={
+									watchedCategories?.[idx] ??
+									field
+								}
 								error={
 									formState.errors.categories?.[
 										idx
@@ -241,10 +271,15 @@ const ClassroomEdit = () => {
 										getValues(
 											`categories.${idx}.categoryName`,
 										);
-									update(idx, {
-										...newValue,
-										categoryName: currentCategory,
-									});
+									setValue(
+										`categories.${idx}`,
+										{
+											...newValue,
+											categoryName:
+												currentCategory,
+										},
+										{ shouldDirty: true },
+									);
 								}}
 								onRemove={() =>
 									handleRemoveCategory(idx)

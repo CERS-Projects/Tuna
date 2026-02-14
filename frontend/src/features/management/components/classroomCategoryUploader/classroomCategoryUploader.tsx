@@ -213,8 +213,7 @@ export const ClassroomCategoryUploader =
 					existingDocuments:
 						v.existingDocuments.filter(
 							(d) =>
-								d.documentName !==
-								doc.documentName,
+								d.documentId !== doc.documentId,
 						),
 					deleteDocuments: [
 						...v.deleteDocuments,

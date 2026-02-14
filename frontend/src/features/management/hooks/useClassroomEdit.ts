@@ -43,13 +43,15 @@ export const useCreateClassroom = (
 						`categories[${i}].categoryName`,
 						category.categoryName,
 					);
-					category.files.forEach((file) => {
-						formData.append(
-							`categories[${i}].documents[0].documentFile`,
-							file,
-							file.name,
-						);
-					});
+					category.files.forEach(
+						(file, j) => {
+							formData.append(
+								`categories[${i}].documents[${j}].documentFile`,
+								file,
+								file.name,
+							);
+						},
+					);
 				},
 			);
 
@@ -118,7 +120,7 @@ export const useUpdateClassroom = (
 						(doc, j) => {
 							formData.append(
 								`updateCategories[${i}].deleteDocumentIds[${j}]`,
-								doc.name,
+								doc.documentId,
 							);
 						},
 					);
@@ -141,6 +143,13 @@ export const useUpdateClassroom = (
 						`newCategories[${i}].categoryName`,
 						category.categoryName,
 					);
+					category.files.forEach((file, j) => {
+						formData.append(
+							`newCategories[${i}].documents[${j}].documentFile`,
+							file,
+							file.name,
+						);
+					});
 				},
 			);
 

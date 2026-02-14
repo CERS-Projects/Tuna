@@ -7,9 +7,10 @@ export type ClassroomItem = {
 
 export type ClassroomCategoryDocument =
 	{
+		documentId: string;
 		documentName: string;
-		uploadDate: string;
-		files: File[];
+		documentUrl: string;
+		uploadedAt: string;
 	};
 
 export type ClassroomCategory = {
@@ -55,6 +56,7 @@ export type ClassroomEditInput = {
 	roomName: string;
 	description: string;
 	categories: ClassroomCategoryEdit[];
+	newCategories: ClassroomCategoryEdit[];
 };
 
 export type ClassroomEditPost = {
@@ -62,6 +64,11 @@ export type ClassroomEditPost = {
 	roomName: string;
 	description: string;
 	updateCategories: ClassroomCategoryEditPost[];
-	newCategories: ClassroomCategory[];
+	newCategories: ClassroomNewCategoryPost[];
 	deletedCategoryIds: string[];
+};
+
+export type ClassroomNewCategoryPost = {
+	categoryName: string;
+	files: File[];
 };
