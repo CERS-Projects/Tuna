@@ -8,11 +8,19 @@ import { useFollower } from "@/features/profile/hooks/useFollower";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useUser } from "@/features/auth/hooks/useUser";
+import { NoticeInfo } from "@/features/searchClassroom/components/noticeInfo";
+import { useNotice } from "@/features/profile/hooks/useNotice";
 
 const Follower = () => {
   const { data: follower, isLoading, isError } = useFollower();
   const { authToken } = useAuth();
   const { data: loginUser } = useUser(authToken);
+
+  const {
+    data: notice,
+    isLoading: isNoticeLoading,
+    isError: isNoticeError,
+  } = useNotice();
 
   const modalRef = useRef<ModalHandle>(null);
   const modalButtonClick = () => {
@@ -50,13 +58,25 @@ const Follower = () => {
         </div>
         <div className={styles.followSub}>
           <InfoBox>
-            <></>
+            {isNoticeError ? (
+              <p>おしらせの取得に失敗しました</p>
+            ) : isNoticeLoading ? (
+              <Spinner />
+            ) : notice && notice.length > 0 ? (
+              <NoticeInfo notices={notice} />
+            ) : null}
           </InfoBox>
         </div>
       </div>
       <Modal ref={modalRef} height={"fit-content"} width={"fit-content"}>
         <InfoBox>
-          <></>
+          {isNoticeError ? (
+            <p>おしらせの取得に失敗しました</p>
+          ) : isNoticeLoading ? (
+            <Spinner />
+          ) : notice && notice.length > 0 ? (
+            <NoticeInfo notices={notice} />
+          ) : null}
         </InfoBox>
       </Modal>
     </div>
