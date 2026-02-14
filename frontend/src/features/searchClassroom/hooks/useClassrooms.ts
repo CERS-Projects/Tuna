@@ -21,7 +21,8 @@ export const useClassrooms = () => {
 					},
 				},
 			});
-			classrooms.map((classroom) => {
+			// クラスルームの最新更新日時を日本語形式に変換
+			classrooms.forEach((classroom) => {
 				classroom.latestUpdate = new Date(
 					classroom.latestUpdate,
 				).toLocaleDateString("ja-JP", {
@@ -30,6 +31,7 @@ export const useClassrooms = () => {
 					day: "2-digit",
 				});
 			});
+
 			return classrooms;
 		},
 		refetchOnMount: true,
