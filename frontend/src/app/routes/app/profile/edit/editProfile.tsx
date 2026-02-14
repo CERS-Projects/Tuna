@@ -1,21 +1,11 @@
-import {
-  type EditProfileData,
-  type ProfileData,
-} from "@/features/profile/types/profileTypes";
 import { useState, useRef } from "react";
-import { useLocation } from "react-router";
+import { useForm } from "react-hook-form";
 import styles from "@/features/profile/styles/editProfile.module.css";
-
-// フォールバック用のダミーデータ
-const dummyEditProfileData: EditProfileData = {
-  userId: 1,
-  showUserId: "user-default",
-  userName: "ゲストユーザー",
-  iconUrl: "https://via.placeholder.com/150",
-  introduction: "自己紹介が設定されていません。",
-};
-
-type EditState = Omit<EditProfileData, "userId">;
+import { useEditProfile } from "@/features/profile/hooks/useEditProfile";
+import { type EditProfileForm } from "@/features/profile/types/profileTypes";
+import { Spinner } from "@/components/ui/spinner/spinner";
+import { useNavigate } from "react-router";
+import { paths } from "@/config/paths";
 
 const maxFileSize = 1024 * 1024 * 5;
 const fileTypes = [
@@ -27,18 +17,18 @@ const fileTypes = [
 ];
 
 const EditProfile = () => {
-  const location = useLocation();
-  const receivedData = location.state as ProfileData | null;
+  const { user, isLoading, mutate: editProfileMutate } = useEditProfile();
+  const navigate = useNavigate();
 
-  const [editData, setEditData] = useState<EditState>({
-    showUserId: receivedData?.showUserId ?? dummyEditProfileData.showUserId,
-    userName: receivedData?.userName ?? dummyEditProfileData.userName,
-    iconUrl: receivedData?.iconUrl ?? dummyEditProfileData.iconUrl,
-    introduction:
-      receivedData?.introduction ?? dummyEditProfileData.introduction,
+  const { register, handleSubmit } = useForm<EditProfileForm>({
+    values: {
+      nickname: user?.userName ?? "",
+      showUserId: user?.showUserId ?? "",
+      introduction: user?.introduction ?? "",
+    },
   });
 
-  const [previewUrl, setPreviewUrl] = useState<string>(editData.iconUrl ?? "");
+  const [previewUrl, setPreviewUrl] = useState<string>(user?.iconUrl ?? "");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,32 +54,36 @@ const EditProfile = () => {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setEditData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: EditProfileForm) => {
     const formData = new FormData();
-    formData.append("userName", editData.userName ?? "");
-    formData.append("showUserId", editData.showUserId ?? "");
-    formData.append("introduction", editData.introduction ?? "");
+    formData.append("nickname", data.nickname);
+    formData.append("showUserId", data.showUserId);
+    formData.append("introduction", data.introduction);
 
     if (imageFile) {
-      formData.append("icon", imageFile);
+      formData.append("iconFile", imageFile);
     }
-    console.log("送信データ:", Object.fromEntries(formData));
+
+    editProfileMutate(formData, {
+      onSuccess: () => {
+        alert("プロフィールを更新しました！");
+        navigate(paths.app.profile.posts.getHref(data.showUserId));
+      },
+      onError: () => {
+        alert(
+          "プロフィールの更新に失敗しました。通信環境や入力内容をご確認ください。",
+        );
+      },
+    });
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className={styles.container}>
-      <form onSubmit={handleSubmit} className={styles.formContainer}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
         <div className={styles.header}>
           <h2>プロフィール編集</h2>
         </div>
@@ -122,36 +116,30 @@ const EditProfile = () => {
 
         <div className={styles.fieldsContainer}>
           <div className={styles.inputGroup}>
-            <label htmlFor="userName">名前</label>
+            <label htmlFor="nickname">名前</label>
             <input
-              id="userName"
-              name="userName"
-              value={editData.userName}
+              id="nickname"
               maxLength={50}
-              onChange={handleChange}
               className={styles.textInput}
+              {...register("nickname")}
             />
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="showUserId">ユーザーID</label>
             <input
               id="showUserId"
-              name="showUserId"
-              value={editData.showUserId}
               maxLength={20}
-              onChange={handleChange}
               className={styles.textInput}
+              {...register("showUserId")}
             />
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="introduction">自己紹介</label>
             <textarea
               id="introduction"
-              name="introduction"
-              value={editData.introduction ?? ""}
               maxLength={200}
-              onChange={handleChange}
               className={styles.textAreaInput}
+              {...register("introduction")}
             />
           </div>
         </div>

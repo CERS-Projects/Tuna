@@ -28,10 +28,9 @@ export type MenuItemType = {
   menuLabel: string;
 };
 
-export type EditProfileData = {
-  userId: number;
+export type EditProfileForm = {
+  nickname: string;
   showUserId: string;
-  userName: string;
-  iconUrl?: string;
-  introduction?: string;
+  introduction: string;
+  iconFile?: File;
 };
