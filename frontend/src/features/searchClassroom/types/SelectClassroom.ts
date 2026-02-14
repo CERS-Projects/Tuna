@@ -1,16 +1,16 @@
 export type Classroom = {
-  roomId: number;
-  teacherName: string;
-  roomName: string;
-  description: string;
-  latestUpdate: string;
+	roomId: string;
+	teacherName: string;
+	roomName: string;
+	description: string;
+	latestUpdate: string;
 };
 
 export type NoticeInfoItem = {
-  noticeId: number;
-  groupId: number;
-  noticeTitle: string;
-  noticeContent: string;
-  noticeDate: string;
-  teacherName: string;
+	noticeId: string;
+	groupId: number;
+	noticeTitle: string;
+	noticeContent: string;
+	noticeDate: string;
+	teacherName: string;
 };

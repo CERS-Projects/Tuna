@@ -1,60 +1,67 @@
 export type ClassroomItem = {
-  roomId: number;
-  roomName: string;
-  teacherName: string;
-  latestUpdate: string;
+	roomId: string;
+	roomName: string;
+	teacherName: string;
+	latestUpdate: string;
 };
 
-export type ClassroomCategoryDocument = {
-  name: string;
-  path: string;
-  uploadDate: string;
-};
+export type ClassroomCategoryDocument =
+	{
+		documentName: string;
+		uploadDate: string;
+		files: File[];
+	};
 
 export type ClassroomCategory = {
-  categoryName: string;
-  documents: ClassroomCategoryDocument[];
+	categoryName: string;
+	documents: ClassroomCategoryDocument[];
 };
 
 export type ClassroomCategoryEdit = {
-  categoryName: string;
-  existingDocuments: ClassroomCategoryDocument[];
-  deleteDocuments: ClassroomCategoryDocument[];
-  newFiles: File[];
+	categoryId: string;
+	categoryName: string;
+	existingDocuments: ClassroomCategoryDocument[];
+	deleteDocuments: ClassroomCategoryDocument[];
+	newFiles: File[];
 };
 
-export type ClassroomCategoryEditPost = {
-  categoryName: string;
-  deleteDocuments: ClassroomCategoryDocument[];
-  newFiles: File[];
-};
+export type ClassroomCategoryEditPost =
+	{
+		categoryId: string;
+		categoryName: string;
+		existingDocuments: ClassroomCategoryDocument[];
+		deleteDocuments: ClassroomCategoryDocument[];
+		newFiles: File[];
+	};
 
 export type ClassroomType = {
-  roomId: number;
-  roomName: string;
-  description: string;
-  categories: ClassroomCategory[];
+	roomId: string;
+	roomName: string;
+	description: string;
+	categories: ClassroomCategory[];
 };
 
 export type ClassroomCreateInput = {
-  roomName: string;
-  description: string;
-  categories: {
-    categoryName: string;
-    files: File[];
-  }[];
+	roomName: string;
+	description: string;
+	categories: {
+		categoryName: string;
+		files: File[];
+	}[];
 };
 
 export type ClassroomEditInput = {
-  roomId: number;
-  roomName: string;
-  description: string;
-  categories: ClassroomCategoryEdit[];
+	roomId: string;
+	roomName: string;
+	description: string;
+	categories: ClassroomCategoryEdit[];
 };
 
 export type ClassroomEditPost = {
-  roomId: number;
-  roomName: string;
-  description: string;
-  categories: ClassroomCategoryEditPost[];
+	roomId: string;
+	roomName: string;
+	description: string;
+	updateCategories: ClassroomCategoryEditPost[];
+	newCategories: ClassroomCategory[];
+	deletedCategoryIds: string[];
 };
