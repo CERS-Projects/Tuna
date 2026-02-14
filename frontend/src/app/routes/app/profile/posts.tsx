@@ -6,13 +6,13 @@ import { useOutletContext } from "react-router";
 
 const ProfilePosts = () => {
   const { userId } = useOutletContext<ProfileContext>();
-  const { data: posts, isPending, isError } = useUserPost(userId);
+  const { data: posts, isLoading, isError } = useUserPost(userId);
 
   return (
     <>
       {isError ? (
         <p>ユーザ投稿の取得に失敗しました</p>
-      ) : isPending ? (
+      ) : isLoading ? (
         <Spinner />
       ) : (
         posts?.map((post) => <PostBox key={post.postId} {...post} />)

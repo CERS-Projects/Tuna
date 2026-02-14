@@ -6,13 +6,13 @@ import { useOutletContext } from "react-router";
 
 const ProfileBookmarks = () => {
   const { userId } = useOutletContext<ProfileContext>();
-  const { data: posts, isPending, isError } = useUserBookmark(userId);
+  const { data: posts, isLoading, isError } = useUserBookmark(userId);
 
   return (
     <>
       {isError ? (
         <p>ユーザ投稿の取得に失敗しました</p>
-      ) : isPending ? (
+      ) : isLoading ? (
         <Spinner />
       ) : (
         posts?.map((post) => <PostBox key={post.postId} {...post} />)

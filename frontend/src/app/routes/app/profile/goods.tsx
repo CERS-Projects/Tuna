@@ -6,13 +6,13 @@ import { type ProfileContext } from "@/features/profile/layout/profileLayout";
 
 const ProfileGoods = () => {
   const { userId } = useOutletContext<ProfileContext>();
-  const { data: posts, isPending, isError } = useUserGood(userId);
+  const { data: posts, isLoading, isError } = useUserGood(userId);
 
   return (
     <>
       {isError ? (
         <p>いいね投稿の取得に失敗しました</p>
-      ) : isPending ? (
+      ) : isLoading ? (
         <Spinner />
       ) : (
         posts?.map((post) => <PostBox key={post.postId} {...post} />)
