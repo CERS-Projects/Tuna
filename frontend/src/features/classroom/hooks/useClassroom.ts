@@ -32,6 +32,15 @@ export const useClassroom = (roomId: string | undefined) => {
 						},
 					},
 				});
+				classroom.categories.forEach((category) => {
+					category.documents.forEach((doc) => {
+						doc.uploadedAt = new Date(doc.uploadedAt).toLocaleDateString("ja-JP", {
+							year: "numeric",
+							month: "2-digit",
+							day: "2-digit",
+						});
+					});
+				});
 				return classroom;
 			},
 			refetchOnMount: true,
