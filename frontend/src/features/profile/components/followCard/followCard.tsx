@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./followCard.module.css";
-import { type FollowData } from "../types/profileTypes";
+import { type FollowData } from "../../types/profileTypes";
 import { Link } from "react-router";
 import { paths } from "@/config/paths";
 

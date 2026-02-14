@@ -4,7 +4,7 @@ import styles from "@/features/profile/styles/follow.module.css";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
 import { useRef } from "react";
 import { type FollowData } from "@/features/profile/types/profileTypes";
-import { FollowCard } from "@/features/profile/components/followCard";
+import { FollowCard } from "@/features/profile/components/followCard/followCard";
 
 const dummyFollowers: FollowData[] = [
   {

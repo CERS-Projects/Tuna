@@ -1,9 +1,9 @@
 import styles from "./profileCard.module.css";
 import { FaUser } from "react-icons/fa";
-import { type ProfileData } from "../types/profileTypes";
+import { type ProfileData } from "../../types/profileTypes";
 import { Link } from "react-router";
 import { paths } from "@/config/paths";
-import { useDebouncedFollow } from "../hooks/useFollow";
+import { useDebouncedFollow } from "../../hooks/useFollow";
 import { useState } from "react";
 
 type OtherProfileCardProps = ProfileData;
