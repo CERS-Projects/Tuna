@@ -1,42 +1,59 @@
 import { useQuery } from "@tanstack/react-query";
-import { type ClassroomType } from "../types/classroom";
+import { useApiWithRefresh } from "@/lib/api-client";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import type { ClassroomCategory } from "../types/classroom";
 
-const DUMMY_CLASSROOM: ClassroomType = {
-  roomId: 1,
-  roomName: "2026年度前期 数学A",
-  description: "数学Aの授業ルームです。",
-  categories: [
-    {
-      category: "資料",
-      documents: [
-        {
-          name: "教科書.pdf",
-          path: "/files/textbook.pdf",
-          uploadDate: "2026-01-28",
-        },
-        {
-          name: "課題.docx",
-          path: "/files/homework.docx",
-          uploadDate: "2026-01-27",
-        },
-      ],
-    },
-    {
-      category: "連絡",
-      documents: [],
-    },
-  ],
+type ClassroomDetailResponse = {
+	classroomId: string;
+	roomName: string;
+	description: string;
+	categories: (ClassroomCategory & {
+		categoryId: string;
+	})[];
 };
 
-export const useClassroom = (roomId: number) => {
-  const { data, isFetching, isError, refetch } = useQuery<ClassroomType>({
-    queryKey: ["classroom", "edit", roomId],
-    queryFn: async (): Promise<ClassroomType> => {
-      // のちにAPIを実装
-      return DUMMY_CLASSROOM;
-    },
-    initialData: DUMMY_CLASSROOM,
-  });
+export const useClassroom = (
+	roomId: string,
+) => {
+	const apiWithRefresh =
+		useApiWithRefresh();
+	const { authToken } = useAuth();
 
-  return { data, isFetching, isError, refetch };
+	const {
+		data,
+		isFetching,
+		isError,
+		refetch,
+	} = useQuery<ClassroomDetailResponse>({
+		queryKey: [
+			"classroom",
+			"edit",
+			roomId,
+		],
+		enabled: !!authToken && !!roomId,
+		queryFn:
+			async (): Promise<ClassroomDetailResponse> => {
+				return await apiWithRefresh<ClassroomDetailResponse>(
+					{
+						url: `/classroom/detail?roomId=${roomId}`,
+						options: {
+							method: "GET",
+							headers: {
+								"Content-Type":
+									"application/json",
+								Authorization: `Bearer ${authToken}`,
+							},
+						},
+					},
+				);
+			},
+		refetchOnMount: true,
+	});
+
+	return {
+		data,
+		isFetching,
+		isError,
+		refetch,
+	};
 };
