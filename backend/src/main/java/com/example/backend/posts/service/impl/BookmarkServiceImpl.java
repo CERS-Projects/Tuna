@@ -95,37 +95,46 @@ public class BookmarkServiceImpl implements BookmarkService {
     //ブックマーク投稿の取得
     @Override
     public List<PostDetailResponse> getBookmarkedPosts(Authentication authentication, Integer userId, Integer schoolId) {
-        List<PostDetailResponse> postDetails = null;
+        List<PostDetailResponse> postDetails = List.of();
         Set<Integer> getShaRangeList = new HashSet<>();
         boolean isAdminorTeacher = authentication.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
-        try{
-            postDetails = bookmarkRepository.findByBookmarked(userId);
-
-            Iterator<PostDetailResponse> iterator = postDetails.iterator();
-            while (iterator.hasNext()) {
-                PostDetailResponse postDetail = iterator.next();
-                if(!isAdminorTeacher){
-                    if (!postPermissionHelper.canViewPost(userId, postDetail.getShareRange())) {
-                        iterator.remove();
-                        continue;
-                    }
-                }
-                getShaRangeList.addAll(postDetail.getShareRange());
-                postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
-                postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+            try{
+                postDetails = bookmarkRepository.findByBookmarked(userId);
+            } catch(Exception e){
+                log.error("ブックマーク投稿の取得に失敗しました userId: {} エラー: {}" , userId, e);
+                throw new RuntimeException("ブックマーク投稿の取得に失敗しました");
             }
+            Iterator<PostDetailResponse> iterator = postDetails.iterator();
+
+            try{
+                while (iterator.hasNext()) {
+                    PostDetailResponse postDetail = iterator.next();
+                    if(!isAdminorTeacher){
+                        if (!postPermissionHelper.canViewPost(userId, postDetail.getShareRange())) {
+                            iterator.remove();
+                            continue;
+                        }
+                    }
+                    if(!postDetail.getShareRange().contains(0)){
+                        getShaRangeList.addAll(postDetail.getShareRange());
+                    }
+                    postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
+                    postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+                    
+                }
+            } catch(Exception e){
+                log.error("ブックマーク投稿の処理中にエラーが発生しました userId: {} エラー: {}" , userId, e);
+                throw new RuntimeException("ブックマーク投稿の処理中にエラーが発生しました");
+                }
+            
+            
             if(isAdminorTeacher){
                 if(!accountConfirm.isExistsAllGroups(schoolId, getShaRangeList.toArray(new Integer[0]))){
                     log.error("取得したブックマークに学校に所属していないグループが含まれています userId: {} and schoolId: {} groups: {}", userId, schoolId,getShaRangeList);
                     throw new RuntimeException("取得したブックマークに学校に所属していないグループが含まれています");
                 }
             }
-
-        } catch(Exception e) {
-            log.error("ブックマーク投稿の取得に失敗しました userId: {} エラー: {}", userId, e);
-            throw new RuntimeException("ブックマーク投稿の取得に失敗しました");
-        }
         return postDetails;
     }
 }

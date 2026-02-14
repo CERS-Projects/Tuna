@@ -112,9 +112,13 @@ public class LikeServiceImpl implements LikeService {
         
         try{
             postDetails = likeRepository.findByLiked(userId);
-
-            //閲覧権限確認(なかったら除外)とURL設定
-            Iterator<PostDetailResponse> iterator = postDetails.iterator();
+        } catch(Exception e){
+            log.error("いいねした投稿の取得に失敗しました userId: {} エラー: {}", userId, e);
+            throw new RuntimeException("いいねした投稿の取得に失敗しました");
+        }
+        
+        Iterator<PostDetailResponse> iterator = postDetails.iterator();
+        try{
             while (iterator.hasNext()) {
                 PostDetailResponse postDetail = iterator.next();
                 if(!isAdminorTeacher){
@@ -123,10 +127,19 @@ public class LikeServiceImpl implements LikeService {
                         continue;
                     }
                 }
-                getShaRangeList.addAll(postDetail.getShareRange());
+
+                if(!postDetail.getShareRange().contains(0)){
+                    getShaRangeList.addAll(postDetail.getShareRange());
+                }
+
                 postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
                 postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
+                }
+        } catch(Exception e){
+            log.error("いいねした投稿の処理中にエラーが発生しました userId: {} エラー: {}", userId, e);
+            throw new RuntimeException("いいねした投稿の処理中にエラーが発生しました");
             }
+
             if(isAdminorTeacher){
                 if(!accountConfirm.isExistsAllGroups(schoolId, getShaRangeList.toArray(new Integer[0]))){
                     log.info("いいねした投稿の取得に失敗しました userId: {} エラー: {}", userId, "権限のないグループが含まれています");
@@ -136,10 +149,7 @@ public class LikeServiceImpl implements LikeService {
 
             log.info("いいねした投稿の取得に成功しました userId: {}", userId);
             return postDetails;
-        } catch(Exception e){
-            log.error("いいねした投稿の取得に失敗しました userId: {} エラー: {}", userId, e);
-            throw new RuntimeException("いいねした投稿の取得に失敗しました");
-        }
+        
     }
 }
 
