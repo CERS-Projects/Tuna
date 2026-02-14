@@ -183,11 +183,17 @@ const ClassroomEdit = () => {
 				"この内容で授業ルームを更新しますか？",
 			)
 		) {
-			updateClassroom(formData);
-			navigate(
-				paths.app.management.classroom.list
-					.path,
-			);
+			updateClassroom(formData, {
+				onSuccess: () => {
+					alert(
+						"授業ルームを更新しました。",
+					);
+					navigate(
+						paths.app.management.classroom
+							.list.path,
+					);
+				},
+			});
 		}
 	};
 
