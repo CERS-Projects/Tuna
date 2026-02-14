@@ -50,13 +50,7 @@ export const useCreatePost = (options?: UseCreatePostOptions) => {
       variables.shareRange.forEach((id) => {
         queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
         queryClient.invalidateQueries({
-          queryKey: ["user", "profile", "posts", user?.showUserId],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["user", "profile", "goods", user?.showUserId],
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["user", "profile", "bookmarks", user?.showUserId],
+          queryKey: ["user", "profile", user?.showUserId],
         });
       });
 

@@ -41,13 +41,7 @@ export const useBookmark = (
         queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
       });
       queryClient.invalidateQueries({
-        queryKey: ["user", "profile", "posts", showUserId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["user", "profile", "goods", showUserId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["user", "profile", "bookmarks", showUserId],
+        queryKey: ["user", "profile", showUserId],
       });
       options?.onSuccess?.();
     },
@@ -86,13 +80,7 @@ export const useUnBookmarkPost = (
         queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
       });
       queryClient.invalidateQueries({
-        queryKey: ["user", "profile", "posts", showUserId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["user", "profile", "goods", showUserId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["user", "profile", "bookmarks", showUserId],
+        queryKey: ["user", "profile", showUserId],
       });
       options?.onSuccess?.();
     },

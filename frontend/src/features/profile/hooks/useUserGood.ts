@@ -10,7 +10,7 @@ export const useUserGood = (userId: number | undefined) => {
   const { showUserId } = useParams();
 
   return useQuery({
-    queryKey: ["user", "profile", "goods", showUserId],
+    queryKey: ["user", "profile", showUserId, "goods"],
     enabled: !!authToken && !!showUserId && !!userId,
     queryFn: async (): Promise<PostData[]> => {
       const posts = await apiWithRefresh<PostData[]>({
