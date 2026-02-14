@@ -19,7 +19,7 @@ const ClassroomEdit = () => {
 	const { roomId } = useParams();
 	const parsedRoomId = roomId || "";
 
-	const [deletedCategoryIds, setDeletedCategoryIds] = useState<string[]>([]);
+	const [deleteCategoryIds, setDeleteCategoryIds] = useState<string[]>([]);
 
 	const { data: classroom, isFetching, isError } = useClassroom(parsedRoomId);
 
@@ -61,7 +61,7 @@ const ClassroomEdit = () => {
 
 	useEffect(() => {
 		if (classroom) {
-			setDeletedCategoryIds([]);
+			setDeleteCategoryIds([]);
 			reset({
 				roomId: parsedRoomId,
 				roomName: classroom.roomName,
@@ -80,7 +80,7 @@ const ClassroomEdit = () => {
 	const handleRemoveCategory = (idx: number) => {
 		const category = getValues(`categories.${idx}`);
 		if (category.categoryId) {
-			setDeletedCategoryIds((prev) => [...prev, category.categoryId]);
+			setDeleteCategoryIds((prev) => [...prev, category.categoryId]);
 		}
 		remove(idx);
 	};
@@ -88,7 +88,7 @@ const ClassroomEdit = () => {
 	const onSubmit = (data: ClassroomEditInput) => {
 		if (
 			!formState.isDirty &&
-			deletedCategoryIds.length === 0 &&
+			deleteCategoryIds.length === 0 &&
 			data.categories.every((c, i) => {
 				const defaultCategory = classroom?.categories[i];
 				return (
@@ -125,7 +125,7 @@ const ClassroomEdit = () => {
 					categoryName,
 					files: newFiles,
 				})),
-			deletedCategoryIds,
+			deleteCategoryIds,
 		};
 
 		if (confirm("この内容で授業ルームを更新しますか？")) {

@@ -62,7 +62,7 @@ export type ClassroomEditPost = {
 	description: string;
 	updateCategories: ClassroomCategoryEditPost[];
 	newCategories: ClassroomNewCategoryPost[];
-	deletedCategoryIds: string[];
+	deleteCategoryIds: string[];
 };
 
 export type ClassroomNewCategoryPost = {
