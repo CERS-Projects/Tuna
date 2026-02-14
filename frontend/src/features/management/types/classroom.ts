@@ -5,13 +5,12 @@ export type ClassroomItem = {
 	latestUpdate: string;
 };
 
-export type ClassroomCategoryDocument =
-	{
-		documentId: string;
-		documentName: string;
-		documentUrl: string;
-		uploadedAt: string;
-	};
+export type ClassroomCategoryDocument = {
+	documentId: string;
+	documentName: string;
+	documentUrl: string;
+	uploadedAt: string;
+};
 
 export type ClassroomCategory = {
 	categoryName: string;
@@ -26,14 +25,13 @@ export type ClassroomCategoryEdit = {
 	newFiles: File[];
 };
 
-export type ClassroomCategoryEditPost =
-	{
-		categoryId: string;
-		categoryName: string;
-		existingDocuments: ClassroomCategoryDocument[];
-		deleteDocuments: ClassroomCategoryDocument[];
-		newFiles: File[];
-	};
+export type ClassroomCategoryEditPost = {
+	categoryId: string;
+	categoryName: string;
+	existingDocuments: ClassroomCategoryDocument[];
+	deleteDocuments: ClassroomCategoryDocument[];
+	newFiles: File[];
+};
 
 export type ClassroomType = {
 	roomId: string;
@@ -56,7 +54,6 @@ export type ClassroomEditInput = {
 	roomName: string;
 	description: string;
 	categories: ClassroomCategoryEdit[];
-	newCategories: ClassroomCategoryEdit[];
 };
 
 export type ClassroomEditPost = {
