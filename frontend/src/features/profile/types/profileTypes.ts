@@ -14,10 +14,10 @@ export type ProfileData = {
 
 export type FollowData = {
   userId: number;
-  userName: string;
+  nickname: string;
   showUserId: string;
-  isFollowed: boolean;
-  isFollowing: boolean;
+  followed: boolean;
+  following: boolean;
   iconUrl: string;
 };
 

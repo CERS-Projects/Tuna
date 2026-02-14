@@ -1,25 +1,27 @@
-import React, { useState } from "react";
 import styles from "./followCard.module.css";
 import { type FollowData } from "../../types/profileTypes";
 import { Link } from "react-router";
 import { paths } from "@/config/paths";
+import { useDebouncedFollow } from "../../hooks/useFollow";
+import { useState } from "react";
 
-type ProfileCardProps = FollowData;
+type ProfileCardProps = FollowData & { isMyself: boolean };
 
 export const FollowCard = ({
   userId,
   showUserId,
-  userName,
+  nickname,
   iconUrl,
-  isFollowed,
-  isFollowing: initialIsFollowing,
+  followed,
+  following,
+  isMyself,
 }: ProfileCardProps) => {
-  const [following, setFollowing] = useState(initialIsFollowing);
+  const { debouncedToggle } = useDebouncedFollow(userId);
+  const [isFollowing, setIsFollowing] = useState<boolean>(following);
 
-  const handleFollowClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setFollowing(!following);
+  const handleFollow = () => {
+    debouncedToggle(isFollowing);
+    setIsFollowing((prev) => !prev);
   };
 
   return (
@@ -33,14 +35,14 @@ export const FollowCard = ({
             <img
               src={iconUrl}
               className={styles.profileIcon}
-              alt={`${userName}のプロフィール画像`}
+              alt={`${nickname}のプロフィール画像`}
             />
           )}
         </div>
         <div className={styles.textWrapper}>
           <div className={styles.nameRow}>
-            <span className={styles.userName}>{userName}</span>
-            {isFollowed && (
+            <span className={styles.userName}>{nickname}</span>
+            {followed && (
               <span className={styles.followedBadge}>フォローされています</span>
             )}
           </div>
@@ -49,12 +51,16 @@ export const FollowCard = ({
       </Link>
 
       <div className={styles.actionArea}>
-        <button
-          className={following ? styles.buttonFollowing : styles.buttonFollow}
-          onClick={handleFollowClick}
-        >
-          {following ? "フォロー中" : "フォローする"}
-        </button>
+        {!isMyself && (
+          <button
+            className={
+              isFollowing ? styles.buttonFollowing : styles.buttonFollow
+            }
+            onClick={handleFollow}
+          >
+            {isFollowing ? "フォロー中" : "フォローする"}
+          </button>
+        )}
       </div>
     </div>
   );

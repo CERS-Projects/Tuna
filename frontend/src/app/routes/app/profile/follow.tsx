@@ -3,59 +3,24 @@ import { RiCompass3Line } from "react-icons/ri";
 import styles from "@/features/profile/styles/follow.module.css";
 import { Modal, type ModalHandle } from "@/components/ui/modal/modal";
 import { useRef } from "react";
-import { type FollowData } from "@/features/profile/types/profileTypes";
 import { FollowCard } from "@/features/profile/components/followCard/followCard";
-
-const dummyFollowers: FollowData[] = [
-  {
-    userId: 1,
-    showUserId: "tanaka_tech",
-    userName: "リュウグウノツカイ",
-    iconUrl: "https://loremflickr.com/150/150/deepseafish?random=1",
-    isFollowed: true,
-    isFollowing: false,
-  },
-  {
-    userId: 2,
-    showUserId: "yuki_design",
-    userName: "デメニギス",
-    iconUrl: "https://loremflickr.com/150/150/deepseafish?random=2",
-    isFollowed: true,
-    isFollowing: true,
-  },
-  {
-    userId: 3,
-    showUserId: "long_name_user_test_account_example",
-    userName: "ミツクリザメ",
-    iconUrl: "https://loremflickr.com/150/150/deepseafish?random=3",
-    isFollowed: false,
-    isFollowing: false,
-  },
-  {
-    userId: 4,
-    showUserId: "react_lover",
-    userName: "チョウチンアンコウ",
-    iconUrl: "https://loremflickr.com/150/150/deepseafish?random=4",
-    isFollowed: true,
-    isFollowing: false,
-  },
-  {
-    userId: 5,
-    showUserId: "no_image_user",
-    userName: "フクロウナギ",
-    iconUrl: "https://loremflickr.com/150/150/deepseafish?random=5",
-    isFollowed: false,
-    isFollowing: true,
-  },
-];
+import { Spinner } from "@/components/ui/spinner/spinner";
+import { useFollowing } from "@/features/profile/hooks/useFollowing";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 const Follow = () => {
+  const { data: following, isLoading, isError } = useFollowing();
+  const { authToken } = useAuth();
+  const { data: loginUser } = useUser(authToken);
+
   const modalRef = useRef<ModalHandle>(null);
   const modalButtonClick = () => {
     if (modalRef.current) {
       modalRef.current.show();
     }
   };
+
   return (
     <div className={styles.followLayout}>
       <div className={styles.followContainer}>
@@ -67,9 +32,21 @@ const Follow = () => {
             <h2>フォロー</h2>
           </div>
           <hr />
-          {dummyFollowers.map((user) => (
-            <FollowCard key={user.showUserId} {...user} />
-          ))}
+          {isError ? (
+            <p>フォローユーザ一覧の取得に失敗しました</p>
+          ) : isLoading ? (
+            <Spinner />
+          ) : following && following.length > 0 ? (
+            following.map((user) => (
+              <FollowCard
+                key={user.showUserId}
+                {...user}
+                isMyself={user.showUserId === loginUser?.showUserId}
+              />
+            ))
+          ) : (
+            <p>フォローしているユーザがいません</p>
+          )}
         </div>
         <div className={styles.followSub}>
           <InfoBox>
