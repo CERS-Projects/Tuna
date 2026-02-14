@@ -1,9 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useApiWithRefresh } from "@/lib/api-client";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useDebouncedCallback } from "use-debounce";
 import { useEffect } from "react";
-import { useParams } from "react-router";
 
 type UseBookmarkOptions = {
   onSuccess?: () => void;
@@ -17,8 +16,6 @@ export const useBookmark = (
 ) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
-  const { showUserId } = useParams();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
@@ -37,12 +34,6 @@ export const useBookmark = (
       });
     },
     onSuccess: () => {
-      shareRange.forEach((id) => {
-        queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["user", "profile", showUserId],
-      });
       options?.onSuccess?.();
     },
     onError: (error: Error) => {
@@ -58,8 +49,6 @@ export const useUnBookmarkPost = (
 ) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
-  const { showUserId } = useParams();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
@@ -76,12 +65,6 @@ export const useUnBookmarkPost = (
       });
     },
     onSuccess: () => {
-      shareRange.forEach((id) => {
-        queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["user", "profile", showUserId],
-      });
       options?.onSuccess?.();
     },
     onError: (error: Error) => {
