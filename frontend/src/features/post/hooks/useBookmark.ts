@@ -103,7 +103,7 @@ export const useDebouncedBookmark = (
     } else {
       unBookmarkMutate(undefined);
     }
-  }, 5000);
+  }, 1500);
 
   useEffect(() => {
     return () => {

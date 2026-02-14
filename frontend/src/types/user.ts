@@ -5,8 +5,8 @@ export type User = {
   showUserId: string;
   userName: string;
   iconUrl?: string;
-  follow: number;
-  follower: number;
+  followCount: number;
+  followerCount: number;
   introduction?: string;
   role: Role;
 };
