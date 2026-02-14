@@ -83,7 +83,15 @@ const EditProfile = () => {
 
   return (
     <div className={styles.container}>
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.formContainer}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className={styles.formContainer}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && e.target instanceof HTMLInputElement) {
+            e.preventDefault();
+          }
+        }}
+      >
         <div className={styles.header}>
           <h2>プロフィール編集</h2>
         </div>

@@ -16,12 +16,6 @@ export const useEditProfile = () => {
 
   const isMyProfile = !!user && user.showUserId === showUserId;
 
-  useEffect(() => {
-    if (!isUserLoading && user && !isMyProfile) {
-      navigate(-1);
-    }
-  }, [isUserLoading, user, isMyProfile, navigate]);
-
   const editProfile = useMutation({
     mutationFn: async (formData: FormData) => {
       if (!user) return;
@@ -45,10 +39,28 @@ export const useEditProfile = () => {
         queryKey: ["user", "profile", showUserId],
       });
       queryClient.invalidateQueries({
+        queryKey: ["post"],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["posts"],
       });
     },
   });
+
+  useEffect(() => {
+    const isProcessingOrDone = editProfile.isPending || editProfile.isSuccess;
+
+    if (!isUserLoading && user && !isMyProfile && !isProcessingOrDone) {
+      navigate(-1);
+    }
+  }, [
+    isUserLoading,
+    user,
+    isMyProfile,
+    navigate,
+    editProfile.isPending,
+    editProfile.isSuccess,
+  ]);
 
   return {
     user,
