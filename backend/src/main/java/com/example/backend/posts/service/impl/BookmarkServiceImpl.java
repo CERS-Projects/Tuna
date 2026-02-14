@@ -126,7 +126,7 @@ public class BookmarkServiceImpl implements BookmarkService {
                     }
                 }
                 // 管理者/教師: 学校の場合 shareRangeを集約
-                if (isAdminOrTeacher && postDetail.getShareRange().contains(0)) {
+                if (isAdminOrTeacher && !postDetail.getShareRange().contains(0)) {
                     shareRangeList.addAll(postDetail.getShareRange());
                 }
 
