@@ -3,6 +3,7 @@ import { useApiWithRefresh } from "@/lib/api-client";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useDebouncedCallback } from "use-debounce";
 import { useEffect } from "react";
+import { useParams } from "react-router";
 
 type UseBookmarkOptions = {
   onSuccess?: () => void;
@@ -16,6 +17,7 @@ export const useBookmark = (
 ) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
+  const { showUserId } = useParams();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -38,6 +40,15 @@ export const useBookmark = (
       shareRange.forEach((id) => {
         queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
       });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "profile", "posts", showUserId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "profile", "goods", showUserId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "profile", "bookmarks", showUserId],
+      });
       options?.onSuccess?.();
     },
     onError: (error: Error) => {
@@ -53,6 +64,7 @@ export const useUnBookmarkPost = (
 ) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
+  const { showUserId } = useParams();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -72,6 +84,15 @@ export const useUnBookmarkPost = (
     onSuccess: () => {
       shareRange.forEach((id) => {
         queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "profile", "posts", showUserId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "profile", "goods", showUserId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user", "profile", "bookmarks", showUserId],
       });
       options?.onSuccess?.();
     },
