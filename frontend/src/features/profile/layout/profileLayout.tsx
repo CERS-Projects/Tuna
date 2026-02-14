@@ -62,6 +62,10 @@ const dummyInfo: NoticeInfoItem[] = [
   },
 ];
 
+export type ProfileContext = {
+  userId: number | undefined;
+};
+
 const ProfileLayout = () => {
   const modalRef = useRef<ModalHandle>(null);
   const { data: profile, isMyProfile, isPending, isError } = useProfile();
@@ -90,7 +94,7 @@ const ProfileLayout = () => {
             ) : null}
 
             <ProfileCardTab isMyProfile={isMyProfile} />
-            <Outlet />
+            <Outlet context={{ userId: profile?.userId }} />
           </div>
         ) : (
           <>ユーザ情報の取得に失敗しました</>
