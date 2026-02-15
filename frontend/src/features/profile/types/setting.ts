@@ -3,3 +3,7 @@ export type EditPasswordForm = {
   newPassword: string;
   confirmPassword: string;
 };
+
+export type FilterWords = {
+  filterWords: string[];
+};
