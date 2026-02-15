@@ -2,6 +2,8 @@ package com.example.backend.profile.service.impl;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.backend.profile.service.ProfileService;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import com.example.backend.accounts.repository.UserRepository;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class ProfileServiceImpl implements ProfileService {
@@ -75,9 +78,6 @@ public class ProfileServiceImpl implements ProfileService {
                 .orElseThrow(() -> new EmptyResultDataAccessException("ユーザー情報の取得に失敗しました", 0));
 
         userEntity.setShowUserId(profile.getShowUserId());
-
-        userRepository.save(userEntity);
-
     }
 
     // フィルターワードの更新
