@@ -61,7 +61,7 @@ public interface ClassroomRepository extends MongoRepository<ClassroomEntity, Ob
         
         // カテゴリーごとに再集約
         "{ $group: { " +
-            "_id: '$_id', " +
+            "_id: { $toString: '$_id' }, " +
             "room_name: { $first: '$room_name' }, " +
             "description: { $first: '$description' }, " +
             "categories: { $push: { " +
