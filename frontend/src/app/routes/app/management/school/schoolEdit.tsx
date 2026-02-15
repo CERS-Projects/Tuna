@@ -7,8 +7,6 @@ import {
 import { type SchoolEditFormInput } from "@/features/management/types/school";
 import { Input } from "@/components/ui/input/input";
 import { Button } from "@/components/ui/button/button";
-import { BackPage } from "@/features/management/components/backPage/backPage";
-import { paths } from "@/config/paths";
 import styles from "@/features/management/style/schoolEdit.module.css";
 
 const SchoolEdit = () => {

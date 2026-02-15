@@ -49,7 +49,6 @@ export const useUpdateSchool = () => {
 					body: JSON.stringify(data),
 				},
 			});
-			console.log("学校情報を更新:", data);
 			return result;
 		},
 		onSuccess: () => {
