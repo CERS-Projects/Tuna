@@ -74,6 +74,7 @@ public class ReportHelper {
             response.setReasonId(entity.getReasonId());
             response.setReportDate(entity.getReportDate());
             response.setReportedPost(post.getSentence());
+            response.setReportedPostDate(post.getPostDate());
             response.setReportDetail(entity.getDetail());
             return response;
         }).toList();

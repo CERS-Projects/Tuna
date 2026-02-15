@@ -18,5 +18,6 @@ public class ReportListResponse {
     private Integer reasonId;
     private Date reportDate;
     private String reportedPost;
+    private Date reportedPostDate;
     private String reportDetail;
 }
