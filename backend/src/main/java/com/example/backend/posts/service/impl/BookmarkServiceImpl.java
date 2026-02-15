@@ -99,7 +99,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         List<PostDetailResponse> postDetails = List.of();
         HashSet<Integer> shareRangeList = new HashSet<>();
         boolean isAdminOrTeacher = authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
         try{
             postDetails = bookmarkRepository.findByBookmarked(userId);
         } catch(Exception e){

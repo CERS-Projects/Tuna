@@ -68,7 +68,7 @@ public class PostServiceImpl implements PostService {
         // 除外したリストをもとに権限確認（userGroupIdsが空でない場合のみ)
         if(!userGroupIds.isEmpty()) {
             boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
-                    .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ADMIN_SCHOOL"));
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
 
             if (!isTeacherOrAdmin) {
                 if (!accountConfirm.isExistsAllGroups(userId, userGroupIds.toArray(new Integer[0]))) {
@@ -138,7 +138,7 @@ public class PostServiceImpl implements PostService {
         List<Integer> shareRangeList = new java.util.ArrayList<>(List.of(shareRange));
 
         boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ADMIN_SCHOOL"));
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
 
         if (!isTeacherOrAdmin && !(shareRangeList.size() == 1 && shareRangeList.get(0) == 0)) {
 
@@ -187,7 +187,7 @@ public class PostServiceImpl implements PostService {
         List<Integer> userGroupIds = groupJoinByUserId.getJoinedGroupIdsByUserId(currentUserId);
 
         boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ADMIN_SCHOOL"));
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
         if (!isTeacherOrAdmin) {
             if (!accountConfirm.isExistsAllGroups(currentUserId, userGroupIds.toArray(new Integer[0]))) {
                 throw new IllegalArgumentException("指定されたグループに所属していません。");
@@ -245,7 +245,7 @@ public class PostServiceImpl implements PostService {
         Integer currentUserId = userInfo.getUserId();
 
         boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ADMIN_SCHOOL"));
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
 
         // publicの0を除外
         List<Integer> nonPublicGroupIds = shareRange.stream()
@@ -350,7 +350,7 @@ public class PostServiceImpl implements PostService {
         Integer currentUserId = userInfo.getUserId();
 
         boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ADMIN_SCHOOL"));
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
 
         try {
             log.info("投稿単体取得を開始しました 投稿ID: " + postId + " 取得 currentUserId: " + currentUserId);

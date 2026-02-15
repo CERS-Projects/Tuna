@@ -108,7 +108,7 @@ public class LikeServiceImpl implements LikeService {
     public List<PostDetailResponse> getLikedPosts(Authentication authentication, Integer userId, Integer schoolId) {
         List<PostDetailResponse> postDetails = List.of();
         boolean isAdminOrTeacher = authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
         
         try{
             postDetails = likeRepository.findByLiked(userId);
@@ -167,7 +167,7 @@ public class LikeServiceImpl implements LikeService {
         List<PostDetailResponse> postDetails = List.of();
         HashSet<Integer> shareRangeList = new HashSet<>();
         boolean isAdminOrTeacher = authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
         
         try{
             postDetails = likeRepository.findByLiked(targetUserId);
