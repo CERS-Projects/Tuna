@@ -707,8 +707,44 @@ try {
       follow: 2,
       follower: 2,
     },
+    {
+      user_id: 6,
+      nickname: "上野 俊",
+      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      show_user_id: "t003_teacher_c",
+      introduction: "こんにちは！よろしくお願いします。",
+      follow: 0,
+      follower: 0,
+    },
+    {
+      user_id: 8,
+      nickname: "松本 層",
+      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      show_user_id: "s004_student_v",
+      introduction: "こんにちは！よろしくお願いします。",
+      follow: 0,
+      follower: 0,
+    },
+    {
+      user_id: 9,
+      nickname: "菊池 優希",
+      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      show_user_id: "s005_student_u",
+      introduction: "こんにちは！よろしくお願いします。",
+      follow: 0,
+      follower: 0,
+    },
+    {
+      user_id: 10,
+      nickname: "飯塚 千尋",
+      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      show_user_id: "t003_teacher_t",
+      introduction: "こんにちは！よろしくお願いします。",
+      follow: 0,
+      follower: 0,
+    },
   ]);
-  print("✅ profile_collectionに5件挿入しました。");
+  print("✅ profile_collectionに9件挿入しました。");
 
   // C. search_history_collection
   db.search_history_collection.insertMany([
