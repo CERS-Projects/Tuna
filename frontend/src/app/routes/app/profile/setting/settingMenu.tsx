@@ -5,6 +5,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { IoFilterOutline } from "react-icons/io5";
 import styles from "@/features/profile/styles/settingMenu.module.css";
 import { paths } from "@/config/paths";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 const MenuItems: MenuItemType[] = [
   {
@@ -21,20 +22,30 @@ const MenuItems: MenuItemType[] = [
   },
   {
     menuName: "ログアウト",
-    menuPath: paths.welcome.path,
     menuIcon: <FaSignOutAlt />,
     menuLabel: "ログアウトします",
   },
 ];
 
 const SettingMenu = () => {
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    if (confirm("ログアウトしますか？")) logout();
+  };
+
+  const items = MenuItems.map((item) =>
+    item.menuName === "ログアウト"
+      ? { ...item, handleLogout: handleLogout }
+      : item,
+  );
   return (
     <div>
       <div className={styles.settingMenuHeader}>
         <h2>設定メニュー </h2>
       </div>
       <div className={styles.settingMenuMain}>
-        {MenuItems.map((item) => (
+        {items.map((item) => (
           <MenuItem key={item.menuName} {...item} />
         ))}
       </div>

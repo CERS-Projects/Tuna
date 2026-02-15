@@ -23,7 +23,7 @@ export type FollowData = {
 
 export type MenuItemType = {
   menuName: string;
-  menuPath: string;
+  menuPath?: string;
   menuIcon: ReactNode;
   menuLabel: string;
 };
