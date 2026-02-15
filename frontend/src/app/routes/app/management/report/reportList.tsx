@@ -8,7 +8,7 @@ import { Pagination } from "@/features/management/components/pagination/paginati
 import { reasonLabels } from "@/features/management/types/report";
 import styles from "@/features/management/style/reportList.module.css";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 8;
 
 const ReportList = () => {
   const [reasonFilter, setReasonFilter] = useState<number>(-1);
