@@ -1,19 +1,17 @@
 export type categoryType = {
-  id: number;
-  name: string;
-  createdAt: string;
+	categoryId: string;
+	categoryName: string;
+	createdAt: string;
 };
 
 export type materialType = {
-  categoryId: number;
-  materialId: number;
-  title: string;
-  fileName: string;
-  fileUrl: string;
-  createdAt: string;
+	documentId: string;
+	documentName: string;
+	documentUrl: string;
+	uploadedAt: string;
 };
 
 export type classroomData = {
-  className: string;
-  information: string;
+	roomName: string;
+	description: string;
 };

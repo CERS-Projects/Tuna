@@ -10,6 +10,8 @@ import com.example.backend.classroom.dto.DocumentsResponse;
 @Setter
 public class CategoriesResponse {
 
+    private String categoryId;
+
     private String categoryName;
 
     private List<DocumentsResponse> documents;

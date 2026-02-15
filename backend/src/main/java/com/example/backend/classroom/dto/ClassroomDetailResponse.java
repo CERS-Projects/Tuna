@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Setter
 public class ClassroomDetailResponse {
 
+    private String classroomId;
+
     @Field("room_name")
     private String roomName;
 

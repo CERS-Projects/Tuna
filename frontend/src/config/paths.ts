@@ -103,7 +103,7 @@ export const paths = {
       getHref: () => "/app/classroom",
       contents: {
         path: "/app/classroom/:id",
-        getHref: (id: number) => `/app/classroom/${id}`,
+        getHref: (id: string) => `/app/classroom/${id}`,
       },
     },
     profile: {
