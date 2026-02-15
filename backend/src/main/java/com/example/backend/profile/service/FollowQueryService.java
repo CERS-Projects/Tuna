@@ -9,6 +9,10 @@ public interface FollowQueryService {
     
     List<FollowingProfileResponse> getFollowerAccounts(Integer userId);
 
+    List<FollowingProfileResponse> getOtherUserFollowingAccounts(Integer targetUserId, Integer currentUserId);
+
+    List<FollowingProfileResponse> getOtherUserFollowerAccounts(Integer targetUserId, Integer currentUserId);
+
     void addFollowRelation(Integer followerId, Integer followingId);
 
     void removeFollowRelation(Integer followerId, Integer followingId);

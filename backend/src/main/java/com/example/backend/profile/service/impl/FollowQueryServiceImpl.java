@@ -145,6 +145,120 @@ public class FollowQueryServiceImpl implements FollowQueryService {
         }
     }
 
+    //　他のユーザーのフォロー一覧を取得
+    @Override
+    public List<FollowingProfileResponse> getOtherUserFollowingAccounts(Integer targetUserId, Integer currentUserId) {
+        try {
+            // 1) targetUserがフォローしている相手ID一覧
+            List<FollowRelationEntity> relations = followRelationRepository.findByFollowerId(targetUserId);
+            if (relations.isEmpty()) return List.of();
+
+            List<Integer> followingIds = relations.stream()
+                    .map(FollowRelationEntity::getFollowingId)
+                    .distinct()
+                    .toList();
+
+            // 2) 相手プロフィールをまとめて取得
+            List<UserProfileEntity> profiles = profileRepository.findByUserIdIn(followingIds);
+
+            Map<Integer, UserProfileEntity> profileMap = profiles.stream()
+                    .collect(Collectors.toMap(UserProfileEntity::getUserId, Function.identity(), (a, b) -> a));
+
+            // 3) isFollowing を判定（currentUser → 相手）
+            Set<Integer> actuallyFollowing = followRelationRepository
+                    .findByFollowerIdAndFollowingIdIn(currentUserId, followingIds)
+                    .stream()
+                    .map(FollowRelationEntity::getFollowingId)
+                    .collect(Collectors.toSet());
+
+            // 4) isFollower を判定（相手 → currentUser）
+            Set<Integer> actuallyFollowers = followRelationRepository
+                    .findByFollowerIdInAndFollowingId(followingIds, currentUserId)
+                    .stream()
+                    .map(FollowRelationEntity::getFollowerId)
+                    .collect(Collectors.toSet());
+
+            List<FollowingProfileResponse> result = new ArrayList<>();
+            for (Integer fid : followingIds) {
+                UserProfileEntity p = profileMap.get(fid);
+                if (p == null) {
+                    continue;
+                }
+                result.add(new FollowingProfileResponse(
+                        fid,
+                        p.getNickname(),
+                        p.getShowUserId(),
+                        actuallyFollowing.contains(fid),
+                        actuallyFollowers.contains(fid),
+                        fileControlHelper.getFileUrl(p.getIconObjectKey())
+                ));
+            }
+            log.info("他ユーザーのフォロー一覧を取得しました targetUserId: {}, currentUserId: {}", targetUserId, currentUserId);
+            return result;
+
+        } catch (Exception e) {
+            log.error("他ユーザーのフォロー一覧の取得に失敗しました: ", e);
+            throw new IllegalArgumentException("他ユーザーのフォロー一覧の取得に失敗しました");
+        }
+    }
+
+    // 他のユーザーのフォロワー一覧を取得
+    @Override
+    public List<FollowingProfileResponse> getOtherUserFollowerAccounts(Integer targetUserId, Integer currentUserId) {
+        try {
+            // 1) targetUserをフォローしている相手ID一覧
+            List<FollowRelationEntity> relations = followRelationRepository.findByFollowingId(targetUserId);
+            if (relations.isEmpty()) return List.of();
+
+            List<Integer> followerIds = relations.stream()
+                    .map(FollowRelationEntity::getFollowerId)
+                    .distinct()
+                    .toList();
+
+            // 2) 相手プロフィールをまとめて取得
+            List<UserProfileEntity> profiles = profileRepository.findByUserIdIn(followerIds);
+
+            Map<Integer, UserProfileEntity> profileMap = profiles.stream()
+                    .collect(Collectors.toMap(UserProfileEntity::getUserId, Function.identity(), (a, b) -> a));
+
+            // 3) isFollowing を判定（currentUser → 相手）
+            Set<Integer> actuallyFollowing = followRelationRepository
+                    .findByFollowerIdAndFollowingIdIn(currentUserId, followerIds)
+                    .stream()
+                    .map(FollowRelationEntity::getFollowingId)
+                    .collect(Collectors.toSet());
+
+            // 4) isFollower を判定（相手 → currentUser）
+            Set<Integer> actuallyFollowers = followRelationRepository
+                    .findByFollowerIdInAndFollowingId(followerIds, currentUserId)
+                    .stream()
+                    .map(FollowRelationEntity::getFollowerId)
+                    .collect(Collectors.toSet());
+
+            List<FollowingProfileResponse> result = new ArrayList<>();
+            for (Integer fid : followerIds) {
+                UserProfileEntity p = profileMap.get(fid);
+                if (p == null) {
+                    continue;
+                }
+                result.add(new FollowingProfileResponse(
+                        fid,
+                        p.getNickname(),
+                        p.getShowUserId(),
+                        actuallyFollowing.contains(fid),
+                        actuallyFollowers.contains(fid),
+                        fileControlHelper.getFileUrl(p.getIconObjectKey())
+                ));
+            }
+            log.info("他ユーザーのフォロワー一覧を取得しました targetUserId: {}, currentUserId: {}", targetUserId, currentUserId);
+            return result;
+
+        } catch (Exception e) {
+            log.error("他ユーザーのフォロワー一覧の取得に失敗しました: ", e);
+            throw new IllegalArgumentException("他ユーザーのフォロワー一覧の取得に失敗しました");
+        }
+    }
+
     // フォロー関係の追加
     @Override
     public void addFollowRelation(Integer followerId, Integer followingId) {
