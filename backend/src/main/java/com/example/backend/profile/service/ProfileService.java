@@ -2,7 +2,6 @@ package com.example.backend.profile.service;
 
 import java.util.List;
 
-import org.springframework.security.access.method.P;
 
 import com.example.backend.profile.dto.ProfileResponse;
 import com.example.backend.profile.dto.ProfileUpdateRequest;

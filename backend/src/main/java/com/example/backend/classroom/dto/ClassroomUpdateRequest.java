@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
 
-import com.example.backend.classroom.dto.CategoryItem;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

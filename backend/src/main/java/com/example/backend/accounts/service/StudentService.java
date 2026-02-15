@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.backend.accounts.dto.GetFindAllStudentAccountRequest;
 import com.example.backend.accounts.dto.ModifyStudentAccountRequest;
 import com.example.backend.accounts.dto.StudentCreateRequest;
 import com.example.backend.accounts.dto.StudentInformationResponse;

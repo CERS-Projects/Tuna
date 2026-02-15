@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
 import java.util.Date;
-import com.example.backend.classroom.dto.DocumentsResponse;
 
 @Getter
 @Setter
