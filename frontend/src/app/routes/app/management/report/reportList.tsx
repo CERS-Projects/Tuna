@@ -42,8 +42,11 @@ const ReportList = () => {
   // 削除処理
   const handleDelete = (reportId: string) => {
     if (window.confirm("この通報を削除しますか？")) {
-      deleteReport.mutate(reportId);
-      refetch();
+      deleteReport.mutate(reportId, {
+        onSuccess: () => {
+          refetch();
+        },
+      });
     }
   };
 
