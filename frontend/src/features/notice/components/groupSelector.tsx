@@ -2,13 +2,10 @@ import React from "react";
 import { type TreeType } from "@/features/management/types/group";
 import styles from "./groupSelector.module.css";
 
-// ★ここでの const items = ... の定義は削除します（親から貰うため）
-
-// Propsの型定義を追加
 type GroupSelectorProps = {
-  data: TreeType[]; // 親からデータを受け取る
-  selectedId?: number; // 現在の選択IDを受け取る
-  onSelect: (id: number) => void; // 変更を親に伝える
+  data: TreeType[];
+  selectedId?: number;
+  onSelect: (id: number) => void;
 };
 
 type TreeNodeProps = {
@@ -18,7 +15,6 @@ type TreeNodeProps = {
   isAncestorSelected?: boolean;
 };
 
-// 再帰パーツ（ここはほぼ変更なしですが、型の整合性をとります）
 export function TreeNode({
   node,
   selectedId,
@@ -29,7 +25,7 @@ export function TreeNode({
   const isActive = isSelfSelected || isAncestorSelected;
 
   const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // クリックイベントのバブリング防止
+    e.stopPropagation();
     if (!isAncestorSelected) {
       onSelect(node.groupId);
     }
@@ -50,18 +46,18 @@ export function TreeNode({
         <span
           className={`${styles.nodeLabel} ${isSelfSelected ? styles.labelSelected : ""}`}
         >
-          {node.name}
+          {node.groupName}
           {isAncestorSelected && (
             <span className={styles.subText}>(親に含まれます)</span>
           )}
         </span>
       </div>
 
-      {node.branch && node.branch.length > 0 && (
+      {node.branchGroups && node.branchGroups.length > 0 && (
         <div className={styles.childrenWrapper}>
-          {node.branch.map((childNode) => (
+          {node.branchGroups.map((childNode) => (
             <TreeNode
-              key={childNode.id}
+              key={childNode.groupId}
               node={childNode}
               selectedId={selectedId}
               onSelect={onSelect}
@@ -74,8 +70,6 @@ export function TreeNode({
   );
 }
 
-// メインコンポーネント
-// Propsを受け取るように変更し、内部のuseStateは削除（親の状態を使うため）
 export default function GroupSelector({
   data,
   selectedId,
@@ -85,9 +79,8 @@ export default function GroupSelector({
     <div className={styles.treeContainer}>
       {data.map((node) => (
         <TreeNode
-          key={node.id}
+          key={node.groupId}
           node={node}
-          // 親から来た selectedId をそのまま使う（なければ null）
           selectedId={selectedId ?? null}
           onSelect={onSelect}
         />

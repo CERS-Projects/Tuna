@@ -1,39 +1,82 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApiWithRefresh } from "@/lib/api-client";
 import { type Notice } from "@/features/notice/types/notice";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export const useNotices = () => {
-  const api = useApiWithRefresh(); // 認証付きfetch関数を取得
+  const { authToken } = useAuth();
+  const apiWithRefresh = useApiWithRefresh();
   const queryClient = useQueryClient();
 
-  // 1. データの取得 (READ)
   const noticesQuery = useQuery({
-    queryKey: ["notices"], // キャッシュのキー
+    queryKey: ["notices"],
     queryFn: async () => {
-      // api関数経由でバックエンドを叩く
-      return await api<Notice[]>({ url: "/notice", options: {} });
+      return await apiWithRefresh<Notice[]>({
+        url: "/notice/teacher/list",
+        options: {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
+      });
     },
   });
 
-  // 2. データの削除 (DELETE)
   const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return await api<void>({
-        url: `/notices/${id}`,
-        options: { method: "DELETE" },
+    mutationFn: async (id: string) => {
+      return await apiWithRefresh<void>({
+        url: `/notice/delete?noticeId=${id}`,
+        options: {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
       });
     },
-    // 成功したらリストを再取得（リフェッチ）する
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notices"] });
+    },
+  });
+
+  const modifyMutation = useMutation({
+    mutationFn: async (data: {
+      noticeId: string;
+      title: string;
+      content: string;
+      groupId: number;
+    }) => {
+      return await apiWithRefresh<void>({
+        url: "/notice/modify",
+        options: {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify(data),
+        },
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notices"] });
     },
   });
 
   return {
-    notices: noticesQuery.data ?? [], // データがない場合は空配列
+    notices: noticesQuery.data ? [...noticesQuery.data].reverse() : [],
+
     isLoading: noticesQuery.isLoading,
     isError: noticesQuery.isError,
     error: noticesQuery.error,
-    deleteNotice: deleteMutation.mutate, // 削除実行関数
+
+    deleteNotice: deleteMutation.mutate,
+    isDeleting: deleteMutation.isPending,
+
+    modifyNotice: modifyMutation.mutateAsync,
+    isUpdating: modifyMutation.isPending,
   };
 };

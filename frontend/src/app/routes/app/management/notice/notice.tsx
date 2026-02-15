@@ -7,7 +7,7 @@ import { useNotices } from "@/features/notice/hooks/useNotices";
 const NoticePage = () => {
   const { notices, isLoading, isError, deleteNotice } = useNotices();
 
-  const handleDeleteNotice = (id: number) => {
+  const handleDeleteNotice = (id: string) => {
     if (confirm("本当に削除しますか？")) {
       deleteNotice(id);
     }
@@ -41,7 +41,7 @@ const NoticePage = () => {
           {notices.length > 0 ? (
             notices.map((notice) => (
               <NoticeCard
-                key={notice.id}
+                key={notice.noticeId}
                 notice={notice}
                 onDelete={handleDeleteNotice}
               />

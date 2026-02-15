@@ -1,8 +1,8 @@
 export type Notice = {
-  id: number;
+  noticeId: string;
   title: string;
   content: string;
-  updatedAt: string;
-  groupIds?: number[];
-  targetGroups?: number[];
+  groupId: number;
+  groupName: string;
+  createdAt: string;
 };
