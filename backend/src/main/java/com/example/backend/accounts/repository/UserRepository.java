@@ -35,13 +35,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     Optional<UserEntity> findByShowUserId(String showUserId);
 
-    @Query("""
-            SELECT u.name as name, u.showUserId as showUserId
-            FROM UserEntity u
-            WHERE u.userId = :userId
-            """)
-    Optional<GetUserName> findUserInfo(@Param("userId") Integer userId);
-
     boolean existsByShowUserId(String showUserId);
 
     @Query("""
