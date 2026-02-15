@@ -116,9 +116,9 @@ public class ProfileServiceImpl implements ProfileService {
     public List<String> getFilterWords(Integer userId) {
         try {
             UserProfileEntity profile = profileRepository.findByUserId(userId)
-                    .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+                    .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
 
-            if (profile.getFilterWords() != null) {
+            if(profile.getFilterWords() != null) {
                 return profile.getFilterWords();
 
             } else {
@@ -135,7 +135,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void deleteProfile(Integer userId) {
         UserProfileEntity existingProfile = profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
 
         try {
             fileControlHelper.deleteFile(existingProfile.getIconObjectKey());
@@ -178,7 +178,7 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponse getProfileByShowUserId(String showUserId, Integer currentUserId) {
         ProfileResponse profile = new ProfileResponse();
         UserProfileEntity profileEntity = profileRepository.findByShowUserId(showUserId)
-                .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
 
         profile.setUserId(profileEntity.getUserId());
         profile.setShowUserId(profileEntity.getShowUserId());
@@ -187,10 +187,8 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setIntroduction(profileEntity.getIntroduction());
         profile.setFollowCount(profileEntity.getFollowCount());
         profile.setFollowerCount(profileEntity.getFollowerCount());
-        profile.setIsFollowing(
-                followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
-        profile.setIsFollowed(
-                followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
+        profile.setIsFollowing(followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
+        profile.setIsFollowed(followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
         return profile;
     }
 
