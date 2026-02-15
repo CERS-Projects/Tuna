@@ -5,10 +5,12 @@ import { useDebouncedCallback } from "use-debounce";
 import { useEffect } from "react";
 import { type FollowData, type ProfileData } from "../types/profileTypes";
 import { type User } from "@/types/user";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 export const useFollow = (targetUserId: number, showUserId: string) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
+  const { data: user } = useUser(authToken);
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -76,6 +78,19 @@ export const useFollow = (targetUserId: number, showUserId: string) => {
             };
         },
       );
+
+      if (user?.showUserId) {
+        queryClient.setQueriesData(
+          { queryKey: ["user", "profile", user.showUserId], exact: true },
+          (oldData: ProfileData | User) => {
+            if (!oldData) return oldData;
+            return {
+              ...oldData,
+              followCount: (oldData.followCount ?? 0) + 1,
+            };
+          },
+        );
+      }
     },
   });
 };
@@ -83,6 +98,7 @@ export const useFollow = (targetUserId: number, showUserId: string) => {
 export const useUnFollow = (targetUserId: number, showUserId: string) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
+  const { data: user } = useUser(authToken);
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -150,6 +166,19 @@ export const useUnFollow = (targetUserId: number, showUserId: string) => {
             };
         },
       );
+
+      if (user?.showUserId) {
+        queryClient.setQueriesData(
+          { queryKey: ["user", "profile", user.showUserId], exact: true },
+          (oldData: ProfileData | User) => {
+            if (!oldData) return oldData;
+            return {
+              ...oldData,
+              followCount: Math.max((oldData.followCount ?? 0) - 1, 0),
+            };
+          },
+        );
+      }
     },
   });
 };
