@@ -62,8 +62,10 @@ public class ReportHelper {
 
         return reportEntities.stream().map(entity -> {
             ReportListResponse response = new ReportListResponse();
-            GetUserName object = userRepository.findUserInfo(entity.getReportedUser())
-                .orElseThrow(() -> new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。"));
+            GetUserName object = userRepository.findUserName(entity.getReportedUser());
+            if (object == null) {
+                throw new IllegalArgumentException("そのユーザは存在しないか、報告が存在しません。");
+            }
 
             PostEntity post = postRepository.findById(entity.getReportedPostId()).orElseThrow(() -> new IllegalArgumentException("その投稿は存在しないか、報告が存在しません。"));
             response.setReportedName(object.name());
