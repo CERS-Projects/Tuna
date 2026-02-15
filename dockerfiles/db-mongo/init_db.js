@@ -614,7 +614,7 @@ try {
       response_count: 0,
       share_range: [0, 7],
       response_to: null,
-      post_flag: false,
+      post_flag: true,
     },
     {
       user_id: 7,
@@ -624,7 +624,7 @@ try {
       response_count: 0,
       share_range: [7, 10],
       response_to: null,
-      post_flag: false,
+      post_flag: true,
     },
     {
       user_id: 10,
@@ -634,7 +634,7 @@ try {
       response_count: 0,
       share_range: [10],
       response_to: null,
-      post_flag: false,
+      post_flag: true,
     },
     {
       user_id: 8,
@@ -644,7 +644,7 @@ try {
       response_count: 0,
       share_range: [7, 10],
       response_to: null,
-      post_flag: false,
+      post_flag: true,
     },
     {
       user_id: 9,
@@ -654,7 +654,7 @@ try {
       response_count: 0,
       share_range: [7, 10],
       response_to: ObjectId("669a84a2c914e6b7f329d508"),
-      post_flag: false,
+      post_flag: true,
     },
   ]);
   print("✅ post_collectionに12件挿入しました。");
@@ -968,8 +968,62 @@ try {
       reported_post_id: ObjectId("669a84a2c914e6b7f329d503"),
       detail: "他のユーザに対するいやがらせやいじめを確認しました。",
     },
+    {
+      school_id: 3,
+      report_date: new Date(),
+      report_by: 6,
+      reported_user: 7,
+      reason_id: 4,
+      reported_post_id: ObjectId("669a84a2c914e6b7f329d503"),
+      detail: "他のユーザに対するいやがらせやいじめを確認しました。",
+    },
+    {
+      school_id: 3,
+      report_date: new Date(),
+      report_by: 6,
+      reported_user: 7,
+      reason_id: 4,
+      reported_post_id: ObjectId("669a84a2c914e6b7f329d503"),
+      detail: "他のユーザに対するいやがらせやいじめを確認しました。",
+    },
+    {
+      school_id: 3,
+      report_date: new Date(),
+      report_by: 6,
+      reported_user: 7,
+      reason_id: 4,
+      reported_post_id: ObjectId("669a84a2c914e6b7f329d503"),
+      detail: "他のユーザに対するいやがらせやいじめを確認しました。",
+    },
+    {
+      school_id: 3,
+      report_date: new Date(),
+      report_by: 6,
+      reported_user: 7,
+      reason_id: 4,
+      reported_post_id: ObjectId("669a84a2c914e6b7f329d503"),
+      detail: "他のユーザに対するいやがらせやいじめを確認しました。",
+    },
+    {
+      school_id: 3,
+      report_date: new Date(),
+      report_by: 6,
+      reported_user: 7,
+      reason_id: 4,
+      reported_post_id: ObjectId("669a84a2c914e6b7f329d503"),
+      detail: "他のユーザに対するいやがらせやいじめを確認しました。",
+    },
+    {
+      school_id: 3,
+      report_date: new Date(),
+      report_by: 6,
+      reported_user: 7,
+      reason_id: 4,
+      reported_post_id: ObjectId("669a84a2c914e6b7f329d503"),
+      detail: "他のユーザに対するいやがらせやいじめを確認しました。",
+    },
   ]);
-  print("✅ report_collectionに4件挿入しました。");
+  print("✅ report_collectionに10件挿入しました。");
 
   // I. reason_collection
   db.reason_collection.insertMany([
