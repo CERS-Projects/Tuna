@@ -1,11 +1,14 @@
 package com.example.backend.profile.service.impl;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.profile.service.ProfileService;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
+import com.example.backend.utils.fileUtil.helper.ByteArrayMultipartFile;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.dto.GetUserName;
 import com.example.backend.accounts.model.UserEntity;
@@ -30,6 +33,9 @@ public class ProfileServiceImpl implements ProfileService {
     private final FileControlHelper fileControlHelper;
     private final UserRepository userRepository;
 
+    // デフォルトアイコンのクラスパスリソースパス
+    private static final String DEFAULT_ICON_RESOURCE = "defaulticon.png";
+
     // プロフィール作成
     @Override
     public void createProfile(Integer userId) {
@@ -40,7 +46,21 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setUserId(userId);
         profile.setShowUserId(userInfo.showUserId());
         profile.setNickname(userInfo.name());
-        profile.setIconObjectKey("images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png");
+
+        // デフォルトアイコンをクラスパスから読み込みS3にアップロード
+        try {
+            Resource defaultIconResource = new ClassPathResource(DEFAULT_ICON_RESOURCE);
+            byte[] iconBytes = defaultIconResource.getInputStream().readAllBytes();
+            MultipartFile iconFile = new ByteArrayMultipartFile(
+                "icon", "defaulticon.png", "image/png", iconBytes
+            );
+            List<String> keys = fileControlHelper.uploadFile("images", iconFile);
+            profile.setIconObjectKey(keys.get(0));
+        } catch (Exception e) {
+            log.error("デフォルトアイコンのアップロードに失敗しました: ", e);
+            profile.setIconObjectKey("images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png");
+        }
+
         profile.setFollowCount(0);
         profile.setFollowerCount(0);
         profile.setIntroduction("こんにちは！よろしくお願いします。");
