@@ -604,8 +604,60 @@ try {
       response_to: null,
       post_flag: true,
     },
+    {
+      _id: ObjectId("669a84a2c914e6b7f329d508"), // 固定のObjectIdを指定
+      user_id: 6,
+      post_date: new Date(Date.now() - 300000), // 5分前
+      sentence:
+        "今日から水戸電子専門学校の三年生の主任になりました、よろしくお願いします。",
+      like_count: 0,
+      response_count: 0,
+      share_range: [0, 7],
+      response_to: null,
+      post_flag: false,
+    },
+    {
+      user_id: 7,
+      post_date: new Date(Date.now() - 300000), // 5分前
+      sentence: "3-A組の担任になりました、よろしくお願いします。",
+      like_count: 0,
+      response_count: 0,
+      share_range: [7, 10],
+      response_to: null,
+      post_flag: false,
+    },
+    {
+      user_id: 10,
+      post_date: new Date(Date.now() - 300000),
+      sentence: "3-A組のの副担任になりました、よろしくお願いします。",
+      like_count: 0,
+      response_count: 0,
+      share_range: [10],
+      response_to: null,
+      post_flag: false,
+    },
+    {
+      user_id: 8,
+      post_date: new Date(Date.now() - 300000),
+      sentence: "三年生でもよろしくー！",
+      like_count: 0,
+      response_count: 0,
+      share_range: [7, 10],
+      response_to: null,
+      post_flag: false,
+    },
+    {
+      user_id: 9,
+      post_date: new Date(Date.now() - 300000),
+      sentence: "三年生の菊池です。よろしくお願いします！",
+      like_count: 0,
+      response_count: 0,
+      share_range: [7, 10],
+      response_to: ObjectId("669a84a2c914e6b7f329d508"),
+      post_flag: false,
+    },
   ]);
-  print("✅ post_collectionに9件挿入しました。");
+  print("✅ post_collectionに12件挿入しました。");
 
   // B. profile_collection
   db.profile_collection.insertMany([

@@ -128,15 +128,17 @@ INSERT INTO tuna_db.user_tb (user_id, school_id, show_user_id, password, mailadd
 (7, 3, 't003_teacher_w', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'daigo_uchida@ygcollege.jp', '内田 大吾 (教)', 0), -- 教師
 (8, 3, 's004_student_v', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'sou_matumoto@ygcollege.jp', '松本 層 (生)', 0), -- 生徒
 (9, 3, 's005_student_u', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'yuuki_kikuti@ygcollege.jp', '菊池 優希 (生)', 0), -- 生徒
-(10, 3, 't003_teacher_t','$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'chihiro_iizuka@ygcollege.jp', '飯塚 千尋',0); -- 生徒
+(10, 3, 't003_teacher_t','$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'chihiro_iizuka@ygcollege.jp', '飯塚 千尋(教)',0), -- 教師
+(11, 3, 't004_teacher_u ', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'haruki_mutou@ygcollege.jp', '無糖 春木 (教)', 0); -- 教師
 
 -- user_id = 1, 4 を教師として登録
 INSERT INTO tuna_db.teacher_tb (user_id, authority_flag) VALUES
 (1, 1), -- 佐藤太郎 (管理者権限あり)
 (4, 0), -- 山田次郎 (管理者権限なし)
 (6, 1), -- 上野 (管理者権限あり)
-(7, 1), -- 内田  (管理者権限なし)
-(10, 1);  -- 飯塚 
+(7, 0), -- 内田  (管理者権限なし)
+(10, 1),  -- 飯塚 (管理者権限あり)
+(11, 1);  -- 無糖 (管理者権限あり)
 
 -- user_id = 2, 3 を生徒として登録
 INSERT INTO tuna_db.student_tb (user_id, grade, admission_date, graduate_date) VALUES
@@ -166,7 +168,13 @@ INSERT INTO tuna_db.group_tb (group_name, school_id, upper_group) VALUES
 ('バスケットボール部', 1, NULL), -- group_id = 4
 -- school_id = 2 (カツオ私立高等専門学校)
 ('情報処理科', 2, NULL), -- group_id = 5
-('電子工学科', 2, NULL); -- group_id = 6
+('電子工学科', 2, NULL), -- group_id = 6
+
+-- school_id = 3 (水戸電子専門学校) 
+('3年生', 3, NULL), -- group_id = 7
+('2年生', 3, NULL), -- group_id = 8
+('1年生', 3, NULL), -- group_id = 9
+('3-A組', 3, 7); -- group_id = 10
 
 --
 INSERT INTO tuna_db.group_member_tb (group_id, user_id) VALUES
@@ -182,4 +190,19 @@ INSERT INTO tuna_db.group_member_tb (group_id, user_id) VALUES
 -- 山田次郎 (user_id=4, 教師) は情報処理科 (管理者的な立場で)
 (5, 4),
 (5, 5), -- 佐々木一郎 (user_id=5, 生徒) は情報処理科
-(6, 5);
+(6, 5),
+  -- 三年生
+(7, 6), -- 上野 (user_id=6, 教師) は3年生 (管理者的な立場で)
+(7, 7), -- 内田 (user_id=7, 教師) は2年生 (管理者的な立場で)
+(7, 8), -- 松本 (user_id=8, 生徒) は1年生
+(7, 9), -- 菊池 (user_id=9, 生徒) は1年生
+(7, 10), -- 飯塚 (user_id=10, 生徒) は3年生
+(7,11), -- 無糖 (user_id=11, 教師) は3年生
+  -- 3-A組
+(10, 6), -- 上野 (user_id=6, 教師) は3年生 (管理者的な立場で)
+(10, 7), -- 内田 (user_id=7, 教師) は2年生 (管理者的な立場で)
+(10, 8), -- 松本 (user_id=8, 生徒) は1年生
+(10, 9), -- 菊池 (user_id=9, 生徒) は1年生
+(10, 10), -- 飯塚 (user_id=10, 生徒) は3年生
+(10,11); -- 無糖 (user_id=11, 教師) は3年生
+
