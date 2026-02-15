@@ -77,9 +77,16 @@ const SchoolEdit = () => {
 									value: 256,
 									message: "学校名は256文字以内で入力してください",
 								},
+								validate: (value) =>
+									value.trim() !== "" || "学校名は空白のみで入力できません",
+								pattern: {
+									value: /^[^\s]+(\s[^\s]+)*$/,
+									message:
+										"学校名は空白で始まったり、連続する空白を含むことはできません",
+								},
 							})}
 							error={errors.schoolName?.message}
-							placeholder="例：〇〇学園高等学校"
+							placeholder="例：〇〇学校"
 						/>
 
 						<Input
@@ -90,6 +97,8 @@ const SchoolEdit = () => {
 									value: 161,
 									message: "学校住所は161文字以内で入力してください",
 								},
+								validate: (value) =>
+									value.trim() !== "" || "学校住所は空白のみで入力できません",
 							})}
 							error={errors.schoolAddress?.message}
 							placeholder="例：東京都千代田区丸の内1-1-1"
@@ -109,6 +118,8 @@ const SchoolEdit = () => {
 									message:
 										"有効なメールアドレスを入力してください（例: school@example.com）",
 								},
+								validate: (value) =>
+									value.trim() !== "" || "メールアドレスは空白のみで入力できません",
 							})}
 							error={errors.schoolMailAddress?.message}
 							placeholder="例：info@example-school.ac.jp"
