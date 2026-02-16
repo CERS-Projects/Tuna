@@ -13,10 +13,8 @@ import lombok.Getter;
 public class ModifyGroupMembersRequest {
 
     @NotNull
-    private Integer groupId;
-    
-    @NotNull
     private Integer parentGroupId;
-    
+
     private List<@Valid ModifyGroupMemberRequest> members = new ArrayList<>();
+
 }
