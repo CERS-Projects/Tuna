@@ -50,7 +50,10 @@ public class ProfileServiceImpl implements ProfileService {
         // デフォルトアイコンをクラスパスから読み込みS3にアップロード
         try {
             Resource defaultIconResource = new ClassPathResource(DEFAULT_ICON_RESOURCE);
-            byte[] iconBytes = defaultIconResource.getInputStream().readAllBytes();
+            byte[] iconBytes;
+            try (InputStream is = defaultIconResource.getInputStream()) {
+                iconBytes = is.readAllBytes();
+            }
             MultipartFile iconFile = new ByteArrayMultipartFile(
                 "icon", "defaulticon.png", "image/png", iconBytes
             );
