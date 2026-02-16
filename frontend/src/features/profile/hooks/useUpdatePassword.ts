@@ -23,11 +23,13 @@ export const useUpdatePassword = () => {
       });
     },
     onSuccess: () => {
-      alert("パスワードが更新されました。\n再度ログインをお願いします。");
+      window.alert(
+        "パスワードが更新されました。\n再度ログインをお願いします。",
+      );
       logout();
     },
     onError: () => {
-      alert("パスワード更新に失敗しました");
+      window.alert("パスワード更新に失敗しました");
     },
   });
 };

@@ -31,7 +31,7 @@ const SettingMenu = () => {
   const { logout } = useAuth();
 
   const handleLogout = () => {
-    if (confirm("ログアウトしますか？")) logout();
+    if (window.confirm("ログアウトしますか？")) logout();
   };
 
   const items = MenuItems.map((item) =>
