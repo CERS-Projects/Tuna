@@ -124,7 +124,7 @@ public class GroupServiceImpl implements GroupService {
             groupMemberService.groupMemberToDB(dto.getMembersUserId(), savedGroupEntity.getGroupId());
 
             return groupEntity;
-        } catch (Exception e) {
+        } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException("すでに存在しているグループ名です");
         }
 
