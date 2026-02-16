@@ -25,11 +25,13 @@ export const useUpdateFilterWords = () => {
       });
     },
     onSuccess: (_, variables) => {
-      queryClient.setQueryData(["filterWords", user?.userId], variables);
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-      queryClient.invalidateQueries({
-        queryKey: ["user", "profile", user?.showUserId],
-      });
+      if (user) {
+        queryClient.setQueryData(["filterWords", user.userId], variables);
+        queryClient.invalidateQueries({ queryKey: ["posts"] });
+        queryClient.invalidateQueries({
+          queryKey: ["user", "profile", user.showUserId],
+        });
+      }
     },
   });
 };

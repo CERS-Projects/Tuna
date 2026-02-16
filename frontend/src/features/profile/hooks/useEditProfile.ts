@@ -32,9 +32,11 @@ export const useEditProfile = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["user", user?.userId.toString()],
-      });
+      if (user)
+        queryClient.invalidateQueries({
+          queryKey: ["user", user?.userId.toString()],
+        });
+
       queryClient.invalidateQueries({
         queryKey: ["user", "profile", showUserId],
       });
