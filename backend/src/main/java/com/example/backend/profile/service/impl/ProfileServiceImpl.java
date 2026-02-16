@@ -58,7 +58,7 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setIconObjectKey(keys.get(0));
         } catch (Exception e) {
             log.error("デフォルトアイコンのアップロードに失敗しました: ", e);
-            profile.setIconObjectKey("images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png");
+            throw new RuntimeException("デフォルトアイコンのアップロードに失敗しました"); 
         }
 
         profile.setFollowCount(0);
