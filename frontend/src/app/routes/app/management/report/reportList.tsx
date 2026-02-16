@@ -12,6 +12,7 @@ import {
 } from "@/features/management/types/report";
 import type { ModalHandle } from "@/components/ui/modal/modal";
 import styles from "@/features/management/style/reportList.module.css";
+import { Spinner } from "@/components/ui/spinner/spinner";
 const ITEMS_PER_PAGE = 8;
 
 const ReportList = () => {
@@ -71,7 +72,7 @@ const ReportList = () => {
     setDeleteTarget(null);
   };
   if (isFetching) {
-    return <div className={styles.loading}>読み込み中...</div>;
+    return <Spinner />;
   }
 
   if (reports.length === 0) {
@@ -107,7 +108,7 @@ const ReportList = () => {
       </div>
 
       {isFetching ? (
-        <div className={styles.loading}>読み込み中...</div>
+        <Spinner />
       ) : (
         <>
           <ReportTable reports={paginatedReports} onDelete={handleDelete} />
