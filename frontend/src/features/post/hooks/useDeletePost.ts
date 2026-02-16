@@ -26,10 +26,10 @@ export const useDeletePost = (postId: string | undefined) => {
       queryClient.invalidateQueries({
         queryKey: ["user", "profile"],
       });
-      alert("投稿を削除しました");
+      window.alert("投稿を削除しました");
     },
     onError: () => {
-      alert("投稿の削除に失敗しました");
+      window.alert("投稿の削除に失敗しました");
     },
   });
 };

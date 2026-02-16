@@ -110,7 +110,7 @@ export const PostBox = ({ props, canDelete = false }: Props) => {
     e.stopPropagation();
     e.preventDefault();
 
-    if (confirm("投稿を削除しますか？")) deleteMutate(undefined);
+    if (window.confirm("投稿を削除しますか？")) deleteMutate(undefined);
   };
 
   const handleImgClick = (e: React.MouseEvent, imgurl: string) => {
