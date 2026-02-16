@@ -129,7 +129,11 @@ INSERT INTO tuna_db.user_tb (user_id, school_id, show_user_id, password, mailadd
 (8, 3, 's004_student_v', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'sou_matumoto@ygcollege.jp', '松本 層 (生)', 0), -- 生徒
 (9, 3, 's005_student_u', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'yuuki_kikuti@ygcollege.jp', '菊池 優希 (生)', 0), -- 生徒
 (10, 3, 't003_teacher_t','$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'chihiro_iizuka@ygcollege.jp', '飯塚 千尋(教)',0), -- 教師
-(11, 3, 't004_teacher_u ', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'haruki_mutou@ygcollege.jp', '無糖 春木 (教)', 0); -- 教師
+(11, 3, 't004_teacher_u', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'haruki_mutou@ygcollege.jp', '無糖 春木 (教)', 0), -- 教師
+(12, 3, 's006_student_r', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'misaki_takahashi@ygcollege.jp', '高橋 美咲 (生)', 0), -- 生徒
+(13, 3, 's007_student_q', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'riku_watanabe@ygcollege.jp', '渡辺 陸 (生)', 0), -- 生徒
+(14, 3, 's008_student_p', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'yui_nakamura@ygcollege.jp', '中村 結衣 (生)', 0), -- 生徒
+(15, 3, 's009_student_o', '$2a$10$mgpctCptVVAS0Vx.ynyXOO3Hy1cJaKwSBv6GWkNhzG1X7peRS1lbu', 'shota_ito@ygcollege.jp', '伊藤 翔太 (生)', 0); -- 生徒
 
 -- user_id = 1, 4 を教師として登録
 INSERT INTO tuna_db.teacher_tb (user_id, authority_flag) VALUES
@@ -140,13 +144,17 @@ INSERT INTO tuna_db.teacher_tb (user_id, authority_flag) VALUES
 (10, 1),  -- 飯塚 (管理者権限あり)
 (11, 1);  -- 無糖 (管理者権限あり)
 
--- user_id = 2, 3 を生徒として登録
+-- student_ユーザーを生徒として登録
 INSERT INTO tuna_db.student_tb (user_id, grade, admission_date, graduate_date) VALUES
 (2, 3, '2023-04-01', NULL), -- 田中花子: 3年生
 (3, 1, '2025-04-01', NULL), -- 小林健太: 1年生
 (5, 2, '2024-04-01', NULL), -- 佐々木一郎: 2年生
-(8, 1, '2025-04-01', NULL), -- 松本: 1年生
-(9, 1, '2025-04-01', NULL); -- 菊池: 1年生
+(8, 3, '2023-04-01', NULL), -- 松本 層: 3年生
+(9, 3, '2023-04-01', NULL), -- 菊池 優希: 3年生
+(12, 2, '2024-04-01', NULL), -- 高橋 美咲: 2年生
+(13, 2, '2024-04-01', NULL), -- 渡辺 陸: 2年生
+(14, 1, '2025-04-01', NULL), -- 中村 結衣: 1年生
+(15, 1, '2025-04-01', NULL); -- 伊藤 翔太: 1年生
 
 INSERT INTO tuna_db.help_category_tb (help_category_name) VALUES
 ('アカウント'),
@@ -174,7 +182,11 @@ INSERT INTO tuna_db.group_tb (group_name, school_id, upper_group) VALUES
 ('3年生', 3, NULL), -- group_id = 7
 ('2年生', 3, NULL), -- group_id = 8
 ('1年生', 3, NULL), -- group_id = 9
-('3-A組', 3, 7); -- group_id = 10
+('3-A組', 3, 7), -- group_id = 10
+('2-A組', 3, 8), -- group_id = 11
+('2-B組', 3, 8), -- group_id = 12
+('1-A組', 3, 9), -- group_id = 13
+('1-B組', 3, 9); -- group_id = 14
 
 --
 INSERT INTO tuna_db.group_member_tb (group_id, user_id) VALUES
@@ -204,5 +216,16 @@ INSERT INTO tuna_db.group_member_tb (group_id, user_id) VALUES
 (10, 8), -- 松本 (user_id=8, 生徒) は1年生
 (10, 9), -- 菊池 (user_id=9, 生徒) は1年生
 (10, 10), -- 飯塚 (user_id=10, 生徒) は3年生
-(10,11); -- 無糖 (user_id=11, 教師) は3年生
+(10,11), -- 無糖 (user_id=11, 教師) は3年生
+  -- 2年生 & 2-A組/2-B組
+(8, 12),  -- 高橋 (user_id=12, 生徒) は2年生
+(11, 12), -- 高橋 は2-A組
+(8, 13),  -- 渡辺 (user_id=13, 生徒) は2年生
+(12, 13), -- 渡辺 は2-B組
+  -- 1年生 & 1-A組/1-B組
+(9, 14),  -- 中村 (user_id=14, 生徒) は1年生
+(13, 14), -- 中村 は1-A組
+(9, 15),  -- 伊藤 (user_id=15, 生徒) は1年生
+(14, 15); -- 伊藤 は1-B組
+
 
