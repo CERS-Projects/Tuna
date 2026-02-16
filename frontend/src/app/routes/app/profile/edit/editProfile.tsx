@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styles from "@/features/profile/styles/editProfile.module.css";
 import { useEditProfile } from "@/features/profile/hooks/useEditProfile";
@@ -20,7 +20,11 @@ const EditProfile = () => {
   const { user, isLoading, mutate: editProfileMutate } = useEditProfile();
   const navigate = useNavigate();
 
-  const { register, handleSubmit } = useForm<EditProfileForm>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EditProfileForm>({
     values: {
       nickname: user?.userName ?? "",
       showUserId: user?.showUserId ?? "",
@@ -28,10 +32,16 @@ const EditProfile = () => {
     },
   });
 
-  const [previewUrl, setPreviewUrl] = useState<string>(user?.iconUrl ?? "");
+  const [previewUrl, setPreviewUrl] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (user?.iconUrl) {
+      setPreviewUrl(user.iconUrl);
+    }
+  }, [user?.iconUrl]);
 
   const handleImageEdit = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -118,28 +128,38 @@ const EditProfile = () => {
             {imageFile && (
               <p className={styles.fileName}>変更中: {imageFile.name}</p>
             )}
-            {imageError && <p className={styles.imageError}>{imageError}</p>}
+            {imageError && <p className={styles.errorMessage}>{imageError}</p>}
           </div>
         </div>
 
         <div className={styles.fieldsContainer}>
           <div className={styles.inputGroup}>
-            <label htmlFor="nickname">名前</label>
+            <label htmlFor="nickname">
+              名前<span className={styles.errorMessage}>*</span>
+            </label>
             <input
               id="nickname"
               maxLength={50}
               className={styles.textInput}
-              {...register("nickname")}
+              {...register("nickname", { required: "名前は必須です" })}
             />
+            {errors.nickname && (
+              <p className={styles.errorMessage}>{errors.nickname.message}</p>
+            )}
           </div>
           <div className={styles.inputGroup}>
-            <label htmlFor="showUserId">ユーザーID</label>
+            <label htmlFor="showUserId">
+              ユーザーID<span className={styles.errorMessage}>*</span>
+            </label>
             <input
               id="showUserId"
               maxLength={20}
               className={styles.textInput}
-              {...register("showUserId")}
+              {...register("showUserId", { required: "ユーザーIDは必須です" })}
             />
+            {errors.showUserId && (
+              <p className={styles.errorMessage}>{errors.showUserId.message}</p>
+            )}
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="introduction">自己紹介</label>
