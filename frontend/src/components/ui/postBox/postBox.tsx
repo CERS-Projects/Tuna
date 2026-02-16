@@ -16,6 +16,8 @@ import { paths } from "@/config/paths";
 import { useDebouncedLike } from "@/features/post/hooks/useGood";
 import { useDebouncedBookmark } from "@/features/post/hooks/useBookmark";
 import { useDeletePost } from "@/features/post/hooks/useDeletePost";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 type Props = {
   props: PostData;
@@ -24,6 +26,8 @@ type Props = {
 
 export const PostBox = ({ props, canDelete = false }: Props) => {
   const [searchParams] = useSearchParams();
+  const { authToken } = useAuth();
+  const { data: user } = useUser(authToken);
   const currentGroupId = searchParams.get("groupId")
     ? Number(searchParams.get("groupId"))
     : undefined;
@@ -118,7 +122,7 @@ export const PostBox = ({ props, canDelete = false }: Props) => {
 
   const renderContent = () => (
     <>
-      {canDelete && (
+      {canDelete && showUserId === user?.showUserId && (
         <button
           className={styles.trashButton}
           onClick={(e) => handlePostDelete(e)}
