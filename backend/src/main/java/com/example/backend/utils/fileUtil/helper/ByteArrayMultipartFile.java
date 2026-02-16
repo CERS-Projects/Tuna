@@ -23,7 +23,7 @@ public class ByteArrayMultipartFile implements MultipartFile {
         this.name = name;
         this.originalFilename = originalFilename;
         this.contentType = contentType;
-        this.content = content;
+        this.content = content.clone();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ByteArrayMultipartFile implements MultipartFile {
 
     @Override
     @NonNull
-    public byte[] getBytes() { return content; }
+    public byte[] getBytes() { return content.clone(); }
 
     @Override
     @NonNull
