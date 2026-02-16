@@ -59,7 +59,7 @@ const ProfileLayout = () => {
             <Outlet context={{ userId: profile?.userId }} />
           </div>
         ) : (
-          <>ユーザ情報の取得に失敗しました</>
+          <p>ユーザ情報の取得に失敗しました</p>
         )}
 
         <div className={styles.profileSub}>
