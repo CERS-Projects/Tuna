@@ -61,6 +61,18 @@ public class PostServiceImpl implements PostService {
         List<MultipartFile> imageFiles = post.getImageFile();
         ObjectId replyPost = null;
 
+        // 返信投稿設定
+        if (post.getResponseTo() != null && !post.getResponseTo().isEmpty()) {
+            replyPost = new ObjectId(post.getResponseTo());
+            log.info("返信：{}", postRepository.existsById(replyPost));
+            if (post.getShareRange().contains(0)) {
+                post.setShareRange(post.getShareRange().stream()
+                        .filter(i -> i == 0)
+                        .toList());
+            }
+        }
+        log.info("投稿範囲 {}", post.getShareRange());
+
         // publicの0を除外
         List<Integer> userGroupIds = post.getShareRange().stream()
                 .filter(i -> i != 0)
@@ -94,6 +106,11 @@ public class PostServiceImpl implements PostService {
         if (post.getResponseTo() != null && !post.getResponseTo().isEmpty()) {
             replyPost = new ObjectId(post.getResponseTo());
             log.info("返信：{}", postRepository.existsById(replyPost));
+            if (post.getShareRange().contains(0)) {
+                post.setShareRange(post.getShareRange().stream()
+                        .filter(i -> i != 0)
+                        .toList());
+            }
         }
 
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
