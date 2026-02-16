@@ -7,27 +7,27 @@ type ProfileCardTabProps = {
 };
 
 export const ProfileCardTab = ({ isMyProfile }: ProfileCardTabProps) => {
-  const { userId } = useParams();
+  const { showUserId } = useParams();
 
-  if (!userId) return null;
+  if (!showUserId) return null;
   const navItems = [
     {
-      path: paths.app.profile.posts.getHref(userId),
+      path: paths.app.profile.posts.getHref(showUserId),
       label: "投稿",
       isPrivate: false,
     },
+    // {
+    //   path: paths.app.profile.responses.getHref(showUserId),
+    //   label: "返信",
+    //   isPrivate: false,
+    // },
     {
-      path: paths.app.profile.responses.getHref(userId),
-      label: "返信",
-      isPrivate: false,
-    },
-    {
-      path: paths.app.profile.goods.getHref(userId),
+      path: paths.app.profile.goods.getHref(showUserId),
       label: "いいね",
       isPrivate: false,
     },
     {
-      path: paths.app.profile.bookmarks.getHref(userId),
+      path: paths.app.profile.bookmarks.getHref(showUserId),
       label: "ブックマーク",
       isPrivate: true,
     },

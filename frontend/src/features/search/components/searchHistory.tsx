@@ -140,7 +140,7 @@ export const SearchHistory = ({ selectedIds }: Props) => {
       ) : searchData.length > 0 ? (
         <div className={styles.postsContainer}>
           {searchData.map((item) => (
-            <PostBox key={item.postId} {...item} />
+            <PostBox key={item.postId} props={{ ...item }} />
           ))}
         </div>
       ) : keyword ? (

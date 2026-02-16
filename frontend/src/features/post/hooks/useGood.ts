@@ -1,7 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useApiWithRefresh } from "@/lib/api-client";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useDebouncedCallback } from "use-debounce";
+import { useEffect } from "react";
 
 type UseGoodOptions = {
   onSuccess?: () => void;
@@ -15,7 +16,6 @@ export const useGood = (
 ) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
@@ -34,9 +34,6 @@ export const useGood = (
       });
     },
     onSuccess: () => {
-      shareRange.forEach((id) => {
-        queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
-      });
       options?.onSuccess?.();
     },
     onError: (error: Error) => {
@@ -52,7 +49,6 @@ export const useUnGood = (
 ) => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
@@ -69,9 +65,6 @@ export const useUnGood = (
       });
     },
     onSuccess: () => {
-      shareRange.forEach((id) => {
-        queryClient.invalidateQueries({ queryKey: ["posts", id.toString()] });
-      });
       options?.onSuccess?.();
     },
     onError: (error: Error) => {
@@ -94,6 +87,12 @@ export const useDebouncedLike = (
       unGoodMutate(undefined);
     }
   }, 1500);
+
+  useEffect(() => {
+    return () => {
+      debouncedToggle.flush();
+    };
+  }, [debouncedToggle]);
 
   return { debouncedToggle };
 };

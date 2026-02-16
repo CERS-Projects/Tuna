@@ -25,14 +25,12 @@ import com.example.backend.posts.service.LikeService;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
 public class LikeServiceImpl implements LikeService {
 
-    
     private final LikeRepository likeRepository;
 
     private final FileControlHelper fileControlHelper;
@@ -45,18 +43,17 @@ public class LikeServiceImpl implements LikeService {
 
     private final AccountConfirm accountConfirm;
 
-
-    //投稿の存在確認
+    // 投稿の存在確認
     private boolean existsPost(ObjectId postId) {
         return postRepository.existsById(postId);
     }
 
-    //いいねの存在確認
+    // いいねの存在確認
     private boolean isLiked(ObjectId postId, Integer userId) {
         return likeRepository.existsByPostIdAndUserId(postId, userId);
     }
 
-    //いいね追加
+    // いいね追加
     @Override
     public void addLikes(ObjectId postId, Integer userId) {
         LikeEntity like = new LikeEntity();
@@ -74,18 +71,18 @@ public class LikeServiceImpl implements LikeService {
             throw new IllegalStateException("すでにいいねされています");
 
         }
-        try{
+        try {
             likeRepository.save(like);
             postCounterRepository.incrementLikeCount(postId);
             log.info("いいねが正常に追加されました userId: {} and postId: {}", userId, postId);
 
-        } catch(Exception e){
-            log.error("いいねの追加に失敗しました userId: {} and postId: {} エラー: {}" , userId, postId, e);
+        } catch (Exception e) {
+            log.error("いいねの追加に失敗しました userId: {} and postId: {} エラー: {}", userId, postId, e);
             throw new RuntimeException("いいねの追加に失敗しました");
         }
     }
-    
-    //いいね削除
+
+    // いいね削除
     @Override
     public void removeLikes(ObjectId postId, Integer userId) {
 
@@ -93,26 +90,27 @@ public class LikeServiceImpl implements LikeService {
             log.info("いいねが存在しません userId: {} and postId: {}", userId, postId);
             throw new IllegalStateException("いいねが存在しません");
         }
-        try{
+        try {
             likeRepository.deleteByPostIdAndUserId(postId, userId);
             postCounterRepository.decrementLikeCount(postId);
             log.info("いいねが正常に削除されました userId: {} and postId: {}", userId, postId);
-        } catch(Exception e){
-            log.error("いいねの削除に失敗しました userId: {} and postId: {} エラー: {}" , userId, postId, e);
+        } catch (Exception e) {
+            log.error("いいねの削除に失敗しました userId: {} and postId: {} エラー: {}", userId, postId, e);
             throw new RuntimeException("いいねの削除に失敗しました");
         }
     }
-    
-    //いいね取得
+
+    // いいね取得
     @Override
     public List<PostDetailResponse> getLikedPosts(Authentication authentication, Integer userId, Integer schoolId) {
         List<PostDetailResponse> postDetails = List.of();
         boolean isAdminOrTeacher = authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
-        
-        try{
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN_SCHOOL")
+                        || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
+
+        try {
             postDetails = likeRepository.findByLiked(userId);
-        } catch(Exception e){
+        } catch (Exception e) {
             log.error("いいねした投稿の取得に失敗しました userId: {} エラー: {}", userId, e);
             throw new RuntimeException("いいねした投稿の取得に失敗しました");
         }
@@ -122,9 +120,9 @@ public class LikeServiceImpl implements LikeService {
             userGroups = new HashSet<>(postPermissionHelper.getUserGroupIds(userId));
             userGroups.add(0);
         }
-        
+
         Iterator<PostDetailResponse> iterator = postDetails.iterator();
-        try{
+        try {
             while (iterator.hasNext()) {
                 PostDetailResponse postDetail = iterator.next();
 
@@ -136,42 +134,48 @@ public class LikeServiceImpl implements LikeService {
                     }
                 }
 
-                // 管理者/教師: 学校に所属しないグループの投稿を除外
-                if (isAdminOrTeacher) {
-                    List<Integer> nonGlobalIds = postDetail.getShareRange().stream()
-                            .filter(id -> id != 0)
-                            .toList();
-                    if (!nonGlobalIds.isEmpty() && !accountConfirm.isAllGroupsBelongToSchool(schoolId, new ArrayList<>(nonGlobalIds))) {
-                        log.warn("学校に所属していないグループを含む投稿を除外しました userId: {} postId: {} groups: {}", userId, postDetail.getPostId(), postDetail.getShareRange());
-                        iterator.remove();
-                        continue;
+                if (postDetail.getShareRange() != null && !postDetail.getShareRange().contains(0)) {
+                    // 管理者/教師: 学校に所属しないグループの投稿を除外
+                    if (isAdminOrTeacher) {
+                        List<Integer> nonGlobalIds = postDetail.getShareRange().stream()
+                                .filter(id -> id != 0)
+                                .toList();
+                        if (!nonGlobalIds.isEmpty()
+                                && !accountConfirm.isAllGroupsBelongToSchool(schoolId, new ArrayList<>(nonGlobalIds))) {
+                            log.warn("学校に所属していないグループを含む投稿を除外しました userId: {} postId: {} groups: {}", userId,
+                                    postDetail.getPostId(), postDetail.getShareRange());
+                            iterator.remove();
+                            continue;
+                        }
                     }
                 }
 
                 postDetail.setImageUrl(fileControlHelper.getMultiFileUrl(postDetail.getImageUrl()));
                 postDetail.setIcon(fileControlHelper.getFileUrl(postDetail.getIcon()));
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             log.error("いいねした投稿の処理中にエラーが発生しました userId: {} エラー: {}", userId, e);
             throw new RuntimeException("いいねした投稿の処理中にエラーが発生しました");
         }
 
         log.info("いいねした投稿の取得に成功しました userId: {}", userId);
         return postDetails;
-        
+
     }
 
-    //他ユーザーいいね取得
+    // 他ユーザーいいね取得
     @Override
-    public List<PostDetailResponse> getOtherUserLikedPosts(Authentication authentication, Integer currentUserId, Integer schoolId, Integer targetUserId) {
+    public List<PostDetailResponse> getOtherUserLikedPosts(Authentication authentication, Integer currentUserId,
+            Integer schoolId, Integer targetUserId) {
         List<PostDetailResponse> postDetails = List.of();
         HashSet<Integer> shareRangeList = new HashSet<>();
         boolean isAdminOrTeacher = authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN_SCHOOL") || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
-        
-        try{
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN_SCHOOL")
+                        || grantedAuthority.getAuthority().equals("ROLE_TEACHER"));
+
+        try {
             postDetails = likeRepository.findByLiked(targetUserId);
-        } catch(Exception e){
+        } catch (Exception e) {
             log.error("いいねした投稿の取得に失敗しました userId: {} エラー: {}", targetUserId, e);
             throw new RuntimeException("いいねした投稿の取得に失敗しました");
         }
@@ -181,9 +185,9 @@ public class LikeServiceImpl implements LikeService {
             userGroups = new HashSet<>(postPermissionHelper.getUserGroupIds(currentUserId));
             userGroups.add(0);
         }
-        
+
         Iterator<PostDetailResponse> iterator = postDetails.iterator();
-        try{
+        try {
             while (iterator.hasNext()) {
                 PostDetailResponse postDetail = iterator.next();
 
@@ -205,18 +209,17 @@ public class LikeServiceImpl implements LikeService {
             }
             // 管理者/教師: 学校に所属しない投稿があった場合はエラー
             if (isAdminOrTeacher && shareRangeList != null) {
-                if(!accountConfirm.isAllGroupsBelongToSchool(schoolId, new ArrayList<>(shareRangeList))) {
+                if (!accountConfirm.isAllGroupsBelongToSchool(schoolId, new ArrayList<>(shareRangeList))) {
                     throw new RuntimeException("学校に所属しないグループの投稿が含まれています、他校向けの投稿は表示できません");
                 }
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             log.error("いいねした投稿の処理中にエラーが発生しました userId: {} エラー: {}", currentUserId, e);
             throw new RuntimeException("いいねした投稿の処理中にエラーが発生しました");
         }
 
         log.info("いいねした投稿の取得に成功しました userId: {}", currentUserId);
         return postDetails;
-        
+
     }
 }
-

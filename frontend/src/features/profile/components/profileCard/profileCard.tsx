@@ -1,62 +1,58 @@
-import { CiEdit } from "react-icons/ci";
+import { FaEdit, FaUser } from "react-icons/fa";
 import styles from "./profileCard.module.css";
-import { type ProfileData } from "../types/profileTypes";
 import { Link } from "react-router";
 import { paths } from "@/config/paths";
+import { type User } from "@/types/user";
 
-type ProfileCardProps = ProfileData;
+type ProfileCardProps = User;
 
-export const ProfileCard = (props: ProfileCardProps) => {
-  const {
-    showUserId,
-    nickname,
-    iconUrl,
-    followCount,
-    followerCount,
-    introduction,
-  } = props;
+export const ProfileCard = (profile: ProfileCardProps) => {
   return (
     <div className={styles.profileCard}>
       <div className={styles.profileCardLeft}>
-        {iconUrl && (
+        {profile.iconUrl ? (
           <img
-            src={iconUrl}
+            src={profile.iconUrl}
             className={styles.profileIcon}
-            alt={`${nickname}のプロフィール画像`}
+            alt={`${profile.userName}のプロフィール画像`}
           />
+        ) : (
+          <div className={styles.profileIcon}>
+            <FaUser />
+          </div>
         )}
       </div>
       <div className={styles.profileCardRight}>
         <Link
-          to={paths.app.profile.edit.getHref(showUserId)}
-          state={props}
+          to={paths.app.profile.edit.getHref(profile.showUserId)}
+          state={profile}
           className={styles.profileNameLink}
           title="プロフィール編集"
         >
-          {nickname}
-          <CiEdit className={styles.editIcon} />
+          {profile.userName}
+          <FaEdit className={styles.editIcon} />
         </Link>
-        <small>@{showUserId}</small>
-        <p>{introduction}</p>
+        <small>@{profile.showUserId}</small>
+        <p>{profile.introduction}</p>
         <div className={styles.followWrapper}>
           <Link
             title="フォロー"
-            to={paths.app.profile.follow.getHref(showUserId)}
+            to={paths.app.profile.follow.getHref(profile.showUserId)}
             className={styles.followLink}
           >
             <small>フォロー</small>
-            <span>{followCount}</span>
+            <span>{profile.followCount}</span>
           </Link>
 
           <span className={styles.separator}>/</span>
 
           <Link
-            to={paths.app.profile.follower.getHref(showUserId)}
+            to={paths.app.profile.follower.getHref(profile.showUserId)}
             className={styles.followLink}
             title="フォロワー"
           >
             <small>フォロワー</small>
-            <span>{followerCount}</span>
+            <span>{profile.followerCount}</span>
           </Link>
         </div>
       </div>

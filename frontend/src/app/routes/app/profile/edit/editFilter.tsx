@@ -1,19 +1,15 @@
 import { useState, type KeyboardEvent } from "react";
 import styles from "@/features/profile/styles/editFilter.module.css";
-
-type FilterWord = {
-  word: string;
-};
-
-const dummyFilterWords: FilterWord[] = [
-  { word: "test" },
-  { word: "test2" },
-  { word: "ああ" },
-];
+import { useFilterWords } from "@/features/profile/hooks/useFilterWords";
+import { useUpdateFilterWords } from "@/features/profile/hooks/useUpdateFilterWords";
+import { Spinner } from "@/components/ui/spinner/spinner";
 
 const EditFilter = () => {
-  const [filterWords, setFilterWords] =
-    useState<FilterWord[]>(dummyFilterWords);
+  const { data, isPending: isWordsPending } = useFilterWords();
+  const { mutate, isPending: isUpdating } = useUpdateFilterWords();
+
+  const filterWordsList = data?.filterWords ?? [];
+
   const [inputWord, setInputWord] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -27,22 +23,43 @@ const EditFilter = () => {
 
     if (!trimmedInput) return;
 
-    const isDuplicate = filterWords.some((item) => item.word === trimmedInput);
+    const isDuplicate = filterWordsList.some((item) => item === trimmedInput);
     if (isDuplicate) {
       setErrorMessage(`「${trimmedInput}」は既に追加されています`);
       return;
     }
 
-    const newFilterWord: FilterWord = { word: trimmedInput };
-    setFilterWords([newFilterWord, ...filterWords]);
+    const newFilterWord: string = trimmedInput;
 
-    setInputWord("");
-    setErrorMessage("");
+    mutate(
+      { filterWords: [newFilterWord, ...filterWordsList] },
+      {
+        onSuccess: () => {
+          setInputWord("");
+          setErrorMessage("");
+        },
+        onError: () => {
+          alert("フィルターワードの更新に失敗しました。");
+        },
+      },
+    );
   };
 
   const handleRemoveWord = (wordToRemove: string) => {
-    const newWords = filterWords.filter((item) => item.word !== wordToRemove);
-    setFilterWords(newWords);
+    const newWords = filterWordsList.filter((item) => item !== wordToRemove);
+
+    mutate(
+      { filterWords: newWords },
+      {
+        onSuccess: () => {
+          setInputWord("");
+          setErrorMessage("");
+        },
+        onError: () => {
+          alert("フィルターワードの更新に失敗しました。");
+        },
+      },
+    );
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -89,6 +106,7 @@ const EditFilter = () => {
                   if (errorMessage) setErrorMessage("");
                 }}
                 onKeyDown={handleKeyDown}
+                disabled={isUpdating}
               />
               {errorMessage && (
                 <p
@@ -103,7 +121,7 @@ const EditFilter = () => {
               type="button"
               className={styles.addButton}
               onClick={handleAddWord}
-              disabled={isInvalidInput}
+              disabled={isInvalidInput || isUpdating}
               style={{
                 opacity: isInvalidInput ? 0.5 : 1,
                 cursor: isInvalidInput ? "not-allowed" : "pointer",
@@ -115,23 +133,27 @@ const EditFilter = () => {
 
           <div className={styles.listContainer}>
             <div className={styles.listHeader}>
-              登録済みのワード ({filterWords.length})
+              登録済みのワード ({filterWordsList.length})
             </div>
             <ul className={styles.wordList}>
-              {filterWords.map((wordObj) => (
-                <li key={wordObj.word} className={styles.wordItem}>
-                  <span className={styles.wordText}>{wordObj.word}</span>
-                  <button
-                    type="button"
-                    className={styles.deleteButton}
-                    onClick={() => handleRemoveWord(wordObj.word)}
-                    aria-label={`${wordObj.word}を削除`}
-                  >
-                    ✕
-                  </button>
-                </li>
-              ))}
-              {filterWords.length === 0 && (
+              {isWordsPending ? (
+                <Spinner />
+              ) : filterWordsList.length > 0 ? (
+                filterWordsList.map((wordObj) => (
+                  <li key={wordObj} className={styles.wordItem}>
+                    <span className={styles.wordText}>{wordObj}</span>
+                    <button
+                      type="button"
+                      className={styles.deleteButton}
+                      onClick={() => handleRemoveWord(wordObj)}
+                      aria-label={`${wordObj}を削除`}
+                      disabled={isUpdating}
+                    >
+                      ✕
+                    </button>
+                  </li>
+                ))
+              ) : (
                 <li className={styles.emptyState}>
                   登録されているワードはありません
                 </li>

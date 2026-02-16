@@ -1,11 +1,8 @@
 import { useForm } from "react-hook-form";
 import styles from "@/features/profile/styles/editPassword.module.css";
-
-type editPasswordForm = {
-  currentPassword: string;
-  newPassword: string;
-  rePassword: string;
-};
+import { type EditPasswordForm } from "@/features/profile/types/setting";
+import { useUpdatePassword } from "@/features/profile/hooks/useUpdatePassword";
+import { Spinner } from "@/components/ui/spinner/spinner";
 
 const EditPassword = () => {
   const {
@@ -13,19 +10,16 @@ const EditPassword = () => {
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<editPasswordForm>({
+  } = useForm<EditPasswordForm>({
     mode: "onChange",
   });
 
+  const { mutate, isPending } = useUpdatePassword();
+
   const newPasswordValue = watch("newPassword");
 
-  const onSubmit = (data: editPasswordForm) => {
-    const isConfirmed = window.confirm("パスワードを変更しますか？");
-    if (!isConfirmed) {
-      return;
-    }
-
-    console.log("変更しました", data);
+  const onSubmit = (data: EditPasswordForm) => {
+    if (confirm("パスワードを変更しますか？")) mutate(data);
   };
 
   const passwordValidationRules = {
@@ -52,6 +46,8 @@ const EditPassword = () => {
     },
   };
 
+  if (isPending) return <Spinner isDark={true} />;
+
   return (
     <div className={styles.container}>
       <h2 className={styles.heading}>パスワード変更</h2>
@@ -62,13 +58,11 @@ const EditPassword = () => {
           <input
             type="password"
             placeholder="現在のパスワード"
-            className={`${styles.input} ${errors.currentPassword ? styles.inputError : ""}`}
-            {...register("currentPassword", { required: "入力必須です" })}
+            className={`${styles.input} ${errors.password ? styles.inputError : ""}`}
+            {...register("password", { required: "入力必須です" })}
           />
-          {errors.currentPassword && (
-            <p className={styles.errorMessage}>
-              {errors.currentPassword.message}
-            </p>
+          {errors.password && (
+            <p className={styles.errorMessage}>{errors.password.message}</p>
           )}
         </div>
 
@@ -90,15 +84,17 @@ const EditPassword = () => {
           <input
             type="password"
             placeholder="もう一度入力してください"
-            className={`${styles.input} ${errors.rePassword ? styles.inputError : ""}`}
-            {...register("rePassword", {
+            className={`${styles.input} ${errors.confirmPassword ? styles.inputError : ""}`}
+            {...register("confirmPassword", {
               required: "確認のためもう一度入力してください",
               validate: (value) =>
                 value === newPasswordValue || "パスワードが一致しません",
             })}
           />
-          {errors.rePassword && (
-            <p className={styles.errorMessage}>{errors.rePassword.message}</p>
+          {errors.confirmPassword && (
+            <p className={styles.errorMessage}>
+              {errors.confirmPassword.message}
+            </p>
           )}
         </div>
 
