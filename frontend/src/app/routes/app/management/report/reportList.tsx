@@ -21,7 +21,7 @@ const ReportList = () => {
   const [deleteTarget, setDeleteTarget] = useState<ReportType | null>(null);
 
   const modalRef = useRef<ModalHandle>(null);
-  const { reportList: reports, isFetching, refetch } = useReports();
+  const { reportList: reports, isFetching, isError, refetch } = useReports();
   const deleteReport = useDeleteReport();
 
   // 初回データ取得
@@ -71,8 +71,26 @@ const ReportList = () => {
     modalRef.current?.close();
     setDeleteTarget(null);
   };
+
   if (isFetching) {
     return <Spinner />;
+  }
+
+  if (isError) {
+    return (
+      <div className={styles.contents}>
+        <h2 className={styles.title}>通報一覧</h2>
+        <div className={styles.noData}>
+          データの取得に失敗しました。
+          <button
+            type="button"
+            className={styles.retryBtn}
+            onClick={() => refetch()}>
+            再試行
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (reports.length === 0) {

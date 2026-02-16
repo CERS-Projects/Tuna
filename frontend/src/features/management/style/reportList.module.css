@@ -62,3 +62,18 @@
   color: #888;
   font-size: 0.95rem;
 }
+
+.retryBtn {
+  margin-top: 12px;
+  padding: 8px 20px;
+  background-color: #4a90d9;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.retryBtn:hover {
+  background-color: #3a7bc8;
+}
