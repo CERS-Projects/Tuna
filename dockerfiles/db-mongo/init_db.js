@@ -629,7 +629,7 @@ try {
     {
       user_id: 10,
       post_date: new Date(Date.now() - 300000),
-      sentence: "3-A組のの副担任になりました、よろしくお願いします。",
+      sentence: "3-A組の副担任になりました、よろしくお願いします。",
       like_count: 0,
       response_count: 0,
       share_range: [10],
@@ -941,7 +941,7 @@ try {
   db.profile_collection.insertMany([
     {
       user_id: 1,
-      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       nickname: "タロウ",
       show_user_id: "taro_user",
       introduction: "テストユーザー1号です。",
@@ -952,7 +952,7 @@ try {
     {
       user_id: 2,
       nickname: "ハナコ",
-      icon: "images/85f3aeee-3c96-459a-82a5-128956ef0e7d.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "hanako_test",
       introduction: "テストユーザー2号。よろしくお願いします！",
       follow: 10,
@@ -961,7 +961,7 @@ try {
     {
       user_id: 4,
       nickname: "ジロウ",
-      icon: "images/b35909eb-0df0-47aa-ad3a-4448e768aa7f.png",
+      icon: "images/images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "jiro_example",
       introduction: "テストユーザー4号です。勉強頑張ります!",
       follow: 2,
@@ -970,7 +970,7 @@ try {
     {
       user_id: 5,
       nickname: "イチロウ",
-      icon: "images/63b81b67-68ec-4171-a28c-3042a33b8591.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "ichiro_sample",
       introduction: "テストユーザー4号。よろしく!",
       follow: 0,
@@ -979,7 +979,7 @@ try {
     {
       user_id: 7,
       nickname: "センセイ",
-      icon: "images/df7810bd-a128-487c-a389-8d836e35da22.jpg",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "t003_teacher_w",
       introduction: "数学を教えています。よろしくお願いします。",
       follow: 2,
@@ -988,7 +988,7 @@ try {
     {
       user_id: 6,
       nickname: "上野 俊",
-      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "t003_teacher_c",
       introduction: "こんにちは！よろしくお願いします。",
       follow: 0,
@@ -997,7 +997,7 @@ try {
     {
       user_id: 8,
       nickname: "松本 層",
-      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "s004_student_v",
       introduction: "こんにちは！よろしくお願いします。",
       follow: 0,
@@ -1006,7 +1006,7 @@ try {
     {
       user_id: 9,
       nickname: "菊池 優希",
-      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "s005_student_u",
       introduction: "こんにちは！よろしくお願いします。",
       follow: 0,
@@ -1015,8 +1015,17 @@ try {
     {
       user_id: 10,
       nickname: "飯塚 千尋",
-      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "t003_teacher_t",
+      introduction: "こんにちは！よろしくお願いします。",
+      follow: 0,
+      follower: 0,
+    },
+    {
+      user_id: 11,
+      nickname: "メガネマン",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
+      show_user_id: "t003_teacher_s",
       introduction: "こんにちは！よろしくお願いします。",
       follow: 0,
       follower: 0,
@@ -1024,7 +1033,7 @@ try {
     {
       user_id: 12,
       nickname: "高橋 美咲",
-      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "s006_student_r",
       introduction: "2年生の高橋です！趣味は読書です。",
       follow: 0,
@@ -1033,7 +1042,7 @@ try {
     {
       user_id: 13,
       nickname: "渡辺 陸",
-      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "s007_student_q",
       introduction: "サッカーが好きです。よろしく！",
       follow: 0,
@@ -1042,7 +1051,7 @@ try {
     {
       user_id: 14,
       nickname: "中村 結衣",
-      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "s008_student_p",
       introduction: "1年生です。たくさん友達作りたいです！",
       follow: 0,
@@ -1051,14 +1060,14 @@ try {
     {
       user_id: 15,
       nickname: "伊藤 翔太",
-      icon: "images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png",
+      icon: "images/3e5539df-5387-46e8-9393-8bfeb67f8aea.png",
       show_user_id: "s009_student_o",
       introduction: "プログラミング勉強中です！",
       follow: 0,
       follower: 0,
     },
   ]);
-  print("✅ profile_collectionに13件挿入しました。");
+  print("✅ profile_collectionに15件挿入しました。");
 
   // C. search_history_collection
   db.search_history_collection.insertMany([
