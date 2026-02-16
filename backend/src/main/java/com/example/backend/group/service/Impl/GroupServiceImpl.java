@@ -2,10 +2,13 @@ package com.example.backend.group.service.Impl;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.accounts.helper.AccountsHelper;
+import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.group.dto.DelGroupRequest;
 import com.example.backend.group.dto.GetGroupResponse;
@@ -32,11 +35,22 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
 
+    private final UserRepository userRepository;
+
     /* グループ作成 */
     @Transactional
     @Override
-    public void createGroup(GroupCreateRequest dto) {
-        toGroupEntity(dto);
+    public void createGroup(Integer schoolId, GroupCreateRequest dto) {
+
+        List<Integer> memberList = dto.getMembersUserId();
+
+        long sum = userRepository.countValidUsers(memberList, schoolId);
+
+        if (sum != memberList.size()) {
+            throw new IllegalArgumentException("指定されたユーザーの中に、無効なユーザーが含まれています。");
+        }
+
+        toGroupEntity(schoolId, dto);
     }
 
     @Transactional
@@ -53,7 +67,22 @@ public class GroupServiceImpl implements GroupService {
 
     @Transactional
     @Override
-    public void deleteGroup(DelGroupRequest dto) {
+    public void deleteGroup(Integer schoolId, DelGroupRequest dto) {
+
+        Integer groupId = dto.getGroupId();
+
+        if (groupId == null) {
+            throw new IllegalArgumentException("nullの値が含まれています");
+        }
+
+        GroupEntity groupEntity = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EmptyResultDataAccessException("グループが見つかりません", 0));
+
+        Integer getSchoolId = groupEntity.getSchool().getSchoolId();
+
+        if (getSchoolId != schoolId) {
+            throw new IllegalArgumentException("不正なリクエストです");
+        }
 
         final Integer newParentId = dto.getParentId();
         final Integer myId = dto.getGroupId();
@@ -66,23 +95,38 @@ public class GroupServiceImpl implements GroupService {
 
     @Transactional
     @Override
-    public void modifyUpperGroup(final ModifyUpperGroupRequest dto) {
-        groupHelper.updateParentGroup(dto.getNewParentGroupId(), dto.getGroupId());
+    public void modifyUpperGroup(Integer schoolId, Integer groupId, final ModifyUpperGroupRequest dto) {
+
+        GroupEntity groupEntity = groupRepository.findById(groupId)
+                .orElseThrow(() -> new EmptyResultDataAccessException("グループが見つかりません", 0));
+
+        Integer getSchoolId = groupEntity.getSchool().getSchoolId();
+
+        if (getSchoolId != schoolId) {
+            throw new IllegalArgumentException("不正なリクエストです");
+        }
+
+        groupHelper.updateParentGroup(dto.getNewParentGroupId(), groupId);
     }
 
     /* GroupCreateRequest DTOをGroupEntityに変換 */
-    private GroupEntity toGroupEntity(GroupCreateRequest dto) {
-        SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(dto.getSchoolId());
-        GroupEntity groupEntity = new GroupEntity();
-        GroupEntity parentGroup = groupHelper.findGroupEntityById(dto.getParentGroupId());
-        groupEntity.setGroupName(dto.getGroupName());
-        groupEntity.setSchool(schoolEntity);
-        groupEntity.setGroup(parentGroup);
+    private GroupEntity toGroupEntity(Integer schoolId, GroupCreateRequest dto) {
+        try {
+            SchoolEntity schoolEntity = accountsHelper.findSchoolEntityById(schoolId);
+            GroupEntity groupEntity = new GroupEntity();
+            GroupEntity parentGroup = groupHelper.findGroupEntityById(dto.getParentGroupId());
+            groupEntity.setGroupName(dto.getGroupName());
+            groupEntity.setSchool(schoolEntity);
+            groupEntity.setGroup(parentGroup);
 
-        GroupEntity savedGroupEntity = groupRepository.save(groupEntity);
+            GroupEntity savedGroupEntity = groupRepository.save(groupEntity);
 
-        groupMemberService.groupMemberToDB(dto.getMembersUserId(), savedGroupEntity.getGroupId());
+            groupMemberService.groupMemberToDB(dto.getMembersUserId(), savedGroupEntity.getGroupId());
 
-        return groupEntity;
+            return groupEntity;
+        } catch (Exception e) {
+            throw new DataIntegrityViolationException("すでに存在しているグループ名です");
+        }
+
     }
 }
