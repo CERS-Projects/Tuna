@@ -1,7 +1,16 @@
+import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ReportType } from "../types/report";
 import { useApiWithRefresh } from "@/lib/api-client";
 import { useAuth } from "@/features/auth/hooks/useAuth";
+
+const formatDate = (date: string | Date): string =>
+  new Date(date).toLocaleDateString("ja-JP", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
 export const useReports = () => {
   const apiWithRefresh = useApiWithRefresh();
   const { authToken } = useAuth();
@@ -25,24 +34,18 @@ export const useReports = () => {
       });
     },
   });
-  reportList?.forEach((report) => {
-    report.reportDate = new Date(report.reportDate).toLocaleDateString(
-      "ja-JP",
-      {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      },
-    );
-    report.reportedPostDate = new Date(
-      report.reportedPostDate,
-    ).toLocaleDateString("ja-JP", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  });
-  return { reportList, isFetching, isError, refetch };
+
+  const formattedReportList = useMemo(
+    () =>
+      reportList?.map((report) => ({
+        ...report,
+        reportDate: formatDate(report.reportDate),
+        reportedPostDate: formatDate(report.reportedPostDate),
+      })) ?? [],
+    [reportList],
+  );
+
+  return { reportList: formattedReportList, isFetching, isError, refetch };
 };
 
 export const useDeleteReport = () => {
