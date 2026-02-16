@@ -22,6 +22,7 @@ import com.example.backend.profile.repository.FollowRelationRepository;
 import com.example.backend.profile.dto.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -41,8 +42,13 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void createProfile(Integer userId) {
         UserProfileEntity profile = new UserProfileEntity();
+        try {
         GetUserName userInfo = userRepository.findUserName(userId);
-
+        } catch (Exception e) {
+            log.error("ユーザー情報の取得に失敗しました: ", e);
+            throw new RuntimeException("ユーザー情報の取得に失敗しました");
+        }
+        
         log.info("ユーザー情報取得 userInfo: {}", userInfo);
         profile.setUserId(userId);
         profile.setShowUserId(userInfo.showUserId());
