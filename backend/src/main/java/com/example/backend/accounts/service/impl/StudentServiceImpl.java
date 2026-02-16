@@ -202,7 +202,7 @@ public class StudentServiceImpl implements StudentService {
 
         Integer getSchoolId = groupEntity.getSchool().getSchoolId();
 
-        if (getSchoolId != schoolId) {
+        if (!getSchoolId.equals(schoolId)) {
             throw new IllegalArgumentException("不正なリクエストです");
         }
         List<GetUserResponse> response = studentRepository.findAllStudentUsers(schoolId);
