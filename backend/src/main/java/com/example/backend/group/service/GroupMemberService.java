@@ -10,7 +10,10 @@ import com.example.backend.group.dto.ModifyGroupMembersRequest;
  */
 public interface GroupMemberService {
     void groupMemberToDB(List<Integer> membersUserId, Integer groupId);
-    void modifyGroupMembers(ModifyGroupMembersRequest dto);
+
+    void modifyGroupMembers(Integer schoolId, Integer groupId, ModifyGroupMembersRequest dto);
+
     void deleteMembersByGroupId(Integer groupId);
+
     Set<Integer> findJoinUserIdsByGroupId(Integer groupId);
 }

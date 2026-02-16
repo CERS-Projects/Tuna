@@ -12,13 +12,13 @@ import com.example.backend.auth.dto.UserInfo;
  * グループに関するサービスインターフェース
  */
 public interface GroupService {
-     void createGroup(GroupCreateRequest dto);
+     void createGroup(Integer schoolId, GroupCreateRequest dto);
 
-     void deleteGroup(DelGroupRequest dto);
+     void deleteGroup(Integer schoolId, DelGroupRequest dto);
 
      List<GetGroupResponse> getAllGroups(UserInfo userInfo);
 
      List<GetGroupResponse> getMyGroups(UserInfo userInfo);
 
-     void modifyUpperGroup(ModifyUpperGroupRequest dto);
+     void modifyUpperGroup(Integer schoolId, Integer groupId, ModifyUpperGroupRequest dto);
 }
