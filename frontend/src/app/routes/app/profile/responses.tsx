@@ -69,7 +69,7 @@ const ProfileResponses = () => {
   return (
     <>
       {dummyPostData.map((post) => (
-        <PostBox key={post.postId} {...post} />
+        <PostBox key={post.postId} props={{ ...post }} />
       ))}
     </>
   );

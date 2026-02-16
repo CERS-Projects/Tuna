@@ -33,7 +33,9 @@ const Timeline = () => {
               <Spinner />
             </div>
           ) : posts ? (
-            posts.map((item) => <PostBox key={item.postId} {...item} />)
+            posts.map((item) => (
+              <PostBox key={item.postId} props={{ ...item }} />
+            ))
           ) : (
             []
           )}

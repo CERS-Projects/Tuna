@@ -110,7 +110,7 @@ const DetailPost = () => {
           <button onClick={modalButtonClick} className={styles.modalButton}>
             <RiCompass3Line />
           </button>
-          <PostBox {...post} isLink={false} />
+          <PostBox props={{ ...post, isLink: false }} />
 
           <h3 className={styles.detailTag}>返信一覧</h3>
 
@@ -128,7 +128,7 @@ const DetailPost = () => {
                 key={item.postId}
                 ref={index === 0 ? firstResponseRef : null}
               >
-                <PostBox {...item} />
+                <PostBox props={{ ...item }} />
               </div>
             ))
           ) : (

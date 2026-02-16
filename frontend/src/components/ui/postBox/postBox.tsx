@@ -5,6 +5,7 @@ import {
   BsChat,
   BsExclamationCircle,
 } from "react-icons/bs";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { useNavigate, Link, useSearchParams } from "react-router";
 import type React from "react";
 import { useState, useRef } from "react";
@@ -14,8 +15,14 @@ import { type PostData } from "@/features/post/types/post";
 import { paths } from "@/config/paths";
 import { useDebouncedLike } from "@/features/post/hooks/useGood";
 import { useDebouncedBookmark } from "@/features/post/hooks/useBookmark";
+import { useDeletePost } from "@/features/post/hooks/useDeletePost";
 
-export const PostBox = (props: PostData) => {
+type Props = {
+  props: PostData;
+  canDelete?: boolean;
+};
+
+export const PostBox = ({ props, canDelete = false }: Props) => {
   const [searchParams] = useSearchParams();
   const currentGroupId = searchParams.get("groupId")
     ? Number(searchParams.get("groupId"))
@@ -55,6 +62,8 @@ export const PostBox = (props: PostData) => {
     shareRange,
   );
 
+  const { mutate: deleteMutate } = useDeletePost(postId);
+
   const modalRef = useRef<ModalHandle>(null);
 
   const handleNavigateClick = (
@@ -93,6 +102,13 @@ export const PostBox = (props: PostData) => {
     debouncedBookmarkToggle(newBookmark);
   };
 
+  const handlePostDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (confirm("投稿を削除しますか？")) deleteMutate(undefined);
+  };
+
   const handleImgClick = (e: React.MouseEvent, imgurl: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -102,6 +118,15 @@ export const PostBox = (props: PostData) => {
 
   const renderContent = () => (
     <>
+      {canDelete && (
+        <button
+          className={styles.trashButton}
+          onClick={(e) => handlePostDelete(e)}
+        >
+          <FaRegTrashAlt />
+        </button>
+      )}
+
       <div
         className={styles.postHeader}
         onClick={(e) =>
@@ -149,7 +174,7 @@ export const PostBox = (props: PostData) => {
     </>
   );
 
-  const containerClass = `${styles.postBoxLink} ${styles.postContainer}`;
+  const containerClass = `${styles.postBoxLink} ${styles.postContainer} ${canDelete ? styles.hasTrash : ""}`;
 
   return (
     <>
