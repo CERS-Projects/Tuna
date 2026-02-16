@@ -295,6 +295,10 @@ const createAppRouter = (queryClient: QueryClient) => {
                   paths.app.management.schoolInfo.path,
                   () => import("./routes/app/management/school/schoolEdit"),
                 ),
+                route(
+                  paths.app.management.report.path,
+                  () => import("./routes/app/management/report/reportList"),
+                ),
               ],
             },
           ],

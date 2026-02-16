@@ -67,7 +67,7 @@ public class ProfileController {
                 return ResponseEntity.notFound().build();
             }
         } catch(EmptyResultDataAccessException e) {
-            log.error("プロフィールの取得に失敗しました userId: {}", userInfo.getUserId(), e);
+            log.error("プロフィールが見つかりません userId: {}", userInfo.getUserId(), e);
             return ResponseEntity.notFound().build();
         
         } catch(Exception e) {

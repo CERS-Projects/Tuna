@@ -1,6 +1,5 @@
 package com.example.backend.classroom.dto;
 
-import com.example.backend.classroom.dto.DocumentItem;
 import java.util.List;
 
 import lombok.Getter;

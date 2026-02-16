@@ -1,14 +1,18 @@
 package com.example.backend.profile.service.impl;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.profile.service.ProfileService;
 import com.example.backend.utils.fileUtil.helper.FileControlHelper;
+import com.example.backend.utils.fileUtil.helper.ByteArrayMultipartFile;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.dto.GetUserName;
 import com.example.backend.accounts.model.UserEntity;
+import java.io.InputStream;
 
 import java.util.List;
 import com.example.backend.profile.model.UserProfileEntity;
@@ -18,6 +22,7 @@ import com.example.backend.profile.repository.FollowRelationRepository;
 import com.example.backend.profile.dto.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -30,17 +35,42 @@ public class ProfileServiceImpl implements ProfileService {
     private final FileControlHelper fileControlHelper;
     private final UserRepository userRepository;
 
+    // デフォルトアイコンのクラスパスリソースパス
+    private static final String DEFAULT_ICON_RESOURCE = "defaulticon.png";
+
     // プロフィール作成
     @Override
     public void createProfile(Integer userId) {
         UserProfileEntity profile = new UserProfileEntity();
+        try {
         GetUserName userInfo = userRepository.findUserName(userId);
-
+        } catch (Exception e) {
+            log.error("ユーザー情報の取得に失敗しました: ", e);
+            throw new RuntimeException("ユーザー情報の取得に失敗しました");
+        }
+        
         log.info("ユーザー情報取得 userInfo: {}", userInfo);
         profile.setUserId(userId);
         profile.setShowUserId(userInfo.showUserId());
         profile.setNickname(userInfo.name());
-        profile.setIconObjectKey("images/fb82d7cb-cf37-4e31-af5c-ec22d602c402.png");
+
+        // デフォルトアイコンをクラスパスから読み込みS3にアップロード
+        try {
+            Resource defaultIconResource = new ClassPathResource(DEFAULT_ICON_RESOURCE);
+            byte[] iconBytes;
+            try (InputStream is = defaultIconResource.getInputStream()) {
+                iconBytes = is.readAllBytes();
+            }
+            MultipartFile iconFile = new ByteArrayMultipartFile(
+                "icon", "defaulticon.png", "image/png", iconBytes
+            );
+            List<String> keys = fileControlHelper.uploadFile("images", iconFile);
+            profile.setIconObjectKey(keys.get(0));
+        } catch (Exception e) {
+            log.error("デフォルトアイコンのアップロードに失敗しました: ", e);
+            throw new RuntimeException("デフォルトアイコンのアップロードに失敗しました"); 
+        }
+
         profile.setFollowCount(0);
         profile.setFollowerCount(0);
         profile.setIntroduction("こんにちは！よろしくお願いします。");
@@ -96,9 +126,9 @@ public class ProfileServiceImpl implements ProfileService {
     public List<String> getFilterWords(Integer userId) {
         try {
             UserProfileEntity profile = profileRepository.findByUserId(userId)
-                    .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+                    .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
 
-            if (profile.getFilterWords() != null) {
+            if(profile.getFilterWords() != null) {
                 return profile.getFilterWords();
 
             } else {
@@ -115,7 +145,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void deleteProfile(Integer userId) {
         UserProfileEntity existingProfile = profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
 
         try {
             fileControlHelper.deleteFile(existingProfile.getIconObjectKey());
@@ -158,7 +188,7 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponse getProfileByShowUserId(String showUserId, Integer currentUserId) {
         ProfileResponse profile = new ProfileResponse();
         UserProfileEntity profileEntity = profileRepository.findByShowUserId(showUserId)
-                .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
 
         profile.setUserId(profileEntity.getUserId());
         profile.setShowUserId(profileEntity.getShowUserId());
@@ -167,10 +197,8 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setIntroduction(profileEntity.getIntroduction());
         profile.setFollowCount(profileEntity.getFollowCount());
         profile.setFollowerCount(profileEntity.getFollowerCount());
-        profile.setIsFollowing(
-                followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
-        profile.setIsFollowed(
-                followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
+        profile.setIsFollowing(followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
+        profile.setIsFollowed(followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
         return profile;
     }
 
