@@ -65,6 +65,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     UserEntity findByMailAddress(String mailAddress);
 
-    @Query("SELECT COUNT(u) FROM User u WHERE u.userId IN :userIds AND u.schoolId = :schoolId")
+    @Query("SELECT COUNT(u) FROM UserEntity u WHERE u.userId IN :userIds AND u.school.schoolId = :schoolId")
     long countValidUsers(@Param("userIds") List<Integer> userIds, @Param("schoolId") Integer schoolId);
 }

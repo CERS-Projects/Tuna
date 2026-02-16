@@ -51,7 +51,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/accounts/teacher/**", "/school/information", "/school/modify")
                         .hasRole("ADMIN_SCHOOL")
-                        .requestMatchers("/groups/**", "accounts/all", "/accounts/student/**", "/notice/create",
+                        .requestMatchers("/groups/**", "/accounts/all", "/accounts/student/**", "/notice/create",
                                 "/notice/modify",
                                 "/notice/teacher/list", "/notice/delete", "/report/list", "/report/delete",
                                 "/classroom/create",

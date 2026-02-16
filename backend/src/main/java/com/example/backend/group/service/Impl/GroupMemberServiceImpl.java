@@ -33,7 +33,7 @@ public class GroupMemberServiceImpl implements GroupMemberService {
 
         Integer getSchoolId = groupEntity.getSchool().getSchoolId();
 
-        if (getSchoolId != schoolId) {
+        if (!getSchoolId.equals(schoolId)) {
             throw new IllegalArgumentException("不正なリクエストです");
         }
 
