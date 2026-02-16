@@ -1,22 +1,29 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useReports,
   useDeleteReport,
 } from "@/features/management/hooks/useReports";
 import { ReportTable } from "@/features/management/components/reportTable/reportTable";
 import { Pagination } from "@/features/management/components/pagination/pagination";
-import { reasonLabels } from "@/features/management/types/report";
+import { DeleteConfirmModal } from "@/features/management/components/deleteConfirmModal/deleteConfirmModal";
+import {
+  reasonLabels,
+  type ReportType,
+} from "@/features/management/types/report";
+import type { ModalHandle } from "@/components/ui/modal/modal";
 import styles from "@/features/management/style/reportList.module.css";
-
 const ITEMS_PER_PAGE = 8;
 
 const ReportList = () => {
   const [reasonFilter, setReasonFilter] = useState<number>(-1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState<ReportType | null>(null);
 
+  const modalRef = useRef<ModalHandle>(null);
   const { reportList: reports, isFetching, refetch } = useReports();
   const deleteReport = useDeleteReport();
 
+  // 初回データ取得
   useEffect(() => {
     refetch();
   }, [refetch]);
@@ -39,16 +46,42 @@ const ReportList = () => {
     setCurrentPage(1);
   };
 
-  // 削除処理
+  // 削除モーダルを開く
   const handleDelete = (reportId: string) => {
-    if (window.confirm("この通報を削除しますか？")) {
-      deleteReport.mutate(reportId, {
-        onSuccess: () => {
-          refetch();
-        },
-      });
-    }
+    const target = reports.find((r) => r.reportId === reportId) ?? null;
+    setDeleteTarget(target);
+    modalRef.current?.show();
   };
+
+  // 削除確定
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return;
+    deleteReport.mutate(deleteTarget.reportId, {
+      onSuccess: () => {
+        modalRef.current?.close();
+        setDeleteTarget(null);
+        refetch();
+      },
+    });
+  };
+
+  // 削除キャンセル
+  const handleCancelDelete = () => {
+    modalRef.current?.close();
+    setDeleteTarget(null);
+  };
+  if (isFetching) {
+    return <div className={styles.loading}>読み込み中...</div>;
+  }
+
+  if (reports.length === 0) {
+    return (
+      <div className={styles.contents}>
+        <h2 className={styles.title}>通報一覧</h2>
+        <div className={styles.noData}>該当データがありませんでした</div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.contents}>
@@ -86,6 +119,14 @@ const ReportList = () => {
           />
         </>
       )}
+
+      <DeleteConfirmModal
+        ref={modalRef}
+        report={deleteTarget}
+        isPending={deleteReport.isPending}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   );
 };

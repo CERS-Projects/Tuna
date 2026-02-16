@@ -9,18 +9,23 @@ type Props = {
 };
 
 const getPageNumbers = (current: number, total: number): (number | "...")[] => {
-  if (total <= 5) {
+  if (total <= 7) {
     return Array.from({ length: total }, (_, i) => i + 1);
   }
 
   const pages: (number | "...")[] = [];
 
+  // 先頭付近
   if (current <= 3) {
-    pages.push(1, 2, 3, "...", total);
-  } else if (current >= total - 2) {
-    pages.push(1, "...", total - 2, total - 1, total);
-  } else {
-    pages.push(1, "...", current, "...", total);
+    pages.push(1, 2, 3, 4, "...", total);
+  }
+  // 末尾付近
+  else if (current >= total - 2) {
+    pages.push(1, "...", total - 3, total - 2, total - 1, total);
+  }
+  // 中間
+  else {
+    pages.push(1, "...", current - 1, current, current + 1, "...", total);
   }
 
   return pages;
@@ -50,8 +55,7 @@ export const Pagination = ({
           className={styles.pageBtn}
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
-          aria-label="前のページ"
-        >
+          aria-label="前のページ">
           <IoChevronBack />
         </button>
 
@@ -65,8 +69,7 @@ export const Pagination = ({
               key={page}
               type="button"
               className={`${styles.pageBtn} ${page === currentPage ? styles.active : ""}`}
-              onClick={() => onPageChange(page)}
-            >
+              onClick={() => onPageChange(page)}>
               {page}
             </button>
           ),
@@ -77,8 +80,7 @@ export const Pagination = ({
           className={styles.pageBtn}
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
-          aria-label="次のページ"
-        >
+          aria-label="次のページ">
           <IoChevronForward />
         </button>
       </div>
