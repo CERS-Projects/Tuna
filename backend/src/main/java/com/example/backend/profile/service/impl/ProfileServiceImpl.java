@@ -12,6 +12,7 @@ import com.example.backend.utils.fileUtil.helper.ByteArrayMultipartFile;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.dto.GetUserName;
 import com.example.backend.accounts.model.UserEntity;
+import java.io.InputStream;
 
 import java.util.List;
 import com.example.backend.profile.model.UserProfileEntity;
