@@ -27,7 +27,7 @@ export const FollowCard = ({
   return (
     <div className={styles.cardContainer}>
       <Link
-        to={paths.app.profile.root.getHref(showUserId)}
+        to={paths.app.profile.posts.getHref(showUserId)}
         className={styles.userInfoLink}
       >
         <div className={styles.iconWrapper}>
