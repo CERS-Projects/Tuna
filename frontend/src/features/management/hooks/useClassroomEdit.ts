@@ -11,7 +11,6 @@ type UseEditClassroomsOptions = {
   onError?: (error: Error) => void;
 };
 
-/** POST /classroom/create (multipart/form-data) */
 export const useCreateClassroom = (options?: UseEditClassroomsOptions) => {
   const queryClient = useQueryClient();
   const apiWithRefresh = useApiWithRefresh();
@@ -57,7 +56,6 @@ export const useCreateClassroom = (options?: UseEditClassroomsOptions) => {
   });
 };
 
-/** PUT /classroom/update (multipart/form-data) */
 export const useUpdateClassroom = (options?: UseEditClassroomsOptions) => {
   const queryClient = useQueryClient();
   const apiWithRefresh = useApiWithRefresh();
@@ -138,7 +136,6 @@ export const useUpdateClassroom = (options?: UseEditClassroomsOptions) => {
   });
 };
 
-/** DELETE /classroom/delete?roomId={roomId} */
 export const useDeleteClassroom = (options?: UseEditClassroomsOptions) => {
   const queryClient = useQueryClient();
   const apiWithRefresh = useApiWithRefresh();
