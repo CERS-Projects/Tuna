@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,11 +30,15 @@ import com.example.backend.accounts.service.StudentService;
 import com.example.backend.exception.model.SchoolNotFoundException;
 import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
+import com.example.backend.group.model.GroupEntity;
+import com.example.backend.group.repository.GroupRepository;
 import com.example.backend.group.service.GroupMemberService;
 import com.example.backend.school.model.SchoolEntity;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+
+    private final GroupRepository groupRepository;
 
     /* StudentRepository の依存性注入 */
     private final StudentRepository studentRepository;
@@ -55,12 +60,13 @@ public class StudentServiceImpl implements StudentService {
 
     /* CSVファイル扱えるようにするための初期設定 */
     public StudentServiceImpl(UserRepository userRepository, StudentRepository studentRepository,
-            AccountsHelper accountsHelper, GroupMemberService groupMemberService) {
+            AccountsHelper accountsHelper, GroupMemberService groupMemberService, GroupRepository groupRepository) {
         /* 依存の注入 */
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.accountsHelper = accountsHelper;
         this.groupMemberService = groupMemberService;
+        this.groupRepository = groupRepository;
 
         /* CSVマッパーを使用できるようにするための処理 */
         CsvMapper csvMapper = new CsvMapper();
@@ -189,9 +195,17 @@ public class StudentServiceImpl implements StudentService {
      */
     @Override
     @Transactional(readOnly = true)
-    public List<GetUserResponse> findAllGroups(GetUserBySchoolIdRequest dto) {
-        List<GetUserResponse> response = studentRepository.findAllStudentUsers(dto.getSchoolId());
+    public List<GetUserResponse> findAllGroups(Integer schoolId, GetUserBySchoolIdRequest dto) {
 
+        GroupEntity groupEntity = groupRepository.findById(dto.getGroupId())
+                .orElseThrow(() -> new EmptyResultDataAccessException("グループが見つかりません", 0));
+
+        Integer getSchoolId = groupEntity.getSchool().getSchoolId();
+
+        if (getSchoolId != schoolId) {
+            throw new IllegalArgumentException("不正なリクエストです");
+        }
+        List<GetUserResponse> response = studentRepository.findAllStudentUsers(schoolId);
         Set<Integer> members = groupMemberService.findJoinUserIdsByGroupId(dto.getGroupId());
         return response.stream()
                 .peek(user -> {

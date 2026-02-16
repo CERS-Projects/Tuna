@@ -20,7 +20,7 @@ public interface StudentService {
 
     void createStudentByFile(MultipartFile csvFile, final Integer schoolId) throws IOException;
 
-    List<GetUserResponse> findAllGroups(GetUserBySchoolIdRequest dto);
+    List<GetUserResponse> findAllGroups(Integer schoolId, GetUserBySchoolIdRequest dto);
 
     List<StudentInformationResponse> findStudentInformationResponses(Integer schoolId);
 

@@ -3,18 +3,19 @@ package com.example.backend.profile.service.impl;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import com.example.backend.profile.service.ProfileService;
-import com.example.backend.utils.fileUtil.helper.FileControlHelper;  
+import com.example.backend.utils.fileUtil.helper.FileControlHelper;
 import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.dto.GetUserName;
+import com.example.backend.accounts.model.UserEntity;
+
 import java.util.List;
 import com.example.backend.profile.model.UserProfileEntity;
 import com.example.backend.profile.repository.ProfileRepository;
-import com.example.backend.profile.dto.ProfileUpdateRequest;  
+import com.example.backend.profile.dto.ProfileUpdateRequest;
 import com.example.backend.profile.repository.FollowRelationRepository;
 import com.example.backend.profile.dto.ProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +24,9 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository profileRepository;
     private final FollowRelationRepository followRelationRepository;
-    private final FileControlHelper fileControlHelper;  
+    private final FileControlHelper fileControlHelper;
     private final UserRepository userRepository;
+
     // プロフィール作成
     @Override
     public void createProfile(Integer userId) {
@@ -42,13 +44,13 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setFilterWords(List.of());
         profileRepository.save(profile);
     }
-    
+
     // プロフィール更新
     @Override
     public void updateProfile(ProfileUpdateRequest profile, Integer userId) {
         UserProfileEntity existingProfile = profileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("プロフィールが見つかりません"));
-        
+
         if (profile.getIntroduction() != null) {
             existingProfile.setIntroduction(profile.getIntroduction());
         }
@@ -68,8 +70,16 @@ public class ProfileServiceImpl implements ProfileService {
             existingProfile.setIconObjectKey(keys.get(0));
         }
         profileRepository.save(existingProfile);
+
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EmptyResultDataAccessException("ユーザー情報の取得に失敗しました", 0));
+
+        userEntity.setShowUserId(profile.getShowUserId());
+
+        userRepository.save(userEntity);
+
     }
-    
+
     // フィルターワードの更新
     @Override
     public void updateFilterWords(Integer userId, List<String> filterWords) {
@@ -80,16 +90,15 @@ public class ProfileServiceImpl implements ProfileService {
             throw new RuntimeException("フィルターワードの更新に失敗しました");
         }
     }
-    
-    
+
     // フィルターワードの取得
     @Override
     public List<String> getFilterWords(Integer userId) {
         try {
             UserProfileEntity profile = profileRepository.findByUserId(userId)
-                    .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
-            
-            if(profile.getFilterWords() != null) {
+                    .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+
+            if (profile.getFilterWords() != null) {
                 return profile.getFilterWords();
 
             } else {
@@ -106,8 +115,8 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void deleteProfile(Integer userId) {
         UserProfileEntity existingProfile = profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
-        
+                .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+
         try {
             fileControlHelper.deleteFile(existingProfile.getIconObjectKey());
         } catch (Exception e) {
@@ -126,9 +135,9 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ProfileResponse getProfilesByUserId(Integer currentUserId) {
         ProfileResponse profile = new ProfileResponse();
-        
+
         UserProfileEntity profileEntity = profileRepository.findByUserId(currentUserId)
-                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+                .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
 
         profile.setUserId(profileEntity.getUserId());
         profile.setShowUserId(profileEntity.getShowUserId());
@@ -137,8 +146,10 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setIntroduction(profileEntity.getIntroduction());
         profile.setFollowCount(profileEntity.getFollowCount());
         profile.setFollowerCount(profileEntity.getFollowerCount());
-        profile.setIsFollowing(followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
-        profile.setIsFollowed(followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
+        profile.setIsFollowing(
+                followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
+        profile.setIsFollowed(
+                followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
         return profile;
     }
 
@@ -147,8 +158,8 @@ public class ProfileServiceImpl implements ProfileService {
     public ProfileResponse getProfileByShowUserId(String showUserId, Integer currentUserId) {
         ProfileResponse profile = new ProfileResponse();
         UserProfileEntity profileEntity = profileRepository.findByShowUserId(showUserId)
-                .orElseThrow(() -> new  EmptyResultDataAccessException("プロフィールが見つかりません", 1));
-                
+                .orElseThrow(() -> new EmptyResultDataAccessException("プロフィールが見つかりません", 1));
+
         profile.setUserId(profileEntity.getUserId());
         profile.setShowUserId(profileEntity.getShowUserId());
         profile.setNickname(profileEntity.getNickname());
@@ -156,9 +167,11 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setIntroduction(profileEntity.getIntroduction());
         profile.setFollowCount(profileEntity.getFollowCount());
         profile.setFollowerCount(profileEntity.getFollowerCount());
-        profile.setIsFollowing(followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
-        profile.setIsFollowed(followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
-        return profile; 
+        profile.setIsFollowing(
+                followRelationRepository.existsByFollowerIdAndFollowingId(currentUserId, profileEntity.getUserId()));
+        profile.setIsFollowed(
+                followRelationRepository.existsByFollowerIdAndFollowingId(profileEntity.getUserId(), currentUserId));
+        return profile;
     }
 
 }
