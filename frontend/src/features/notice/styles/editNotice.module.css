@@ -1,12 +1,9 @@
-* {
-  box-sizing: border-box;
-}
-
 .pageContainer {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .formCard {
@@ -15,6 +12,17 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   padding: 32px;
   border: 1px solid #e2e8f0;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 0.02em;
 }
 
 .formGroup {

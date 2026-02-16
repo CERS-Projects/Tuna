@@ -27,37 +27,13 @@ export const useNotices = () => {
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       return await apiWithRefresh<void>({
-        url: `/notice/delete?noticeId=${id}`,
+        url: `/notice/delete?noticeId=${encodeURIComponent(id)}`,
         options: {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
-        },
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notices"] });
-    },
-  });
-
-  const modifyMutation = useMutation({
-    mutationFn: async (data: {
-      noticeId: string;
-      title: string;
-      content: string;
-      groupId: number;
-    }) => {
-      return await apiWithRefresh<void>({
-        url: "/notice/modify",
-        options: {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify(data),
         },
       });
     },
@@ -75,8 +51,5 @@ export const useNotices = () => {
 
     deleteNotice: deleteMutation.mutate,
     isDeleting: deleteMutation.isPending,
-
-    modifyNotice: modifyMutation.mutateAsync,
-    isUpdating: modifyMutation.isPending,
   };
 };
