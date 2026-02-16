@@ -15,16 +15,11 @@ const getPageNumbers = (current: number, total: number): (number | "...")[] => {
 
   const pages: (number | "...")[] = [];
 
-  // 先頭付近
   if (current <= 3) {
     pages.push(1, 2, 3, 4, "...", total);
-  }
-  // 末尾付近
-  else if (current >= total - 2) {
+  } else if (current >= total - 2) {
     pages.push(1, "...", total - 3, total - 2, total - 1, total);
-  }
-  // 中間
-  else {
+  } else {
     pages.push(1, "...", current - 1, current, current + 1, "...", total);
   }
 
