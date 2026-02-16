@@ -55,7 +55,7 @@ export const ReportDetailRow = ({ report, onDelete }: Props) => {
                 onDelete(report.reportId);
               }}>
               <RiDeleteBin6Line />
-              削除
+              通報を削除
             </button>
           </div>
         </div>
