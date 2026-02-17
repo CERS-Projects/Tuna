@@ -61,14 +61,27 @@ public class PostServiceImpl implements PostService {
         List<MultipartFile> imageFiles = post.getImageFile();
         ObjectId replyPost = null;
 
+        // 返信投稿設定
+        if (post.getResponseTo() != null && !post.getResponseTo().isEmpty()) {
+            replyPost = new ObjectId(post.getResponseTo());
+            log.info("返信：{}", postRepository.existsById(replyPost));
+            if (post.getShareRange().contains(0)) {
+                post.setShareRange(post.getShareRange().stream()
+                        .filter(i -> i == 0)
+                        .toList());
+            }
+        }
+        log.info("投稿範囲 {}", post.getShareRange());
+
         // publicの0を除外
         List<Integer> userGroupIds = post.getShareRange().stream()
                 .filter(i -> i != 0)
                 .toList();
         // 除外したリストをもとに権限確認（userGroupIdsが空でない場合のみ)
-        if(!userGroupIds.isEmpty()) {
+        if (!userGroupIds.isEmpty()) {
             boolean isTeacherOrAdmin = authentication.getAuthorities().stream()
-                    .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER") || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER")
+                            || a.getAuthority().equals("ROLE_ADMIN_SCHOOL"));
 
             if (!isTeacherOrAdmin) {
                 if (!accountConfirm.isExistsAllGroups(userId, userGroupIds.toArray(new Integer[0]))) {
@@ -93,6 +106,11 @@ public class PostServiceImpl implements PostService {
         if (post.getResponseTo() != null && !post.getResponseTo().isEmpty()) {
             replyPost = new ObjectId(post.getResponseTo());
             log.info("返信：{}", postRepository.existsById(replyPost));
+            if (post.getShareRange().contains(0)) {
+                post.setShareRange(post.getShareRange().stream()
+                        .filter(i -> i != 0)
+                        .toList());
+            }
         }
 
         OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
@@ -182,7 +200,8 @@ public class PostServiceImpl implements PostService {
 
     // ユーザー投稿取得
     @Override
-    public List<PostDetailResponse> getUserPosts(Authentication authentication, Integer targetUserId, Integer currentUserId, Integer schoolId) {
+    public List<PostDetailResponse> getUserPosts(Authentication authentication, Integer targetUserId,
+            Integer currentUserId, Integer schoolId) {
         List<PostDetailResponse> postDetails;
         List<Integer> userGroupIds = groupJoinByUserId.getJoinedGroupIdsByUserId(currentUserId);
 
@@ -192,7 +211,7 @@ public class PostServiceImpl implements PostService {
             if (!accountConfirm.isExistsAllGroups(currentUserId, userGroupIds.toArray(new Integer[0]))) {
                 throw new IllegalArgumentException("指定されたグループに所属していません。");
             }
-        }else {
+        } else {
             if (!accountConfirm.isAllGroupsBelongToSchool(schoolId, userGroupIds)) {
                 throw new IllegalArgumentException("指定されたグループは自校に属していません。");
             }
@@ -364,15 +383,19 @@ public class PostServiceImpl implements PostService {
                 throw new RuntimeException("指定された投稿が存在しません。");
             }
             // 投稿閲覧権限確認
-            if (isTeacherOrAdmin) {
-                // 教師/管理者は自校のグループの投稿のみ閲覧可能
-                if (!accountConfirm.isAllGroupsBelongToSchool(userInfo.getSchoolId(), postDetail.getShareRange())) {
-                    log.error("投稿の閲覧権限がありません（他校の投稿）。 投稿ID: " + postId);
+            if (postDetail.getShareRange() != null && !postDetail.getShareRange().contains(0)) {
+
+                if (isTeacherOrAdmin) {
+                    // 教師/管理者は自校のグループの投稿のみ閲覧可能
+                    if (!accountConfirm.isAllGroupsBelongToSchool(userInfo.getSchoolId(), postDetail.getShareRange())) {
+                        log.error("投稿の閲覧権限がありません（他校の投稿）。 投稿ID: " + postId);
+                        throw new IllegalArgumentException("投稿の閲覧権限がありません。");
+                    }
+                } else if (!postPermissionHelper.canViewPost(currentUserId, postDetail.getShareRange())) {
+                    log.error("投稿の閲覧権限がありません。 投稿ID: " + postId);
                     throw new IllegalArgumentException("投稿の閲覧権限がありません。");
                 }
-            } else if (!postPermissionHelper.canViewPost(currentUserId, postDetail.getShareRange())) {
-                log.error("投稿の閲覧権限がありません。 投稿ID: " + postId);
-                throw new IllegalArgumentException("投稿の閲覧権限がありません。");
+
             }
             log.info("取得完了しました。 投稿ID: " + postId);
 

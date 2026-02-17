@@ -5,6 +5,7 @@ import {
   BsChat,
   BsExclamationCircle,
 } from "react-icons/bs";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { useNavigate, Link, useSearchParams } from "react-router";
 import type React from "react";
 import { useState, useRef } from "react";
@@ -14,9 +15,19 @@ import { type PostData } from "@/features/post/types/post";
 import { paths } from "@/config/paths";
 import { useDebouncedLike } from "@/features/post/hooks/useGood";
 import { useDebouncedBookmark } from "@/features/post/hooks/useBookmark";
+import { useDeletePost } from "@/features/post/hooks/useDeletePost";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useUser } from "@/features/auth/hooks/useUser";
 
-export const PostBox = (props: PostData) => {
+type Props = {
+  props: PostData;
+  canDelete?: boolean;
+};
+
+export const PostBox = ({ props, canDelete = false }: Props) => {
   const [searchParams] = useSearchParams();
+  const { authToken } = useAuth();
+  const { data: user } = useUser(authToken);
   const currentGroupId = searchParams.get("groupId")
     ? Number(searchParams.get("groupId"))
     : undefined;
@@ -54,6 +65,8 @@ export const PostBox = (props: PostData) => {
     postId,
     shareRange,
   );
+
+  const { mutate: deleteMutate } = useDeletePost(postId);
 
   const modalRef = useRef<ModalHandle>(null);
 
@@ -93,6 +106,13 @@ export const PostBox = (props: PostData) => {
     debouncedBookmarkToggle(newBookmark);
   };
 
+  const handlePostDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (window.confirm("投稿を削除しますか？")) deleteMutate(undefined);
+  };
+
   const handleImgClick = (e: React.MouseEvent, imgurl: string) => {
     e.preventDefault();
     e.stopPropagation();
@@ -102,9 +122,20 @@ export const PostBox = (props: PostData) => {
 
   const renderContent = () => (
     <>
+      {canDelete && showUserId === user?.showUserId && (
+        <button
+          className={styles.trashButton}
+          onClick={(e) => handlePostDelete(e)}
+        >
+          <FaRegTrashAlt />
+        </button>
+      )}
+
       <div
         className={styles.postHeader}
-        onClick={(e) => handleNavigateClick(e, `/@${showUserId}`)}
+        onClick={(e) =>
+          handleNavigateClick(e, paths.app.profile.posts.getHref(showUserId))
+        }
       >
         {icon && <img src={icon} className={styles.userIcon} alt="" />}
         <span className={styles.userName}>{nameData}</span>
@@ -147,7 +178,7 @@ export const PostBox = (props: PostData) => {
     </>
   );
 
-  const containerClass = `${styles.postBoxLink} ${styles.postContainer}`;
+  const containerClass = `${styles.postBoxLink} ${styles.postContainer} ${canDelete ? styles.hasTrash : ""}`;
 
   return (
     <>

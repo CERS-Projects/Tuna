@@ -80,7 +80,7 @@ public class GroupServiceImpl implements GroupService {
 
         Integer getSchoolId = groupEntity.getSchool().getSchoolId();
 
-        if (getSchoolId != schoolId) {
+        if (!getSchoolId.equals(schoolId)) {
             throw new IllegalArgumentException("不正なリクエストです");
         }
 
@@ -102,7 +102,7 @@ public class GroupServiceImpl implements GroupService {
 
         Integer getSchoolId = groupEntity.getSchool().getSchoolId();
 
-        if (getSchoolId != schoolId) {
+        if (!getSchoolId.equals(schoolId)) {
             throw new IllegalArgumentException("不正なリクエストです");
         }
 

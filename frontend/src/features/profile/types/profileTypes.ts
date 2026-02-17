@@ -14,24 +14,23 @@ export type ProfileData = {
 
 export type FollowData = {
   userId: number;
-  userName: string;
+  nickname: string;
   showUserId: string;
-  isFollowed: boolean;
-  isFollowing: boolean;
+  followed: boolean;
+  following: boolean;
   iconUrl: string;
 };
 
 export type MenuItemType = {
   menuName: string;
-  menuPath: string;
+  menuPath?: string;
   menuIcon: ReactNode;
   menuLabel: string;
 };
 
-export type EditProfileData = {
-  userId: number;
+export type EditProfileForm = {
+  nickname: string;
   showUserId: string;
-  userName: string;
-  iconUrl?: string;
-  introduction?: string;
+  introduction: string;
+  iconFile?: File;
 };

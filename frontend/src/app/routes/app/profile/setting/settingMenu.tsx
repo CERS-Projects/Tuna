@@ -5,36 +5,47 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { IoFilterOutline } from "react-icons/io5";
 import styles from "@/features/profile/styles/settingMenu.module.css";
 import { paths } from "@/config/paths";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 const MenuItems: MenuItemType[] = [
   {
     menuName: "パスワード更新",
-    menuPath: paths.app.profile.settingMenu.editPassword.getHref(),
+    menuPath: paths.app.profile.setting.editPassword.getHref(),
     menuIcon: <RiLockPasswordFill />,
     menuLabel: "パスワードの変更を行います",
   },
   {
     menuName: "フィルタリング設定",
-    menuPath: paths.app.profile.settingMenu.editFilter.getHref(),
+    menuPath: paths.app.profile.setting.editFilter.getHref(),
     menuIcon: <IoFilterOutline />,
     menuLabel: "フィルタリングの設定を行います",
   },
   {
     menuName: "ログアウト",
-    menuPath: paths.welcome.path,
     menuIcon: <FaSignOutAlt />,
     menuLabel: "ログアウトします",
   },
 ];
 
 const SettingMenu = () => {
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    if (window.confirm("ログアウトしますか？")) logout();
+  };
+
+  const items = MenuItems.map((item) =>
+    item.menuName === "ログアウト"
+      ? { ...item, handleLogout: handleLogout }
+      : item,
+  );
   return (
     <div>
       <div className={styles.settingMenuHeader}>
         <h2>設定メニュー </h2>
       </div>
       <div className={styles.settingMenuMain}>
-        {MenuItems.map((item) => (
+        {items.map((item) => (
           <MenuItem key={item.menuName} {...item} />
         ))}
       </div>
