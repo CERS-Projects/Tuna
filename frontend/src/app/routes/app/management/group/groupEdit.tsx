@@ -10,7 +10,10 @@ import {
 import { flattenGroups } from "@/features/management/utils/flattenGroups";
 import { findParentGroup } from "@/features/management/utils/findParentGroup";
 import { GroupForm } from "@/features/management/components/groupForm/groupForm";
+import { Spinner } from "@/components/ui/spinner/spinner";
 import styles from "@/features/management/style/groupForm.module.css";
+import { useDeleteGroup } from "@/features/management/hooks/useDeleteGroup";
+import { paths } from "@/config/paths";
 
 const GroupEdit = () => {
   const navigate = useNavigate();
@@ -32,7 +35,7 @@ const GroupEdit = () => {
     },
   });
 
-  const { reset } = methods;
+  const { reset, getValues } = methods;
 
   const parentOptions = useMemo(
     () => flattenGroups(groups, selectedGroupId, { excludeDescendants: true }),
@@ -41,8 +44,8 @@ const GroupEdit = () => {
 
   const [selectedGrade, setSelectedGrade] = useState<number[]>([]);
 
-  // ダミーでschoolIdを1に設定
-  const { data: members } = useMembers(1, selectedGroupId);
+  const { data: members } = useMembers(selectedGroupId);
+  const { mutate: deleteGroupMutate, isPending } = useDeleteGroup();
 
   useEffect(() => {
     if (members && currentGroup) {
@@ -53,7 +56,7 @@ const GroupEdit = () => {
 
         members: members.map((member) => ({
           ...member,
-          isJoined: member.isJoined ?? false,
+          isJoined: member.isJoin ?? false,
         })),
       });
     }
@@ -65,7 +68,27 @@ const GroupEdit = () => {
     setActions({
       left: {
         label: "削除",
-        onClick: () => console.log("選択されたグループ削除"),
+        onClick: () => {
+          const currentFormData = getValues();
+
+          if (currentGroup?.groupId) {
+            deleteGroupMutate(
+              {
+                groupId: currentGroup?.groupId,
+                parentId: currentFormData.parentGroupId,
+              },
+              {
+                onSuccess: () => {
+                  window.alert("グループ削除に成功しました");
+                  navigate(paths.app.management.group.root.path);
+                },
+                onError: () => window.alert("グループ削除に失敗しました"),
+              },
+            );
+          } else {
+            window.alert("グループ削除に失敗しました");
+          }
+        },
       },
       middle: {
         label: "キャンセル",
@@ -81,7 +104,14 @@ const GroupEdit = () => {
     });
 
     return () => setActions(null);
-  }, [setActions, navigate, location.search]);
+  }, [
+    setActions,
+    navigate,
+    location.search,
+    getValues,
+    currentGroup,
+    deleteGroupMutate,
+  ]);
 
   const onSubmit = async (formData: GroupFormType) => {
     const members = Array.isArray(formData.members) ? formData.members : [];
@@ -120,6 +150,7 @@ const GroupEdit = () => {
 
   return (
     <FormProvider {...methods}>
+      {isPending && <Spinner isDark={true} />}
       <GroupForm
         selectedGrade={selectedGrade}
         setSelectedGrade={setSelectedGrade}

@@ -11,6 +11,7 @@ import { flattenGroups } from "@/features/management/utils/flattenGroups";
 import { GroupForm } from "@/features/management/components/groupForm/groupForm";
 import { useCreateGroup } from "@/features/management/hooks/useCreateGroup";
 import { paths } from "@/config/paths";
+import { Spinner } from "@/components/ui/spinner/spinner";
 
 const GroupNew = () => {
   const navigate = useNavigate();
@@ -95,13 +96,13 @@ const GroupNew = () => {
 
   return (
     <FormProvider {...methods}>
+      {isPending && <Spinner isDark={true} />}
       <GroupForm
         selectedGrade={selectedGrade}
         setSelectedGrade={setSelectedGrade}
         parentOptions={parentOptions}
         members={members ?? null}
         onSubmit={onSubmit}
-        isPending={isPending}
       />
     </FormProvider>
   );

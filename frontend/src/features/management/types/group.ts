@@ -24,6 +24,11 @@ export type GroupRequestType = {
   members: number[];
 };
 
+export type GroupDeleteRequestType = {
+  parentId: number;
+  groupId: number;
+};
+
 export type GradeOption = {
   value: number;
   label: string;

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.accounts.service.StudentService;
@@ -46,7 +47,11 @@ public class GroupController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteGroup(@AuthenticationPrincipal UserInfo userInfo, DelGroupRequest dto) {
+    public ResponseEntity<Void> deleteGroup(
+            @AuthenticationPrincipal UserInfo userInfo,
+            @RequestParam("groupId") Integer groupId,
+            @RequestParam(value = "parentId", required = false) Integer parentId) {
+        DelGroupRequest dto = new DelGroupRequest(groupId, parentId);
         groupService.deleteGroup(userInfo.getSchoolId(), dto);
         return ResponseEntity.ok().build();
     }
