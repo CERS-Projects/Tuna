@@ -2,17 +2,19 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApiWithRefresh } from "@/lib/api-client";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
+type CreateNoticeData = {
+  title: string;
+  content: string;
+  groupId: number;
+};
+
 export const useCreateNotice = () => {
   const { authToken } = useAuth();
   const apiWithRefresh = useApiWithRefresh();
   const queryClient = useQueryClient();
 
   const createNoticeMutation = useMutation({
-    mutationFn: async (data: {
-      title: string;
-      content: string;
-      groupId: number;
-    }) => {
+    mutationFn: async (data: CreateNoticeData) => {
       return await apiWithRefresh<void>({
         url: "/notice/create",
         options: {
@@ -31,7 +33,7 @@ export const useCreateNotice = () => {
   });
 
   return {
-    createNotice: createNoticeMutation.mutateAsync,
+    createNotice: createNoticeMutation.mutate,
     isCreating: createNoticeMutation.isPending,
   };
 };

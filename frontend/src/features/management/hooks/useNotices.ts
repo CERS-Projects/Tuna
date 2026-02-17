@@ -3,6 +3,43 @@ import { useApiWithRefresh } from "@/lib/api-client";
 import { type Notice } from "@/features/management/types/notice";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
+type UpdateNoticeData = {
+  noticeId: string;
+  title: string;
+  content: string;
+  groupId: number;
+};
+
+export const useUpdateNotice = () => {
+  const { authToken } = useAuth();
+  const apiWithRefresh = useApiWithRefresh();
+  const queryClient = useQueryClient();
+
+  const updateNoticeMutation = useMutation({
+    mutationFn: async (data: UpdateNoticeData) => {
+      return await apiWithRefresh<void>({
+        url: "/notice/update",
+        options: {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify(data),
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notices"] });
+    },
+  });
+
+  return {
+    updateNotice: updateNoticeMutation.mutate,
+    isUpdating: updateNoticeMutation.isPending,
+  };
+};
+
 export const useNotices = () => {
   const { authToken } = useAuth();
   const apiWithRefresh = useApiWithRefresh();
@@ -44,7 +81,6 @@ export const useNotices = () => {
 
   return {
     notices: noticesQuery.data ? [...noticesQuery.data].reverse() : [],
-
     isLoading: noticesQuery.isLoading,
     isError: noticesQuery.isError,
     error: noticesQuery.error,

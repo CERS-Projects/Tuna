@@ -29,7 +29,7 @@ const MENU_ITEMS = [
     icon: <MdMeetingRoom />,
   },
   {
-    path: paths.app.management.notification.path,
+    path: paths.app.management.notice.path,
     name: "お知らせ管理",
     icon: <FaBell />,
   },

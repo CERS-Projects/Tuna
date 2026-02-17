@@ -1,10 +1,17 @@
-import { useState, useEffect, useMemo, type FormEvent } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation, useParams, useNavigate } from "react-router";
-import styles from "@/features/notice/styles/editNotice.module.css";
+import { useForm, type SubmitHandler } from "react-hook-form"; // RHF導入
+import styles from "@/features/management/style/editNotice.module.css";
 import { useNotices } from "@/features/management/hooks/useNotices";
 import { useUpdateNotice } from "@/features/management/hooks/useUpdateNotice";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import { paths } from "@/config/paths";
+
+type EditNoticeFormValues = {
+  title: string;
+  content: string;
+  groupId: number;
+};
 
 const EditNoticePage = () => {
   const { state } = useLocation();
@@ -14,72 +21,86 @@ const EditNoticePage = () => {
   const { notices, isLoading } = useNotices();
   const { updateNotice, isUpdating } = useUpdateNotice();
 
+  const MAX_TITLE_LENGTH = 100;
+  const MAX_CONTENT_LENGTH = 200;
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { isValid },
+  } = useForm<EditNoticeFormValues>({
+    mode: "onChange",
+    defaultValues: {
+      title: "",
+      content: "",
+      groupId: 0,
+    },
+  });
+
   const targetNotice = useMemo(() => {
     if (state?.notice) return state.notice;
-
     if (notices.length > 0 && id) {
       return notices.find((n) => String(n.noticeId) === String(id));
     }
     return null;
   }, [id, state, notices]);
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [groupId, setGroupId] = useState<number | null>(null);
-
-  const MAX_TITLE_LENGTH = 100;
-  const MAX_CONTENT_LENGTH = 200;
-
   useEffect(() => {
     if (targetNotice) {
-      setTitle(targetNotice.title);
-      setContent(targetNotice.content);
-      setGroupId(targetNotice.groupId);
-    }
-  }, [targetNotice]);
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!id || !title || !content || groupId === null) {
-      return;
-    }
-
-    try {
-      await updateNotice({
-        noticeId: id,
-        title: title,
-        content: content,
-        groupId: groupId,
+      reset({
+        title: targetNotice.title,
+        content: targetNotice.content,
+        groupId: targetNotice.groupId,
       });
-      alert("お知らせを更新しました");
-      navigate(paths.app.management.notice.path);
-    } catch (error) {
-      alert("更新に失敗しました。");
     }
+  }, [targetNotice, reset]);
+
+  const titleValue = watch("title");
+  const contentValue = watch("content");
+
+  const onSubmit: SubmitHandler<EditNoticeFormValues> = (data) => {
+    if (!id) return;
+
+    updateNotice(
+      {
+        noticeId: id,
+        title: data.title,
+        content: data.content,
+        groupId: data.groupId,
+      },
+      {
+        onSuccess: () => {
+          alert("お知らせを更新しました");
+          navigate(paths.app.management.notice.path);
+        },
+        onError: () => {
+          alert("更新に失敗しました。");
+        },
+      },
+    );
   };
 
   if (isLoading || isUpdating) {
     return <Spinner isDark={isUpdating} />;
   }
 
-  if (!targetNotice) {
+  if (!targetNotice && !isLoading) {
     return (
       <div className={styles.pageContainer}>
         <p>該当するお知らせが見つかりませんでした。</p>
-        <button onClick={() => navigate("/manager/notice")}>一覧へ戻る</button>
+        <button onClick={() => navigate(paths.app.management.notice.path)}>
+          一覧へ戻る
+        </button>
       </div>
     );
-  }
-
-  if (groupId === null) {
-    return <Spinner />;
   }
 
   return (
     <div className={styles.pageContainer}>
       <h2 className={styles.pageTitle}>お知らせ編集</h2>
-      <form onSubmit={handleSubmit} className={styles.formCard}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.formCard}>
         <div className={styles.formGroup}>
           <label htmlFor="title" className={styles.label}>
             タイトル <span className={styles.requiredBadge}>必須</span>
@@ -88,15 +109,15 @@ const EditNoticePage = () => {
             id="title"
             type="text"
             className={styles.inputField}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            maxLength={MAX_TITLE_LENGTH}
             disabled={isUpdating}
-            required
+            {...register("title", {
+              required: true,
+              maxLength: MAX_TITLE_LENGTH,
+            })}
           />
           <div className={styles.charCount}>
             <span>
-              {title.length} / {MAX_TITLE_LENGTH}
+              {titleValue?.length || 0} / {MAX_TITLE_LENGTH}
             </span>
           </div>
         </div>
@@ -108,16 +129,16 @@ const EditNoticePage = () => {
           <textarea
             id="content"
             className={styles.textareaField}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            maxLength={MAX_CONTENT_LENGTH}
             disabled={isUpdating}
-            required
             rows={8}
+            {...register("content", {
+              required: true,
+              maxLength: MAX_CONTENT_LENGTH,
+            })}
           />
           <div className={styles.charCount}>
             <span>
-              {content.length} / {MAX_CONTENT_LENGTH}
+              {contentValue?.length || 0} / {MAX_CONTENT_LENGTH}
             </span>
           </div>
         </div>
@@ -126,7 +147,7 @@ const EditNoticePage = () => {
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={!title || !content || isUpdating}
+            disabled={!isValid || isUpdating || !targetNotice}
           >
             {isUpdating ? "更新中..." : "更新する"}
           </button>

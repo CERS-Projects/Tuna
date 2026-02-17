@@ -1,10 +1,16 @@
-import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
-import styles from "@/features/notice/styles/createNotice.module.css";
+import { useForm, Controller, type SubmitHandler } from "react-hook-form";
+import styles from "@/features/management/style/createNotice.module.css";
 import GroupSelector from "@/features/management/components/groupSelector/groupSelector";
 import { useGroups } from "@/features/management/hooks/useGroups";
 import { useCreateNotice } from "@/features/management/hooks/useCreateNotice";
 import { paths } from "@/config/paths";
+
+type CreateNoticeFormValues = {
+  title: string;
+  content: string;
+  groupId: number | null;
+};
 
 const CreateNotice = () => {
   const navigate = useNavigate();
@@ -12,33 +18,52 @@ const CreateNotice = () => {
   const { groups, isFetching } = useGroups();
   const { createNotice, isCreating } = useCreateNotice();
 
-  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
   const MAX_TITLE_LENGTH = 100;
   const MAX_CONTENT_LENGTH = 200;
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!title || !content || !selectedGroupId) return;
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { isValid },
+  } = useForm<CreateNoticeFormValues>({
+    defaultValues: {
+      title: "",
+      content: "",
+      groupId: null,
+    },
+    mode: "onChange",
+  });
 
-    try {
-      await createNotice({
-        title,
-        content,
-        groupId: selectedGroupId,
-      });
-      alert("お知らせを作成しました");
-      navigate(paths.app.management.notice.path);
-    } catch (error) {
-      alert("お知らせの作成に失敗しました");
-    }
+  const titleValue = watch("title");
+  const contentValue = watch("content");
+  const groupIdValue = watch("groupId");
+
+  const onSubmit: SubmitHandler<CreateNoticeFormValues> = (data) => {
+    if (!data.groupId) return;
+
+    createNotice(
+      {
+        title: data.title,
+        content: data.content,
+        groupId: data.groupId,
+      },
+      {
+        onSuccess: () => {
+          alert("お知らせを作成しました");
+          navigate(paths.app.management.notice.path);
+        },
+        onError: () => {
+          alert("お知らせの作成に失敗しました");
+        },
+      },
+    );
   };
 
   return (
     <div className={styles.pageContainer}>
-      <form onSubmit={handleSubmit} className={styles.formCard}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.formCard}>
         <div className={styles.formGroup}>
           <label htmlFor="title" className={styles.label}>
             タイトル<span className={styles.requiredBadge}>必須</span>
@@ -47,19 +72,21 @@ const CreateNotice = () => {
             id="title"
             type="text"
             className={styles.inputField}
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            maxLength={MAX_TITLE_LENGTH}
-            required
             placeholder="例：システムメンテナンスのお知らせ"
+            {...register("title", {
+              required: true,
+              maxLength: MAX_TITLE_LENGTH,
+            })}
           />
           <div className={styles.charCount}>
             <span
               className={
-                title.length >= MAX_TITLE_LENGTH ? styles.charCountWarning : ""
+                (titleValue?.length || 0) >= MAX_TITLE_LENGTH
+                  ? styles.charCountWarning
+                  : ""
               }
             >
-              {title.length}
+              {titleValue?.length || 0}
             </span>
             <span> / {MAX_TITLE_LENGTH}</span>
           </div>
@@ -72,22 +99,22 @@ const CreateNotice = () => {
           <textarea
             id="content"
             className={styles.textareaField}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            maxLength={MAX_CONTENT_LENGTH}
-            required
             rows={6}
             placeholder="お知らせの詳細内容を入力してください"
+            {...register("content", {
+              required: true,
+              maxLength: MAX_CONTENT_LENGTH,
+            })}
           />
           <div className={styles.charCount}>
             <span
               className={
-                content.length >= MAX_CONTENT_LENGTH
+                (contentValue?.length || 0) >= MAX_CONTENT_LENGTH
                   ? styles.charCountWarning
                   : ""
               }
             >
-              {content.length}
+              {contentValue?.length || 0}
             </span>
             <span> / {MAX_CONTENT_LENGTH}</span>
           </div>
@@ -103,17 +130,24 @@ const CreateNotice = () => {
                 グループ情報を読み込み中...
               </p>
             ) : groups.length > 0 ? (
-              <GroupSelector
-                data={groups}
-                onSelect={setSelectedGroupId}
-                selectedId={selectedGroupId ?? undefined}
+              <Controller
+                control={control}
+                name="groupId"
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <GroupSelector
+                    data={groups}
+                    onSelect={(id) => field.onChange(id)}
+                    selectedId={field.value ?? undefined}
+                  />
+                )}
               />
             ) : (
               <p style={{ color: "red" }}>グループ情報の取得に失敗しました</p>
             )}
           </div>
           <div style={{ marginTop: "8px", fontSize: "0.85rem", color: "#666" }}>
-            {selectedGroupId
+            {groupIdValue
               ? "※選択された範囲とその配下すべてに配信されます"
               : "配信範囲を選択してください"}
           </div>
@@ -123,9 +157,7 @@ const CreateNotice = () => {
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={
-              !title || !content || !selectedGroupId || isCreating || isFetching
-            }
+            disabled={!isValid || isCreating || isFetching}
           >
             {isCreating ? "送信中..." : "作成する"}
           </button>

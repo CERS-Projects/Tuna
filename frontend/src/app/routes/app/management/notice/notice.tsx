@@ -1,8 +1,9 @@
 import { Link } from "react-router";
-import { NoticeCard } from "@/features/management/components/notice/noticeCard";
+import { NoticeCard } from "@/features/management/components/noticeCard/noticeCard";
 import { FiPlus, FiBell } from "react-icons/fi";
-import styles from "@/features/notice/styles/notice.module.css";
+import styles from "@/features/management/style/notice.module.css";
 import { useNotices } from "@/features/management/hooks/useNotices";
+import { paths } from "@/config/paths";
 
 const NoticePage = () => {
   const { notices, isLoading, isError, deleteNotice } = useNotices();
@@ -30,7 +31,10 @@ const NoticePage = () => {
             <span>お知らせ</span>
           </h2>
 
-          <Link to="/manager/notice/create" className={styles.createButton}>
+          <Link
+            to={paths.app.management.notice.create.path}
+            className={styles.createButton}
+          >
             <FiPlus className={styles.btnIcon} />
             <span className={styles.btnText}>新規作成</span>
           </Link>

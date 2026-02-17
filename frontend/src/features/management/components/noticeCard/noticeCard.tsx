@@ -1,6 +1,6 @@
 import { type Notice } from "@/features/management/types/notice";
-import { Link } from "react-router";
-import { type MouseEvent } from "react";
+import { useNavigate } from "react-router";
+import { type MouseEvent, type KeyboardEvent } from "react";
 import { FiTrash2, FiClock, FiUsers } from "react-icons/fi";
 import styles from "./noticeCard.module.css";
 import { paths } from "@/config/paths";
@@ -17,25 +17,41 @@ const formatDate = (dateString: string | undefined) => {
   });
 };
 
-export const NoticeCard = ({
-  notice,
-  onDelete,
-}: {
+type NoticeCardProps = {
   notice: Notice;
   onDelete: (id: string) => void;
-}) => {
+};
+
+export const NoticeCard = ({ notice, onDelete }: NoticeCardProps) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(paths.app.management.notice.edit.getHref(notice.noticeId), {
+      state: { notice },
+    });
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleCardClick();
+    }
+  };
+
   const handleDelete = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-
     onDelete(notice.noticeId);
   };
 
   return (
-    <Link
-      to={paths.app.management.notice.edit.getHref(notice.noticeId)}
-      state={{ notice }}
+    <div
+      onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
       className={styles.noticeCard}
+      role="button"
+      tabIndex={0}
+      style={{ cursor: "pointer" }}
     >
       <div className={styles.noticeHeader}>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -67,6 +83,6 @@ export const NoticeCard = ({
           {formatDate(notice.createdAt)}
         </span>
       </div>
-    </Link>
+    </div>
   );
 };

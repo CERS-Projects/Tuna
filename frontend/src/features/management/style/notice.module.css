@@ -49,8 +49,6 @@
   color: rgb(50, 85, 150);
 }
 
-/* --- ボタン関連のスタイル --- */
-
 .createButton {
   display: flex;
   align-items: center;
@@ -229,6 +227,6 @@
   }
 
   .mainContent {
-    padding: 24px 16px 40px; /* SP時の余白調整 */
+    padding: 24px 16px 40px;
   }
 }
