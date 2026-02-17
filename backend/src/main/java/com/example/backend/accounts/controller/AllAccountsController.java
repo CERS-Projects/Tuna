@@ -38,21 +38,20 @@ public class AllAccountsController {
         @GetMapping("/all")
         public ResponseEntity<List<AllAccountInformationResponse>> allAccountGet(Authentication authentication,
                         @AuthenticationPrincipal UserInfo userInfo) {
+                List<StudentInformationResponse> studentInfo = studentService
+                                .findStudentInformationResponses(userInfo.getSchoolId());
+
                 if (authentication.getAuthorities().toString().equals("[ROLE_TEACHER]")) {
-                        List<TeacherInformationResponse> teacherInfo = teacherService
-                                        .findTeacherInformationResponses(userInfo.getSchoolId());
-                        List<StudentInformationResponse> studentInfo = studentService
-                                        .findStudentInformationResponses(userInfo.getSchoolId());
-                        List<AllAccountInformationResponse> allAccountInformationResponse = accountsHelper
-                                        .join(studentInfo, teacherInfo);
-                        return ResponseEntity.ok(allAccountInformationResponse);
-                } else {
-                        List<StudentInformationResponse> studentInfo = studentService
-                                        .findStudentInformationResponses(userInfo.getSchoolId());
                         List<AllAccountInformationResponse> allAccountInformationResponse = accountsHelper
                                         .join(studentInfo);
                         return ResponseEntity.ok(allAccountInformationResponse);
                 }
+
+                List<TeacherInformationResponse> teacherInfo = teacherService
+                                .findTeacherInformationResponses(userInfo.getSchoolId());
+                List<AllAccountInformationResponse> allAccountInformationResponse = accountsHelper
+                                .join(studentInfo, teacherInfo);
+                return ResponseEntity.ok(allAccountInformationResponse);
         }
 
         @GetMapping("/detail")
