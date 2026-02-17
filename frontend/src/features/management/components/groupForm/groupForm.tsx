@@ -12,7 +12,7 @@ type Props = {
   parentOptions: TreeType[];
   members: Member[] | null;
   onSubmit: (formData: GroupFormType) => Promise<void>;
-  isPending: boolean;
+  isPending?: boolean;
 };
 
 export const GroupForm = ({
@@ -21,7 +21,7 @@ export const GroupForm = ({
   parentOptions,
   members,
   onSubmit,
-  isPending,
+  isPending = false,
 }: Props) => {
   const { handleSubmit } = useFormContext<GroupFormType>();
 

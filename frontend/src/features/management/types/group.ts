@@ -15,7 +15,7 @@ export type GroupFormType = {
 export type GroupCreateType = {
   parentGroupId: number;
   groupName: string;
-  memberUserId: number[];
+  membersUserId: number[];
 };
 
 export type GroupRequestType = {

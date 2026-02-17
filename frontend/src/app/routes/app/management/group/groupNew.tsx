@@ -79,7 +79,7 @@ const GroupNew = () => {
     const request: GroupCreateType = {
       parentGroupId: formData.parentGroupId,
       groupName: formData.groupName.trim(),
-      memberUserId: joinedMembersId,
+      membersUserId: joinedMembersId,
     };
 
     createGroupMutate(request, {
