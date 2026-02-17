@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo, type FormEvent } from "react";
 import { useLocation, useParams, useNavigate } from "react-router";
 import styles from "@/features/notice/styles/editNotice.module.css";
-import { useNotices } from "@/features/notice/hooks/useNotices";
-import { useUpdateNotice } from "@/features/notice/hooks/useUpdateNotice";
+import { useNotices } from "@/features/management/hooks/useNotices";
+import { useUpdateNotice } from "@/features/management/hooks/useUpdateNotice";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import { paths } from "@/config/paths";
 

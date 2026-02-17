@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import styles from "@/features/notice/styles/createNotice.module.css";
-import GroupSelector from "@/features/notice/components/groupSelector";
+import GroupSelector from "@/features/management/components/groupSelector/groupSelector";
 import { useGroups } from "@/features/management/hooks/useGroups";
-import { useCreateNotice } from "@/features/notice/hooks/useCreateNotice";
+import { useCreateNotice } from "@/features/management/hooks/useCreateNotice";
 import { paths } from "@/config/paths";
 
 const CreateNotice = () => {

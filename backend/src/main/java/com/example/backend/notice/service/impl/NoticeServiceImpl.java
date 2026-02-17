@@ -110,7 +110,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     @Transactional
     public void deleteNotice(String noticeId, Integer userId, Integer schoolId) {
-        if(!accountConfirm.existsByUserIdAndSchoolId(userId, schoolId)) {
+        if(!accountConfirm.existsByUserIdBySchoolId(userId, schoolId)) {
             throw new IllegalArgumentException("指定した学校に所属していません。");
         }
         if(!ObjectId.isValid(noticeId)){

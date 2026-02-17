@@ -1,8 +1,8 @@
 import { Link } from "react-router";
-import { NoticeCard } from "@/features/notice/components/noticeCard";
+import { NoticeCard } from "@/features/management/components/notice/noticeCard";
 import { FiPlus, FiBell } from "react-icons/fi";
 import styles from "@/features/notice/styles/notice.module.css";
-import { useNotices } from "@/features/notice/hooks/useNotices";
+import { useNotices } from "@/features/management/hooks/useNotices";
 
 const NoticePage = () => {
   const { notices, isLoading, isError, deleteNotice } = useNotices();

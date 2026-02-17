@@ -1,4 +1,4 @@
-import { type Notice } from "@/features/notice/types/notice";
+import { type Notice } from "@/features/management/types/notice";
 import { Link } from "react-router";
 import { type MouseEvent } from "react";
 import { FiTrash2, FiClock, FiUsers } from "react-icons/fi";

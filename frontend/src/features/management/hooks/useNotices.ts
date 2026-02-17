@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApiWithRefresh } from "@/lib/api-client";
-import { type Notice } from "@/features/notice/types/notice";
+import { type Notice } from "@/features/management/types/notice";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 
 export const useNotices = () => {
