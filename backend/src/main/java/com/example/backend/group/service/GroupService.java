@@ -5,7 +5,7 @@ import java.util.List;
 import com.example.backend.group.dto.DelGroupRequest;
 import com.example.backend.group.dto.GetGroupResponse;
 import com.example.backend.group.dto.GroupCreateRequest;
-import com.example.backend.group.dto.ModifyUpperGroupRequest;
+import com.example.backend.group.dto.ModifyGroupInfoRequest;
 import com.example.backend.auth.dto.UserInfo;
 
 /**
@@ -20,5 +20,6 @@ public interface GroupService {
 
      List<GetGroupResponse> getMyGroups(UserInfo userInfo);
 
-     void modifyUpperGroup(Integer schoolId, Integer groupId, ModifyUpperGroupRequest dto);
+     void modifyGroup(Integer schoolId, Integer groupId, ModifyGroupInfoRequest dto);
+
 }

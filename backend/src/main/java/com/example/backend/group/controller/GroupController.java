@@ -20,7 +20,9 @@ import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
 import com.example.backend.group.dto.GroupCreateRequest;
 import com.example.backend.group.dto.ModifyGroupMembersRequest;
-import com.example.backend.group.dto.ModifyUpperGroupRequest;
+import com.example.backend.group.dto.ModifyGroupRequest;
+import com.example.backend.group.facade.ModifyGroupFacade;
+import com.example.backend.group.dto.ModifyGroupInfoRequest;
 import com.example.backend.group.service.GroupMemberService;
 import com.example.backend.group.service.GroupService;
 
@@ -39,6 +41,8 @@ public class GroupController {
     private final GroupMemberService groupMemberService;
 
     private final StudentService studentService;
+
+    private final ModifyGroupFacade modifyGroupFacade;
 
     @GetMapping
     public ResponseEntity<List<GetGroupResponse>> getAllGroups(@AuthenticationPrincipal UserInfo userInfo) {
@@ -76,6 +80,13 @@ public class GroupController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{groupId}")
+    public ResponseEntity<Void> modifyGroup(@AuthenticationPrincipal UserInfo userInfo,
+            @PathVariable("groupId") Integer groupId, @Valid @RequestBody ModifyGroupRequest dto) {
+        modifyGroupFacade.modifyGroup(userInfo, groupId, dto);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/{groupId}/members")
     public ResponseEntity<Void> modifyGroupMembers(@AuthenticationPrincipal UserInfo userInfo,
             @PathVariable("groupId") Integer groupId, @Valid @RequestBody ModifyGroupMembersRequest dto) {
@@ -86,8 +97,9 @@ public class GroupController {
     @PostMapping("/{groupId}/upper-group")
     public ResponseEntity<Void> modifyUpperGroup(@AuthenticationPrincipal UserInfo userInfo,
             @PathVariable("groupId") Integer groupId,
-            @Valid @RequestBody ModifyUpperGroupRequest dto) {
-        groupService.modifyUpperGroup(userInfo.getSchoolId(), groupId, dto);
+            @Valid @RequestBody ModifyGroupInfoRequest dto) {
+        groupService.modifyGroup(userInfo.getSchoolId(), groupId, dto);
         return ResponseEntity.ok().build();
     }
+
 }
