@@ -41,7 +41,11 @@ public class GroupHelper {
 
     /* 単一のグループのアップデート用 */
     public void modifyGroup(final ModifyGroupInfoRequest DTO, final Integer MY_ID) {
-        groupRepository.modifyGroupParentIdAndName(DTO.getNewParentGroupId(), DTO.getNewGroupName(), MY_ID);
+        Integer parentGroupId = DTO.getNewParentGroupId();
+        Integer resolvedParentId = (parentGroupId == null || parentGroupId == 0) ? null : parentGroupId;
+
+        groupRepository.modifyGroupParentIdAndName(resolvedParentId, DTO.getNewGroupName(), MY_ID);
+
     }
 
     public List<GetGroupResponse> getTree(Integer schoolId) {
