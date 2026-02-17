@@ -20,7 +20,9 @@ import com.example.backend.utils.fileUtil.validation.DocumentFileValidation;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequestMapping("/accounts")
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +40,7 @@ public class StudentController {
         List<UserEntity> savedStudentAccount = studentService.createStudent(dto, userInfo.getSchoolId());
         /* 生徒情報を登録する */
         studentService.setStudentEnrollmentInformation(dto, savedStudentAccount);
+        log.info("生徒アカウントを正常に生成しました。");
         return ResponseEntity.ok().build();
     }
 

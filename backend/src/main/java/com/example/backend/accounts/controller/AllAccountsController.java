@@ -7,12 +7,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.accounts.dto.AccountDetailResponse;
 import com.example.backend.accounts.dto.AllAccountInformationResponse;
 import com.example.backend.accounts.dto.StudentInformationResponse;
 import com.example.backend.accounts.dto.TeacherInformationResponse;
 import com.example.backend.accounts.helper.AccountsHelper;
+import com.example.backend.accounts.service.AccountService;
 import com.example.backend.accounts.service.StudentService;
 import com.example.backend.accounts.service.TeacherService;
 import com.example.backend.auth.dto.UserInfo;
@@ -29,6 +32,8 @@ public class AllAccountsController {
         private final TeacherService teacherService;
 
         private final AccountsHelper accountsHelper;
+
+        private final AccountService accountService;
 
         @GetMapping("/all")
         public ResponseEntity<List<AllAccountInformationResponse>> allAccountGet(Authentication authentication,
@@ -48,6 +53,12 @@ public class AllAccountsController {
                                         .join(studentInfo);
                         return ResponseEntity.ok(allAccountInformationResponse);
                 }
+        }
 
+        @GetMapping("/detail")
+        public ResponseEntity<AccountDetailResponse> getAccountDetail(
+                        @RequestParam("userId") Integer userId) {
+                AccountDetailResponse response = accountService.getAccountDetail(userId);
+                return ResponseEntity.ok(response);
         }
 }
