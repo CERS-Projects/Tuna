@@ -2,6 +2,7 @@ package com.example.backend.accounts.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import jakarta.validation.constraints.Email;
@@ -37,12 +38,12 @@ public record ReadCSVFileStudentCreateRequest (
     Integer grade,
     
     @NotNull
+    @JsonFormat(pattern = "yyyy/M/d")
     LocalDate admissionDate,
 
     /* 
      * 卒業年度情報(Nullは許容)
      */
+    @JsonFormat(pattern = "yyyy/M/d")
     LocalDate graduateDate
-){}
-
-
+) {}
