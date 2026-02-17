@@ -138,6 +138,12 @@ export const TeacherAccountRegisterForm = ({
               autoComplete="new-password"
               placeholder="パスワードを入力..."
               {...register("password", { required: "パスワードは必須です" })}
+              {...register("password", {
+                minLength: {
+                  value: 6,
+                  message: "6文字以上で入力してください",
+                },
+              })}
             />
 
             <button
