@@ -18,12 +18,6 @@ export type GroupCreateType = {
   membersUserId: number[];
 };
 
-export type GroupRequestType = {
-  parentGroupId: number;
-  groupName: string;
-  members: number[];
-};
-
 export type GroupDeleteRequestType = {
   parentId: number;
   groupId: number;
