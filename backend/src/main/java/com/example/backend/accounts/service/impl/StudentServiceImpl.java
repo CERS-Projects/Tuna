@@ -197,15 +197,22 @@ public class StudentServiceImpl implements StudentService {
     @Transactional(readOnly = true)
     public List<GetUserResponse> findAllGroups(Integer schoolId, GetUserBySchoolIdRequest dto) {
 
-        GroupEntity groupEntity = groupRepository.findById(dto.getGroupId())
-                .orElseThrow(() -> new EmptyResultDataAccessException("グループが見つかりません", 0));
+        if (dto.getGroupId() != 0) {
+            GroupEntity groupEntity = groupRepository.findById(dto.getGroupId())
+                    .orElseThrow(() -> new EmptyResultDataAccessException("グループが見つかりません", 0));
 
-        Integer getSchoolId = groupEntity.getSchool().getSchoolId();
+            Integer getSchoolId = groupEntity.getSchool().getSchoolId();
 
-        if (!getSchoolId.equals(schoolId)) {
-            throw new IllegalArgumentException("不正なリクエストです");
+            if (!getSchoolId.equals(schoolId)) {
+                throw new IllegalArgumentException("不正なリクエストです");
+            }
         }
+
         List<GetUserResponse> response = studentRepository.findAllStudentUsers(schoolId);
+
+        if (dto.getGroupId() == 0)
+            return response;
+
         Set<Integer> members = groupMemberService.findJoinUserIdsByGroupId(dto.getGroupId());
         return response.stream()
                 .peek(user -> {
