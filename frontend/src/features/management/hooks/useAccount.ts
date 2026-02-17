@@ -1,31 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
+import { useApiWithRefresh } from "@/lib/api-client";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 import {
   type StudentAccountEditType,
   type TeacherAccountEditType,
 } from "../types/account";
 
-const DUMMY_STUDENT_ACCOUNT: StudentAccountEditType = {
-  userId: 1,
-  showUserId: "550e8400-e29b-41d4-a716-446655440000",
-  name: "田中 太郎",
-  email: "tanaka@tarou.jp",
-  accountStopFlag: 1,
-  grade: 3,
-  graduateDate: "2027-03-31",
-};
-
-const DUMMY_TEACHER_ACCOUNT: TeacherAccountEditType = {
-  userId: 2,
-  showUserId: "6fa459ea-ee8a-3ca4-894e-db77e160355e",
-  name: "鈴木 花子",
-  email: "suzuki@hanako.jp",
-  accountStopFlag: 0,
-  authority: 1, // 管理者
+type AccountDetailResponse = {
+  userId: number;
+  showUserId: string;
+  name: string;
+  mailAddress: string;
+  accountStopFlag: boolean;
+  grade: number | null;
+  graduateDate: string | null;
+  authority: boolean | null;
 };
 
 export const useAccount = (userId: number) => {
-  const dummy: StudentAccountEditType | TeacherAccountEditType =
-    userId % 2 === 0 ? DUMMY_TEACHER_ACCOUNT : DUMMY_STUDENT_ACCOUNT;
+  const apiWithRefresh = useApiWithRefresh();
+  const { authToken } = useAuth();
 
   const { data, isFetching, isError } = useQuery<
     StudentAccountEditType | TeacherAccountEditType
@@ -35,10 +29,37 @@ export const useAccount = (userId: number) => {
     queryFn: async (): Promise<
       StudentAccountEditType | TeacherAccountEditType
     > => {
-      // のちにAPIを実装
-      return dummy;
+      const res = await apiWithRefresh<AccountDetailResponse>({
+        url: `/accounts/detail?userId=${userId}`,
+        options: {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        },
+      });
+
+      if (res.authority === null) {
+        return {
+          userId: res.userId,
+          showUserId: res.showUserId,
+          name: res.name,
+          email: res.mailAddress,
+          accountStopFlag: res.accountStopFlag ? 1 : 0,
+          grade: res.grade ?? 1,
+          graduateDate: res.graduateDate ?? "",
+        } as StudentAccountEditType;
+      } else {
+        return {
+          userId: res.userId,
+          showUserId: res.showUserId,
+          name: res.name,
+          email: res.mailAddress,
+          accountStopFlag: res.accountStopFlag ? 1 : 0,
+          authority: res.authority ? 1 : 0,
+        } as TeacherAccountEditType;
+      }
     },
-    placeholderData: dummy,
   });
 
   return { data, isFetching, isError };
