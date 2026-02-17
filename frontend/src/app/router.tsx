@@ -20,6 +20,7 @@ import {
 } from "./routes/app/management/root";
 import ProtectedRoute from "@/features/auth/components/protectedRoute";
 import TeacherProtectedRoute from "@/features/auth/components/teacherProtectedRoute";
+import AdminProtectedRoute from "@/features/auth/components/adminProtectedRoute";
 import { AuthWrapper } from "@/features/auth/context/authWrapper";
 
 const convert = (queryClient: QueryClient) => (m: any) => {
@@ -291,10 +292,16 @@ const createAppRouter = (queryClient: QueryClient) => {
                     ),
                   ],
                 },
-                route(
-                  paths.app.management.schoolInfo.path,
-                  () => import("./routes/app/management/school/schoolEdit"),
-                ),
+                // ADMIN_SCHOOL 専用ルート（学校情報編集）
+                {
+                  element: <AdminProtectedRoute />,
+                  children: [
+                    route(
+                      paths.app.management.schoolInfo.path,
+                      () => import("./routes/app/management/school/schoolEdit"),
+                    ),
+                  ],
+                },
                 route(
                   paths.app.management.report.path,
                   () => import("./routes/app/management/report/reportList"),
