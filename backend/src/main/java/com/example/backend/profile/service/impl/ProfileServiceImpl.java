@@ -42,8 +42,9 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public void createProfile(Integer userId) {
         UserProfileEntity profile = new UserProfileEntity();
+        GetUserName userInfo;
         try {
-        GetUserName userInfo = userRepository.findUserName(userId);
+            userInfo = userRepository.findUserName(userId);
         } catch (Exception e) {
             log.error("ユーザー情報の取得に失敗しました: ", e);
             throw new RuntimeException("ユーザー情報の取得に失敗しました");
