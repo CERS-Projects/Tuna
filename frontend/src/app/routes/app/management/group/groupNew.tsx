@@ -4,11 +4,13 @@ import { useOutletContext, useNavigate, useLocation } from "react-router";
 import { useMembers } from "@/features/management/hooks/useMember";
 import { type GroupsOutletContext } from "@/features/management/layouts/groupShell/groupShell";
 import {
-  type GroupRequestType,
+  type GroupCreateType,
   type GroupFormType,
 } from "@/features/management/types/group";
 import { flattenGroups } from "@/features/management/utils/flattenGroups";
 import { GroupForm } from "@/features/management/components/groupForm/groupForm";
+import { useCreateGroup } from "@/features/management/hooks/useCreateGroup";
+import { paths } from "@/config/paths";
 
 const GroupNew = () => {
   const navigate = useNavigate();
@@ -30,8 +32,9 @@ const GroupNew = () => {
 
   const [selectedGrade, setSelectedGrade] = useState<number[]>([]);
 
-  // ダミーでschoolIdを1に設定
-  const { data: members } = useMembers(1);
+  const { data: members } = useMembers(0);
+
+  const { mutate: createGroupMutate, isPending } = useCreateGroup();
 
   useEffect(() => {
     setValue("parentGroupId", selectedGroupId ?? 0);
@@ -44,7 +47,7 @@ const GroupNew = () => {
       members.map((m) => ({
         ...m,
         isJoined: false,
-      }))
+      })),
     );
   }, [members, setValue]);
 
@@ -55,7 +58,7 @@ const GroupNew = () => {
         onClick: () =>
           navigate(
             { pathname: "..", search: location.search },
-            { relative: "path" }
+            { relative: "path" },
           ),
       },
       right: {
@@ -73,13 +76,21 @@ const GroupNew = () => {
       .filter((member) => member.isJoined)
       .map((member) => member.userId);
 
-    const request: GroupRequestType = {
+    const request: GroupCreateType = {
       parentGroupId: formData.parentGroupId,
       groupName: formData.groupName.trim(),
-      members: joinedMembersId,
+      memberUserId: joinedMembersId,
     };
 
-    console.log(request);
+    createGroupMutate(request, {
+      onSuccess: () => {
+        window.alert("グループを作成できました！");
+        navigate(paths.app.management.group.root.path);
+      },
+      onError: () => {
+        window.alert(`グループ作成に失敗しました`);
+      },
+    });
   };
 
   return (
@@ -90,6 +101,7 @@ const GroupNew = () => {
         parentOptions={parentOptions}
         members={members ?? null}
         onSubmit={onSubmit}
+        isPending={isPending}
       />
     </FormProvider>
   );

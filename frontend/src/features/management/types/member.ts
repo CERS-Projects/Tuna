@@ -1,7 +1,7 @@
 export type Member = {
   userId: number;
   showUserId: string;
-  name: string;
+  userName: string;
   grade: number;
-  isJoined?: boolean;
+  isJoin: boolean;
 };

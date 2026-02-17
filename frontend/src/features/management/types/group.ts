@@ -12,6 +12,12 @@ export type GroupFormType = {
   members: { userId: number; isJoined: boolean }[];
 };
 
+export type GroupCreateType = {
+  parentGroupId: number;
+  groupName: string;
+  memberUserId: number[];
+};
+
 export type GroupRequestType = {
   parentGroupId: number;
   groupName: string;
