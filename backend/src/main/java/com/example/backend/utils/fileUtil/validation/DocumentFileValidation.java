@@ -32,6 +32,7 @@ public class DocumentFileValidation {
         
         // CSV (TikaはCSVをtext/plainと判定することもあるため注意)
         "text/csv",
+        "text/plain",
 
         //msoffice系の許可
         "application/x-tika-msoffice",

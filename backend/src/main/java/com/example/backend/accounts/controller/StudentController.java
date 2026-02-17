@@ -49,16 +49,16 @@ public class StudentController {
      * 実際のそのリクエストのユーザ名がschoolIdに紐づけられているユーザ名があるかどうかで整合性を検証する
      */
     @PostMapping("/student/csv-file")
-    public ResponseEntity<String> createStudentByFile(@RequestPart("file") MultipartFile uploadCsvFile,
+    public ResponseEntity<Void> createStudentByFile(@RequestPart("file") MultipartFile uploadCsvFile,
             @AuthenticationPrincipal UserInfo userInfo) throws IOException {
         final boolean validationResult = documentFileValidation.isValidDocumentFile(uploadCsvFile);
         final boolean isCsv = documentFileValidation.isCSV(uploadCsvFile);
 
         if (!validationResult || !isCsv) {
-            return ResponseEntity.badRequest().body("CSVファイルの形式が正しいこと、ファイルの上限内であること、内容が正しいかどうか確認してください。");
+            return ResponseEntity.badRequest().build();
         }
         studentService.createStudentByFile(uploadCsvFile, userInfo.getSchoolId());
-        return ResponseEntity.ok().body("アカウントを正常に生成しました。");
+        return ResponseEntity.ok().build();
     }
 
     /* 生徒情報を変更する */
