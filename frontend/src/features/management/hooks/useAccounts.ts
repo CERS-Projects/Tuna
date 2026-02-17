@@ -2,12 +2,7 @@ import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useApiWithRefresh } from "@/lib/api-client";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import {
-  type AccountSearchType,
-  type AccountType,
-  type StudentAccountEditType,
-  type TeacherAccountEditType,
-} from "../types/account";
+import { type AccountSearchType, type AccountType } from "../types/account";
 
 export const useAccounts = (searchInfo: AccountSearchType) => {
   const apiWithRefresh = useApiWithRefresh();
@@ -59,57 +54,4 @@ export const useAccounts = (searchInfo: AccountSearchType) => {
   }, [accounts, searchInfo]);
 
   return { data, isFetching, isError, refetch };
-};
-
-export const useAccount = (userId: number) => {
-  const apiWithRefresh = useApiWithRefresh();
-  const { authToken } = useAuth();
-
-  const { data, isFetching, isError } = useQuery<
-    StudentAccountEditType | TeacherAccountEditType
-  >({
-    queryKey: ["account", userId],
-    enabled: userId > 0,
-    queryFn: async (): Promise<
-      StudentAccountEditType | TeacherAccountEditType
-    > => {
-      const allAccounts = await apiWithRefresh<AccountType[]>({
-        url: "/accounts/all",
-        options: {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        },
-      });
-
-      const account = allAccounts.find((a) => a.userId === userId);
-      if (!account) {
-        throw new Error("アカウントが見つかりません");
-      }
-
-      if (account.authority === null) {
-        return {
-          userId: account.userId,
-          showUserId: account.showUserId,
-          name: account.name,
-          email: "",
-          accountStopFlag: account.isAccountStopFlag ? 1 : 0,
-          grade: account.grade ?? 1,
-          graduateDate: "",
-        } as StudentAccountEditType;
-      } else {
-        return {
-          userId: account.userId,
-          showUserId: account.showUserId,
-          name: account.name,
-          email: "",
-          accountStopFlag: account.isAccountStopFlag ? 1 : 0,
-          authority: account.authority ? 1 : 0,
-        } as TeacherAccountEditType;
-      }
-    },
-  });
-
-  return { data, isFetching, isError };
 };
