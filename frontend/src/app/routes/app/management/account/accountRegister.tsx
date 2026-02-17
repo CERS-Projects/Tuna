@@ -7,7 +7,7 @@ import {
   type StudentAccountRegisterType,
   type TeacherAccountRegisterType,
 } from "@/features/management/types/account";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useBeforeUnload, useNavigate } from "react-router";
 import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 import { paths } from "@/config/paths";
@@ -16,8 +16,15 @@ import {
   StudentAccountRegisterTable,
   TeacherAccountRegisterTable,
 } from "@/features/management/components/accountRegisterTable/accountRegisterTable";
+import {
+  useCreateStudents,
+  useCreateTeachers,
+} from "@/features/management/hooks/useAccountMutations";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { decodeUserParams } from "@/features/auth/utils/jwt";
 
 const initialStudent: StudentAccountRegisterType = {
+  showUserId: "",
   name: "",
   grade: 1,
   email: "",
@@ -28,6 +35,7 @@ const initialStudent: StudentAccountRegisterType = {
 };
 
 const initialTeacher: TeacherAccountRegisterType = {
+  showUserId: "",
   name: "",
   email: "",
   password: "",
@@ -36,8 +44,11 @@ const initialTeacher: TeacherAccountRegisterType = {
 
 const AccountRegister = () => {
   const navigate = useNavigate();
-  const [shouldNavigate, setShouldNavigate] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { authToken } = useAuth();
+  const userInfo = decodeUserParams(authToken);
+  const role = userInfo?.role ?? "STUDENT";
+  const isAdmin = role === "ADMIN_SCHOOL";
+
   const [activeTab, setActiveTab] = useState<"student" | "teacher">("student");
   const formRef = useRef<HTMLDivElement | null>(null);
   const scrollToForm = () => {
@@ -89,8 +100,30 @@ const AccountRegister = () => {
     null,
   );
 
+  const createStudents = useCreateStudents({
+    onSuccess: () => {
+      alert("生徒アカウントを登録しました");
+      navigate(paths.app.management.account.list.path);
+    },
+    onError: () => {
+      alert("登録に失敗しました");
+    },
+  });
+
+  const createTeachers = useCreateTeachers({
+    onSuccess: () => {
+      alert("教師アカウントを登録しました");
+      navigate(paths.app.management.account.list.path);
+    },
+    onError: () => {
+      alert("登録に失敗しました");
+    },
+  });
+
+  const isPending = createStudents.isPending || createTeachers.isPending;
+
   useBlockNavigation(
-    (teacherAccounts.length > 0 || studentAccounts.length > 0) && !isSubmitting,
+    (teacherAccounts.length > 0 || studentAccounts.length > 0) && !isPending,
   );
 
   useBeforeUnload(
@@ -98,53 +131,31 @@ const AccountRegister = () => {
       (e) => {
         if (
           (teacherAccounts.length > 0 || studentAccounts.length > 0) &&
-          !isSubmitting
+          !isPending
         ) {
           e.preventDefault();
         }
       },
-      [studentAccounts, teacherAccounts, isSubmitting],
+      [studentAccounts, teacherAccounts, isPending],
     ),
   );
 
-  useEffect(() => {
-    if (!shouldNavigate) return;
-    navigate(paths.app.management.account.list.path);
-  }, [shouldNavigate, navigate]);
-
   const handleSubmit = () => {
-    const cancel = confirm("この内容で登録しますか？");
-
-    if (cancel === false) return;
+    const ok = confirm("この内容で登録しますか？");
+    if (!ok) return;
 
     if (activeTab === "student") {
       if (studentAccounts.length === 0) {
         alert("データが追加されていません");
         return;
       }
-
-      setIsSubmitting(true);
-      try {
-        console.log(studentAccounts);
-        setShouldNavigate(true);
-      } catch (e) {
-        setIsSubmitting(false);
-        throw e;
-      }
+      createStudents.mutate(studentAccounts);
     } else {
       if (teacherAccounts.length === 0) {
         alert("データが追加されていません");
         return;
       }
-
-      setIsSubmitting(true);
-      try {
-        console.log(teacherAccounts);
-        setShouldNavigate(true);
-      } catch (e) {
-        setIsSubmitting(false);
-        throw e;
-      }
+      createTeachers.mutate(teacherAccounts);
     }
   };
 
@@ -157,22 +168,24 @@ const AccountRegister = () => {
       <header className={styles.header}>
         <h3 className={styles.sectionName}>手入力アカウント登録</h3>
 
-        <div className={styles.toggleTab} data-active={activeTab}>
-          <button
-            type="button"
-            className={activeTab === "student" ? styles.tabActive : ""}
-            onClick={() => setActiveTab("student")}
-          >
-            生徒
-          </button>
-          <button
-            type="button"
-            className={activeTab === "teacher" ? styles.tabActive : ""}
-            onClick={() => setActiveTab("teacher")}
-          >
-            教師
-          </button>
-        </div>
+        {isAdmin ? (
+          <div className={styles.toggleTab} data-active={activeTab}>
+            <button
+              type="button"
+              className={activeTab === "student" ? styles.tabActive : ""}
+              onClick={() => setActiveTab("student")}
+              disabled={isPending}>
+              生徒
+            </button>
+            <button
+              type="button"
+              className={activeTab === "teacher" ? styles.tabActive : ""}
+              onClick={() => setActiveTab("teacher")}
+              disabled={isPending}>
+              教師
+            </button>
+          </div>
+        ) : null}
       </header>
 
       <hr />
@@ -190,7 +203,7 @@ const AccountRegister = () => {
               initialStudent={initialStudent}
               onFormDone={scrollToStudentTable}
             />
-          ) : (
+          ) : isAdmin ? (
             <TeacherAccountRegisterForm
               current={currentTeacher}
               setCurrent={setCurrentTeacher}
@@ -201,7 +214,7 @@ const AccountRegister = () => {
               initialTeacher={initialTeacher}
               onFormDone={scrollToTeacherTable}
             />
-          )}
+          ) : null}
         </div>
 
         {activeTab === "student" ? (
@@ -213,7 +226,7 @@ const AccountRegister = () => {
             onEditDone={scrollToForm}
             tableRef={studentTableRef}
           />
-        ) : (
+        ) : isAdmin ? (
           <TeacherAccountRegisterTable
             setCurrent={setCurrentTeacher}
             setEditingIndex={setEditingTeacherIndex}
@@ -222,10 +235,14 @@ const AccountRegister = () => {
             onEditDone={scrollToForm}
             tableRef={teacherTableRef}
           />
-        )}
+        ) : null}
 
-        <button type="button" className={styles.button} onClick={handleSubmit}>
-          作成完了
+        <button
+          type="button"
+          className={styles.button}
+          onClick={handleSubmit}
+          disabled={isPending}>
+          {isPending ? "登録中..." : "作成完了"}
         </button>
       </div>
     </div>

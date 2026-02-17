@@ -4,12 +4,16 @@ import { AccountSearch } from "@/features/management/components/accountSearch/ac
 import { AccountTable } from "@/features/management/components/accountTable/accountTable";
 import { FormProvider, useForm } from "react-hook-form";
 import { type AccountSearchType } from "@/features/management/types/account";
-import { type Role } from "@/types/user";
 import styles from "@/features/management/style/accountList.module.css";
-
-const ROLE: Role = "ADMIN_SCHOOL";
+import { Spinner } from "@/components/ui/spinner/spinner";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+import { decodeUserParams } from "@/features/auth/utils/jwt";
 
 const AccountList = () => {
+  const { authToken } = useAuth();
+  const userInfo = decodeUserParams(authToken);
+  const role = userInfo?.role ?? "STUDENT";
+
   const methods = useForm<AccountSearchType>({
     defaultValues: {
       query: "",
@@ -29,6 +33,12 @@ const AccountList = () => {
     refetch,
   } = useAccounts(searchInfo);
 
+  if (isError) {
+    return (
+      <div className={styles.contents}>アカウントの取得に失敗しました</div>
+    );
+  }
+
   useEffect(() => {
     refetch();
   }, [searchInfo, refetch]);
@@ -41,8 +51,8 @@ const AccountList = () => {
   return (
     <FormProvider {...methods}>
       <div className={styles.contents}>
-        <AccountSearch onSubmit={onSubmit} role={ROLE} />
-        <AccountTable accounts={accounts} />
+        <AccountSearch onSubmit={onSubmit} role={role} />
+        {isFetching ? <Spinner /> : <AccountTable accounts={accounts} />}
       </div>
     </FormProvider>
   );

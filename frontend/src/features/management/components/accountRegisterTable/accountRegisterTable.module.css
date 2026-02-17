@@ -6,11 +6,6 @@
   min-width: 0;
 }
 
-.student {
-}
-.teacher {
-}
-
 .tableScroll {
   width: 100%;
   min-width: 0;
@@ -20,20 +15,12 @@
 
 .accountTable {
   width: 100%;
-  table-layout: auto;
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
   background: #fff;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
-}
-
-.student .accountTable {
-  min-width: 49rem;
-}
-
-.teacher .accountTable {
-  min-width: 28rem;
 }
 
 .accountTable :is(th, td) {
@@ -45,49 +32,56 @@
   text-overflow: ellipsis;
 }
 
-.student .accountTable :is(thead th, tbody td):nth-child(2),
-.student .accountTable :is(thead th, tbody td):nth-child(5),
-.student .accountTable :is(thead th, tbody td):nth-child(6) {
-  white-space: nowrap;
+/* ── 生徒テーブル（8列: ID/名前/学年/メール/パスワード/入学/卒業/操作） ── */
+.student .accountTable {
+  min-width: 56rem;
 }
 
 .student .accountTable :is(thead th, tbody td):nth-child(1) {
-  width: 9rem;
+  width: 12%;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(2) {
-  width: 3.5rem;
-  text-align: center;
+  width: 14%;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(3) {
-  width: 12rem;
+  width: 6%;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(4) {
-  width: 7rem;
+  width: 20%;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(5) {
-  width: 6.5rem;
-  text-align: center;
+  width: 14%;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(6) {
-  width: 6.5rem;
-  text-align: center;
+  width: 12%;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(7) {
-  width: 4.5rem;
+  width: 12%;
+}
+.student .accountTable :is(thead th, tbody td):nth-child(8) {
+  width: 10%;
   text-align: center;
 }
 
+/* ── 教師テーブル（5列: ID/名前/メール/パスワード/操作） ── */
+.teacher .accountTable {
+  min-width: 38rem;
+}
+
 .teacher .accountTable :is(thead th, tbody td):nth-child(1) {
-  width: 9rem;
+  width: 18%;
 }
 .teacher .accountTable :is(thead th, tbody td):nth-child(2) {
-  width: 14rem;
+  width: 18%;
 }
 .teacher .accountTable :is(thead th, tbody td):nth-child(3) {
-  width: 7rem;
+  width: 30%;
 }
 .teacher .accountTable :is(thead th, tbody td):nth-child(4) {
-  width: 4.5rem;
+  width: 20%;
+}
+.teacher .accountTable :is(thead th, tbody td):nth-child(5) {
+  width: 14%;
   text-align: center;
 }
 

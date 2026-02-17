@@ -6,8 +6,10 @@ import { CsvUploadField } from "@/features/management/components/csvUploadField/
 import { AccountImportTable } from "@/features/management/components/accountImportTable/accountImportTable";
 import { type StudentAccountImportType } from "@/features/management/types/account";
 import { parseAccountsCsv } from "@/features/management/utils/parseAccountsCsv";
+import { useCreateStudentsByCsv } from "@/features/management/hooks/useAccountMutations";
 import { paths } from "@/config/paths";
 import styles from "@/features/management/style/accountImport.module.css";
+import { FaInfoCircle } from "react-icons/fa";
 
 const AccountImport = () => {
   const navigate = useNavigate();
@@ -15,6 +17,16 @@ const AccountImport = () => {
   const [accounts, setAccounts] = useState<StudentAccountImportType[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [shouldNavigate, setShouldNavigate] = useState(false);
+
+  const createStudentsByCsv = useCreateStudentsByCsv({
+    onSuccess: () => {
+      setShouldNavigate(true);
+    },
+    onError: (error: Error) => {
+      alert("登録に失敗しました: " + error.message);
+      setIsSubmitting(false);
+    },
+  });
 
   useEffect(() => {
     if (file && file.type === "text/csv") {
@@ -67,7 +79,7 @@ const AccountImport = () => {
     navigate(paths.app.management.account.list.path);
   }, [shouldNavigate, navigate]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     const ok = confirm("この内容で登録しますか？");
     if (!ok) return;
 
@@ -76,14 +88,13 @@ const AccountImport = () => {
       return;
     }
 
-    setIsSubmitting(true);
-    try {
-      console.log(accounts);
-      setShouldNavigate(true);
-    } catch (e) {
-      setIsSubmitting(false);
-      throw e;
+    if (!file) {
+      alert("ファイルが選択されていません");
+      return;
     }
+
+    setIsSubmitting(true);
+    createStudentsByCsv.mutate(file);
   };
 
   return (
@@ -94,6 +105,11 @@ const AccountImport = () => {
       />
 
       <h3 className={styles.sectionName}>外部ファイルアカウント登録</h3>
+
+      <div className={styles.infoNote}>
+        <FaInfoCircle />
+        <span>外部ファイルでの登録は生徒アカウントのみ対応しています</span>
+      </div>
 
       <hr />
 
@@ -111,9 +127,8 @@ const AccountImport = () => {
         type="button"
         className={styles.button}
         onClick={handleSubmit}
-        disabled={isSubmitting}
-      >
-        作成完了
+        disabled={isSubmitting || createStudentsByCsv.isPending}>
+        {createStudentsByCsv.isPending ? "登録中..." : "作成完了"}
       </button>
     </div>
   );
