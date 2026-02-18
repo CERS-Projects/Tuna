@@ -73,3 +73,14 @@ export type ModifyTeacherAccountRequestType = {
   authorityFlag: boolean;
   accountStopFlag: boolean;
 };
+
+export type AccountDetailResponse = {
+  userId: number;
+  showUserId: string;
+  name: string;
+  mailAddress: string;
+  accountStopFlag: boolean;
+  grade: number | null;
+  graduateDate: string | null;
+  authority: boolean | null;
+};

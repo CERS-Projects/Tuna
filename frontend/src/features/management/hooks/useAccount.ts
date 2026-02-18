@@ -4,18 +4,8 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import {
   type StudentAccountEditType,
   type TeacherAccountEditType,
+  type AccountDetailResponse,
 } from "../types/account";
-
-type AccountDetailResponse = {
-  userId: number;
-  showUserId: string;
-  name: string;
-  mailAddress: string;
-  accountStopFlag: boolean;
-  grade: number | null;
-  graduateDate: string | null;
-  authority: boolean | null;
-};
 
 export const useAccount = (userId: number) => {
   const apiWithRefresh = useApiWithRefresh();
