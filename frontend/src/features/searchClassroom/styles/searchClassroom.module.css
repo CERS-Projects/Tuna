@@ -33,6 +33,13 @@
   z-index: 10;
 }
 
+.searchBarWrapper {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.8rem;
+}
+
 .mainBottom {
   padding-top: 20px;
   flex: 1;
