@@ -27,7 +27,7 @@ export const MemberTable = ({ members, searchQuery }: Props) => {
             members.map((member, index) => {
               if (searchQuery) {
                 const lowerQuery = searchQuery.toLowerCase();
-                const lowerName = member.name.toLowerCase();
+                const lowerName = member.userName.toLowerCase();
                 const lowerId = member.showUserId.toLowerCase();
 
                 if (
@@ -41,7 +41,7 @@ export const MemberTable = ({ members, searchQuery }: Props) => {
               return (
                 <tr key={member.userId}>
                   <td>{member.showUserId}</td>
-                  <td>{member.name}</td>
+                  <td>{member.userName}</td>
                   <td>{member.grade}年</td>
                   <td>
                     <input
