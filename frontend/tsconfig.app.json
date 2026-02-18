@@ -28,5 +28,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "src/features/management/hooks/.useAccountMutations.ts"]
+  "include": ["src"]
 }
