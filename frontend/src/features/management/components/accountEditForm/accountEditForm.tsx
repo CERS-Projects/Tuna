@@ -29,6 +29,7 @@ export const StudentAccountEditForm = ({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<StudentAccountEditType>({
     defaultValues: {
@@ -41,6 +42,8 @@ export const StudentAccountEditForm = ({
       graduateDate,
     },
   });
+
+  const watchStopFlag = watch("accountStopFlag");
 
   const onSubmit = (formData: StudentAccountEditType) => {
     onSubmitProp(formData);
@@ -113,8 +116,7 @@ export const StudentAccountEditForm = ({
 
         <div className={styles.toggle}>
           <label htmlFor="isStop">
-            現在：{accountStopFlag ? "停止中" : "利用可"}（off:利用可
-            on:停止中）
+            現在：{watchStopFlag ? "停止中" : "利用可"}（off:利用可 on:停止中）
           </label>
           <input id="isStop" type="checkbox" {...register("accountStopFlag")} />
         </div>
@@ -148,6 +150,7 @@ export const TeacherAccountEditForm = ({
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<TeacherAccountEditType>({
     defaultValues: {
@@ -159,6 +162,9 @@ export const TeacherAccountEditForm = ({
       authority,
     },
   });
+
+  const watchStopFlag = watch("accountStopFlag");
+  const watchAuthority = watch("authority");
 
   const onSubmit = (formData: TeacherAccountEditType) => {
     onSubmitProp(formData);
@@ -209,14 +215,14 @@ export const TeacherAccountEditForm = ({
 
         <div className={styles.toggle}>
           <label htmlFor="isStop">
-            {accountStopFlag ? "停止中" : "利用可"}（off:利用可, on:停止中）
+            {watchStopFlag ? "停止中" : "利用可"}（off:利用可, on:停止中）
           </label>
           <input id="isStop" type="checkbox" {...register("accountStopFlag")} />
         </div>
 
         <div className={styles.toggle}>
           <label htmlFor="authority">
-            {authority ? "学校管理者" : "教師"}（off:教師, on:学校管理者）
+            {watchAuthority ? "学校管理者" : "教師"}（off:教師, on:学校管理者）
           </label>
           <input id="authority" type="checkbox" {...register("authority")} />
         </div>
