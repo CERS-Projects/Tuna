@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.group.dto.GetGroupResponse;
+import com.example.backend.group.dto.ModifyGroupInfoRequest;
 import com.example.backend.group.model.GroupEntity;
 import com.example.backend.group.repository.GroupRepository;
 
@@ -39,8 +40,12 @@ public class GroupHelper {
     }
 
     /* 単一のグループのアップデート用 */
-    public void updateParentGroup(final Integer NEW_PARENT_ID, final Integer MY_ID) {
-        groupRepository.modifyGroupParentId(NEW_PARENT_ID, MY_ID);
+    public void modifyGroup(final ModifyGroupInfoRequest DTO, final Integer MY_ID) {
+        Integer parentGroupId = DTO.getNewParentGroupId();
+        Integer resolvedParentId = (parentGroupId == null || parentGroupId == 0) ? null : parentGroupId;
+
+        groupRepository.modifyGroupParentIdAndName(resolvedParentId, DTO.getNewGroupName(), MY_ID);
+
     }
 
     public List<GetGroupResponse> getTree(Integer schoolId) {

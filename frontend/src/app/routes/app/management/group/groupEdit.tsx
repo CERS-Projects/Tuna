@@ -1,16 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useOutletContext, useNavigate, useLocation } from "react-router";
 import { useMembers } from "@/features/management/hooks/useMember";
 import { type GroupsOutletContext } from "@/features/management/layouts/groupShell/groupShell";
-import {
-  type GroupRequestType,
-  type GroupFormType,
-} from "@/features/management/types/group";
+import { type GroupFormType } from "@/features/management/types/group";
+import { type ModifyGroupMemberType } from "@/features/management/types/member";
 import { flattenGroups } from "@/features/management/utils/flattenGroups";
 import { findParentGroup } from "@/features/management/utils/findParentGroup";
 import { GroupForm } from "@/features/management/components/groupForm/groupForm";
+import { Spinner } from "@/components/ui/spinner/spinner";
 import styles from "@/features/management/style/groupForm.module.css";
+import { useDeleteGroup } from "@/features/management/hooks/useDeleteGroup";
+import { paths } from "@/config/paths";
+import { useEditGroup } from "@/features/management/hooks/useEditGroup";
 
 const GroupEdit = () => {
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ const GroupEdit = () => {
     },
   });
 
-  const { reset } = methods;
+  const { reset, getValues } = methods;
 
   const parentOptions = useMemo(
     () => flattenGroups(groups, selectedGroupId, { excludeDescendants: true }),
@@ -41,21 +43,32 @@ const GroupEdit = () => {
 
   const [selectedGrade, setSelectedGrade] = useState<number[]>([]);
 
-  // ダミーでschoolIdを1に設定
-  const { data: members } = useMembers(1, selectedGroupId);
+  const initialJoinedRef = useRef<ModifyGroupMemberType[]>([]);
+
+  const { data: members } = useMembers(selectedGroupId);
+  const { mutate: deleteGroupMutate, isPending: isDeleting } = useDeleteGroup();
+  const { mutate: editGroupMutate, isPending: isEditing } =
+    useEditGroup(selectedGroupId);
+
+  const isPendingAny = isDeleting || isEditing;
 
   useEffect(() => {
     if (members && currentGroup) {
+      const mappedMembers = members.map((member) => ({
+        ...member,
+        isJoined: member.isJoin,
+      }));
+
       reset({
         parentGroupId: parentGroup?.groupId ?? 0,
-
         groupName: currentGroup.groupName ?? "",
-
-        members: members.map((member) => ({
-          ...member,
-          isJoined: member.isJoined ?? false,
-        })),
+        members: mappedMembers,
       });
+
+      initialJoinedRef.current = mappedMembers.map((m) => ({
+        userId: m.userId,
+        modifiedIsJoined: m.isJoined,
+      }));
     }
 
     setSelectedGrade([]);
@@ -65,7 +78,27 @@ const GroupEdit = () => {
     setActions({
       left: {
         label: "削除",
-        onClick: () => console.log("選択されたグループ削除"),
+        onClick: () => {
+          const currentFormData = getValues();
+
+          if (currentGroup?.groupId) {
+            deleteGroupMutate(
+              {
+                groupId: currentGroup?.groupId,
+                parentId: currentFormData.parentGroupId,
+              },
+              {
+                onSuccess: () => {
+                  window.alert("グループ削除に成功しました");
+                  navigate(paths.app.management.group.root.path);
+                },
+                onError: () => window.alert("グループ削除に失敗しました"),
+              },
+            );
+          } else {
+            window.alert("グループ削除に失敗しました");
+          }
+        },
       },
       middle: {
         label: "キャンセル",
@@ -81,22 +114,42 @@ const GroupEdit = () => {
     });
 
     return () => setActions(null);
-  }, [setActions, navigate, location.search]);
+  }, [
+    setActions,
+    navigate,
+    location.search,
+    getValues,
+    currentGroup,
+    deleteGroupMutate,
+  ]);
 
   const onSubmit = async (formData: GroupFormType) => {
     const members = Array.isArray(formData.members) ? formData.members : [];
 
-    const joinedMembersId = members
-      .filter((member) => member.isJoined)
-      .map((member) => member.userId);
+    const modifyMembers = members.filter((member) => {
+      const initial = initialJoinedRef.current.find(
+        (m) => m.userId === member.userId,
+      );
 
-    const request: GroupRequestType = {
+      return initial && initial.modifiedIsJoined !== member.isJoined;
+    });
+
+    const request: GroupFormType = {
       parentGroupId: formData.parentGroupId,
       groupName: formData.groupName.trim(),
-      members: joinedMembersId,
+      members: modifyMembers,
     };
 
-    console.log(request);
+    if (window.confirm("この内容で更新しますか？")) {
+      editGroupMutate(request, {
+        onSuccess: () => {
+          window.alert("グループを更新しました！");
+        },
+        onError: () => {
+          window.alert("グループ更新に失敗しました");
+        },
+      });
+    }
   };
 
   if (!currentGroup) {
@@ -120,6 +173,7 @@ const GroupEdit = () => {
 
   return (
     <FormProvider {...methods}>
+      {isPendingAny && <Spinner isDark={true} />}
       <GroupForm
         selectedGrade={selectedGrade}
         setSelectedGrade={setSelectedGrade}

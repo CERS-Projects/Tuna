@@ -13,7 +13,7 @@ import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.group.dto.DelGroupRequest;
 import com.example.backend.group.dto.GetGroupResponse;
 import com.example.backend.group.dto.GroupCreateRequest;
-import com.example.backend.group.dto.ModifyUpperGroupRequest;
+import com.example.backend.group.dto.ModifyGroupInfoRequest;
 import com.example.backend.group.helper.GroupHelper;
 import com.example.backend.group.model.GroupEntity;
 import com.example.backend.group.repository.GroupRepository;
@@ -95,7 +95,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Transactional
     @Override
-    public void modifyUpperGroup(Integer schoolId, Integer groupId, final ModifyUpperGroupRequest dto) {
+    public void modifyGroup(Integer schoolId, Integer groupId, final ModifyGroupInfoRequest dto) {
 
         GroupEntity groupEntity = groupRepository.findById(groupId)
                 .orElseThrow(() -> new EmptyResultDataAccessException("グループが見つかりません", 0));
@@ -106,7 +106,7 @@ public class GroupServiceImpl implements GroupService {
             throw new IllegalArgumentException("不正なリクエストです");
         }
 
-        groupHelper.updateParentGroup(dto.getNewParentGroupId(), groupId);
+        groupHelper.modifyGroup(dto, groupId);
     }
 
     /* GroupCreateRequest DTOをGroupEntityに変換 */

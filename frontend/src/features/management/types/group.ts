@@ -12,10 +12,15 @@ export type GroupFormType = {
   members: { userId: number; isJoined: boolean }[];
 };
 
-export type GroupRequestType = {
+export type GroupCreateType = {
   parentGroupId: number;
   groupName: string;
-  members: number[];
+  membersUserId: number[];
+};
+
+export type GroupDeleteRequestType = {
+  parentId: number;
+  groupId: number;
 };
 
 export type GradeOption = {

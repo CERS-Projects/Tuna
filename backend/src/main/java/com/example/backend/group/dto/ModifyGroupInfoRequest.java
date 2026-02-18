@@ -5,6 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ModifyUpperGroupRequest {
+public class ModifyGroupInfoRequest {
     private Integer newParentGroupId;
+
+    private String newGroupName;
 }

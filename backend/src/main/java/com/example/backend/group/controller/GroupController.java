@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.accounts.service.StudentService;
@@ -19,7 +20,9 @@ import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
 import com.example.backend.group.dto.GroupCreateRequest;
 import com.example.backend.group.dto.ModifyGroupMembersRequest;
-import com.example.backend.group.dto.ModifyUpperGroupRequest;
+import com.example.backend.group.dto.ModifyGroupRequest;
+import com.example.backend.group.facade.ModifyGroupFacade;
+import com.example.backend.group.dto.ModifyGroupInfoRequest;
 import com.example.backend.group.service.GroupMemberService;
 import com.example.backend.group.service.GroupService;
 
@@ -39,6 +42,8 @@ public class GroupController {
 
     private final StudentService studentService;
 
+    private final ModifyGroupFacade modifyGroupFacade;
+
     @GetMapping
     public ResponseEntity<List<GetGroupResponse>> getAllGroups(@AuthenticationPrincipal UserInfo userInfo) {
         List<GetGroupResponse> groupList = groupService.getAllGroups(userInfo);
@@ -46,7 +51,11 @@ public class GroupController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteGroup(@AuthenticationPrincipal UserInfo userInfo, DelGroupRequest dto) {
+    public ResponseEntity<Void> deleteGroup(
+            @AuthenticationPrincipal UserInfo userInfo,
+            @RequestParam("groupId") Integer groupId,
+            @RequestParam(value = "parentId", required = false) Integer parentId) {
+        DelGroupRequest dto = new DelGroupRequest(groupId, parentId);
         groupService.deleteGroup(userInfo.getSchoolId(), dto);
         return ResponseEntity.ok().build();
     }
@@ -71,6 +80,13 @@ public class GroupController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{groupId}")
+    public ResponseEntity<Void> modifyGroup(@AuthenticationPrincipal UserInfo userInfo,
+            @PathVariable("groupId") Integer groupId, @Valid @RequestBody ModifyGroupRequest dto) {
+        modifyGroupFacade.modifyGroup(userInfo, groupId, dto);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/{groupId}/members")
     public ResponseEntity<Void> modifyGroupMembers(@AuthenticationPrincipal UserInfo userInfo,
             @PathVariable("groupId") Integer groupId, @Valid @RequestBody ModifyGroupMembersRequest dto) {
@@ -81,8 +97,9 @@ public class GroupController {
     @PostMapping("/{groupId}/upper-group")
     public ResponseEntity<Void> modifyUpperGroup(@AuthenticationPrincipal UserInfo userInfo,
             @PathVariable("groupId") Integer groupId,
-            @Valid @RequestBody ModifyUpperGroupRequest dto) {
-        groupService.modifyUpperGroup(userInfo.getSchoolId(), groupId, dto);
+            @Valid @RequestBody ModifyGroupInfoRequest dto) {
+        groupService.modifyGroup(userInfo.getSchoolId(), groupId, dto);
         return ResponseEntity.ok().build();
     }
+
 }

@@ -11,22 +11,26 @@ export const NoticeInfo = ({ notices }: NoticeInfoProps) => {
       <h2>あなたへのお知らせ</h2>
       <hr className={styles.separator} />
       <div className={styles.scrollArea}>
-        {notices.map((item) => (
-          <div key={item.noticeId} className={styles.noticeInfoContent}>
-            <h3>{item.title}</h3>
-            <small>
-              {new Intl.DateTimeFormat("ja-JP", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-              }).format(new Date(item.createdAt))}
-            </small>
-            <p>{item.content}</p>
-            <big>{item.groupName}</big>
-          </div>
-        ))}
+        {notices.length > 0 ? (
+          notices.map((item) => (
+            <div key={item.noticeId} className={styles.noticeInfoContent}>
+              <h3>{item.title}</h3>
+              <small>
+                {new Intl.DateTimeFormat("ja-JP", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }).format(new Date(item.createdAt))}
+              </small>
+              <p>{item.content}</p>
+              <big>{item.groupName}</big>
+            </div>
+          ))
+        ) : (
+          <p>現在お知らせが投稿されていません</p>
+        )}
       </div>
     </div>
   );

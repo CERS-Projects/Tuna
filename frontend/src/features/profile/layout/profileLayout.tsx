@@ -70,7 +70,9 @@ const ProfileLayout = () => {
               <Spinner />
             ) : notice && notice.length > 0 ? (
               <NoticeInfo notices={notice} />
-            ) : null}
+            ) : (
+              <NoticeInfo notices={[]} />
+            )}
           </InfoBox>
         </div>
       </div>
@@ -82,7 +84,9 @@ const ProfileLayout = () => {
             <Spinner />
           ) : notice && notice.length > 0 ? (
             <NoticeInfo notices={notice} />
-          ) : null}
+          ) : (
+            <NoticeInfo notices={[]} />
+          )}
         </InfoBox>
       </Modal>
     </div>
