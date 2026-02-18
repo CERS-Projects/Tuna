@@ -210,8 +210,11 @@ public class StudentServiceImpl implements StudentService {
 
         List<GetUserResponse> response = studentRepository.findAllStudentUsers(schoolId);
 
-        if (dto.getGroupId() == 0)
-            return response;
+        if (dto.getGroupId() == 0) {
+            return response.stream()
+                    .peek(user -> user.setIsJoin(Boolean.FALSE))
+                    .collect(Collectors.toList());
+        }
 
         Set<Integer> members = groupMemberService.findJoinUserIdsByGroupId(dto.getGroupId());
         return response.stream()
