@@ -88,7 +88,7 @@ export const CsvUploadField = ({ file, setFile, setAccounts }: Props) => {
         <input
           ref={inputRef}
           type="file"
-          accept=".csv,text/csv"
+          accept=".csv,text/csv,text/plain,application/vnd.ms-excel"
           onChange={handleChange}
         />
       </div>

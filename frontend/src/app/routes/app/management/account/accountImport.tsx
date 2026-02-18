@@ -34,7 +34,7 @@ const AccountImport = () => {
   });
 
   useEffect(() => {
-    if (file && file.type === "text/csv") {
+    if (file && file.name.toLowerCase().endsWith(".csv")) {
       const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5,242,880 bytes
 
       if (file.size > MAX_FILE_SIZE) {
