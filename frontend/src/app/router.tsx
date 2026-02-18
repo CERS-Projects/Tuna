@@ -299,6 +299,18 @@ const createAppRouter = (queryClient: QueryClient) => {
                   paths.app.management.report.path,
                   () => import("./routes/app/management/report/reportList"),
                 ),
+                route(
+                  paths.app.management.notice.path,
+                  () => import("./routes/app/management/notice/notice"),
+                ),
+                route(
+                  paths.app.management.notice.create.path,
+                  () => import("./routes/app/management/notice/createNotice"),
+                ),
+                route(
+                  paths.app.management.notice.edit.path,
+                  () => import("./routes/app/management/notice/editNotice"),
+                ),
               ],
             },
           ],

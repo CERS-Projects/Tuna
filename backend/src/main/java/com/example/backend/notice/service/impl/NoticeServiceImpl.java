@@ -20,6 +20,7 @@ import com.example.backend.notice.model.NoticeEntity;
 import com.example.backend.notice.repository.NoticeRepository;
 import com.example.backend.notice.service.NoticeService;
 import com.example.backend.school.repository.SchoolRepository;
+import com.example.backend.utils.accountConfirm.AccountConfirm;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -35,6 +36,8 @@ public class NoticeServiceImpl implements NoticeService {
     private final GroupMemberRepository groupMemberRepository;
 
     private final NoticeHelper noticeHelper;
+
+    private final AccountConfirm accountConfirm;
 
     @Override
     @Transactional
@@ -107,8 +110,8 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     @Transactional
     public void deleteNotice(String noticeId, Integer userId, Integer schoolId) {
-        if(!groupMemberRepository.existsByUserIdAndGroupId(userId, schoolId)) {
-            throw new IllegalArgumentException("そのグループは存在しないか、指定した学校に所属していません。");
+        if(!accountConfirm.existsByUserIdBySchoolId(userId, schoolId)) {
+            throw new IllegalArgumentException("指定した学校に所属していません。");
         }
         if(!ObjectId.isValid(noticeId)){
             throw new IllegalArgumentException("不正なお知らせIDです。");

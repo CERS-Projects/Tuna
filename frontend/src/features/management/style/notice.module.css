@@ -1,0 +1,232 @@
+.pageContainer {
+  background-color: #f1f5f9;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.pageContainer {
+  background-color: #f1f5f9;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pageHeader {
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.headerInner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 0.02em;
+}
+
+.titleIcon {
+  color: rgb(50, 85, 150);
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgb(50, 85, 150);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(50, 85, 150, 0.2);
+}
+
+.btnIcon {
+  font-size: 1.2em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.btnText {
+  white-space: nowrap;
+}
+
+.createButton:hover {
+  background-color: rgb(40, 70, 130);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(50, 85, 150, 0.3);
+}
+
+.mainContent {
+  padding: 32px 24px 60px;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.feedContainer {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 240px;
+  color: #64748b;
+  font-weight: 500;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .headerInner {
+    padding: 0 16px;
+  }
+
+  .pageTitle {
+    font-size: 1.25rem;
+  }
+
+  .createButton {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    border-radius: 9999px;
+  }
+
+  .mainContent {
+    padding: 24px 16px 40px;
+  }
+}
+
+.pageHeader {
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e2e8f0;
+  padding: 16px 0;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.headerInner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: 0.02em;
+}
+
+.titleIcon {
+  color: rgb(50, 85, 150);
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgb(50, 85, 150);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(50, 85, 150, 0.2);
+}
+
+.createButton:hover {
+  background-color: rgb(40, 70, 130);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(50, 85, 150, 0.3);
+}
+
+.mainContent {
+  padding: 32px 24px 60px;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+
+  overflow-y: auto;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.feedContainer {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.emptyState {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 240px;
+  color: #64748b;
+  font-weight: 500;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .headerInner {
+    padding: 0 16px;
+  }
+
+  .pageTitle {
+    font-size: 1.25rem;
+  }
+
+  .createButton {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    border-radius: 9999px;
+  }
+
+  .mainContent {
+    padding: 24px 16px 40px;
+  }
+}

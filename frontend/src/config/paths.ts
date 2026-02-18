@@ -240,6 +240,19 @@ export const paths = {
         path: "/manager/school-info",
         getHref: () => "/manager/school-info",
       },
+      notice: {
+        path: "/manager/notice",
+        getHref: () => "/manager/notice",
+        create: {
+          path: "/manager/notice/create",
+          getHref: () => "/manager/notice/create",
+        },
+        edit: {
+          path: "/manager/notice/edit/:noticeId",
+          getHref: (noticeId: number | string) =>
+            `/manager/notice/edit/${noticeId}`,
+        },
+      },
     },
   },
 } as const;
