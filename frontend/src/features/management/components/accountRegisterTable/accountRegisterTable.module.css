@@ -32,28 +32,34 @@
   text-overflow: ellipsis;
 }
 
-/* ── 生徒テーブル（6列: ID/名前/学年/メール/パスワード/操作） ── */
+/* ── 生徒テーブル（8列: ID/名前/学年/メール/パスワード/入学時期/卒業時期/操作） ── */
 .student .accountTable {
-  min-width: 42rem;
+  min-width: 56rem;
 }
 
 .student .accountTable :is(thead th, tbody td):nth-child(1) {
-  width: 15%;
+  width: 12%;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(2) {
-  width: 17%;
+  width: 13%;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(3) {
-  width: 8%;
+  width: 6%;
 }
 .student .accountTable :is(thead th, tbody td):nth-child(4) {
-  width: 26%;
-}
-.student .accountTable :is(thead th, tbody td):nth-child(5) {
   width: 20%;
 }
+.student .accountTable :is(thead th, tbody td):nth-child(5) {
+  width: 15%;
+}
 .student .accountTable :is(thead th, tbody td):nth-child(6) {
-  width: 14%;
+  width: 12%;
+}
+.student .accountTable :is(thead th, tbody td):nth-child(7) {
+  width: 12%;
+}
+.student .accountTable :is(thead th, tbody td):nth-child(8) {
+  width: 10%;
   text-align: center;
 }
 

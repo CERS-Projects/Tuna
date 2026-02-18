@@ -75,6 +75,8 @@ export const StudentAccountRegisterTable = ({
               <th>学年</th>
               <th>メールアドレス</th>
               <th>パスワード</th>
+              <th>入学時期</th>
+              <th>卒業時期</th>
               <th className={styles.actionsHead}>操作</th>
             </tr>
           </thead>
@@ -115,6 +117,8 @@ export const StudentAccountRegisterTable = ({
                       )}
                     </div>
                   </td>
+                    <td>{account.entryDate}</td>
+                    <td>{account.graduateDate}</td>
                   <td className={styles.actionsCell}>
                     <div className={styles.actionsInner}>
                       <button
