@@ -75,23 +75,6 @@ const GroupEdit = () => {
   }, [members, currentGroup, parentGroup, reset]);
 
   useEffect(() => {
-    if (members && currentGroup) {
-      reset({
-        parentGroupId: parentGroup?.groupId ?? 0,
-
-        groupName: currentGroup.groupName ?? "",
-
-        members: members.map((member) => ({
-          ...member,
-          isJoined: member.isJoin ?? false,
-        })),
-      });
-    }
-
-    setSelectedGrade([]);
-  }, [members, currentGroup, parentGroup, reset]);
-
-  useEffect(() => {
     setActions({
       left: {
         label: "削除",
