@@ -18,6 +18,7 @@ import styles from "@/features/management/style/accountEdit.module.css";
 import { paths } from "@/config/paths";
 import { useAuth } from "@/features/auth/hooks/useAuth";
 import { useUser } from "@/features/auth/hooks/useUser";
+import { useDeleteAccount } from "@/features/management/hooks/useDeleteAccount";
 
 const isTeacherAccount = (
   account: StudentAccountEditType | TeacherAccountEditType,
@@ -63,6 +64,8 @@ const AccountEdit = () => {
     },
   });
 
+  const deleteAccount = useDeleteAccount();
+
   const handleStudentSubmit = (formData: StudentAccountEditType) => {
     modifyStudent.mutate({
       userId: formData.userId,
@@ -86,13 +89,22 @@ const AccountEdit = () => {
   const isPending = modifyStudent.isPending || modifyTeacher.isPending;
 
   const handleDelete = async () => {
-    if (!userId) {
-      console.log("userIdがありません");
+    if (!account) {
+      window.alert(`ユーザの削除に失敗しました`);
       return;
     }
 
-    console.log(`ユーザID：${userId}のアカウントを削除しました`);
-    navigate(paths.app.management.account.list.path, { replace: true });
+    if (window.confirm("本当に削除しますか？")) {
+      deleteAccount.mutate(account, {
+        onSuccess: () => {
+          window.alert(`ユーザID：${userId}のアカウントを削除しました`);
+          navigate(paths.app.management.account.list.path, { replace: true });
+        },
+        onError: () => {
+          window.alert(`ユーザID：${userId}のアカウントの削除に失敗しました`);
+        },
+      });
+    }
   };
 
   return (
@@ -128,7 +140,8 @@ const AccountEdit = () => {
           form="accountEditForm"
           className={`${styles.button} ${styles.primary}`}
           type="submit"
-          disabled={isPending}>
+          disabled={isPending}
+        >
           {isPending ? "更新中..." : "更新"}
         </button>
 
@@ -137,7 +150,8 @@ const AccountEdit = () => {
             className={`${styles.button} ${styles.danger}`}
             type="button"
             onClick={handleDelete}
-            disabled={isPending}>
+            disabled={isPending}
+          >
             削除
           </button>
         )}
