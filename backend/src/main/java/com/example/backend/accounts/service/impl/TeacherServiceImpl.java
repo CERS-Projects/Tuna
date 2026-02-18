@@ -80,6 +80,16 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService {
         return savedTeacherEntity;
     }
 
+    @Override
+    @Transactional
+    public void deleteTeacher(Integer userId, Integer schoolId) {
+        Boolean isExistsTeacher = teacherRepository.existsBySchoolIdAndUserId(schoolId, userId);
+
+        if (isExistsTeacher) {
+            teacherRepository.deleteById(userId);
+        }
+    }
+
     /* 管理者権限あり状態を登録する機能 */
     @Override
     @Transactional

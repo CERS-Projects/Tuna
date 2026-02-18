@@ -15,6 +15,8 @@ import com.example.backend.group.dto.GetUserResponse;
 public interface StudentService {
     List<UserEntity> createStudent(List<StudentCreateRequest> dto, Integer schoolId);
 
+    void deleteStudent(Integer userId, final Integer schoolId);
+
     void setStudentEnrollmentInformation(List<StudentCreateRequest> dto, List<UserEntity> savedStudentAccount);
 
     void createStudentByFile(MultipartFile csvFile, final Integer schoolId) throws IOException;

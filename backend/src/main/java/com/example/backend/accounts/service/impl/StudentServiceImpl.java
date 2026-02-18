@@ -113,6 +113,16 @@ public class StudentServiceImpl implements StudentService {
         return savedUserEntities;
     }
 
+    @Override
+    @Transactional
+    public void deleteStudent(Integer userId, Integer schoolId) {
+        Boolean isExistsStudent = studentRepository.existsBySchoolIdAndUserId(schoolId, userId);
+
+        if (isExistsStudent) {
+            studentRepository.deleteById(userId);
+        }
+    }
+
     /* 登録した基本情報のユーザIDを元に、生徒情報を付加する */
     @Override
     @Transactional
