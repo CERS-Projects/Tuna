@@ -33,12 +33,6 @@ const AccountList = () => {
     refetch,
   } = useAccounts(searchInfo);
 
-  if (isError) {
-    return (
-      <div className={styles.contents}>アカウントの取得に失敗しました</div>
-    );
-  }
-
   useEffect(() => {
     refetch();
   }, [searchInfo, refetch]);
@@ -52,7 +46,13 @@ const AccountList = () => {
     <FormProvider {...methods}>
       <div className={styles.contents}>
         <AccountSearch onSubmit={onSubmit} role={role} />
-        {isFetching ? <Spinner /> : <AccountTable accounts={accounts} />}
+        {isError ? (
+          <div>アカウントの取得に失敗しました</div>
+        ) : isFetching ? (
+          <Spinner />
+        ) : (
+          <AccountTable accounts={accounts} />
+        )}
       </div>
     </FormProvider>
   );
