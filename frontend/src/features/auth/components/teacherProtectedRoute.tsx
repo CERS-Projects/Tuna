@@ -1,15 +1,16 @@
 import { Navigate, Outlet } from "react-router";
 import { paths } from "@/config/paths";
 import { useAuth } from "../hooks/useAuth";
-import { decodeUserParams } from "../utils/jwt";
+import { useUser } from "../hooks/useUser"; // 変更: decodeUserParams ではなくこれを使う
 
 const TeacherProtectedRoute = () => {
   const { authToken } = useAuth();
 
-  if (!authToken) return <Navigate to={paths.auth.login.path} replace />;
+  const { data: user } = useUser(authToken);
 
-  const userInfo = decodeUserParams(authToken);
-  const role = userInfo?.role ?? "STUDENT";
+  if (!user) return null;
+
+  const role = user.role;
 
   if (role === "STUDENT") {
     return <Navigate to={paths.app.timeline.path} replace />;

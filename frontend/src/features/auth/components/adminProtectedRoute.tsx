@@ -2,10 +2,9 @@ import { Navigate, Outlet } from "react-router";
 import { paths } from "@/config/paths";
 import { useAuth } from "../hooks/useAuth";
 import { useUser } from "../hooks/useUser";
+
 const AdminProtectedRoute = () => {
   const { authToken } = useAuth();
-
-  if (!authToken) return <Navigate to={paths.auth.login.path} replace />;
 
   const { data: userInfo } = useUser(authToken);
   const role = userInfo?.role ?? "STUDENT";
