@@ -24,9 +24,22 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public AccountDetailResponse getAccountDetail(Integer userId) {
+    public AccountDetailResponse getAccountDetail(Integer userId, Integer requestSchoolId, String requestRole) {
+        /* 対象ユーザーがリクエスト元と同じ学校に属するか検証 */
+        Boolean belongsToSchool = userRepository.existsByUserIdAndSchoolId(userId, requestSchoolId);
+        if (!belongsToSchool) {
+            throw new RuntimeException("このユーザーの情報を閲覧する権限がありません");
+        }
+
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+
+        boolean isTeacherTarget = teacherRepository.existsByUserId(userId);
+
+        /* 教師情報の取得はADMIN_SCHOOLのみ許可 */
+        if (isTeacherTarget && !"[ROLE_ADMIN_SCHOOL]".equals(requestRole)) {
+            throw new RuntimeException("教師情報の閲覧にはADMIN_SCHOOL権限が必要です");
+        }
 
         AccountDetailResponse response = new AccountDetailResponse();
         response.setUserId(user.getUserId());
@@ -35,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
         response.setMailAddress(user.getMailAddress());
         response.setAccountStopFlag(user.getAccountsStopFlag());
 
-        if (teacherRepository.existsByUserId(userId)) {
+        if (isTeacherTarget) {
             TeacherEntity teacher = teacherRepository.findById(userId).orElse(null);
             if (teacher != null) {
                 response.setAuthority(teacher.getAuthorityFlag());

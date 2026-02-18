@@ -56,8 +56,11 @@ public class AllAccountsController {
 
         @GetMapping("/detail")
         public ResponseEntity<AccountDetailResponse> getAccountDetail(
+                        Authentication authentication,
+                        @AuthenticationPrincipal UserInfo userInfo,
                         @RequestParam("userId") Integer userId) {
-                AccountDetailResponse response = accountService.getAccountDetail(userId);
+                String role = authentication.getAuthorities().toString();
+                AccountDetailResponse response = accountService.getAccountDetail(userId, userInfo.getSchoolId(), role);
                 return ResponseEntity.ok(response);
         }
 }
