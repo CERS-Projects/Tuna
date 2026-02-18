@@ -1,5 +1,10 @@
 import { useRef } from "react";
-import { FaFileUpload, FaFileCsv, FaRegTrashAlt } from "react-icons/fa";
+import {
+  FaFileUpload,
+  FaFileCsv,
+  FaRegTrashAlt,
+  FaDownload,
+} from "react-icons/fa";
 import styles from "./csvUploadField.module.css";
 import { type StudentAccountImportType } from "../../types/account";
 
@@ -45,16 +50,16 @@ export const CsvUploadField = ({ file, setFile, setAccounts }: Props) => {
           inputRef.current?.click();
         }}
         onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
+        onDragOver={handleDragOver}>
         {isUploaded ? (
           <div className={styles.dropzoneDetails}>
             <FaFileCsv className={styles.dropzoneIcon} />
             <div className={styles.fileDetails}>
               <span className={styles.dropzoneTitle}>{file.name}</span>
               <span
-                className={styles.dropzoneHint}
-              >{`${file.size / 1000} KB`}</span>
+                className={
+                  styles.dropzoneHint
+                }>{`${file.size / 1000} KB`}</span>
             </div>
             <button
               className={styles.trashFile}
@@ -63,8 +68,7 @@ export const CsvUploadField = ({ file, setFile, setAccounts }: Props) => {
                 e.stopPropagation();
                 e.preventDefault();
                 clear();
-              }}
-            >
+              }}>
               <FaRegTrashAlt />
             </button>
           </div>
@@ -84,19 +88,20 @@ export const CsvUploadField = ({ file, setFile, setAccounts }: Props) => {
         <input
           ref={inputRef}
           type="file"
-          accept=".csv,text/csv"
+          accept=".csv,text/csv,text/plain,application/vnd.ms-excel"
           onChange={handleChange}
         />
       </div>
 
       <div className={styles.templateField}>
-        <span>フォーマット</span>
         <a
+          className={styles.templateLink}
           href="/templates/account_import_template.csv"
-          download={"一括登録テンプレート.csv"}
-        >
-          csvテンプレートをダウンロード
+          download={"一括登録テンプレート.csv"}>
+          <FaDownload className={styles.templateIcon} />
+          <span>テンプレートを取得</span>
         </a>
+        <p className={styles.templateNote}>※ UTF-8形式で保存してください</p>
       </div>
     </div>
   );

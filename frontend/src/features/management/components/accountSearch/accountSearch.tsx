@@ -6,7 +6,7 @@ import styles from "./accountSearch.module.css";
 
 type Props = {
   onSubmit: (formData: AccountSearchType) => Promise<void>;
-  role: Role;
+  role: Role | undefined;
 };
 
 export const AccountSearch = ({ onSubmit, role }: Props) => {
@@ -26,8 +26,7 @@ export const AccountSearch = ({ onSubmit, role }: Props) => {
           if (e.key !== "Enter") return;
           e.preventDefault();
         }}
-        className={styles.searchContainer}
-      >
+        className={styles.searchContainer}>
         <div className={styles.input}>
           <label htmlFor="userInput">名前・ID</label>
           <input id="userInput" type="text" {...register("query")} />
@@ -37,8 +36,7 @@ export const AccountSearch = ({ onSubmit, role }: Props) => {
           <label htmlFor="authority">権限</label>
           <select
             id="authority"
-            {...register("authority", { valueAsNumber: true })}
-          >
+            {...register("authority", { valueAsNumber: true })}>
             <option value={-2}>（選択無し）</option>
             <option value={-1}>生徒</option>
             <option value={0}>教師</option>

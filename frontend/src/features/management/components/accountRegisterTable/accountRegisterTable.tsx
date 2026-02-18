@@ -70,12 +70,13 @@ export const StudentAccountRegisterTable = ({
         <table className={styles.accountTable}>
           <thead>
             <tr>
+              <th>ID</th>
               <th>名前</th>
               <th>学年</th>
               <th>メールアドレス</th>
               <th>パスワード</th>
               <th>入学時期</th>
-              <th>卒業見込み</th>
+              <th>卒業時期</th>
               <th className={styles.actionsHead}>操作</th>
             </tr>
           </thead>
@@ -86,8 +87,8 @@ export const StudentAccountRegisterTable = ({
                   key={index}
                   ref={(e) => {
                     tableRef.current[index] = e;
-                  }}
-                >
+                  }}>
+                  <td>{account.showUserId}</td>
                   <td>{account.name}</td>
                   <td>{account.grade}</td>
                   <td>{account.email}</td>
@@ -99,8 +100,7 @@ export const StudentAccountRegisterTable = ({
                           <button
                             type="button"
                             className={styles.actionButton}
-                            onClick={() => toggleConfig(index)}
-                          >
+                            onClick={() => toggleConfig(index)}>
                             <FaRegEye />
                           </button>
                         </>
@@ -110,32 +110,29 @@ export const StudentAccountRegisterTable = ({
                           <button
                             type="button"
                             className={styles.actionButton}
-                            onClick={() => toggleConfig(index)}
-                          >
+                            onClick={() => toggleConfig(index)}>
                             <FaRegEyeSlash />
                           </button>
                         </>
                       )}
                     </div>
                   </td>
-                  <td>{account.entryDate}</td>
-                  <td>{account.graduateDate}</td>
+                    <td>{account.entryDate}</td>
+                    <td>{account.graduateDate}</td>
                   <td className={styles.actionsCell}>
                     <div className={styles.actionsInner}>
                       <button
                         type="button"
                         className={styles.actionButton}
                         title="編集"
-                        onClick={() => handleEdit(account, index)}
-                      >
+                        onClick={() => handleEdit(account, index)}>
                         <MdEdit color="rgb(56, 94, 164)" />
                       </button>
                       <button
                         type="button"
                         className={styles.actionButton}
                         title="削除"
-                        onClick={() => handleDelete(account)}
-                      >
+                        onClick={() => handleDelete(account)}>
                         <FaRegTrashAlt color="#fa5959" />
                       </button>
                     </div>
@@ -209,6 +206,7 @@ export const TeacherAccountRegisterTable = ({
         <table className={styles.accountTable}>
           <thead>
             <tr>
+              <th>ID</th>
               <th>名前</th>
               <th>メールアドレス</th>
               <th>パスワード</th>
@@ -222,8 +220,8 @@ export const TeacherAccountRegisterTable = ({
                   key={index}
                   ref={(e) => {
                     tableRef.current[index] = e;
-                  }}
-                >
+                  }}>
+                  <td>{account.showUserId}</td>
                   <td>{account.name}</td>
                   <td>{account.email}</td>
                   <td>
@@ -234,8 +232,7 @@ export const TeacherAccountRegisterTable = ({
                           <button
                             type="button"
                             className={styles.actionButton}
-                            onClick={() => toggleConfig(index)}
-                          >
+                            onClick={() => toggleConfig(index)}>
                             <FaRegEye />
                           </button>
                         </>
@@ -245,8 +242,7 @@ export const TeacherAccountRegisterTable = ({
                           <button
                             type="button"
                             className={styles.actionButton}
-                            onClick={() => toggleConfig(index)}
-                          >
+                            onClick={() => toggleConfig(index)}>
                             <FaRegEyeSlash />
                           </button>
                         </>
@@ -259,16 +255,14 @@ export const TeacherAccountRegisterTable = ({
                         type="button"
                         className={styles.actionButton}
                         title="編集"
-                        onClick={() => handleEdit(account, index)}
-                      >
+                        onClick={() => handleEdit(account, index)}>
                         <MdEdit color="rgb(56, 94, 164)" />
                       </button>
                       <button
                         type="button"
                         className={styles.actionButton}
                         title="削除"
-                        onClick={() => handleDelete(account)}
-                      >
+                        onClick={() => handleDelete(account)}>
                         <FaRegTrashAlt color="#fa5959" />
                       </button>
                     </div>

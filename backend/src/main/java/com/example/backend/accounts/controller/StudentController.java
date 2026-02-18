@@ -3,6 +3,7 @@ package com.example.backend.accounts.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,9 @@ import com.example.backend.utils.fileUtil.validation.DocumentFileValidation;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequestMapping("/accounts")
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +41,7 @@ public class StudentController {
         List<UserEntity> savedStudentAccount = studentService.createStudent(dto, userInfo.getSchoolId());
         /* 生徒情報を登録する */
         studentService.setStudentEnrollmentInformation(dto, savedStudentAccount);
+        log.info("生徒アカウントを正常に生成しました。");
         return ResponseEntity.ok().build();
     }
 
@@ -46,16 +50,16 @@ public class StudentController {
      * 実際のそのリクエストのユーザ名がschoolIdに紐づけられているユーザ名があるかどうかで整合性を検証する
      */
     @PostMapping("/student/csv-file")
-    public ResponseEntity<String> createStudentByFile(@RequestPart("file") MultipartFile uploadCsvFile,
+    public ResponseEntity<Void> createStudentByFile(@RequestPart("file") MultipartFile uploadCsvFile,
             @AuthenticationPrincipal UserInfo userInfo) throws IOException {
         final boolean validationResult = documentFileValidation.isValidDocumentFile(uploadCsvFile);
         final boolean isCsv = documentFileValidation.isCSV(uploadCsvFile);
 
         if (!validationResult || !isCsv) {
-            return ResponseEntity.badRequest().body("CSVファイルの形式が正しいこと、ファイルの上限内であること、内容が正しいかどうか確認してください。");
+            throw new BadRequestException("CSVファイルの形式が正しいこと、ファイルの上限内であること、内容が正しいかどうか確認してください。");
         }
         studentService.createStudentByFile(uploadCsvFile, userInfo.getSchoolId());
-        return ResponseEntity.ok().body("アカウントを正常に生成しました。");
+        return ResponseEntity.ok().build();
     }
 
     /* 生徒情報を変更する */

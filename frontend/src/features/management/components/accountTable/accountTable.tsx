@@ -38,16 +38,15 @@ export const AccountTable = ({ accounts }: Props) => {
                     if (e.key !== "Enter") return;
                     e.preventDefault();
                     handleUserNavigate(account.userId);
-                  }}
-                >
+                  }}>
                   <td>{account.showUserId}</td>
                   <td>{account.name}</td>
                   <td>
-                    {account.authority === -1 ? (
+                    {account.authority === null ? (
                       <span className={`${styles.badge} ${styles.student}`}>
                         {"生徒"}
                       </span>
-                    ) : account.authority === 0 ? (
+                    ) : account.authority === false ? (
                       <span className={`${styles.badge} ${styles.teacher}`}>
                         {"教師"}
                       </span>
@@ -59,10 +58,10 @@ export const AccountTable = ({ accounts }: Props) => {
                   </td>
                   <td>{account.grade ? `${account.grade}年` : "-"}</td>
                   <td>
-                    {account.accountStopFlag === 0 ? (
-                      <span className={styles.isAvailable}>{"利用可"}</span>
-                    ) : (
+                    {account.isAccountStopFlag ? (
                       <span className={styles.isStopped}>{"停止中"}</span>
+                    ) : (
+                      <span className={styles.isAvailable}>{"利用可"}</span>
                     )}
                   </td>
                 </tr>

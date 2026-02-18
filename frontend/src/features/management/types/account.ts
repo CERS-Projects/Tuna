@@ -7,9 +7,9 @@ export type AccountType = {
   userId: number;
   showUserId: string;
   name: string;
-  authority: -1 | 0 | 1;
-  grade?: number;
-  accountStopFlag: 0 | 1;
+  grade: number | null;
+  authority: boolean | null;
+  isAccountStopFlag: boolean;
 };
 
 export type AccountEditType = {
@@ -30,6 +30,7 @@ export type TeacherAccountEditType = AccountEditType & {
 };
 
 export type StudentAccountRegisterType = {
+  showUserId: string;
   name: string;
   grade: number;
   email: string;
@@ -40,6 +41,7 @@ export type StudentAccountRegisterType = {
 };
 
 export type TeacherAccountRegisterType = {
+  showUserId: string;
   name: string;
   email: string;
   password: string;
@@ -54,4 +56,31 @@ export type StudentAccountImportType = {
   password: string;
   admissionDate: string;
   graduateDate: string;
+};
+
+export type ModifyStudentAccountRequestType = {
+  userId: number;
+  name: string;
+  mailAddress: string;
+  graduateDate: string;
+  accountStopFlag: boolean;
+};
+
+export type ModifyTeacherAccountRequestType = {
+  userId: number;
+  name: string;
+  mailAddress: string;
+  authorityFlag: boolean;
+  accountStopFlag: boolean;
+};
+
+export type AccountDetailResponse = {
+  userId: number;
+  showUserId: string;
+  name: string;
+  mailAddress: string;
+  accountStopFlag: boolean;
+  grade: number | null;
+  graduateDate: string | null;
+  authority: boolean | null;
 };
