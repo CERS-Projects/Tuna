@@ -3,6 +3,7 @@ package com.example.backend.accounts.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,7 +56,7 @@ public class StudentController {
         final boolean isCsv = documentFileValidation.isCSV(uploadCsvFile);
 
         if (!validationResult || !isCsv) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("CSVファイルの形式が正しいこと、ファイルの上限内であること、内容が正しいかどうか確認してください。");
         }
         studentService.createStudentByFile(uploadCsvFile, userInfo.getSchoolId());
         return ResponseEntity.ok().build();

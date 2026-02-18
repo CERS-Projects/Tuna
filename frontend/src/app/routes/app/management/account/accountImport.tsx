@@ -7,6 +7,7 @@ import { AccountImportTable } from "@/features/management/components/accountImpo
 import { type StudentAccountImportType } from "@/features/management/types/account";
 import { parseAccountsCsv } from "@/features/management/utils/parseAccountsCsv";
 import { useCreateStudentsByCsv } from "@/features/management/hooks/useAccountMutations";
+import { ApiRequestError } from "@/types/apiRequestError";
 import { paths } from "@/config/paths";
 import styles from "@/features/management/style/accountImport.module.css";
 import { FaInfoCircle } from "react-icons/fa";
@@ -23,7 +24,11 @@ const AccountImport = () => {
       setShouldNavigate(true);
     },
     onError: (error: Error) => {
-      alert("登録に失敗しました: " + error.message);
+      const message =
+        error instanceof ApiRequestError && error.body?.errorMessage
+          ? error.body.errorMessage
+          : "登録処理中にエラーが発生しました";
+      alert("登録に失敗しました: " + message);
       setIsSubmitting(false);
     },
   });
