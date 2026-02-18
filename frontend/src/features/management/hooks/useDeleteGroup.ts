@@ -12,7 +12,6 @@ export const useDeleteGroup = () => {
 
   return useMutation({
     mutationFn: async (data: GroupDeleteRequestType) => {
-      console.log(data);
       return await apiWithRefresh<void>({
         url: `/groups?groupId=${data.groupId}&parentId=${data.parentId}`,
         options: {
