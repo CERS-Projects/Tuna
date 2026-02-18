@@ -153,6 +153,16 @@ export const paths = {
         getHref: (showUserId: string) => `/app/profile/${showUserId}/edit`,
       },
     },
+    report: {
+      root: {
+        path: "/app/report",
+        getHref: () => "/app/report",
+      },
+      confirm: {
+        path: "/app/report/confirm",
+        getHref: () => "/app/report/confirm",
+      },
+    },
     test: {
       path: "/app/test",
       getHref: () => "/app/test",

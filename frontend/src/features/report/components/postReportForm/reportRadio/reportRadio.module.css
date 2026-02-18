@@ -1,0 +1,53 @@
+.reportFieldSet {
+  border: none;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+}
+.title {
+  font-size: 1.4rem;
+  padding: 15px 0 15px 0;
+  text-align: center;
+  font-weight: bold;
+  color: rgb(100, 90, 90);
+}
+.reportRadioContainer {
+  justify-items: center;
+  width: 80%;
+  max-width: 500px;
+  min-width: 250px;
+  padding: 10px 0px 10px 0px;
+  margin: auto;
+  border-radius: 20px;
+  border: 1px solid rgb(50, 85, 150);
+}
+.reportRadio {
+  width: 90%;
+  display: flex;
+  padding: 10px 0 15px 20px;
+  font-size: 1.3rem;
+  align-items: center;
+}
+.radioButton {
+  width: 1rem;
+  height: 1rem;
+}
+@media (max-width: 600px) {
+  .title {
+    font-size: 1.1rem;
+  }
+  .reportRadio {
+    padding: 5px 0 5px 5px;
+    font-size: 1rem;
+  }
+  .radioButton {
+    width: 0.8rem;
+    height: 0.8rem;
+  }
+}
+@media (max-height: 700px) and (min-width: 601px) {
+  .reportRadio {
+    padding: 0 0 5px 5px;
+    font-size: 1rem;
+  }
+}
