@@ -5,6 +5,7 @@
   min-width: 330px;
   margin-bottom: 30px;
 }
+
 .complete {
   border-radius: 8px;
   margin-top: 50px;
@@ -17,17 +18,26 @@
   max-width: 460px;
   padding: 2.5% 2%;
 }
+
+.mailGuide {
+  text-align: center;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
 .guide {
   width: 50%;
   text-align: center;
   font-size: 1.2rem;
 }
+
 .buttonContainer {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
   gap: 15px;
 }
+
 @media (width <= 500px) {
   .complete {
     border-radius: 6px;
@@ -38,13 +48,16 @@
     width: 70%;
     padding: 5% 3%;
   }
+
   .br {
     display: none;
   }
+
   .guide {
     width: 70%;
     font-size: 0.9rem;
   }
+
   .buttonContainer {
     margin-top: -5px;
     display: flex;

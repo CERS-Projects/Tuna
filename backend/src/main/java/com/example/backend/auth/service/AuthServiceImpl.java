@@ -226,7 +226,7 @@ public class AuthServiceImpl implements AuthService {
 
             stringRedisTemplate.opsForValue().set(token, userId, 10, TimeUnit.MINUTES);
 
-            String url = frontURL + "/reset/password" + ("?token=" + token);
+            String url = frontURL + "/password/change" + ("?token=" + token);
 
             mailService.sendMail(mailAddress, url);
         }

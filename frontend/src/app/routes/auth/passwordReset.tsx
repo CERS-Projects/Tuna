@@ -3,23 +3,21 @@ import { Button } from "@/components/ui/button/button.tsx";
 import { Input } from "@/components/ui/input/input.tsx";
 import { useForm } from "react-hook-form";
 import styles from "@/features/auth/styles/passwordReset.module.css";
-
-type passwordForm = {
-  mailaddress: string;
-  userid: string;
-};
+import { type passwordResetForm } from "@/features/auth/types/form";
+import { useSendPasswordResetEmail } from "@/features/auth/hooks/useSendPasswordResetEmail";
 
 export const PasswordReset = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<passwordForm>();
+  } = useForm<passwordResetForm>();
 
-  const onSubmit = (data: passwordForm) => {
-    console.log(data);
+  const { mutate, isPending } = useSendPasswordResetEmail();
+
+  const onSubmit = (data: passwordResetForm) => {
+    mutate(data);
   };
-  console.log("error", errors);
 
   return (
     <>
@@ -27,29 +25,15 @@ export const PasswordReset = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.passwordResetContainer}>
           <h1>パスワードの再設定</h1>
-          <Input
-            width={455}
-            height={45}
-            label="ユーザーID"
-            type="text"
-            placeholder="student1234"
-            error={errors["userid"]?.message ?? ""}
-            {...register("userid", {
-              required: "ユーザーIDは必須です",
-              maxLength: {
-                value: 32,
-                message: "ユーザー名は32字以内です",
-              },
-            })}
-          />
+
           <Input
             width={455}
             height={45}
             label="メールアドレス"
             type="text"
             placeholder="tuna@tuna.jp"
-            error={errors["mailaddress"]?.message ?? ""}
-            {...register("mailaddress", {
+            error={errors["mailAddress"]?.message ?? ""}
+            {...register("mailAddress", {
               required: "メールアドレスは必須です",
               maxLength: {
                 value: 256,
@@ -58,7 +42,7 @@ export const PasswordReset = () => {
             })}
           />
           <Button type="submit" className={styles.passwordResetButton}>
-            メールを送信する
+            {isPending ? "送信中..." : "メールを送信する"}
           </Button>
         </div>
       </form>
