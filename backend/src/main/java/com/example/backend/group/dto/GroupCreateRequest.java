@@ -1,5 +1,6 @@
 package com.example.backend.group.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
@@ -14,5 +15,5 @@ public class GroupCreateRequest {
 
     private Integer parentGroupId;
 
-    private List<Integer> membersUserId;
+    private List<Integer> membersUserId = new ArrayList<>();
 }
