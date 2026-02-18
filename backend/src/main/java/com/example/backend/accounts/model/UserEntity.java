@@ -22,43 +22,26 @@ import lombok.Setter;
 @Entity
 @Table(name = "user_tb")
 public class UserEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Integer userId;
 
-    @ManyToOne
-    @JoinColumn(name = "school_id",
-                nullable = false)
-    private SchoolEntity school;
+        @ManyToOne
+        @JoinColumn(name = "school_id", nullable = false)
+        private SchoolEntity school;
 
-    @Column(name = "show_user_id",
-            nullable = false,
-            unique = true,
-            length = 20
-            )
-    private String showUserId;
+        @Column(name = "show_user_id", nullable = false, unique = true, length = 20)
+        private String showUserId;
 
-    @Column(name = "password",
-            nullable = false,
-            columnDefinition = "CHAR(60)"
-            )
-    private String password;
+        @Column(name = "password", nullable = false, columnDefinition = "CHAR(60)")
+        private String password;
 
-    @Column(name = "mailaddress",
-            nullable = false,
-            unique = true,
-            length = 254
-            )
-    private String mailAddress;
+        @Column(name = "mailaddress", nullable = false, unique = true, length = 254)
+        private String mailAddress;
 
-    @Column(name = "name",
-            nullable = false,
-            length = 50
-            )
-    private String name;
+        @Column(name = "name", nullable = false, length = 50)
+        private String name;
 
-    @Column(name = "accounts_stop_flag",
-            columnDefinition = "BOOLEAN DEFAULT FALSE",
-            nullable = false)
-    private Boolean accountsStopFlag = false;
+        @Column(name = "accounts_stop_flag", columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+        private Boolean accountsStopFlag = false;
 }

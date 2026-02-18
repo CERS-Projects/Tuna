@@ -31,6 +31,7 @@ import com.example.backend.exception.model.SchoolNotFoundException;
 import com.example.backend.group.dto.GetUserBySchoolIdRequest;
 import com.example.backend.group.dto.GetUserResponse;
 import com.example.backend.group.model.GroupEntity;
+import com.example.backend.group.repository.GroupMemberRepository;
 import com.example.backend.group.repository.GroupRepository;
 import com.example.backend.group.service.GroupMemberService;
 import com.example.backend.school.model.SchoolEntity;
@@ -39,6 +40,8 @@ import com.example.backend.school.model.SchoolEntity;
 public class StudentServiceImpl implements StudentService {
 
     private final GroupRepository groupRepository;
+
+    private final GroupMemberRepository groupMemberRepository;
 
     /* StudentRepository の依存性注入 */
     private final StudentRepository studentRepository;
@@ -60,13 +63,15 @@ public class StudentServiceImpl implements StudentService {
 
     /* CSVファイル扱えるようにするための初期設定 */
     public StudentServiceImpl(UserRepository userRepository, StudentRepository studentRepository,
-            AccountsHelper accountsHelper, GroupMemberService groupMemberService, GroupRepository groupRepository) {
+            AccountsHelper accountsHelper, GroupMemberService groupMemberService, GroupRepository groupRepository,
+            GroupMemberRepository groupMemberRepository) {
         /* 依存の注入 */
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.accountsHelper = accountsHelper;
         this.groupMemberService = groupMemberService;
         this.groupRepository = groupRepository;
+        this.groupMemberRepository = groupMemberRepository;
 
         /* CSVマッパーを使用できるようにするための処理 */
         CsvMapper csvMapper = new CsvMapper();
@@ -119,7 +124,11 @@ public class StudentServiceImpl implements StudentService {
         Boolean isExistsStudent = studentRepository.existsBySchoolIdAndUserId(schoolId, userId);
 
         if (isExistsStudent) {
+            groupMemberRepository.deleteAllByUserId(userId);
+
             studentRepository.deleteById(userId);
+
+            userRepository.deleteById(userId);
         }
     }
 
