@@ -7,13 +7,12 @@ import { type AccountSearchType } from "@/features/management/types/account";
 import styles from "@/features/management/style/accountList.module.css";
 import { Spinner } from "@/components/ui/spinner/spinner";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { decodeUserParams } from "@/features/auth/utils/jwt";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 const AccountList = () => {
   const { authToken } = useAuth();
-  const userInfo = decodeUserParams(authToken);
-  const role = userInfo?.role ?? "STUDENT";
-
+  const { data: user } = useUser(authToken);
+  const role = user?.role;
   const methods = useForm<AccountSearchType>({
     defaultValues: {
       query: "",

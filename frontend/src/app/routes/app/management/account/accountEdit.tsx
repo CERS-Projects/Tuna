@@ -17,7 +17,7 @@ import {
 import styles from "@/features/management/style/accountEdit.module.css";
 import { paths } from "@/config/paths";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { decodeUserParams } from "@/features/auth/utils/jwt";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 const isTeacherAccount = (
   account: StudentAccountEditType | TeacherAccountEditType,
@@ -31,7 +31,7 @@ const AccountEdit = () => {
   const parsedUserId = Number(userId) || 0;
 
   const { authToken } = useAuth();
-  const userInfo = decodeUserParams(authToken);
+  const { data: userInfo } = useUser(authToken);
   const role = userInfo?.role ?? "STUDENT";
   const isAdmin = role === "ADMIN_SCHOOL";
 

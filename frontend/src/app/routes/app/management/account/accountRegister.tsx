@@ -7,7 +7,7 @@ import {
   type StudentAccountRegisterType,
   type TeacherAccountRegisterType,
 } from "@/features/management/types/account";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, use } from "react";
 import { useBeforeUnload, useNavigate } from "react-router";
 import { useBlockNavigation } from "@/hooks/useBlockNavigation";
 import { paths } from "@/config/paths";
@@ -21,7 +21,7 @@ import {
   useCreateTeachers,
 } from "@/features/management/hooks/useAccountMutations";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import { decodeUserParams } from "@/features/auth/utils/jwt";
+import { useUser } from "@/features/auth/hooks/useUser";
 
 const initialStudent: StudentAccountRegisterType = {
   showUserId: "",
@@ -45,7 +45,7 @@ const initialTeacher: TeacherAccountRegisterType = {
 const AccountRegister = () => {
   const navigate = useNavigate();
   const { authToken } = useAuth();
-  const userInfo = decodeUserParams(authToken);
+  const { data: userInfo } = useUser(authToken);
   const role = userInfo?.role ?? "STUDENT";
   const isAdmin = role === "ADMIN_SCHOOL";
 
