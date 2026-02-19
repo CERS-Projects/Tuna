@@ -11,6 +11,7 @@ import type React from "react";
 import { useState, useRef } from "react";
 import styles from "./postBox.module.css";
 import { Modal, type ModalHandle } from "../modal/modal";
+import { ReportCreateModal } from "@/features/management/components/reportCreateModal/reportCreateModal";
 import { type PostData } from "@/features/post/types/post";
 import { paths } from "@/config/paths";
 import { useDebouncedLike } from "@/features/post/hooks/useGood";
@@ -34,6 +35,7 @@ export const PostBox = ({ props, canDelete = false }: Props) => {
 
   const {
     postId,
+    userId,
     showUserId,
     nickname,
     icon,
@@ -69,6 +71,7 @@ export const PostBox = ({ props, canDelete = false }: Props) => {
   const { mutate: deleteMutate } = useDeletePost(postId);
 
   const modalRef = useRef<ModalHandle>(null);
+  const reportModalRef = useRef<ModalHandle>(null);
 
   const handleNavigateClick = (
     e: React.MouseEvent,
@@ -118,6 +121,16 @@ export const PostBox = ({ props, canDelete = false }: Props) => {
     e.stopPropagation();
     setSelectedImg(imgurl);
     if (modalRef.current) modalRef.current.show();
+  };
+
+  const handleReportClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (reportModalRef.current) reportModalRef.current.show();
+  };
+
+  const handleReportClose = () => {
+    if (reportModalRef.current) reportModalRef.current.close();
   };
 
   const renderContent = () => (
@@ -171,7 +184,7 @@ export const PostBox = ({ props, canDelete = false }: Props) => {
         <button onClick={handleBookmark}>
           {bookmarkOn ? <BsBookmarkFill /> : <BsBookmark />}
         </button>
-        <button onClick={(e) => handleNavigateClick(e, "")}>
+        <button onClick={handleReportClick}>
           <BsExclamationCircle />
         </button>
       </div>
@@ -205,6 +218,18 @@ export const PostBox = ({ props, canDelete = false }: Props) => {
           <img className={styles.modalImg} src={selectedImg} alt="Enlarged" />
         )}
       </Modal>
+
+      <ReportCreateModal
+        ref={reportModalRef}
+        target={{
+          postId,
+          userId,
+          nickname,
+          showUserId,
+          icon,
+        }}
+        onClose={handleReportClose}
+      />
     </>
   );
 };
