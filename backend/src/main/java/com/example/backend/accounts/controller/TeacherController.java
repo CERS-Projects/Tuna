@@ -2,9 +2,11 @@ package com.example.backend.accounts.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -35,6 +37,14 @@ public class TeacherController {
 
         /* 権限の設定(権限無し) */
         adminUserService.authorityNotGrant(newTeacherAccount);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/teacher")
+    public ResponseEntity<Void> deleteTeacher(@AuthenticationPrincipal UserInfo userInfo,
+            @RequestParam("userId") Integer userId) {
+        teacherService.deleteTeacher(userId, userInfo.getSchoolId());
 
         return ResponseEntity.ok().build();
     }

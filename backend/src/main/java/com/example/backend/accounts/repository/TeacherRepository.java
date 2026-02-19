@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.backend.accounts.dto.TeacherInformationResponse;
 import com.example.backend.accounts.model.TeacherEntity;
 
-public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>{
+public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer> {
     @Query("""
             SELECT new com.example.backend.accounts.dto.TeacherInformationResponse(
                 user.userId,
@@ -52,4 +52,14 @@ public interface TeacherRepository extends JpaRepository<TeacherEntity, Integer>
     void modifyTeacherAccountByUserId(@Param("authorityFlag") Boolean authorityFlag, @Param("userId") Integer userId);
 
     Boolean existsByUserId(Integer userId);
+
+    @Query("""
+            SELECT COUNT(teacher) > 0
+            FROM UserEntity user
+            INNER JOIN TeacherEntity teacher
+                ON user.userId = teacher.userId
+            WHERE user.school.schoolId = :schoolId
+            AND user.userId = :userId
+            """)
+    boolean existsBySchoolIdAndUserId(@Param("schoolId") Integer schoolId, @Param("userId") Integer userId);
 }

@@ -16,6 +16,7 @@ import com.example.backend.accounts.repository.UserRepository;
 import com.example.backend.accounts.service.AdminUserService;
 import com.example.backend.accounts.service.TeacherService;
 import com.example.backend.exception.model.SchoolNotFoundException;
+import com.example.backend.group.repository.GroupMemberRepository;
 import com.example.backend.school.dto.TeacherCreateRequestOutSideApp;
 import com.example.backend.school.model.SchoolEntity;
 import com.example.backend.school.repository.SchoolRepository;
@@ -27,6 +28,8 @@ import com.example.backend.accounts.helper.AccountsHelper;
 @Service
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService, AdminUserService {
+
+    private final GroupMemberRepository groupMemberRepository;
 
     /* UserRepositoryの依存の注入 */
     private final UserRepository userRepository;
@@ -78,6 +81,20 @@ public class TeacherServiceImpl implements TeacherService, AdminUserService {
         /* セットした値をDBに追加 */
         UserEntity savedTeacherEntity = userRepository.save(newTeacherAccount);
         return savedTeacherEntity;
+    }
+
+    @Override
+    @Transactional
+    public void deleteTeacher(Integer userId, Integer schoolId) {
+        Boolean isExistsTeacher = teacherRepository.existsBySchoolIdAndUserId(schoolId, userId);
+
+        if (isExistsTeacher) {
+            groupMemberRepository.deleteAllByUserId(userId);
+
+            teacherRepository.deleteById(userId);
+
+            userRepository.deleteById(userId);
+        }
     }
 
     /* 管理者権限あり状態を登録する機能 */

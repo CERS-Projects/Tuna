@@ -43,11 +43,13 @@ const SearchClassroom = () => {
             <button onClick={modalButtonClick} className={styles.modalButton}>
               <RiCompass3Line />
             </button>
-            <SearchBar
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onSearch={() => {}}
-            />
+            <div className={styles.searchBarWrapper}>
+              <SearchBar
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onSearch={() => {}}
+              />
+            </div>
           </div>
           <div className={styles.mainBottom}>
             {isFetching ? (

@@ -15,54 +15,54 @@ import com.example.backend.accounts.model.StudentEntity;
 import com.example.backend.group.dto.GetUserResponse;
 
 public interface StudentRepository extends JpaRepository<StudentEntity, Integer> {
-    
+
     /* フロントに返す用のカスタムクエリ */
-    @Query ("""
+    @Query("""
             SELECT new com.example.backend.group.dto.GetUserResponse(
                 user.userId,
-                user.showUserId, 
+                user.showUserId,
                 user.name,
                 student.grade)
             FROM UserEntity AS user
-            INNER JOIN 
+            INNER JOIN
             StudentEntity AS student
                 ON user.userId = student.userId
             WHERE user.school.schoolId = :schoolId
             """)
     List<GetUserResponse> findAllStudentUsers(@Param("schoolId") Integer schoolId);
 
-    @Query ("""
+    @Query("""
             SELECT new com.example.backend.accounts.dto.StudentInformationResponse(
                 user.userId,
-                user.showUserId, 
-                user.name, 
-                student.grade, 
+                user.showUserId,
+                user.name,
+                student.grade,
                 user.accountsStopFlag)
             FROM UserEntity AS user
-            INNER JOIN 
+            INNER JOIN
             StudentEntity AS student
                 ON user.userId = student.userId
             WHERE user.school.schoolId = :schoolId
             """)
     List<StudentInformationResponse> findAllStudentInformation(@Param("schoolId") Integer schoolId);
 
-    @Query ("""
+    @Query("""
             SELECT new com.example.backend.accounts.dto.StudentInformationResponse(
                 user.userId,
-                user.showUserId, 
-                user.name, 
-                student.grade, 
+                user.showUserId,
+                user.name,
+                student.grade,
                 user.accountsStopFlag)
             FROM UserEntity AS user
-            INNER JOIN 
+            INNER JOIN
             StudentEntity AS student
                 ON user.userId = student.userId
             WHERE user.userId = :studentId
             """)
     StudentInformationResponse findOneStudentInformation(@Param("studentId") final Integer studentId);
 
-    @Query ("""
-            SELECT userId FROM UserEntity 
+    @Query("""
+            SELECT userId FROM UserEntity
             WHERE school.schoolId = :schoolId
             """)
     Set<Integer> findAllBySchoolId(@Param("schoolId") Integer schoolId);
@@ -75,4 +75,14 @@ public interface StudentRepository extends JpaRepository<StudentEntity, Integer>
             WHERE userId = :userId
             """)
     void modifyStudentAccountByUserId(@Param("userId") Integer userId, @Param("graduateDate") LocalDate graduateDate);
+
+    @Query("""
+            SELECT COUNT(student) > 0
+            FROM UserEntity user
+            INNER JOIN StudentEntity student
+                ON user.userId = student.userId
+            WHERE user.school.schoolId = :schoolId
+            AND user.userId = :userId
+            """)
+    boolean existsBySchoolIdAndUserId(@Param("schoolId") Integer schoolId, @Param("userId") Integer userId);
 }

@@ -88,10 +88,10 @@ const createAppRouter = (queryClient: QueryClient) => {
 
         // アプリ内ルート (ログイン必要)
         {
-          path: paths.app.root.path,
           element: <ProtectedRoute />,
           children: [
             {
+              path: paths.app.root.path,
               element: <AppRoot />,
               ErrorBoundary: AppRootErrorBoundary,
               children: [
@@ -186,146 +186,151 @@ const createAppRouter = (queryClient: QueryClient) => {
                 ),
               ],
             },
-          ],
-        },
 
-        // アプリ内教師ルート (ログイン必要)
-        {
-          path: paths.app.management.root.path,
-          element: <TeacherProtectedRoute />,
-          children: [
+            // アプリ内教師ルート (ログイン必要)
             {
-              element: <ManagementRoot />,
-              ErrorBoundary: ManagementErrorBoundary,
+              path: paths.app.management.root.path,
+              element: <TeacherProtectedRoute />,
               children: [
                 {
-                  index: true,
-                  element: (
-                    <Navigate
-                      to={paths.app.management.group.root.path}
-                      replace
-                    />
-                  ),
-                },
-                {
-                  path: paths.app.management.group.root.path,
-                  lazy: () =>
-                    import("../features/management/layouts/groupShell/groupShell").then(
-                      convert(queryClient),
-                    ),
-                  children: [
-                    route(
-                      paths.app.management.group.root.path,
-                      () => import("./routes/app/management/group/groupList"),
-                    ),
-                    route(
-                      paths.app.management.group.new.path,
-                      () => import("./routes/app/management/group/groupNew"),
-                    ),
-                    route(
-                      paths.app.management.group.edit.path,
-                      () => import("./routes/app/management/group/groupEdit"),
-                    ),
-                  ],
-                },
-                {
-                  path: paths.app.management.account.root.path,
-                  lazy: () =>
-                    import("../features/management/layouts/accountShell/accountShell").then(
-                      convert(queryClient),
-                    ),
+                  element: <ManagementRoot />,
+                  ErrorBoundary: ManagementErrorBoundary,
                   children: [
                     {
                       index: true,
                       element: (
                         <Navigate
-                          to={paths.app.management.account.list.path}
+                          to={paths.app.management.group.root.path}
                           replace
                         />
                       ),
                     },
-                    route(
-                      paths.app.management.account.list.path,
-                      () =>
-                        import("./routes/app/management/account/accountList"),
-                    ),
-                    route(
-                      paths.app.management.account.edit.path,
-                      () =>
-                        import("./routes/app/management/account/accountEdit"),
-                    ),
-                    route(
-                      paths.app.management.account.new.path,
-                      () =>
-                        import("./routes/app/management/account/accountNew"),
-                    ),
-                    route(
-                      paths.app.management.account.register.path,
-                      () =>
-                        import("./routes/app/management/account/accountRegister"),
-                    ),
-                    route(
-                      paths.app.management.account.import.path,
-                      () =>
-                        import("./routes/app/management/account/accountImport"),
-                    ),
-                  ],
-                },
-                {
-                  path: paths.app.management.classroom.root.path,
-                  children: [
                     {
-                      index: true,
-                      element: (
-                        <Navigate
-                          to={paths.app.management.classroom.list.path}
-                          replace
-                        />
-                      ),
+                      path: paths.app.management.group.root.path,
+                      lazy: () =>
+                        import("../features/management/layouts/groupShell/groupShell").then(
+                          convert(queryClient),
+                        ),
+                      children: [
+                        route(
+                          paths.app.management.group.root.path,
+                          () =>
+                            import("./routes/app/management/group/groupList"),
+                        ),
+                        route(
+                          paths.app.management.group.new.path,
+                          () =>
+                            import("./routes/app/management/group/groupNew"),
+                        ),
+                        route(
+                          paths.app.management.group.edit.path,
+                          () =>
+                            import("./routes/app/management/group/groupEdit"),
+                        ),
+                      ],
+                    },
+                    {
+                      path: paths.app.management.account.root.path,
+                      lazy: () =>
+                        import("../features/management/layouts/accountShell/accountShell").then(
+                          convert(queryClient),
+                        ),
+                      children: [
+                        {
+                          index: true,
+                          element: (
+                            <Navigate
+                              to={paths.app.management.account.list.path}
+                              replace
+                            />
+                          ),
+                        },
+                        route(
+                          paths.app.management.account.list.path,
+                          () =>
+                            import("./routes/app/management/account/accountList"),
+                        ),
+                        route(
+                          paths.app.management.account.edit.path,
+                          () =>
+                            import("./routes/app/management/account/accountEdit"),
+                        ),
+                        route(
+                          paths.app.management.account.new.path,
+                          () =>
+                            import("./routes/app/management/account/accountNew"),
+                        ),
+                        route(
+                          paths.app.management.account.register.path,
+                          () =>
+                            import("./routes/app/management/account/accountRegister"),
+                        ),
+                        route(
+                          paths.app.management.account.import.path,
+                          () =>
+                            import("./routes/app/management/account/accountImport"),
+                        ),
+                      ],
+                    },
+                    {
+                      path: paths.app.management.classroom.root.path,
+                      children: [
+                        {
+                          index: true,
+                          element: (
+                            <Navigate
+                              to={paths.app.management.classroom.list.path}
+                              replace
+                            />
+                          ),
+                        },
+                        route(
+                          paths.app.management.classroom.list.path,
+                          () =>
+                            import("./routes/app/management/classroom/classroomList"),
+                        ),
+                        route(
+                          paths.app.management.classroom.edit.path,
+                          () =>
+                            import("./routes/app/management/classroom/classroomEdit"),
+                        ),
+                        route(
+                          paths.app.management.classroom.new.path,
+                          () =>
+                            import("./routes/app/management/classroom/classroomNew"),
+                        ),
+                      ],
+                    },
+                    // ADMIN_SCHOOL 専用ルート（学校情報編集）
+                    {
+                      element: <AdminProtectedRoute />,
+                      children: [
+                        route(
+                          paths.app.management.schoolInfo.path,
+                          () =>
+                            import("./routes/app/management/school/schoolEdit"),
+                        ),
+                      ],
                     },
                     route(
-                      paths.app.management.classroom.list.path,
-                      () =>
-                        import("./routes/app/management/classroom/classroomList"),
+                      paths.app.management.report.path,
+                      () => import("./routes/app/management/report/reportList"),
                     ),
                     route(
-                      paths.app.management.classroom.edit.path,
-                      () =>
-                        import("./routes/app/management/classroom/classroomEdit"),
+                      paths.app.management.notice.path,
+                      () => import("./routes/app/management/notice/notice"),
                     ),
                     route(
-                      paths.app.management.classroom.new.path,
+                      paths.app.management.notice.create.path,
                       () =>
-                        import("./routes/app/management/classroom/classroomNew"),
+                        import("./routes/app/management/notice/createNotice"),
+                    ),
+                    route(
+                      paths.app.management.notice.edit.path,
+                      () => import("./routes/app/management/notice/editNotice"),
                     ),
                   ],
                 },
-                // ADMIN_SCHOOL 専用ルート（学校情報編集）
-                {
-                  element: <AdminProtectedRoute />,
-                  children: [
-                    route(
-                      paths.app.management.schoolInfo.path,
-                      () => import("./routes/app/management/school/schoolEdit"),
-                    ),
-                  ],
-                },
-                route(
-                  paths.app.management.report.path,
-                  () => import("./routes/app/management/report/reportList"),
-                ),
-                route(
-                  paths.app.management.notice.path,
-                  () => import("./routes/app/management/notice/notice"),
-                ),
-                route(
-                  paths.app.management.notice.create.path,
-                  () => import("./routes/app/management/notice/createNotice"),
-                ),
-                route(
-                  paths.app.management.notice.edit.path,
-                  () => import("./routes/app/management/notice/editNotice"),
-                ),
               ],
             },
           ],
