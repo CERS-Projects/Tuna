@@ -31,14 +31,18 @@ const EmailSentConfirm = () => {
     navigate(paths.auth.passReset.passReset.path);
   };
 
-  if (!email) return null;
-
   return (
     <div className={styles.container}>
       <Header />
       <h1 className={styles.complete}>Eメールを送信しました</h1>
 
-      <p className={styles.mailGuide}>{`送信先メールアドレス: ${email}`}</p>
+      {!email ? (
+        <p
+          className={styles.mailGuide}
+        >{`メールアドレスが設定されていません。\nもう一度設定してください。`}</p>
+      ) : (
+        <p className={styles.mailGuide}>{`送信先メールアドレス: ${email}`}</p>
+      )}
 
       <p className={styles.guide}>メールが届かない方は下記の項目へ</p>
 

@@ -41,6 +41,13 @@ export const Header = () => {
         className={styles.headerTitle}
         onClick={handleTitleClick}
         style={{ cursor: "pointer" }}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            handleTitleClick();
+          }
+        }}
       >
         Tuna
       </h1>
