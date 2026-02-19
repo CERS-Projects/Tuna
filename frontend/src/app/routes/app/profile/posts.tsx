@@ -15,9 +15,9 @@ const ProfilePosts = () => {
       ) : isLoading ? (
         <Spinner />
       ) : (
-        posts?.map((post) => (
-          <PostBox key={post.postId} props={{ ...post }} canDelete={true} />
-        ))
+        [...(posts || [])]
+          .reverse()
+          .map((post) => <PostBox key={post.postId} props={{ ...post }} />)
       )}
     </>
   );

@@ -15,7 +15,9 @@ const ProfileBookmarks = () => {
       ) : isLoading ? (
         <Spinner />
       ) : (
-        posts?.map((post) => <PostBox key={post.postId} props={{ ...post }} />)
+        [...(posts || [])]
+          .reverse()
+          .map((post) => <PostBox key={post.postId} props={{ ...post }} />)
       )}
     </>
   );
