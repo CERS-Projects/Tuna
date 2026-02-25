@@ -51,13 +51,13 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/accounts/teacher/**", "/school/information", "/school/modify")
                         .hasRole("ADMIN_SCHOOL")
+                        .requestMatchers("/groups/me").hasRole("STUDENT")
                         .requestMatchers("/groups/**", "/accounts/all", "/accounts/student/**", "/notice/create",
                                 "/notice/modify",
                                 "/notice/teacher/list", "/notice/delete", "/report/list", "/report/delete",
                                 "/classroom/create",
                                 "/classroom/update", "/classroom/delete")
                         .hasAnyRole("TEACHER", "ADMIN_SCHOOL")
-                        .requestMatchers("/groups/me").hasRole("STUDENT")
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler));

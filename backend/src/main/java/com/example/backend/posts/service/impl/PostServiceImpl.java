@@ -7,6 +7,7 @@ import com.example.backend.auth.dto.UserInfo;
 import com.example.backend.posts.dto.PostDetailResponse;
 import org.bson.types.ObjectId;
 
+import com.example.backend.group.repository.GroupRepository;
 import com.example.backend.posts.repository.PostRepository;
 import com.example.backend.posts.repository.LikeRepository;
 import com.example.backend.posts.repository.BookmarkRepository;
@@ -47,7 +48,9 @@ public class PostServiceImpl implements PostService {
 
     private final AccountConfirm accountConfirm;
 
-    private final GroupJoinByUserId groupJoinByUserId;
+    private final GroupRepository groupRepository;
+
+    private final GroupJoinByUserId groupJoinByUserId;  
 
     private final PostPermissionHelper postPermissionHelper;
 
@@ -214,6 +217,9 @@ public class PostServiceImpl implements PostService {
         } else {
             if (!accountConfirm.isAllGroupsBelongToSchool(schoolId, userGroupIds)) {
                 throw new IllegalArgumentException("指定されたグループは自校に属していません。");
+            }else {
+                List<Integer> schoolGroupIds = groupRepository.findGroupIdsBySchoolId(schoolId);
+                userGroupIds.addAll(schoolGroupIds);
             }
         }
         userGroupIds.add(0); // public権限を追加
