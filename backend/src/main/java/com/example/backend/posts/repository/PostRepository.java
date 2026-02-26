@@ -139,7 +139,7 @@ public interface PostRepository extends MongoRepository<PostEntity, ObjectId> {
 
         // 3 .ユーザーのshare_rangeリストでフィルタ
         "{ $match: { $expr: { $gt: [ { $size: { $setIntersection: [ '$share_range', ?2 ] } }, 0 ] } } }",
-
+        "{ $sort: { post_date: -1 } }",
 
         //3.5 post_flagがfalseのものを除外
         "{ $match: { post_flag: { $ne: false } } }",

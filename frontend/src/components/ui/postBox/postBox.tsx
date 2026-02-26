@@ -199,7 +199,7 @@ export const PostBox = ({ props, canDelete = false }: Props) => {
         ref={modalRef}
         height="fit-content"
         width="fit-content"
-        containerStyle={{ maxHeight: "500px", maxWidth: "500px" }}
+        containerStyle={{ maxHeight: "800px", maxWidth: "800px" }}
       >
         {selectedImg && (
           <img className={styles.modalImg} src={selectedImg} alt="Enlarged" />

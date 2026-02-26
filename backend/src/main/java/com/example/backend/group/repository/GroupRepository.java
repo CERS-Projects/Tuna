@@ -73,6 +73,12 @@ public interface GroupRepository extends JpaRepository<GroupEntity, Integer> {
                         @Param("schoolId") Integer schoolId);
 
         @Query("""
+                SELECT g.groupId FROM GroupEntity g
+                WHERE g.school.schoolId = :schoolId
+            """)
+    List<Integer> findGroupIdsBySchoolId(@Param("schoolId") Integer schoolId);
+
+        @Query("""
                         SELECT new com.example.backend.notice.dto.GetGroupIdAndGroupNameRecord(g.groupId, g.groupName)
                         FROM GroupEntity g
                         WHERE g.groupId IN :groupId

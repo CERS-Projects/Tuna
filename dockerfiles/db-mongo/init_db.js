@@ -523,10 +523,6 @@ try {
       user_id: 2,
       post_date: new Date(Date.now() - 1800000), // 30分前
       sentence: "こんにちは！これはテスト投稿です。",
-      image_objectKey: [
-        "images/5c2808e4-2b7b-457d-ae43-9f8e3f9dd1fb.png",
-        "images/63b81b67-68ec-4171-a28c-3042a33b8591.png",
-      ],
       like_count: 7,
       response_count: 0,
       share_range: [0, 1],
@@ -1247,47 +1243,6 @@ try {
     },
   ]);
   print("✅ classroom_category_collectionに6件挿入しました。");
-
-  //G.3 classroom_document_collection
-  db.classroom_document_collection.insertMany([
-    {
-      classroom_category_id: cat1,
-      document_name: "Java変数と型.pdf",
-      document_objectKey: "documents/acd6c4e1-c834-483a-ac41-e78b821ad10d.pdf",
-      upload_date: new Date(),
-    },
-    {
-      classroom_category_id: cat1,
-      document_name: "Java制御構文.pdf",
-      document_objectKey: "documents/77ff706c-0697-4a55-b366-130433db3f51.xls",
-      upload_date: new Date(),
-    },
-    {
-      classroom_category_id: cat3,
-      document_name: "SpringBoot初期構築.pdf",
-      document_objectKey: "docs/springboot/setup.pdf",
-      upload_date: new Date(),
-    },
-    {
-      classroom_category_id: cat4,
-      document_name: "Reactコンポーネント設計.pdf",
-      document_objectKey: "docs/react/components.pdf",
-      upload_date: new Date(),
-    },
-    {
-      classroom_category_id: cat5,
-      document_name: "正規化の基本.pdf",
-      document_objectKey: "docs/db/normalize.pdf",
-      upload_date: new Date(),
-    },
-    {
-      classroom_category_id: cat6,
-      document_name: "インデックス戦略.pdf",
-      document_objectKey: "docs/db/index.pdf",
-      upload_date: new Date(),
-    },
-  ]);
-  print("✅ classroom_document_collectionに6件挿入しました。");
 
   // H. report_collection
   db.report_collection.insertMany([
